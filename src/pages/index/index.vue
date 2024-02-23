@@ -4,177 +4,243 @@
       <view class="t-size-30">小礼AI极简英语</view>
     </cy-navbar>
 
-    <view class="flex align-item-center justify-content-between px-5 pt-2">
-      <view class="font-weight-bold t-size-48">
-        Hi，同学
-      </view>
-      <view>
-        <image src="/static/logo.png" class="student-css"></image>
-      </view>
-    </view>
-    <view class="flex align-item-center justify-content-between px-5 pt-5">
-      <view class="t-size-28 t-line-46">
-        <text>
-          嗨，我是Jim!
-          跟我一起沉浸式学习英语，
-          让您的技能更上一层楼！
-        </text>
-        <view class="music-css mt-2 flex align-item-center justify-content-center">
-          美音
+    <view class="px-4">
+
+      <view class="scene-box">
+        <view class="t-color-fff check-teacher mt-2 flex align-item-center justify-content-center">
+          <view>换老师</view>
+          <view></view>
         </view>
-      </view>
-      <view>
-        <image src="/static/logo.png" class="person-css"></image>
-      </view>
-    </view>
+        <view class="scene-content">
+          <view class="content-text mt-3 mr-2">
+            <view>Hi,我是你的英语口语老师</view>
+            <view class="mt-1">Addy，快来找我练习吧！</view>
+            <view class="say-hello mr-2 mt-2 flex align-item-center justify-content-center">
+              <view></view>
+              <view>Say hello</view>
+            </view>
+          </view>
 
-    <view class="today-learning-box border-box px-3 py-4">
-      <view class="flex align-item-center justify-content-between">
-        <text class="t-size-28 t-color-3D3D3D font-weight-bold">今日学习</text>
-        <text class="t-size-28 t-color-3D3D3D font-weight-bold">我的课程</text>
-      </view>
+          <view class="content-bottom">
+            <view class="flex justify-content-between align-item-center px-3">
+              <view class="description flex flex-direction-column align-item-center justify-content-center">
+                <view class="font-weight-bold t-size-36">情景自由聊</view>
+                <view class="t-size-28">每天10分钟  进阶口语达人</view>
+              </view>
+              <view class="start-btn t-color-fff t-size-28 flex align-item-center justify-content-center">
+                <view>开始对练</view>
+              </view>
+            </view>
+          </view>
+          <image src="/static/微信图片_20240223205459.jpg" mode="widthFix" class="scene-img"></image>
 
-      <view class="flex mt-3">
-        <view class="current-time mr-2">46分钟</view>
-        <view class="total-time-box flex mt-1">
-          <view>/</view>
-          <view>60分钟</view>
         </view>
       </view>
 
-      <view class="progress-box mt-3">
-        <view class="progress-bar"></view>
+      <view class="grid-container mt-5">
+        <view class="share-box flex align-item-center justify-content-around">
+          <view>
+            <view class="font-weight-bold t-size-28">分享得会员</view>
+            <view class="t-size-20 mt-1">年卡会员免费拿</view>
+          </view>
+          <view>
+            <image src="/static/logo.png" class="share-img"></image>
+          </view>
+        </view>
+
+        <view class="share-box flex align-item-center justify-content-around">
+          <view>
+            <view class="font-weight-bold t-size-28">分享得会员</view>
+            <view class="t-size-20 mt-1">年卡会员免费拿</view>
+          </view>
+          <view>
+            <image src="/static/logo.png" class="share-img"></image>
+          </view>
+        </view>
       </view>
-    </view>
 
-    <view class="mt-4 flex border-box px-3">
-      <image src="/static/logo.png" class="english-teacher-box mr-3"></image>
-      <image src="/static/logo.png" class="word-box"></image>
-    </view>
-
-    <view class="mt-5 px-3" @click="$navigateTo('/pages/index/question')">
-      <text class="font-weight-bold t-size-40">AI中考提分</text>
-    </view>
-
-    <view class="mt-5 px-3 flex justify-content-between">
-      <view :class="item.isActive ? 'querstion-type-active-box' : 'querstion-type-box'"
-            v-for="(item, index) in questionTypeMenu" :key="index"
-            class="flex align-item-center justify-content-center"
-            @click="clickQuestionType(item, index)">
-        {{ item.title }}
+      <view class="ai-grid-container mt-5">
+        <view class="ai-tools-box">
+          <view class="t-color-3D3D3D font-weight-bold t-size-36 ai-write">AI作文</view>
+          <view class="aparent">Aparentment</view>
+          <image src="/static/组 48.png" class="ment-image"></image>
+          <image src="/static/logo.png" class="identification"></image>
+        </view>
+        <view class="ai-tools-box">
+          <view class="t-color-3D3D3D font-weight-bold t-size-36 ai-write">AI作文</view>
+          <view class="aparent">Aparentment</view>
+          <image src="/static/组 48.png" class="ment-image"></image>
+          <image src="/static/logo.png" class="identification"></image>
+        </view>
+        <view class="ai-tools-box">
+          <view class="t-color-3D3D3D font-weight-bold t-size-36 ai-write">AI作文</view>
+          <view class="aparent">Aparentment</view>
+          <image src="/static/组 48.png" class="ment-image"></image>
+          <image src="/static/logo.png" class="identification"></image>
+        </view>
+        <view class="ai-tools-box" @click="$navigateTo('/pages/index/question')">
+          <view class="t-color-3D3D3D font-weight-bold t-size-36 ai-write">AI作文</view>
+          <view class="aparent">Aparentment</view>
+          <image src="/static/组 48.png" class="ment-image"></image>
+          <image src="/static/logo.png" class="identification"></image>
+        </view>
       </view>
-    </view>
 
-    <cy-grip :menuList="menuList"
-             @clickMenu="clickMenu"></cy-grip>
+    </view>
 
     <cy-tabbar :currentActive="0"></cy-tabbar>
-
   </view>
+
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        // 题目类型
-        questionTypeMenu: [
-          {title: '语法', isActive: true},
-          {title: '词汇', isActive: false},
-          {title: '句型', isActive: false},
-          {title: '作文', isActive: false},
-        ],
+export default {
 
-        // 菜单栏
-        menuList: [
-          {title: '基础语法', icon: 'home', path: ''},
-          {title: '高级语法', icon: 'course', path: ''},
-          {title: '基础短语', icon: 'exam', path: ''},
-          {title: '高级短语', icon: 'my', path: ''},
-        ],
+}
+</script>
+
+<style lang="scss">
+page {
+  background: #F5FBFD;
+}
+
+.check-teacher {
+  width: 240rpx;
+  height: 60rpx;
+  border-radius: 100rpx;
+  background: #D88422;
+  float: right;
+}
+
+.scene-box {
+  margin-top: 50rpx;
+  position: relative;
+  height: 450rpx;
+
+  .scene-content {
+    width: 100%;
+    height: 350rpx;
+    background: #DAE9FF;
+    position: absolute;
+    bottom: 0;
+    z-index: 2;
+    border-radius: 40rpx 40rpx 0 0;
+
+    .scene-img {
+      position: absolute;
+      z-index: 3;
+      margin-left: 30rpx;
+      width: 260rpx;
+      top: -100rpx;
+    }
+
+    .content-text {
+      width: 50%;
+      color: #022689;
+      float: right;
+
+      .say-hello {
+        width: 200rpx;
+        height: 50rpx;
+        border-radius: 100rpx;
+        background: #FFFFFF;
+        float: right;
       }
-    },
-    methods: {
-      clickQuestionType(item, clickIndex) {
-        this.questionTypeMenu.forEach((item, index) => {
-          item.isActive = clickIndex === index;
-        });
-      },
-      clickMenu(item, index) {
-        this.$navigateTo('/pages/index/questionDetail?title=' + item.title);
+    }
+
+    .content-bottom {
+      width: 100%;
+      height: 150rpx;
+      position: absolute;
+      bottom: 0;
+      z-index: 4;
+      background: linear-gradient(90deg, #C7CAFF 0%, #8FB8FF 100%);
+
+      .description {
+        height: 150rpx;
+        color: #022689;
+        box-sizing: border-box;
+        letter-spacing: 2rpx;
+      }
+
+      .start-btn {
+        width: 200rpx;
+        height: 80rpx;
+        border-radius: 100rpx;
+        background: linear-gradient(90deg, #6296F3 0%, #022689 97%);
       }
     }
   }
-</script>
+}
 
-<style>
-  page {
-    background: #F0FCFF;
-  }
-  .student-css {
-    width: 80rpx; height: 80rpx; border-radius: 50%;
-  }
-  .music-css {
-    width: 110rpx;
-    height: 46rpx;
-    border-radius: 8rpx;
-    background: #FF8817;
-    color: #fff;
-  }
-  .person-css {
-    width: 200rpx; height: 300rpx; border-radius: 50%;
-  }
-  .today-learning-box {
-    width: 690rpx;
-    height: 260rpx;
-    margin: 50rpx 30rpx 30rpx 30rpx;
-    background: #FFFFFF;
-    box-shadow: 0rpx 10rpx 20rpx 0rpx #BFBFBF;
-    border-radius: 20rpx;
-  }
 
-  .current-time {
-    font-size: 50rpx;
-    letter-spacing: 0em;
-    color: #3D3D3D;
-  }
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30rpx;
 
-  .progress-box {
-    width: 100%;
-    height: 12rpx;
-    background: #D8D8D8;
-    border-radius: 5rpx;
-  }
-
-  .progress-bar {
-    width: 80%;
-    height: 12rpx;
-    background: linear-gradient(270deg, #FF8A1D 0%, #FFFFFF 99%);
-    border-radius: 5rpx;
-  }
-
-  .english-teacher-box {
-  }
-  .word-box {
-  }
-  .english-teacher-box, .word-box {
-    height: 260rpx;
+  .share-box {
+    height: 120rpx;
     border-radius: 30rpx;
+    background: linear-gradient(270deg, rgba(225, 235, 254, 0.3) 0%, rgba(0, 93, 255, 0.3) 100%);
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.3);
+    color: #022689;
+
+    .share-img {
+      width: 80rpx;
+      height: 80rpx;
+    }
   }
 
+}
 
-  .querstion-type-box, .querstion-type-active-box {
-    width: 160rpx;
-    height: 60rpx;
-    border-radius: 30rpx;
+.ai-grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40rpx;
+
+  .ai-tools-box {
+    height: 300rpx;
+    border-radius: 50rpx;
+    overflow: hidden;
+    background: linear-gradient(180deg, #DAE8FF 0%, #FFFFFF 100%);
+    box-shadow: 0px 0px 10rpx 0px rgba(0, 0, 0, 0.3);
+    position: relative;
+
+    .ai-write {
+      position: absolute;
+      top: 30rpx;
+      left: 30rpx;
+    }
+
+    .aparent, .ment {
+      font-size: 20rpx;
+    }
+    .aparent {
+      position: absolute;
+      top: 80rpx;
+      left: 30rpx;
+    }
+
+    .ment-image {
+      position: absolute;
+      top: -10rpx;
+      right: -10rpx;
+      width: 150rpx;
+      height: 60rpx;
+      border-radius: 0 0 0 50rpx;
+      overflow: hidden;
+    }
+
+    .identification {
+      position: absolute;
+      width: 150rpx;
+      height: 150rpx;
+      bottom: 20rpx;
+      right: 20rpx;
+    }
   }
-  .querstion-type-box {
-    border: 1px solid #1863E5;
-    background: #ffffff;
-    color: #1863E5;
-  }
-  .querstion-type-active-box {
-    background: #1863E5;
-    color: #ffffff;
-  }
+}
+
+
 </style>

@@ -17,7 +17,6 @@
       @clickMenu="clickMenu"
       :menuList="menuList" :column="2" :boxHeight="300"></cy-grip>
 
-    <cy-tabbar :currentActive="1"></cy-tabbar>
   </view>
 </template>
 

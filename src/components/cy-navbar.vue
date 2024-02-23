@@ -41,6 +41,7 @@ export default {
       return `
       background: ${this.bgColor};
       position: fixed;
+      z-index: 999;
       top: 0;
       `
     },

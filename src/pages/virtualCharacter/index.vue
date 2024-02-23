@@ -126,7 +126,7 @@ export default {
           this.$navigateTo('/pages/virtualCharacter/sceneSwitch');
           break;
         case 1:
-          this.$navigateTo('/pages/virtualCharacter/appearanceSelection');
+          this.$navigateTo('/pages/common/appearanceSelection');
           break;
       }
     }

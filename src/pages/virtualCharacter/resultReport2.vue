@@ -5,7 +5,6 @@
     </cy-navbar>
 
     <view class="person-info-box">
-      <view class="radian"></view>
       <view class="ml-5 mr-5 mt-3 px-3 py-3 person-info">
         <view class="flex align-item-center">
           <view class="mr-4 avatar flex justify-content-center align-item-center">
@@ -58,43 +57,21 @@ export default {
 }
 </script>
 
-<style lang="scss" >
+<style lang="scss" scoped>
   page {
     background: #F5FBFD;
   }
 
   .person-info-box {
     width: 750rpx;
-    height: 450rpx;
-    background-color: #F5FBFD;
+    height: 400rpx;
+    opacity: 1;
+    background: linear-gradient(298deg, #DE8375 0%, #EEBDBD 24%, #93B5E8 74%, #4B7DEA 100%);
+    position: relative;
     overflow: hidden;
 
-    .radian {
-      position: relative;
-      height: 350rpx;
-    }
-
-    .radian::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0%;
-      width: 100%;
-      height: 100%;
-      border-radius: 0 0 45% 45%;
-      background: linear-gradient(298deg, #DE8375 0%, #EEBDBD 24%, #93B5E8 74%, #4B7DEA 100%);
-      z-index: 1;
-      transform: rotateY(40deg);
-      transform: scale(1.5);
-    }
-
     .person-info {
-      top: 200rpx;
-      left: -20rpx;
-      width: 690rpx;
-      position: absolute;
-      z-index: 2;
-      height: 400rpx;
+      height: 360rpx;
       border-radius: 30rpx;
       background: rgba(255, 255, 255, 0.5);
       box-sizing: border-box;

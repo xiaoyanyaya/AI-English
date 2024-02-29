@@ -62,7 +62,7 @@
         </view>
       </view>
 
-      <view class="generate-avatar-btn mt-10 flex align-item-center justify-content-center">
+      <view class="generate-avatar-btn mt-10 flex align-item-center justify-content-center" @click="generateBtn()">
         <text class="font-weight-bold t-size-32 t-color-fff">立即生成</text>
       </view>
     </view>
@@ -73,6 +73,7 @@
 export default {
   data() {
     return {
+      pageType: '',
       publicTemplateList: [
         {image: 'https://yuemei-image.oss-cn-beijing.aliyuncs.com/wxapp/icon/icon_avatar.png'},
         {image: 'https://yuemei-image.oss-cn-beijing.aliyuncs.com/wxapp/icon/icon_avatar.png'},
@@ -84,7 +85,17 @@ export default {
         {image: 'https://yuemei-image.oss-cn-beijing.aliyuncs.com/wxapp/icon/icon_avatar.png'},
       ]
     };
-  }
+  },
+  onLoad({type}) {
+    this.pageType = type;
+  },
+  methods: {
+    generateBtn() {
+      if (this.pageType === 'lecture') {
+        this.$navigateTo('/pages/index/generateResult');
+      }
+    }
+  },
 }
 </script>
 

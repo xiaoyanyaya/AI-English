@@ -1,6 +1,6 @@
 <template>
   <view class="pb-5">
-    <cy-navbar>
+    <cy-navbar show-back>
       <view class="t-size-30">生成结果</view>
     </cy-navbar>
 

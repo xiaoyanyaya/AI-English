@@ -22,10 +22,9 @@
 
       <view class="flex flex-wrap grid-container">
         <view class="grip-cell mt-2" v-for="(item, index) in gripCellList" :key="index">
-          <view class="mt-3 ml-3 font-weight-bold t-size-32">{{item.title}}</view>
-          <view class="mt-1 ml-3 t-size-30">{{item.subTitle}}</view>
+          <view class="mt-3 ml-3 font-weight-bold t-size-30">{{item.title}}</view>
+          <view class="mt-1 ml-3 t-size-26">{{item.subTitle}}</view>
           <view class="left-image">
-            <image :src="item.image" mode="widthFix"></image>
           </view>
           <view class="right-image">
             <image :src="item.image" mode="widthFix"></image>
@@ -37,7 +36,9 @@
 </template>
 
 <script>
+import MyMixin from "@/utils/MyMixin";
 export default {
+  mixins: [MyMixin],
   data() {
     return {
       currentOptions: 0,
@@ -53,37 +54,40 @@ export default {
         name: '自我发展',
       }],
 
-      gripCellList: [{
-        title: '最爱的电影',
-        subTitle: 'Favorite movies',
-        image: 'https://yuemei-image.oss-cn-beijing.aliyuncs.com/wxapp/icon/icon_avatar.png',
-      },{
-        title: '最爱的电影',
-        subTitle: 'Favorite movies',
-        image: 'https://yuemei-image.oss-cn-beijing.aliyuncs.com/wxapp/icon/icon_avatar.png',
-      },{
-        title: '最爱的电影',
-        subTitle: 'Favorite movies',
-        image: 'https://yuemei-image.oss-cn-beijing.aliyuncs.com/wxapp/icon/icon_avatar.png',
-      },{
-        title: '最爱的电影',
-        subTitle: 'Favorite movies',
-        image: 'https://yuemei-image.oss-cn-beijing.aliyuncs.com/wxapp/icon/icon_avatar.png',
-      },{
-        title: '最爱的电影',
-        subTitle: 'Favorite movies',
-        image: 'https://yuemei-image.oss-cn-beijing.aliyuncs.com/wxapp/icon/icon_avatar.png',
-      },{
-        title: '最爱的电影',
-        subTitle: 'Favorite movies',
-        image: 'https://yuemei-image.oss-cn-beijing.aliyuncs.com/wxapp/icon/icon_avatar.png',
-      }],
+      gripCellList: [],
     }
   },
   methods: {
     changeOptions(index) {
       this.currentOptions = index;
     }
+  },
+  onLoad() {
+    this.gripCellList = [{
+      title: '最爱的电影',
+      subTitle: 'Favorite movies',
+      image: `${this.imageBaseUrl}/img_35.png`,
+    },{
+      title: '艺术和博物馆',
+      subTitle: 'Art and museums',
+      image: `${this.imageBaseUrl}/img_36.png`,
+    },{
+      title: '书籍和文学',
+      subTitle: 'Books and litera...',
+      image: `${this.imageBaseUrl}/img_37.png`,
+    },{
+      title: '娱乐和媒体',
+      subTitle: 'Entertainment a...',
+      image: `${this.imageBaseUrl}/img_38.png`,
+    },{
+      title: '运动和锻炼',
+      subTitle: 'Sports and exer...',
+      image: `${this.imageBaseUrl}/img_39.png`,
+    },{
+      title: '最爱的电视...',
+      subTitle: 'Favorite TV shows',
+      image: `${this.imageBaseUrl}/img_40.png`,
+    }]
   },
 }
 </script>
@@ -98,6 +102,7 @@ export default {
   border-image: linear-gradient(180deg, #1863E5 0%, #E1EDFF 100%);
   box-sizing: border-box;
   padding: 35rpx;
+  overflow: hidden;
 
   .Scene {
     width: 215rpx;
@@ -121,11 +126,14 @@ export default {
     position: relative;
     overflow: hidden;
 
-    .left-image image {
+    .left-image  {
       position: absolute;
       left: -20rpx;
       bottom: -20rpx;
       width: 100rpx;
+      height: 100rpx;
+      border-radius: 50%;
+      background: linear-gradient(220deg, #CCDFFF 12%, rgba(204, 223, 255, 0) 74%);
     }
 
     .right-image image {

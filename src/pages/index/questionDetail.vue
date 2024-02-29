@@ -20,8 +20,6 @@
       <view class="t-color-3D3D3D t-size-30">发布时间</view>
       <view class="t-color-8A8A8A t-size-24 mt-2">2023年1月23日</view>
     </view>
-
-    <cy-tabbar :currentActive="0"></cy-tabbar>
   </view>
 </template>
 

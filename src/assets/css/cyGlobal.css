@@ -1,3 +1,7 @@
+.main-bg {
+    background-color: #F5FBFD;
+}
+
 /** [定位] 边距 */
 .ml-1 {
     margin-left: 10rpx;
@@ -278,9 +282,14 @@
 .t-color-fff {
     color: #ffffff;
 }
-
+.t-color-DC0C0C {
+    color: #DC0C0C;
+}
 .t-color-999 {
     color: #999999;
+}
+.t-color-2D6CDA {
+    color: #2D6CDA;
 }
 
 .t-color-666 {
@@ -297,6 +306,10 @@
 
 .t-color-f4c265 {
     color: #f4c265;
+}
+
+.t-color-BFBFBF {
+    color: #BFBFBF;
 }
 
 .t-color-3D3D3D {
@@ -339,11 +352,15 @@
 .t-size-28 {
     font-size: 28rpx;
 }
-
+.t-size-26 {
+    font-size: 26rpx;
+}
 .t-size-24 {
     font-size: 24rpx;
 }
-
+.t-size-22 {
+    font-size: 22rpx;
+}
 .t-size-20 {
     font-size: 20rpx;
 }

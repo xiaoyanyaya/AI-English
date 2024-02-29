@@ -1,9 +1,10 @@
 // MyMixin.js
-export const MyMixin = {
+export default {
 	data() {
 		return {
 			// 系统信息
 			systemInfo: {},
+			imageBaseUrl: "http://www.xliai.com/assets"
 		};
 	},
 	onLoad() {

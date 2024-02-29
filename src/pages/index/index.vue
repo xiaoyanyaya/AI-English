@@ -9,7 +9,7 @@
       <view class="scene-box">
         <view class="t-color-fff check-teacher mt-2 flex align-item-center justify-content-center">
           <view>换老师</view>
-          <view></view>
+          <view class="iconfont ml-2">&#xe652;</view>
         </view>
         <view class="scene-content">
           <view class="content-text mt-3 mr-2">
@@ -25,26 +25,28 @@
             <view class="flex justify-content-between align-item-center px-3">
               <view class="description flex flex-direction-column align-item-center justify-content-center">
                 <view class="font-weight-bold t-size-36">情景自由聊</view>
-                <view class="t-size-28">每天10分钟  进阶口语达人</view>
+                <view class="t-size-28">每天10分钟 进阶口语达人</view>
               </view>
-              <view class="start-btn t-color-fff t-size-28 flex align-item-center justify-content-center">
+              <view class="start-btn t-color-fff t-size-28 flex align-item-center justify-content-center"
+              @click="$navigateTo(`/pages/virtualCharacter/index`)">
                 <view>开始对练</view>
               </view>
             </view>
           </view>
-          <image src="/static/微信图片_20240223205459.jpg" mode="widthFix" class="scene-img"></image>
+          <image
+            :src="`${imageBaseUrl}/img_.png`" mode="widthFix" class="scene-img"></image>
 
         </view>
       </view>
 
-      <view class="grid-container mt-5">
+<!--      <view class="grid-container mt-5">
         <view class="share-box flex align-item-center justify-content-around">
           <view>
             <view class="font-weight-bold t-size-28">分享得会员</view>
             <view class="t-size-20 mt-1">年卡会员免费拿</view>
           </view>
           <view>
-            <image src="/static/logo.png" class="share-img"></image>
+            <image :src="`${imageBaseUrl}/xl-image-11.png`" class="share-img"></image>
           </view>
         </view>
 
@@ -54,35 +56,71 @@
             <view class="t-size-20 mt-1">年卡会员免费拿</view>
           </view>
           <view>
-            <image src="/static/logo.png" class="share-img"></image>
+            <image :src="`${imageBaseUrl}/img_3.png`" class="share-img"></image>
           </view>
         </view>
-      </view>
+      </view>-->
 
       <view class="ai-grid-container mt-5">
-        <view class="ai-tools-box">
-          <view class="t-color-3D3D3D font-weight-bold t-size-36 ai-write">AI作文</view>
+        <view class="ai-tools-box" @click="$navigateTo('/pages/composition/index')">
+          <view class="t-color-3D3D3D font-weight-bold t-size-30 ai-write">AI作文</view>
           <view class="aparent">Aparentment</view>
-          <image src="/static/组 48.png" class="ment-image"></image>
-          <image src="/static/logo.png" class="identification"></image>
+          <image :src="`${imageBaseUrl}/img_4.png`" class="ment-image"></image>
+          <image :src="`${imageBaseUrl}/img_5.png`" class="identification"></image>
         </view>
         <view class="ai-tools-box">
-          <view class="t-color-3D3D3D font-weight-bold t-size-36 ai-write">AI作文</view>
+          <view class="t-color-3D3D3D font-weight-bold t-size-30 ai-write">AI阅读</view>
           <view class="aparent">Aparentment</view>
-          <image src="/static/组 48.png" class="ment-image"></image>
-          <image src="/static/logo.png" class="identification"></image>
+          <image :src="`${imageBaseUrl}/img_4.png`" class="ment-image"></image>
+          <image :src="`${imageBaseUrl}/img_6.png`" class="identification"></image>
         </view>
         <view class="ai-tools-box">
-          <view class="t-color-3D3D3D font-weight-bold t-size-36 ai-write">AI作文</view>
+          <view class="t-color-3D3D3D font-weight-bold t-size-30 ai-write">AI学单词</view>
           <view class="aparent">Aparentment</view>
-          <image src="/static/组 48.png" class="ment-image"></image>
-          <image src="/static/logo.png" class="identification"></image>
+          <image :src="`${imageBaseUrl}/img_4.png`" class="ment-image"></image>
+          <image :src="`${imageBaseUrl}/img_7.png`" class="identification2"></image>
         </view>
-        <view class="ai-tools-box" @click="$navigateTo('/pages/index/question')">
-          <view class="t-color-3D3D3D font-weight-bold t-size-36 ai-write">AI作文</view>
-          <view class="aparent">Aparentment</view>
-          <image src="/static/组 48.png" class="ment-image"></image>
-          <image src="/static/logo.png" class="identification"></image>
+
+        <view class="ai-tools-box2 flex align-item-center border-box px-3"
+              @click="$navigateTo('/pages/index/question')">
+          <image :src="`${imageBaseUrl}/img_8.png`"></image>
+          <view class="ml-3">
+            <view class="title font-weight-bold">
+              <view>AI在线</view>
+              <view>英语老师</view>
+            </view>
+            <view class="subtitle mt-2">
+              <view>24小时在线</view>
+              <view>帮你解答</view>
+            </view>
+          </view>
+        </view>
+        <view class="ai-tools-box3 flex align-item-center border-box px-3"
+              @click="$navigateTo('')">
+          <image :src="`${imageBaseUrl}/img_9.png`"></image>
+          <view class="ml-3">
+            <view class="title font-weight-bold">
+              <view>AI在线</view>
+              <view>英语老师</view>
+            </view>
+            <view class="subtitle mt-2">
+              <view>24小时在线</view>
+              <view>帮你解答</view>
+            </view>
+          </view>
+        </view>
+        <view class="ai-tools-box4 flex align-item-center border-box px-3"
+              @click="$navigateTo('/pages/index/aiLecture')">
+          <image :src="`${imageBaseUrl}/img_10.png`"></image>
+          <view class="ml-3">
+            <view class="title font-weight-bold">
+              <view>AI演讲</view>
+            </view>
+            <view class="subtitle mt-2">
+              <view>好玩又有趣，</view>
+              <view>快来合成吧~</view>
+            </view>
+          </view>
         </view>
       </view>
 
@@ -94,8 +132,11 @@
 </template>
 
 <script>
-export default {
 
+import MyMixin from "@/utils/MyMixin";
+
+export default {
+  mixins: [MyMixin],
 }
 </script>
 
@@ -110,6 +151,11 @@ page {
   border-radius: 100rpx;
   background: #D88422;
   float: right;
+  font-size: 24rpx;
+
+  view:nth-child(2) {
+    font-size: 24rpx;
+  }
 }
 
 .scene-box {
@@ -216,6 +262,7 @@ page {
     .aparent, .ment {
       font-size: 20rpx;
     }
+
     .aparent {
       position: absolute;
       top: 80rpx;
@@ -226,9 +273,8 @@ page {
       position: absolute;
       top: -10rpx;
       right: -10rpx;
-      width: 150rpx;
-      height: 60rpx;
-      border-radius: 0 0 0 50rpx;
+      width: 134rpx;
+      height: 46rpx;
       overflow: hidden;
     }
 
@@ -239,6 +285,45 @@ page {
       bottom: 20rpx;
       right: 20rpx;
     }
+
+    .identification2 {
+      position: absolute;
+      width: 170rpx;
+      height: 100rpx;
+      bottom: 20rpx;
+      right: 20rpx;
+    }
+  }
+
+  .ai-tools-box2, .ai-tools-box3, .ai-tools-box4 {
+    height: 260rpx;
+    border-radius: 50rpx;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+
+    image {
+      width: 100rpx;
+      height: 100rpx;
+    }
+    .title {
+      color: #6B3400;
+      font-size: 26rpx;
+    }
+    .subtitle {
+      color: #6B3400;
+      font-size: 18rpx;
+    }
+  }
+  .ai-tools-box2 {
+    height: 300rpx;
+    background: #FFFFFF;
+  }
+  .ai-tools-box3 {
+    background: linear-gradient(125deg, #FFD07E 2%, #FEF6E8 39%, #EBFBF3 100%);
+  }
+  .ai-tools-box4 {
+    background: linear-gradient(128deg, #97CDFE 3%, #E8FEFC 35%, #FFF2F2 99%);
   }
 }
 

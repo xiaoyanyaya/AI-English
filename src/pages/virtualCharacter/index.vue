@@ -9,22 +9,24 @@
 
       <view class="options-btns flex flex-direction-column">
         <view v-for="(item, index) in optionsBtnsMenu" :key="index"
-          @click="$navigateTo(item.path)">
+              @click="$navigateTo(item.path)">
           <image :src="item.icon" mode="widthFix" class="options-btn-img"></image>
         </view>
       </view>
 
       <view class="select-btns flex flex-direction-column">
         <view v-for="(item, index) in selectBtnsMenu" :key="index"
-        @click="clickSelectBtnMenu(index)">
+              @click="clickSelectBtnMenu(index)">
           <view :class="index === 0 ? 'select-btn-box-first' : 'select-btn-box-last'"
-             class="flex align-item-center justify-content-center">
-            {{item.title}}
+                class="flex align-item-center justify-content-center">
+            <image :src="item.icon" mode="widthFix" class="mr-3"></image>
+            <view>{{ item.title }}</view>
           </view>
         </view>
       </view>
 
-      <view class="start-btn font-weight-bold t-size-40 flex justify-content-center align-item-center" @click="$navigateTo('/pages/virtualCharacter/dialogue')">
+      <view class="start-btn font-weight-bold t-size-40 flex justify-content-center align-item-center"
+            @click="$navigateTo('/pages/virtualCharacter/dialogue')">
         跟Jenny练口语
       </view>
 
@@ -54,16 +56,16 @@
         </view>
       </view>
     </view>
-
-    <cy-tabbar :currentActive="2"></cy-tabbar>
   </view>
 </template>
 
 <script>
 import cyNavbar from "@/components/cy-navbar.vue";
 import cyTabbar from "@/components/cy-tabbar.vue";
+import MyMixin from "@/utils/MyMixin";
 
 export default {
+  mixins: [MyMixin],
   components: {cyTabbar, cyNavbar},
   data() {
     return {
@@ -72,43 +74,48 @@ export default {
         navContentHeiht: 80,
         tabbarHeight: 110
       },
-      optionsBtnsMenu: [
-        {
-          title: '赢时长',
-          icon: 'https://img1.baidu.com/it/u=2460540779,99647303&fm=253&fmt=auto&app=138&f=PNG?w=500&h=500',
-          path: '/pages/virtualCharacter/duration'
-        },
-        {
-          title: '查看历史记录',
-          icon: 'https://img1.baidu.com/it/u=2460540779,99647303&fm=253&fmt=auto&app=138&f=PNG?w=500&h=500'
-        },
-        {
-          title: '查看历史记录',
-          icon: 'https://img1.baidu.com/it/u=2460540779,99647303&fm=253&fmt=auto&app=138&f=PNG?w=500&h=500'
-        }
-      ],
-      selectBtnsMenu: [
-        {
-          title: '场景切换',
-          icon: 'https://img1.baidu.com/it/u=2460540779,99647303&fm=253&fmt=auto&app=138&f=PNG?w=500&h=500'
-        },
-        {
-          title: '形象选择',
-          icon: 'https://img1.baidu.com/it/u=2460540779,99647303&fm=253&fmt=auto&app=138&f=PNG?w=500&h=500'
-        }
-      ],
+      optionsBtnsMenu: [],
+      selectBtnsMenu: [],
       isShowPopup: true
     }
   },
   onLoad() {
     this.getSystemInfo();
+    this.init();
   },
   computed: {
     contentBoxStyle() {
-      return `height: calc(100vh - ${this.otherHeight.statusBarHeight + this.otherHeight.navContentHeiht + this.otherHeight.tabbarHeight}px);`
+      return `height: calc(100vh - ${this.otherHeight.navContentHeiht + this.otherHeight.tabbarHeight - 30}px);`
     }
   },
   methods: {
+    init() {
+      this.optionsBtnsMenu = [
+        {
+          title: '赢时长',
+          icon: `${this.imageBaseUrl}/xl-image-45.png`,
+          path: '/pages/virtualCharacter/duration'
+        },
+        {
+          title: '查看历史记录',
+          icon: `${this.imageBaseUrl}/xl-image-8.png`,
+        },
+        {
+          title: '查看历史记录',
+          icon: `${this.imageBaseUrl}/xl-image-37.png`,
+        }
+      ],
+      this.selectBtnsMenu = [
+        {
+          title: '场景切换',
+          icon: `${this.imageBaseUrl}/xl-image-25.png`,
+        },
+        {
+          title: '形象选择',
+          icon: `${this.imageBaseUrl}/xl-image-27.png`,
+        }
+      ]
+    },
     getSystemInfo() {
       uni.getSystemInfo({
         success: (res) => {
@@ -135,102 +142,113 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .content-box {
-    width: 100vw;
-    overflow: hidden;
-    background-image: url('https://c-ssl.dtstatic.com/uploads/item/202003/31/20200331123100_nBc5m.thumb.1000_0.jpeg');
-    background-size: cover;
-    position: relative;
+.content-box {
+  overflow: hidden;
+  background-image: url('https://c-ssl.dtstatic.com/uploads/item/202003/31/20200331123100_nBc5m.thumb.1000_0.jpeg');
+  background-size: cover;
+  position: relative;
+}
+
+.options-btns {
+  position: absolute;
+  left: 50rpx;
+  top: 80rpx;
+}
+
+.options-btn-img {
+  width: 120rpx;
+  height: 120rpx;
+  margin-bottom: 50rpx;
+}
+
+.select-btns {
+  position: absolute;
+  right: 50rpx;
+  top: 700rpx;
+
+  image {
+    margin-top: 4rpx;
+    width: 30rpx;
+    height: 30rpx;
+  }
+}
+
+.select-btn-box-first, .select-btn-box-last {
+  width: 220rpx;
+  height: 84rpx;
+  border-radius: 15rpx;
+  box-sizing: border-box;
+  border: 1rpx solid #e5dcdc;
+  box-shadow: 0 4rpx 10rpx 0 rgba(0, 0, 0, 0.1);
+  color: #ffffff;
+}
+
+.select-btn-box-first {
+  background: linear-gradient(180deg, rgba(192, 119, 255, 1) 0%, rgba(126, 42, 210, 1) 100%);
+}
+
+.select-btn-box-last {
+  margin-top: 50rpx;
+  background: linear-gradient(180deg, rgba(255, 119, 214, 1) 0%, rgba(210, 42, 129, 1) 100%);
+}
+
+.start-btn {
+  position: absolute;
+  left: 102rpx;
+  bottom: 120rpx;
+  width: 546rpx;
+  height: 96rpx;
+  border-radius: 331rpx;
+  background: linear-gradient(270deg, #528EF8 3%, #002BA3 100%);
+  box-shadow: 0rpx 0rpx 5rpx 0rpx #0546B8;
+  color: #ffffff;
+}
+
+.notes-box {
+  position: absolute;
+  bottom: 20rpx;
+  width: 750rpx;
+  color: #002BA3;
+  font-size: 26rpx;
+  line-height: 40rpx;
+  font-weight: 500;
+}
+
+.mark-bg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 700rpx;
+  background: linear-gradient(180deg, rgba(232, 242, 255, 0) 0%, rgba(228, 240, 255, 0.77) 38%, #B8D8FF 66%);
+}
+
+.popup-mask {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.popup-content {
+  position: fixed;
+  width: 750rpx;
+  height: 600rpx;
+  bottom: 0;
+  border-top-left-radius: 30rpx;
+  border-top-right-radius: 30rpx;
+  background: #FFFFFF;
+  box-sizing: border-box;
+
+  .nav-icon-css {
+    font-size: 28rpx;
   }
 
-  .options-btns {
-    position: absolute;
-    left: 50rpx;
-    top: 80rpx;
-  }
-  .options-btn-img {
-    width: 120rpx; height: 120rpx;
-    margin-bottom: 50rpx;
-  }
-
-  .select-btns {
-    position: absolute;
-    right: 50rpx;
-    top: 700rpx;
-  }
-  .select-btn-box-first, .select-btn-box-last {
-    width: 220rpx;
-    height: 84rpx;
-    border-radius: 15rpx;
-    box-sizing: border-box;
-    border: 1rpx solid #e5dcdc;
-    box-shadow: 0 4rpx 10rpx 0 rgba(0,0,0,0.1);
-    color: #ffffff;
-  }
-  .select-btn-box-first {
-    background: linear-gradient(180deg, rgba(192,119,255,1) 0%, rgba(126,42,210,1) 100%);
-  }
-  .select-btn-box-last {
+  .desc-box {
     margin-top: 50rpx;
-    background: linear-gradient(180deg, rgba(255,119,214,1) 0%, rgba(210,42,129,1) 100%);
-  }
-
-  .start-btn {
-    position: absolute;
-    left: 102rpx;
-    top: 1050rpx;
-    width: 546rpx;
-    height: 96rpx;
-    border-radius: 331rpx;
-    background: linear-gradient(270deg, #528EF8 3%, #002BA3 100%);
-    box-shadow: 0rpx 0rpx 5rpx 0rpx #0546B8;
-    color: #ffffff;
-  }
-
-  .notes-box {
-    position: absolute;
-    bottom: 65rpx;
-    width: 750rpx;
-    color: #002BA3;
-    font-size: 26rpx;
     line-height: 40rpx;
-    font-weight: 500;
   }
-
-  .mark-bg {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 700rpx;
-    background: linear-gradient(180deg, rgba(232, 242, 255, 0) 0%, rgba(228, 240, 255, 0.77) 38%, #B8D8FF 66%);
-  }
-
-  .popup-mask {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.5);
-  }
-  .popup-content {
-    position: absolute;
-    width: 750rpx;
-    height: 600rpx;
-    bottom: 0;
-    border-top-left-radius: 30rpx;
-    border-top-right-radius: 30rpx;
-    background: #FFFFFF;
-    box-sizing: border-box;
-
-    .nav-icon-css {
-      font-size: 28rpx;
-    }
-
-    .desc-box {
-      margin-top: 50rpx;
-      line-height: 40rpx;
-    }
-  }
+}
 </style>

@@ -46,12 +46,16 @@
       </view>
     </view>
 
+    <view class="flex align-item-center justify-content-center">
+    </view>
+
   </view>
 </template>
 
 <script>
-
+import MyMixin from "@/utils/MyMixin";
 export default {
+  mixins: [MyMixin],
   data() {
     return {};
   }
@@ -65,13 +69,13 @@ export default {
 
   .person-info-box {
     width: 750rpx;
-    height: 450rpx;
+    height: 400rpx;
     background-color: #F5FBFD;
     overflow: hidden;
 
     .radian {
       position: relative;
-      height: 350rpx;
+      height: 300rpx;
     }
 
     .radian::after {
@@ -89,7 +93,7 @@ export default {
     }
 
     .person-info {
-      top: 200rpx;
+      top: 130rpx;
       left: -20rpx;
       width: 690rpx;
       position: absolute;

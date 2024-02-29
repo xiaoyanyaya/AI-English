@@ -5,10 +5,12 @@
       <view v-for="(item, index) in tabbarList" :key="index"
             @click="toPage(item, inedx)"
             class="flex flex-direction-column align-item-center">
-        <view class="iconfont"
-              :class="index === currentActive ? 'tabbar-box-color-active' : 'tabbar-box-color'"
-              style="font-size: 50rpx">{{item.icon}}</view>
-        <view class="t-size-28"
+        <image :src="index === currentActive ? `${imageBaseUrl}${item.activeImage}` : `${imageBaseUrl}${item.image}`" mode="widthFix"
+        :style="{
+          width: `${item.width}rpx`,
+          height: `${item.height}rpx`
+        }"></image>
+        <view class="t-size-24 mt-1"
               :class="index === currentActive ? 'tabbar-box-color-active' : 'tabbar-box-color'"
         >{{item.title}}</view>
       </view>
@@ -17,14 +19,19 @@
 </template>
 
 <script>
+
+import MyMixin from "@/utils/MyMixin";
 export default {
+  mixins: [MyMixin],
   data() {
     return {
       tabbarList: [
-        {title: '首页', icon: '\ue731', path: '/pages/index/index'},
-        {title: 'AI作文', icon: '\ue61d', path: ''},
-        {title: '虚拟人对练', icon: '\ue606', path: '/pages/virtualCharacter/index'},
-        {title: 'AI演讲', icon: '\uee19', path: ''},
+        {title: '首页', icon: '\ue731',
+          width: 50, height: 50,
+          image: '/icon_4.png', activeImage: '/icon_2.png', path: '/pages/index/index'},
+        {title: '会员中心', icon: '\uee19',
+          width: 40, height: 40,
+          image: '/icon_3.png', activeImage: '/icon_5.png', path: '/pages/me/index'},
       ]
     }
   },
@@ -37,7 +44,9 @@ export default {
   methods: {
     toPage(item, index) {
       if (index === this.currentActive) return;
-      this.$navigateTo(item.path);
+      uni.reLaunch({
+        url: item.path
+      });
     }
   },
 }
@@ -59,9 +68,9 @@ export default {
 }
 
 .tabbar-box-color-active {
-  color: #1863E5;
+  color: #3D3D3D;
 }
 .tabbar-box-color {
-  color: #97BDFF;
+  color: #BFBFBF;
 }
 </style>

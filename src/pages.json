@@ -40,6 +40,33 @@
     },
     {
       "path": "pages/virtualCharacter/resultReport"
+    },
+    {
+      "path": "pages/composition/index"
+    },
+    {
+      "path": "pages/composition/englishLibrary"
+    },
+    {
+      "path": "pages/composition/titleSubject"
+    },
+    {
+      "path": "pages/me/index"
+    },
+    {
+      "path": "pages/me/personInfo"
+    },
+    {
+      "path": "pages/me/updateInfo"
+    },
+    {
+      "path": "pages/me/selectGrade"
+    },
+    {
+      "path": "pages/me/selectInterest"
+    },
+    {
+      "path": "pages/me/userCenter"
     }
   ],
   "globalStyle": {

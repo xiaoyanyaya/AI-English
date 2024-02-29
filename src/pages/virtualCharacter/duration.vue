@@ -16,7 +16,17 @@
       </view>
 
       <view class="content-box">
-
+        <image :src="`${imageBaseUrl}/xl-image-53.png`" mode="widthFix" class="image1"/>
+        <image :src="`${imageBaseUrl}/xl-image-18.png`" mode="widthFix" class="image2"/>
+        <view class="content1 flex align-item-center">
+          <image :src="`${imageBaseUrl}/img_31.png`" mode="widthFix" class="image3"/>
+          <text class="t-size-24 ml-3 mt-1">每邀请一名好友+10分钟自由对话</text>
+        </view>
+        <view class="content2 flex align-item-center">
+          <image :src="`${imageBaseUrl}/img_32.png`" mode="widthFix" class="image4"/>
+          <text class="t-size-24 ml-3 mt-1">已邀请人数</text>
+          <text class="t-size-30 ml-3 mt-1">0</text>
+        </view>
       </view>
 
       <view class="procedure-box">
@@ -79,14 +89,15 @@
 
 <script>
 import cyNavbar from "@/components/cy-navbar.vue";
-
+import MyMixin from "@/utils/MyMixin";
 export default {
+  mixins: [MyMixin],
   components: {cyNavbar}
 
 }
 </script>
 
-<style>
+<style lang="scss">
 page {
   background: #F0FCFF;
 }
@@ -101,15 +112,48 @@ page {
 }
 
 .content-box {
+  padding: 0 !important;
   width: 670rpx;
   margin-top: 40rpx;
   height: 400rpx;
   border-radius: 30rpx;
-  opacity: 0.7;
-
-  background: linear-gradient(116deg, #0041F6 0%, #B7D2FF 114%);
-
+  background: linear-gradient(116deg, rgba(0, 65, 246, 0.7) 0%, rgba(183, 210, 255, 0.7) 114%);
   box-shadow: 0rpx 4rpx 10rpx 0rpx rgba(0, 0, 0, 0.3);
+  position: relative;
+  color: #FFFFFF;
+
+  .image1 {
+    position: absolute;
+    top: -40rpx;
+    left: -20rpx;
+    width: 320rpx;
+  }
+  .image2 {
+    position: absolute;
+    top: -110rpx;
+    right: 20rpx;
+    width: 220rpx;
+  }
+
+  .content1 {
+    position: absolute;
+    bottom: 150rpx;
+    left: 100rpx;
+    .image3 {
+      width: 60rpx;
+      height: 60rpx;
+    }
+  }
+
+  .content2 {
+    position: absolute;
+    bottom: 50rpx;
+    left: 104rpx;
+    .image4 {
+      width: 60rpx;
+      height: 60rpx;
+    }
+  }
 }
 
 .procedure-box {

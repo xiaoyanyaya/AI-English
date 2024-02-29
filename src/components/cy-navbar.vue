@@ -5,7 +5,7 @@
       <view class="nav-content" :style="navContentStyle">
         <view class="nav-icon ml-1 flex align-item-center">
           <span v-show="showBack" @click="returnPageNum(1)" class="iconfont nav-icon-css">&#xe837;</span>
-          <image v-show="showBack" src="/static/logo.png" class="avatar-css"></image>
+<!--          <image v-show="showBack" src="/static/logo.png" class="avatar-css"></image>-->
         </view>
         <view class="nav-slot mr-1">
           <slot></slot>
@@ -95,7 +95,9 @@ export default {
 }
 
 .nav-icon {
-  width: 33.3%;
+  width: 20%;
+  box-sizing: border-box;
+  padding-left: 10rpx;
 }
 
 .nav-icon-css {
@@ -103,12 +105,12 @@ export default {
 }
 
 .nav-slot {
-  width: 33.3%;
+  width: 60%;
   text-align: center;
 }
 
 .nav-btn {
-  width: 33.3%;
+  width: 20%;
 }
 
 .nav-icon, .nav-slot, .nav-btn {

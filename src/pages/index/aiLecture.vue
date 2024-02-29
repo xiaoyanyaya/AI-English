@@ -1,6 +1,6 @@
 <template>
   <view class="pb-5">
-    <cy-navbar>
+    <cy-navbar showBack>
       <view class="t-size-30">AI演讲</view>
     </cy-navbar>
 
@@ -46,7 +46,7 @@
         </view>
       </view>
 
-      <view class="continue-btn mt-10 flex align-item-center justify-content-center">
+      <view class="continue-btn mt-10 flex align-item-center justify-content-center"  @click="$navigateTo('/pages/common/appearanceSelection?type=lecture')">
         <text class="font-weight-bold t-size-32 t-color-fff">继续</text>
       </view>
     </view>

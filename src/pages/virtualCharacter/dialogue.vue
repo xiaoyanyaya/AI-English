@@ -132,7 +132,7 @@ export default {
 
 .translate-btn {
   position: absolute;
-  top: 630rpx;
+  top: 560rpx;
 }
 .translate-btn image {
   width: 70rpx;
@@ -145,7 +145,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  top: 700rpx;
+  top: 630rpx;
   background: linear-gradient(180deg, rgba(232, 242, 255, 0) 0%, rgba(228, 240, 255, 0.77) 38%, #B8D8FF 66%);
 }
 .self-icon, .no-self-icon {
@@ -164,7 +164,7 @@ export default {
 
 .options-btns-box {
   position: absolute;
-  bottom: 100rpx;
+  bottom: 50rpx;
   width: 670rpx;
   left: 45rpx;
   height: 110rpx;

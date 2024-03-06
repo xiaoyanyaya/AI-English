@@ -8,8 +8,11 @@
       <view class="mark-bg"></view>
 
       <view class="options-btns flex flex-direction-column">
-        <view v-for="(item, index) in optionsBtnsMenu" :key="index"
+        <view v-for="(item, index) in optionsBtnsMenu" :key="index" class="options-item"
               @click="$navigateTo(item.path)">
+          <view class="item-title t-size-24 flex align-item-center justify-content-center"
+            :style="{width: `${item.width}rpx`, right: `${item.right}rpx`}"
+          >{{item.title}}</view>
           <image :src="item.icon" mode="widthFix" class="options-btn-img"></image>
         </view>
       </view>
@@ -76,7 +79,7 @@ export default {
       },
       optionsBtnsMenu: [],
       selectBtnsMenu: [],
-      isShowPopup: true
+      isShowPopup: false
     }
   },
   onLoad() {
@@ -93,15 +96,22 @@ export default {
       this.optionsBtnsMenu = [
         {
           title: '赢时长',
+          width: 120,
+          right: -80,
           icon: `${this.imageBaseUrl}/xl-image-45.png`,
           path: '/pages/virtualCharacter/duration'
         },
         {
-          title: '查看历史记录',
+          title: '查看测评报告历史',
+          width: 220,
+          right: -180,
           icon: `${this.imageBaseUrl}/xl-image-8.png`,
+          path: '/pages/virtualCharacter/dialogueHistory'
         },
         {
-          title: '查看历史记录',
+          title: '使用视频',
+          width: 140,
+          right: -100,
           icon: `${this.imageBaseUrl}/xl-image-37.png`,
         }
       ],
@@ -153,12 +163,30 @@ export default {
   position: absolute;
   left: 50rpx;
   top: 80rpx;
+
+  .options-item {
+    position: relative;
+
+    .item-title {
+      position: absolute;
+      top: -20rpx;
+      height: 52rpx;
+      border-radius: 204rpx;
+      background: #FFFFFF;
+      box-sizing: border-box;
+      color: #2A67D2;
+      z-index: 1;
+      border: 0.1rpx solid #2A67D2;
+    }
+  }
 }
 
 .options-btn-img {
   width: 120rpx;
   height: 120rpx;
   margin-bottom: 50rpx;
+  z-index: 2;
+  position: relative;
 }
 
 .select-btns {

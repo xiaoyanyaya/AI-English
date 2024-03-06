@@ -67,6 +67,15 @@
     },
     {
       "path": "pages/me/userCenter"
+    },
+    {
+      "path": "pages/me/setting"
+    },
+    {
+      "path": "pages/me/cardConversion"
+    },
+    {
+      "path": "pages/me/distribution"
     }
   ],
   "globalStyle": {

@@ -1,307 +1,180 @@
 <template>
-  <view class="pb-5 main-bg">
-    <cy-navbar showBack>
-      <view class="t-size-30">{{ pageTitle }}</view>
-    </cy-navbar>
-
-    <view class="px-4">
-      <view v-if="pageIndex<3"
-            class="mt-4 desc-box flex align-item-center justify-content-between pr-1 border-box t-size-26">
-        <view v-for="(item, index) in descData" :key="index" class="ml-2">
-          <text class="t-color-3D3D3D">{{ item.title }}:</text>
-          <text class="t-color-8A8A8A" style="margin-left: 10rpx;">{{ item.value }}</text>
-        </view>
-      </view>
-      <view v-if="pageIndex==3">
-        <view class="flex mt-4">
-          <view class="grade flex align-item-center border-box px-1 justify-content-around mr-3"
-                @click="selectContent[0].show = true">
-            <text class="t-size-24 t-color-8A8A8A">{{ selectContent[0].value }}</text>
-            <u-icon name="arrow-down" color="#8A8A8A" size="28"></u-icon>
-          </view>
-
-          <view class="grade flex align-item-center border-box px-1 justify-content-around"
-                @click="selectContent[1].show = true">
-            <text class="t-size-24 t-color-8A8A8A">{{ selectContent[1].value }}</text>
-            <u-icon name="arrow-down" color="#8A8A8A" size="28"></u-icon>
-          </view>
-
-          <u-picker mode="selector" v-model="selectContent[0].show"
-                    @confirm="selectConfirm($event, 0)"
-                    :title="selectContent[0].title"
-                    :default-selector="[selectContent[0].index]" :range="selectContent[0].content"></u-picker>
-
-          <u-picker mode="selector" v-model="selectContent[1].show"
-                    @confirm="selectConfirm($event, 1)"
-                    :title="selectContent[1].title"
-                    :default-selector="[selectContent[1].index]" :range="selectContent[1].content"></u-picker>
-        </view>
-
-        <view class="generate-title mt-2 flex border-box pl-1">
-          <view style="width: 70%">
-            <u-input placeholder="请输入题目关键词" :border="false"/>
-          </view>
-          <view style="width: 30%" class="generate-title-btn flex align-item-center justify-content-center">
-            <text class="">生成题目</text>
-          </view>
-        </view>
-      </view>
-
-      <view class="mt-5 font-weight-bold t-size-36 flex align-item-center">
-        <view class="font-weight-bold t-size-36">
-          作文题目
-        </view>
-<!--        <view v-if="pageIndex==3" class="flex align-item-center">
-          <view class="iconfont t-color-1863E5 essay-title-icon">&#xe63e;</view>
-          <view class="iconfont t-color-1863E5 essay-title-icon">&#xe63e;</view>
-          <view class="iconfont t-color-1863E5 essay-title-icon">&#xe63e;</view>
-        </view>-->
-      </view>
-      <view class="ai-title-box mt-2">
-        <u-input v-model="essayData.title"
-                 placeholder="请输入作文题目"
-                 :type="'textarea'" :border="false"
-                 :height="500" :auto-height="false"/>
-      </view>
-
-      <view class="mt-5 font-weight-bold t-size-36 flex align-item-center justify-content-between">
-        <view class="flex">
-          <view class="font-weight-bold t-size-36">
-            {{ pageIndex==5 ? 'AI作文范文' : '作文内容' }}
-          </view>
-          <view v-if="pageIndex<4" class="flex align-item-center">
-            <view class="iconfont t-color-1863E5 essay-title-icon">&#xe63e;</view>
-            <view class="iconfont t-color-1863E5 essay-title-icon">&#xe63e;</view>
-            <view class="iconfont t-color-1863E5 essay-title-icon">&#xe63e;</view>
-          </view>
-        </view>
-        <view class="t-color-8A8A8A t-size-24">
-          已输入20个单词
-        </view>
-      </view>
-      <view class="ai-title-box mt-2">
-        <u-input v-model="essayData.title"
-                 placeholder="请输入/拍照/导入/粘贴作文内容"
-                 :type="'textarea'" :border="false"
-                 :height="500" :auto-height="false"/>
-      </view>
-
-      <view v-if="pageIndex > 3">
-        <view class="mt-5 font-weight-bold t-size-36 flex align-item-center">
-          <view class="font-weight-bold t-size-36">
-            {{ pageIndex==5 ? 'AI作文评审' : 'AI作文批改' }}
-          </view>
-          <view v-if="pageIndex==6" class="flex align-item-center">
-            <view class="iconfont t-color-1863E5 essay-title-icon">&#xe63e;</view>
-            <view class="iconfont t-color-1863E5 essay-title-icon">&#xe63e;</view>
-            <view class="iconfont t-color-1863E5 essay-title-icon">&#xe63e;</view>
-          </view>
-        </view>
-        <view class="ai-review-box mt-2">
-          <u-input v-model="essayData.title"
-                   placeholder="请输入作文题目"
-                   :type="'textarea'" :border="false"
-                   :height="700" :auto-height="false"/>
-        </view>
-      </view>
-
-      <view class="btns-box flex justify-content-around mt-5" v-if="pageIndex<4">
-        <view class="ai-item-1 flex align-item-center justify-content-center" @click="toPage(4)">
-          AI作文批改
-        </view>
-        <view class="ai-item-2 flex align-item-center justify-content-center" @click="toPage(4)">
-          AI作文帮写
-        </view>
-      </view>
-      <view class="collect-btn mt-5 flex align-item-center justify-content-center" v-if="pageIndex>3">
-        <text class="t-color-fff">收藏</text>
-      </view>
-    </view>
+  <view>
 
   </view>
 </template>
 
 <script>
+import {apiDomain} from '@/configs/env';
+import {
+  getCompositionDictList,
+  addCompositionCollect,
+  addCompositionExercise,
+  getAIGCComposition,
+  getAIGCCorrection,
+  getAIGCComment,
+  getAIGCWrite,
+  getPhotoRecognition
+} from '@/api/composition';
+
 export default {
-  data() {
-    return {
-      pageIndex: 0,
-      pageTitle: 'AI英语中考作文-作文题目',
-      descData: [],
-
-      selectContent: [{
-        title: '年级',
-        content: ['一年级', '二年级', '三年级'],
-        show: false,
-        value: '一年级',
-        index: 0,
-      }, {
-        title: '字数',
-        content: ['100字', '200字', '300字'],
-        show: false,
-        value: '100字',
-        index: 0,
-      }],
-
-      // 作文
-      essayData: {
-        title: '',
-        content: ''
-      }
-    };
-  },
-  onLoad({index}) {
-    this.pageIndex = index;
-    if (index == 0 || index == 1) {
-      this.pageTitle = 'AI英语中考作文-作文题目';
-      this.descData = [{
-        title: '年份',
-        value: '2023年'
-      }, {
-        title: '年级',
-        value: '初三'
-      }, {
-        title: '省份',
-        value: '广东省'
-      }, {
-        title: '城市',
-        value: '中山市'
-      }]
-      if (index == 0) {
-        this.pageTitle = 'AI英语中考作文-作文题目';
-      } else if (index == 1) {
-        this.pageTitle = 'AI英语高考作文-作文题目';
-      }
-    } else if (index == 2) {
-      this.pageTitle = 'AI英语教材作文-作文题目';
-      this.descData = [{
-        title: '年份',
-        value: '2023年'
-      }, {
-        title: '年级',
-        value: '初三'
-      }, {
-        title: '出版社',
-        value: '人教社'
-      }]
-    } else if (index == 3) {
-      this.pageTitle = 'AI英语作文训练-作文题目';
-    } else if (index == 4) {
-      this.pageTitle = 'AI英语作文-AI作文批改';
-    } else if (index == 5) {
-      this.pageTitle = 'AI英语作文-AI作文帮写';
-    }
+  onLoad() {
+    this.testRequestTask()
   },
   methods: {
-    toPage(index) {
-      this.$navigateTo(`/pages/composition/titleSubject?index=${index}`);
+    getAIGCComposition: async () => {
+      let params = {
+        info_keyword: "四级,英语",
+        info_word_nums: 200,
+        info_grade: "七年级"
+      }
+      var data = await getAIGCComposition(params);
+      console.log(data)
     },
-    clickSelect(index) {
-      this.selectContent.forEach((item, i) => {
-        if (i !== index) {
-          item.show = false;
-        }
+    getCompositionDictList: async () => {
+      /**
+       * 1、年级列表：dictCode='grade'
+       * 2、作文分类：dictCode='composition_type'，当前返回五个下拉选项。
+       * 3、作文分类-作文训练页面下拉框：dictCode='composition_type_select_component'，当前返回四个下拉选项。
+       * 4、作文内容来源：dictCode='composition_text_source'
+       * 5、是否有效状态：dictCode='status'
+       */
+      let params = {
+        type: "grade"
+      }
+      let data = await getCompositionDictList(params);
+      console.log(data)
+    },
+    addCompositionCollect: async () => {
+      let params = {
+        "compositionTitleId": "string",
+        "compositionTitleText": "string",
+        "compositionTitleImage": "string",
+        "compositionType": "string",
+        "compositionText": "string",
+        "compositionCorrect": "string",
+        "compositionTextSource": "string"
+      }
+      let data = await addCompositionCollect(params);
+      console.log(data)
+    },
+    addCompositionExercise: async () => {
+      let params = {
+        "id": "string",
+        "compositionTitleText": "string",
+        "compositionTitleImage": "string",
+        "compositionType": "string",
+        "compositionText": "string",
+        "compositionCorrect": "string",
+        "titleImageOcrId": "string",
+        "infoGrade": "string",
+        "infoWordNums": "string",
+        "infoKeyword": "string",
+        "status": 0,
+        "note": "string"
+      }
+      let data = await addCompositionExercise(params);
+      console.log(data)
+    },
+    getAIGCCorrection: async () => {
+      let params = {
+        "composition_title_text": "string",
+        "composition_title_image": "string",
+        "composition_text": "string"
+      }
+      let data = await getAIGCCorrection(params);
+      console.log(data)
+    },
+    getAIGCComment: async () => {
+      let params = {
+        "composition_title_text": "string",
+        "composition_title_image": "string",
+        "composition_text": "string"
+      }
+      let data = await getAIGCComment(params);
+      console.log(data)
+    },
+    getAIGCWrite: async () => {
+      let params = {
+        "composition_title_text": "string",
+        "composition_title_image": "string",
+        "info_grade": "string"
+      }
+      let data = await getAIGCWrite(params);
+      console.log(data)
+    },
+    getPhotoRecognition: async () => {
+      let params = {
+        "image_info": "string"
+      }
+      let data = await getPhotoRecognition(params);
+      console.log(data)
+    },
+    testRequestTask() {
+      const requestTask = uni.request({
+        url: `${apiDomain}composition/aigc/title`,
+        timeout: 15000,
+        responseType: 'text',
+        method: 'POST',
+        enableChunked: true,  //配置这里
+        data: {
+          info_keyword: "四级,英语",
+          info_word_nums: 200,
+          info_grade: "七年级"
+        },
+        header: {
+          'X-Access-Token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MDk3NDIyNDUsInVzZXJuYW1lIjoiYWRtaW4ifQ.037WbDif1XuGvXAzZA8QtJpxFm346_5ItFRotjpG2wI'
+        },
+        success: response => {
+          console.log("response", response)
+        },
+        fail: error => {}
+      })
+      requestTask.onHeadersReceived(function(res) {
+        console.log("onHeadersReceived", res);
       });
-      this.selectContent[index].show = true;
+      // 这里监听消息
+      requestTask.onChunkReceived((res) => {
+        let decoder = new TextDecoder('utf-8');
+        let text = decoder.decode(new Uint8Array(res.data));
+        console.log("onChunkReceived", text)
+      })
     },
-    selectConfirm(e, index) {
-      this.selectContent[index].value = this.selectContent[index].content[e[0]];
-      this.selectContent[index].index = e[0];
+    testAxios() {
+      const requestTask = uni.request({
+        url: `${apiDomain}composition/aigc/title`,
+        timeout: 15000,
+        responseType: 'text',
+        method: 'post',
+        header: {
+          'X-Access-Token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MDk2OTM1NzMsInVzZXJuYW1lIjoiYWRtaW4ifQ.cLZl2fjvY9URbLitxFSls_o2v5YOZpDcch6-t1I2I8E'
+        },
+        enableChunked: true,  //配置这里
+        data: {
+          info_keyword: "四级,英语",
+          info_word_nums: 200,
+          info_grade: "七年级"
+        },
+        success: response => {
+          console.log(response)
+        },
+        fail: error => {
+        }
+      })
+      requestTask.onHeadersReceived(function (res) {
+        console.log(res.header);
+      });
+      requestTask.onChunkReceived(function(res) {
+        const uint8Array = new Uint8Array(res.data);
+        let text = String.fromCharCode.apply(null, uint8Array);
+        text = decodeURIComponent(escape(text));
+        console.log(text);
+      })
     },
   },
 }
 </script>
 
-<style lang="scss">
-.desc-box {
-  height: 80rpx;
-  border-radius: 30rpx;
-  background: #FFFFFF;
-  box-sizing: border-box;
-  border: 2px solid #E6EFFF;
-}
+<style lang="scss" scoped>
 
-.grade {
-  width: 150rpx;
-  height: 70rpx;
-  border-radius: 10rpx;
-  background: #FFFFFF;
-  box-sizing: border-box;
-  border: 2rpx solid #AAC9FF;
-}
-
-.select-subject-btn {
-  margin-top: 20rpx;
-  width: 270rpx;
-  height: 70rpx;
-  border-radius: 20rpx;
-  background: linear-gradient(180deg, #7FADFF 0%, #1863E5 100%);
-  box-sizing: border-box;
-  border: 1rpx solid #AAC9FF;
-}
-
-.ai-title-box, .ai-review-box {
-  border-radius: 10rpx;
-  background: #FFFFFF;
-  box-sizing: border-box;
-  border: 1rpx solid #8A8A8A;
-  box-sizing: border-box;
-  padding: 20rpx;
-}
-.ai-title-box {
-  height: 500rpx;
-}
-.ai-review-box {
-  height: 750rpx;
-}
-
-.essay-title-icon {
-  font-size: 40rpx;
-  margin-top: 6rpx;
-  margin-left: 30rpx;
-}
-
-.btns-box {
-
-  .ai-item-1, .ai-item-2 {
-    width: 320rpx;
-    height: 80rpx;
-    border-radius: 50rpx;
-    opacity: 1;
-    box-sizing: border-box;
-    color: #FFFFFF;
-  }
-
-  .ai-item-1 {
-    background: linear-gradient(180deg, #7EEA5A 0%, #3C9B05 100%);
-    border: 2px solid #3C9B05;
-  }
-
-  .ai-item-2 {
-    background: linear-gradient(180deg, #FCBC9A 0%, #EA7902 100%);
-    border: 2px solid #B66107;
-  }
-}
-
-.generate-title {
-  height: 70rpx;
-  border-radius: 16rpx;
-  background: #FFFFFF;
-  box-sizing: border-box;
-  border: 2rpx solid #AAC9FF;
-  overflow: hidden;
-
-  .generate-title-btn {
-    background: #2A67D2;
-    color: #FFFFFF;
-  }
-}
-
-.collect-btn {
-  height: 80rpx;
-  border-radius: 50rpx;
-  background: #FFA646;
-  box-sizing: border-box;
-  border: 1px solid #B94700;
-}
 </style>

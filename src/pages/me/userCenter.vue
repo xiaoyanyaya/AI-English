@@ -13,6 +13,8 @@
 
         <view class="package-grade">
           <view class="package-item mt-4 flex flex-direction-column align-item-center"
+                :class="{ active: item.isActive }"
+                @click="selectPackage(index)"
                 v-for="(item, index) in packageList" :key="index">
             <view class="mt-2">{{ item.name }}</view>
             <view class="price mt-2">
@@ -64,7 +66,8 @@
         </view>
       </view>
 
-      <view class="pay-way mt-5 px-5 pt-5 pb-5 flex align-item-center justify-content-between">
+      <view @click="showPayWay = true"
+        class="pay-way mt-5 px-5 pt-5 pb-5 flex align-item-center justify-content-between">
         <view class="t-color-3D3D3D">支付方式</view>
         <view class="flex align-item-center">
           <view class="t-color-8A8A8A">请选择</view>
@@ -101,6 +104,28 @@
         </view>
       </view>
     </view>
+
+    <u-popup v-model="showPayWay" mode="bottom">
+      <view class="pay-way-box">
+        <view class="px-4 pt-3 pb-3 flex align-item-center title">
+          <u-icon name="arrow-left" color="iconcss" size="28"
+          @click="showPayWay = false"></u-icon>
+          <view class="ml-5">选择支付方式</view>
+        </view>
+        <view style="height: 110rpx"></view>
+        <view v-for="(item, index) in payWayList" :key="index"
+        class="flex align-item-center item-box">
+          <view>
+            <image :src="`${imageBaseUrl}${item.image}`" mode="widthFix"></image>
+          </view>
+          <view class="flex align-item-center ml-3 item-title">
+            <view>{{item.title}}</view>
+            <view class="ml-2" v-if="item.isRecommend">推荐</view>
+          </view>
+        </view>
+
+      </view>
+    </u-popup>
   </view>
 </template>
 
@@ -119,7 +144,8 @@ export default {
           price: 488,
           oriPrice: 776,
           timeDesc: '不限时长',
-          desc: '直降288元'
+          desc: '直降288元',
+          isActive: true
         },
         {
           id: 2,
@@ -127,7 +153,8 @@ export default {
           price: 288,
           oriPrice: 388,
           timeDesc: '不限时长',
-          desc: '直降100元'
+          desc: '直降100元',
+          isActive: false
         },
         {
           id: 3,
@@ -135,7 +162,8 @@ export default {
           price: 98,
           oriPrice: '',
           timeDesc: '不限时长',
-          desc: '直降30元'
+          desc: '直降30元',
+          isActive: false
         }
       ],
       descMenu: [{
@@ -144,9 +172,26 @@ export default {
         title: '大胆开口说，AI外教帮你矫正'
       }, {
         title: '练口语不再枯燥，海量趣味话题'
-      }]
+      }],
+      payWayList: [{
+        title: '支付宝',
+        image: '/alipay.png',
+        isRecommend: true
+      }, {
+        title: '微信支付',
+        image: '/wechatpay.png',
+        isRecommend: false
+      }],
+      showPayWay: false
     };
-  }
+  },
+  methods: {
+    selectPackage(index) {
+      this.packageList.forEach((item, i) => {
+        item.isActive = i === index;
+      });
+    }
+  },
 }
 </script>
 
@@ -180,6 +225,11 @@ page {
       border: 2rpx solid #BFBFBF;
       position: relative;
 
+      &.active {
+        border: 2rpx solid #FFC187;
+        background: #FFF1E5;
+      }
+
       .price {
         color: #DC0C0C;
 
@@ -202,7 +252,7 @@ page {
       .time-box {
         width: 137rpx;
         height: 34rpx;
-        border-radius: 5rpx;
+        border-radius: 10rpx;
         background: #FCDBB9;
         position: absolute;
         bottom: 20rpx;
@@ -283,6 +333,47 @@ page {
     border-radius: 348rpx;
     opacity: 1;
     background: #2D6CDA;
+  }
+}
+
+.pay-way-box {
+  background: #FFFFFF;
+  height: 500rpx;
+
+  .title {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: #FFFFFF;
+    border-bottom: 1px solid #D8D8D8;
+  }
+
+  .iconcss {
+    margin-top: 2rpx;
+  }
+
+  .item-box {
+    image {
+      width: 80rpx;
+      height: 80rpx;
+      margin-left: 50rpx;
+    }
+
+    .item-title {
+      flex: 1;
+      font-size: 26rpx;
+      color: #3D3D3D;
+      padding-bottom: 50rpx;
+      margin-top: 50rpx;
+      border-bottom: 1px solid #D8D8D8;
+
+      view:nth-child(2) {
+        color: #FFFFFF;
+        background: #FF8817;
+        font-size: 16rpx;
+        padding: 2rpx 10rpx;
+      }
+    }
   }
 }
 </style>

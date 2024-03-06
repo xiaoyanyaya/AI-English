@@ -25,7 +25,7 @@
         </view>
 
         <view class="options-btns-box flex align-item-center justify-content-around">
-          <view v-for="(item, index) in optionsList" :key="index">
+          <view v-for="(item, index) in optionsList" :key="index" @click="clickOptions(index)">
             <view class="iconfont btn-icon">{{item.icon}}</view>
           </view>
         </view>
@@ -89,13 +89,13 @@ export default {
       ],
 
       optionsList: [
-        {title: '', icon: '\ue731', path: ''},
-        {title: '', icon: '\ue61d', path: ''},
-        {title: '', icon: '\ue606', path: ''},
-        {title: '', icon: '\ue61d', path: ''},
+        {title: '', icon: '\ue73c', path: ''},
+        {title: '', icon: '\ue6e1', path: ''},
+        {title: '', icon: '\ueac2', path: ''},
+        {title: '', icon: '\ue640', path: ''},
       ],
 
-      isShowPopup: true
+      isShowPopup: false
     }
   },
   onLoad() {
@@ -107,6 +107,11 @@ export default {
     }
   },
   methods: {
+    clickOptions(index) {
+      if (index === 3) {
+        this.isShowPopup = true;
+      }
+    },
     getSystemInfo() {
       uni.getSystemInfo({
         success: (res) => {

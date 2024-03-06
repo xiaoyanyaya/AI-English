@@ -67,7 +67,7 @@
       </view>
     </view>
 
-    <view class="library flex align-item-center justify-content-around" @click="$navigateTo(`/pages/composition/englishLibrary`)">
+    <view class="library flex align-item-center justify-content-around" @click="$navigateTo(`/pages/composition/englishLibrary?type=0`)">
       <view class="library-1 library-common">
         <view class="drill-circle library-circle-01 flex align-item-center justify-content-center">
           <text>06</text>

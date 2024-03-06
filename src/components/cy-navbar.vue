@@ -101,6 +101,8 @@ export default {
 }
 
 .nav-icon-css {
+  width: 50rpx;
+  padding: 10rpx 0;
   font-size: 24rpx;
 }
 

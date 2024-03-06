@@ -277,6 +277,9 @@
 .justify-content-end {
     justify-content: flex-end;
 }
+.justify-content-start {
+    justify-content: flex-start;
+}
 
 /** 文字颜色 */
 .t-color-fff {
@@ -290,6 +293,9 @@
 }
 .t-color-2D6CDA {
     color: #2D6CDA;
+}
+.t-color-2A67D2 {
+    color: #2A67D2;
 }
 
 .t-color-666 {

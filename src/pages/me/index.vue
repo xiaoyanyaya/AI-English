@@ -14,13 +14,14 @@
           <view v-if="1" class="ml-3">
             <view class="t-size-30 t-color-3D3D3D flex align-item-center">
               <view>小礼AI</view>
-              <image :src="`${imageBaseUrl}/icon_6.png`" mode="widthFix" class="user-write mt-1 ml-1"></image>
+              <image @click="$navigateTo('/pages/me/personInfo')"
+                :src="`${imageBaseUrl}/icon_6.png`" mode="widthFix" class="user-write mt-1 ml-1"></image>
             </view>
             <view class="t-size-24 t-color-8A8A8A mt-1">ID: 123456</view>
           </view>
         </view>
-        <view @click="$navigateTo('/pages/me/personInfo')">
-          <image :src="`${imageBaseUrl}/xl-image-42.png`" mode="widthFix" class="setting-img"></image>
+        <view @click="$navigateTo('/pages/me/setting')">
+          <image :src="`${imageBaseUrl}/new_icon5.png`" mode="widthFix" class="setting-img"></image>
         </view>
       </view>
 
@@ -35,7 +36,7 @@
             开通VIP立享所有权益
           </view>
         </view>
-        <view class="user-center-btn t-color-fff flex align-item-center justify-content-center t-size-24">
+        <view class="user-center-btn t-color-fff flex align-item-center justify-content-center t-size-24" @click="$navigateTo('/pages/me/userCenter')">
           立享优惠
         </view>
       </view>
@@ -43,7 +44,7 @@
       <view class="person-info-box px-4 pb-4 mt-4">
         <view class="flex align-item-center justify-content-between pt-4 mt-1"
               v-for="(item, index) in menuList" :key="index"
-              @click="toPage(parentIndex, index)">
+              @click="toPage(index)">
           <view class="flex align-item-center">
             <image :src="`${imageBaseUrl}/${item.image}`" class="ml-1" mode="widthFix"></image>
             <view class="ml-3">{{item.title}}</view>
@@ -82,6 +83,12 @@ export default {
   computed: {
     userCenterBoxStyle() {
       return `background: url(${this.imageBaseUrl}/img_17.png) no-repeat center center; background-size: cover;`
+    }
+  },
+  methods: {
+    toPage(index) {
+      if (index == 0) this.$navigateTo('/pages/me/distribution')
+      if (index == 1) this.$navigateTo('/pages/me/cardConversion')
     }
   },
 }

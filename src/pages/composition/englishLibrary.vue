@@ -5,10 +5,10 @@
     </cy-navbar>
 
     <view class="px-4">
-      <view class="flex mt-4" v-if="pageIndex===0">
+      <view class="flex mt-4" v-if="pageIndex==0">
         <view class="grade flex align-item-center border-box px-1 justify-content-around mr-3"
               @click="showDate = true">
-          <text class="t-size-24 t-color-8A8A8A">{{dateValue}}</text>
+          <text class="t-size-24 t-color-8A8A8A">{{ dateValue }}</text>
           <u-icon name="arrow-down" color="#8A8A8A" size="28"></u-icon>
         </view>
         <view class="keywords flex align-item-center border-box px-1 justify-content-around mr-3 t-size-24"
@@ -39,17 +39,17 @@
             :class="index % 2 === 1 ? 'active' : ''"
             v-for="(item, index) in contentData" :key="index">
         <view class="flex align-item-center justify-content-between content-top">
-          <view class="sort-box">{{index + 1}}、</view>
-          <view class="title-box">{{ item.title }}</view>
-          <view class="t-size-24 t-color-8A8A8A">{{ item.date }}</view>
+          <view class="sort-box">{{ index + 1 }}、</view>
+          <view class="title-box">{{ item.compositionTitleText }}</view>
+          <view class="t-size-24 t-color-8A8A8A">{{ item.createTime }}</view>
         </view>
         <view class="flex align-item-center mt-2">
           <view class="sort-box"></view>
-          <view class="">{{ item.subTitle }}</view>
+          <view class="">{{ item.note }}</view>
         </view>
         <view class="flex align-item-center mt-2">
           <view class="sort-box"></view>
-          <view class="">{{ item.content }}</view>
+          <view class="">{{ item.compositionText }}</view>
         </view>
       </view>
 
@@ -58,37 +58,43 @@
 </template>
 
 <script>
+import {getCompositionList, getCompositionCollectList} from '@/api/composition';
+
 export default {
   data() {
     return {
-      pageIndex: 1,
+      pageIndex: 0,
       pageTitle: "我的英语作文库",
 
       // 日期
       dateValue: "日期",
       showDate: false,
 
-      contentData: [{
-        title: "A happy day with my sistem  ",
-        date: "2021-08-01",
-        subTitle: "作文题目及要求说明（显示前30个单词）",
-        content: "作文内容（显示前50个单词）"
-      },{
-        title: "A happy day with my sistem  ",
-        date: "2021-08-01",
-        subTitle: "作文题目及要求说明（显示前30个单词）",
-        content: "作文内容（显示前50个单词）"
-      },{
-        title: "A happy day with my sistem  ",
-        date: "2021-08-01",
-        subTitle: "作文题目及要求说明（显示前30个单词）",
-        content: "作文内容（显示前50个单词）"
-      },{
-        title: "A happy day with my sistem  ",
-        date: "2021-08-01",
-        subTitle: "作文题目及要求说明（显示前30个单词）",
-        content: "作文内容（显示前50个单词）"
-      }]
+      contentData: [],
+    }
+  },
+  onLoad({type}) {
+    this.pageIndex = type
+    this.network().getData(type)
+  },
+  methods: {
+    network() {
+      return {
+        getData: async (type) => {
+          let data = "";
+          if (type == 0) {
+            this.pageTitle = "我的英语作文库";
+            data = await getCompositionCollectList();
+          } else {
+            this.pageTitle = "选择作文题目";
+            data = await getCompositionList();
+          }
+          this.contentData = data.data.result.records
+          this.contentData.forEach(d => {
+            d.createTime = d.createTime.split(' ')[0]
+          })
+        }
+      }
     }
   },
 }

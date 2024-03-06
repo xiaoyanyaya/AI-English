@@ -7,10 +7,12 @@
     <view class="px-4 py-3">
       <view class="ChatRoom-box">
         <view class="flex justify-content-between">
-          <view class="t-size-36 t-color-3D3D3D font-weight-bold">随意聊</view>
-          <view class="t-size-28 Scene flex align-item-center justify-content-center">
-            <view></view>
-            <view>自定义场景</view>
+          <view class="t-size-32 t-color-3D3D3D font-weight-bold">随意聊</view>
+          <view class=" Scene flex align-item-center justify-content-center">
+            <view>
+              <image :src="`${imageBaseUrl}/new_icon6.png`" mode="widthFix"></image>
+            </view>
+            <view class="t-size-22 t-color-2A67D2">自定义场景</view>
           </view>
         </view>
         <view class="t-color-3D3D3D mt-3">可以自己决定话题，自定义对话练习场景</view>
@@ -106,9 +108,16 @@ export default {
 
   .Scene {
     width: 215rpx;
-    height: 60rpx;
+    height: 50rpx;
     border-radius: 216rpx;
     background: #FFFFFF;
+
+    image {
+      width: 24rpx;
+      height: 24rpx;
+      margin-top: 10rpx;
+      margin-right: 10rpx;
+    }
   }
 }
 

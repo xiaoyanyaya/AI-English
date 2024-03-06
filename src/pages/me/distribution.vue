@@ -1,0 +1,175 @@
+<template>
+  <view class="pt-5">
+    <cy-navbar show-back>
+      <view class="t-size-30">分销中心</view>
+    </cy-navbar>
+
+    <view class="px-4">
+      <view class="flex align-item-center user-info px-3 pt-3 pb-3 pl-1">
+        <view class="mr-4 mt-1">
+          <image :src="`${imageBaseUrl}/new_icon4.png`" mode="widthFix" class="avatar"/>
+        </view>
+        <view class="flex flex-direction-column justify-content-center">
+          <view class="t-color-3D3D3D mb-1">Jim</view>
+          <view class="t-size-24 t-color-8A8A8A">推广员</view>
+        </view>
+      </view>
+
+      <view class="mt-4 my-promotion flex flex-direction-column justify-content-between">
+        <view class="price px-4 pt-3 pb-3 flex align-item-center justify-content-between">
+          <view class="flex flex-direction-column justify-content-start">
+            <view class="font-weight-bold t-size-36 t-color-DC0C0C">3.96</view>
+            <view class="t-size-24 mt-1 t-color-3D3D3D">可提现佣金(元)</view>
+          </view>
+          <view class="withdraw flex align-item-center justify-content-center t-color-fff">
+            申请提现
+          </view>
+        </view>
+        <view class="record px-3 flex align-item-center">
+          <image :src="`${imageBaseUrl}/icon_12.png`" mode="widthFix" class="mr-2 ml-1"/>
+          <view class="t-color-8A8A8A t-size-24">提现记录</view>
+        </view>
+      </view>
+
+      <view class="content-menu mt-4 pr-1 pb-1">
+        <view class="item flex justify-content-center align-item-center"
+              v-for="(item, index) in contentMenuList" :key="index">
+          <image class="mr-3 mt-1" :src="`${imageBaseUrl}/${item.image}`" mode="widthFix"/>
+          <view class="flex flex-direction-column justify-content-center pt-3 pb-3">
+            <view class="t-size-24 t-color-3D3D3D mt-2">{{ item.title }}</view>
+            <view class="t-size-24 t-color-8A8A8A mt-1">{{ item.subTitle }}</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="person-info-box px-4 pb-4 mt-4">
+        <view class="flex align-item-center justify-content-between pt-4 mt-1"
+              v-for="(item, index) in menuList" :key="index"
+              @click="toPage(parentIndex, index)">
+          <view class="flex align-item-center">
+            <image :src="`${imageBaseUrl}/${item.image}`" class="ml-1" mode="widthFix"></image>
+            <view class="ml-3">{{item.title}}</view>
+          </view>
+          <view class="flex align-item-center">
+            <view class="ml-2">
+              <u-icon name="arrow-right" color="#8A8A8A" size="28"></u-icon>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="flex justify-content-center mt-5">
+        <text class="text-center t-color-2D6CDA agreement ">《用户推广协议》</text>
+      </view>
+    </view>
+
+  </view>
+</template>
+
+<script>
+import MyMixin from "@/utils/MyMixin";
+
+export default {
+  mixins: [MyMixin],
+  data() {
+    return {
+      contentMenuList: [{
+        title: '佣金明细',
+        image: 'icon_13.png',
+        subTitle: '3.96元'
+      },{
+        title: '下级推广员',
+        image: 'icon_17.png',
+        subTitle: '0人'
+      },{
+        title: '直推用户',
+        image: 'icon_14.png',
+        subTitle: '20人'
+      },{
+        title: '推广订单',
+        image: 'icon_16.png',
+        subTitle: '1笔'
+      }],
+      menuList: [
+        { title: '邀请下级推广员', image: 'icon_15.png' },
+      ]
+    };
+  }
+}
+</script>
+
+<style lang="scss">
+page {
+  background: #F5FBFD;
+}
+
+.user-info {
+  border-radius: 30rpx;
+  opacity: 1;
+  background: #FFFFFF;
+  box-shadow: 0px 0px 10rpx 0px #D8D8D8;
+
+  .avatar {
+    width: 60rpx;
+    height: 60rpx;
+    border-radius: 50%;
+  }
+}
+
+.my-promotion {
+  border-radius: 30rpx;
+  background: #FFFFFF;
+  box-shadow: 0px 0px 10rpx 0px #D8D8D8;
+
+  .withdraw {
+    padding: 12rpx 40rpx;
+    border-radius: 50rpx;
+    background: #23B32A;
+    box-shadow: 0px 0px 10rpx 0px #D8D8D8;
+  }
+
+  .record {
+    height: 60rpx;
+    opacity: 1;
+    background: #FFF3F6;
+
+    image {
+      width: 30rpx;
+      height: 30rpx;
+      margin-top: 6rpx;
+    }
+  }
+}
+
+.content-menu {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20rpx;
+  border-radius: 30rpx;
+  background: #FFFFFF;
+  box-shadow: 0px 0px 10rpx 0px #D8D8D8;
+
+  .item {
+    image {
+      width: 60rpx;
+      height: 60rpx;
+    }
+  }
+}
+
+.person-info-box {
+  border-radius: 30rpx;
+  background: #FFFFFF;
+  box-shadow: 0px 0px 10rpx 0px #D8D8D8;
+  font-size: 30rpx;
+
+  image {
+    width: 40rpx;
+    height: 40rpx;
+  }
+}
+
+.agreement {
+  border-bottom: 1px solid #2D6CDA;
+}
+</style>

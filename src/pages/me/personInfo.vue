@@ -93,6 +93,7 @@ export default {
       } else {
         if (index == 0) this.$navigateTo('/pages/me/selectGrade')
         if (index == 1) this.showEnglishLevel = true
+        if (index == 2) this.$navigateTo('/pages/me/selectInterest')
       }
     }
   },

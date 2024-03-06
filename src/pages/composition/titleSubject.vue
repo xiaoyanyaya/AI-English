@@ -112,63 +112,27 @@ export default {
     },
     testRequestTask() {
       const requestTask = uni.request({
-        url: `${apiDomain}composition/aigc/title`,
+        url: `${apiDomain}composition/aigc/sse`,
         timeout: 15000,
         responseType: 'text',
-        method: 'POST',
+        method: 'get',
         enableChunked: true,  //配置这里
-        data: {
-          info_keyword: "四级,英语",
-          info_word_nums: 200,
-          info_grade: "七年级"
-        },
         header: {
           'X-Access-Token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MDk3NDIyNDUsInVzZXJuYW1lIjoiYWRtaW4ifQ.037WbDif1XuGvXAzZA8QtJpxFm346_5ItFRotjpG2wI'
         },
         success: response => {
-          console.log("response", response)
         },
-        fail: error => {}
+        fail: error => {
+          console.log("fail", error)
+        }
       })
       requestTask.onHeadersReceived(function(res) {
-        console.log("onHeadersReceived", res);
       });
       // 这里监听消息
       requestTask.onChunkReceived((res) => {
         let decoder = new TextDecoder('utf-8');
         let text = decoder.decode(new Uint8Array(res.data));
         console.log("onChunkReceived", text)
-      })
-    },
-    testAxios() {
-      const requestTask = uni.request({
-        url: `${apiDomain}composition/aigc/title`,
-        timeout: 15000,
-        responseType: 'text',
-        method: 'post',
-        header: {
-          'X-Access-Token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MDk2OTM1NzMsInVzZXJuYW1lIjoiYWRtaW4ifQ.cLZl2fjvY9URbLitxFSls_o2v5YOZpDcch6-t1I2I8E'
-        },
-        enableChunked: true,  //配置这里
-        data: {
-          info_keyword: "四级,英语",
-          info_word_nums: 200,
-          info_grade: "七年级"
-        },
-        success: response => {
-          console.log(response)
-        },
-        fail: error => {
-        }
-      })
-      requestTask.onHeadersReceived(function (res) {
-        console.log(res.header);
-      });
-      requestTask.onChunkReceived(function(res) {
-        const uint8Array = new Uint8Array(res.data);
-        let text = String.fromCharCode.apply(null, uint8Array);
-        text = decodeURIComponent(escape(text));
-        console.log(text);
       })
     },
   },

@@ -3,6 +3,7 @@ import App from './App'
 import './uni.promisify.adaptor'
 import '@/assets/css/cyGlobal.css'
 import '@/assets/font/iconfont.css'
+import store from './store'
 
 Vue.config.productionTip = false
 
@@ -16,9 +17,11 @@ Vue.prototype.$navigateTo = function (url) {
 App.mpType = 'app'
 
 import uView from "uview-ui";
+
 Vue.use(uView);
 
 const app = new Vue({
-  ...App
+	...App,
+	store
 })
 app.$mount()

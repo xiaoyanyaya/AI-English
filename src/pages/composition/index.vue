@@ -1,80 +1,71 @@
 <template>
   <view class="pb-5">
     <cy-navbar show-back>
-      <view class="t-size-30">AI作文</view>
+      <view class="t-size-30">小礼AI极简英语</view>
     </cy-navbar>
 
-    <view class="item-1 mt-3" @click="toPage(0)">
-      <view class="common-content content-1 flex align-item-center justify-content-around">
-        <view class="circle circle-01 flex align-item-center justify-content-center">
-          <text>01</text>
-        </view>
-        <image class="image" :src="`${imageBaseUrl}/img_11.png`" mode="widthFix"></image>
-        <view class="text-css t-color-3D3D3D">
-          <text>AI英语</text>
-          <text class="c-299C0A">中考</text>
-          <text>作文</text>
-        </view>
-      </view>
-    </view>
-    <view class="item-1" @click="toPage(1)">
-      <view class="common-content content-2 flex align-item-center justify-content-around">
-        <view class="circle circle-02 flex align-item-center justify-content-center">
-          <text>02</text>
-        </view>
-        <image class="image" :src="`${imageBaseUrl}/img_12.png`" mode="widthFix"></image>
-        <view class="text-css t-color-3D3D3D">
-          <text>AI英语</text>
-          <text class="c-CE0E0E">高考</text>
-          <text>作文</text>
+    <view class="mt-5 px-4">
+      <view class="grid-box">
+        <view class="grid-item flex flex-direction-column justify-content-around align-item-center"
+              v-for="(item, index) in aiTypeList" :key="index"
+              @click="toPage(index)">
+          <image :style="{width: `${item.imageWidth}rpx`}"
+                 :src="`${imageBaseUrl}${item.image}`" mode="widthFix" class="w-100"></image>
+          <view>{{ item.title }}</view>
+          <view class="t-size-20 text-center">{{ item.desc }}</view>
         </view>
       </view>
-    </view>
-    <view class="item-1" @click="toPage(2)">
-      <view class="common-content content-3 flex align-item-center justify-content-around">
-        <view class="circle circle-03 flex align-item-center justify-content-center">
-          <text>03</text>
-        </view>
-        <image class="image" :src="`${imageBaseUrl}/img_13.png`" mode="widthFix"></image>
-        <view class="text-css t-color-3D3D3D">
-          <text>AI英语</text>
-          <text class="c-9A8706">教材</text>
-          <text>作文</text>
-        </view>
-      </view>
-    </view>
 
-    <view class="teacher flex align-item-center justify-content-around">
-      <view class="drill-common drill-1" @click="toPage(3)">
-        <view class="drill-circle drill-circle-01 flex align-item-center justify-content-center">
-          <text>04</text>
-        </view>
-        <image class="drill-image mt-4" :src="`${imageBaseUrl}/img_14.png`" mode="widthFix"></image>
-        <view class="t-color-3D3D3D mb-1 text-css">
-          <text>AI英语</text>
-          <text class="t-2E00D5">作文训练</text>
-        </view>
-      </view>
-      <view class="drill-common drill-2">
-        <view class="drill-circle drill-circle-02 flex align-item-center justify-content-center">
-          <text>05</text>
-        </view>
-        <image class="drill-image mt-4" :src="`${imageBaseUrl}/img_15.png`" mode="widthFix"></image>
-        <view class="t-color-3D3D3D mb-1 text-css">
-          <text>AI英语</text>
-          <text class="t-D17310">作文批改</text>
+      <view @click="toPage(3)"
+        class="composition-box mt-3 flex align-item-center justify-content-around">
+        <view class="flex">
+          <image :src="`${imageBaseUrl}/new-2.6.png`" mode="widthFix" class="mr-3"></image>
+          <view class="flex t-color-fff flex-direction-column justify-content-around align-item-center">
+            <view class="">我的作文库</view>
+            <view class="t-size-20">作文收藏，随时回顾，巩固学习成果</view>
+          </view>
         </view>
       </view>
-    </view>
 
-    <view class="library flex align-item-center justify-content-around" @click="$navigateTo(`/pages/composition/englishLibrary?type=0`)">
-      <view class="library-1 library-common">
-        <view class="drill-circle library-circle-01 flex align-item-center justify-content-center">
-          <text>06</text>
+      <view class="flex align-item-center ml-3 mt-6">
+        <image :src="`${imageBaseUrl}/new-2.1.png`" mode="widthFix" class="small-image"></image>
+        <view class="t-size-26 font-weight-bold ml-2">批改实例</view>
+      </view>
+      <view class="living-box mt-2 px-2 pb-3 pt-1">
+        <view class="flex justify-content-between mt-3 pb-3 t-size-26 living-item"
+          v-for="(item, index) in livingData" :key="index">
+          <view>
+            <view class="t-color-2D6CDA">{{index+1}}、{{item.title}}</view>
+            <view class="t-size-24 mt-2">{{item.desc}}</view>
+          </view>
+          <view class="flex t-size-24 t-color-8A8A8A">
+            <view>{{item.username}}</view>
+            <view>{{`(${item.school})`}}</view>
+          </view>
         </view>
-        <image class="library-image mt-4" :src="`${imageBaseUrl}/img_16.png`" mode="widthFix"></image>
-        <view class="t-color-3D3D3D mb-1 text-css">
-          <text class="t-002BA3">我的英语作文库</text>
+      </view>
+
+      <view class="flex align-item-center ml-3 mt-6">
+        <image :src="`${imageBaseUrl}/new-2.2.png`" mode="widthFix" class="small-image"></image>
+        <view class="t-size-26 font-weight-bold ml-2">热门评论（6）</view>
+      </view>
+      <view class="common-box mt-2 px-2 pb-3 pt-1">
+        <view class="flex justify-content-between mt-3 pb-3 t-size-26 common-item"
+              v-for="(item, index) in commonData" :key="index">
+          <view class="flex align-item-center">
+            <view class="image-box mr-2">
+              <image :src="`${imageBaseUrl}${item.image}`" mode="widthFix"></image>
+            </view>
+            <view class="t-size-26">
+              <view class="flex justify-content-between align-item-center">
+                <view class="t-color-2D6CDA t-color-3D3D3D">{{item.nickname}}</view>
+                <view class="t-size-24">
+                  <u-rate :count="5" active-color="#FFAB2D" v-model="item.star"></u-rate>
+                </view>
+              </view>
+              <view class="mt-1 t-size-22 t-color-8A8A8A">{{item.content}}</view>
+            </view>
+          </view>
         </view>
       </view>
     </view>
@@ -82,302 +73,150 @@
 </template>
 
 <script>
-import MyMixin from "@/utils/MyMixin";
+import MyMixin from '@/utils/MyMixin';
 
 export default {
   mixins: [MyMixin],
   data() {
-    return {};
+    return {
+      aiTypeList: [{
+        title: '作文批改',
+        desc: '从单词到语法，全方位提高英语写作能力',
+        image: '/new-2.4.png',
+        imageWidth: 100,
+      }, {
+        title: '作文训练',
+        desc: '作文训练新体验！写作提升轻松练！',
+        image: '/new-2.3.png',
+        imageWidth: 80,
+      }, {
+        title: '作文帮写',
+        desc: '考试作文,作业作文AI帮你写',
+        image: '/new-2.5.png',
+        imageWidth: 80,
+      }],
+
+      livingData: [{
+        title: '2023年广东高考作文',
+        desc: '作文题目内容（显示前50个单词）',
+        username: '张三',
+        school: '深圳中学',
+      }, {
+        title: '2023年广东高考作文',
+        desc: '作文题目内容（显示前50个单词）',
+        username: '张三',
+        school: '广州中学',
+      }, {
+        title: '2023年广东高考作文',
+        desc: '作文题目内容（显示前50个单词）',
+        username: '张三',
+        school: '东莞中学',
+      }],
+
+      commonData: [{
+        nickname: '灰太狼',
+        content: '这款工具的作文批改功能非常细致，从单词拼写、语法错误到篇章结构，都能给出准确的建议。',
+        image: '/new-2.7.png',
+        star: 5,
+      }, {
+        nickname: '灰太狼',
+        content: '这款工具的作文批改功能非常细致，从单词拼写、语法错误到篇章结构，都能给出准确的建议。',
+        image: '/new-2.8.png',
+        star: 5,
+      }, {
+        nickname: '灰太狼',
+        content: '这款工具的作文批改功能非常细致，从单词拼写、语法错误到篇章结构，都能给出准确的建议。',
+        image: '/new-2.9.png',
+        star: 5,
+      }]
+    }
   },
   methods: {
     toPage(index) {
-      this.$navigateTo(`/pages/composition/titleSubject?index=${index}`);
+      if (index == 3) {
+        this.$navigateTo(`/pages/composition/englishLibrary?type=0`);
+      } else {
+        this.$navigateTo(`/pages/composition/titleSubject?index=${index}`);
+      }
     }
   },
 }
 </script>
 
-<style lang="scss">
-.item-1 {
-  padding: 25rpx 100rpx;
+<style lang="scss" >
+page {
+  background: #F5FBFD;
 }
 
-.common-content {
-  position: relative;
-  height: 148rpx;
-  border-radius: 15rpx;
-  background: transparent;
-  box-sizing: border-box;
-  box-shadow: 0px 4rpx 10rpx 0px rgba(0, 0, 0, 0.1);
-  padding: 0 50rpx;
+.grid-box {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+
+  .grid-item {
+    width: 210rpx;
+    height: 260rpx;
+    border-radius: 10rpx;
+    opacity: 1;
+    color: #FFFFFF;
+    padding: 20rpx 6rpx;
+
+    &:nth-child(1) {
+      background: linear-gradient(180deg, #FFA63E 0%, #FF5F09 100%);
+    }
+
+    &:nth-child(2) {
+      background: linear-gradient(180deg, #39ACFF 0%, #3967FF 100%);
+    }
+
+    &:nth-child(3) {
+      background: linear-gradient(180deg, #66DE45 0%, #2BA121 100%);
+    }
+  }
 }
 
-.common-content::before,
-.common-content::after {
-  content: "";
-  position: absolute;
-  top: -1rpx; /* 更细的边框 */
-  right: -1rpx; /* 更细的边框 */
-  bottom: -1rpx; /* 更细的边框 */
-  left: -1rpx; /* 更细的边框 */
-  border-radius: 15rpx;
-  z-index: -1;
+.composition-box {
+  height: 140rpx;
+  border-radius: 10rpx;
+  background: linear-gradient(180deg, #FF8484 0%, #D45454 100%);
+
+  image {
+    width: 80rpx;
+  }
 }
 
-.common-content::after {
-  top: 1rpx; /* 更细的边框 */
-  right: 1rpx; /* 更细的边框 */
-  bottom: 1rpx; /* 更细的边框 */
-  left: 1rpx; /* 更细的边框 */
-  border-radius: 15rpx;
+.small-image {
+  width: 30rpx;
+  height: 30rpx;
 }
 
-.content-1::before {
-  background: linear-gradient(180deg, #FFFFFF 0%, #299C0A 99%);
-}
-
-.content-1::after {
-  background: linear-gradient(180deg, #E5FFDF 0%, #FFFFFF 100%);
-}
-
-.content-2::before {
-  background: linear-gradient(180deg, #FFFFFF 0%, #CE0E0E 99%);
-}
-
-.content-2::after {
-  background: linear-gradient(180deg, #FFECEC 0%, #FFFFFF 100%);
-}
-
-.content-3::before {
-  background: linear-gradient(180deg, #FFFFFF 0%, #ABAE00 99%);
-}
-
-.content-3::after {
-  background: linear-gradient(180deg, #FDFFD6 0%, #FFFFFF 100%);
-}
-
-
-.circle {
-  position: absolute;
-  left: -35.5rpx;
-  width: 71rpx;
-  height: 71rpx;
+.living-box {
+  border-radius: 10rpx;
   background: #FFFFFF;
-  box-sizing: border-box;
-  border-radius: 50%;
+
+  .living-item {
+    border-bottom: 1rpx solid #F0F0F0;
+  }
 }
 
-.drill-circle {
-  position: absolute;
-  top: -35.5rpx;
-  width: 71rpx;
-  height: 71rpx;
+.common-box {
+  border-radius: 10rpx;
   background: #FFFFFF;
-  box-sizing: border-box;
-  border-radius: 50%;
-}
 
-.circle-01 {
-  border: 1rpx solid #24A800;
-  text-color: #166800;
-}
+  .common-item {
+    border-bottom: 1rpx solid #F0F0F0;
 
-.circle-02 {
-  border: 1rpx solid #E4483C;
-  text-color: #9B0000;
-}
+    .image-box {
+      width: 100rpx;
+      height: 100rpx;
 
-.circle-03 {
-  border: 1rpx solid #C5A96E;
-  text-color: #9C8C00;
-}
+      image {
+        width: 100rpx;
+        height: 100rpx;
+        border-radius: 50%;
+      }
+    }
 
-.image {
-  width: 100rpx;
-  height: 100rpx;
-}
-
-.text-css {
-  line-height: normal;
-  letter-spacing: 0.13em;
-}
-
-.c-299C0A {
-  color: #299C0A;
-  font-weight: bold;
-  font-size: 32rpx;
-  border-bottom: 4rpx solid #299C0A;
-}
-
-.c-CE0E0E {
-  color: #CE0E0E;
-  font-weight: bold;
-  font-size: 32rpx;
-  border-bottom: 4rpx solid #CE0E0E;
-}
-
-.c-9A8706 {
-  color: #9A8706;
-  font-weight: bold;
-  font-size: 32rpx;
-  border-bottom: 4rpx solid #9A8706;
-}
-
-.teacher {
-  margin-top: 70rpx;
-  padding: 0 50rpx;
-
-  .drill-common {
-    position: relative;
-    width: 280rpx;
-    height: 250rpx;
-    border-radius: 15rpx;
-    background: transparent;
-    box-sizing: border-box;
-    box-shadow: 0px 4rpx 10rpx 0px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
   }
-
-  .drill-common::before,
-  .drill-common::after {
-    content: "";
-    position: absolute;
-    top: -1rpx;
-    right: -1rpx;
-    bottom: -1rpx;
-    left: -1rpx;
-    border-radius: 15rpx;
-    z-index: -1;
-  }
-
-  .drill-common::after {
-    top: 1rpx;
-    right: 1rpx;
-    bottom: 1rpx;
-    left: 1rpx;
-    border-radius: 15rpx;
-  }
-
-  .drill-1::before {
-    background: linear-gradient(360deg, #FFFFFF 0%, #4D34A9 99%);
-  }
-
-  .drill-circle-01 {
-    border: 1rpx solid #4D34A9;
-    color: #3600A3;
-  }
-
-  .drill-circle-02 {
-    border: 1rpx solid #D17310;
-    color: #3600A3;
-  }
-
-  .t-D17310 {
-    color: #D17310;
-    font-weight: bold;
-    font-size: 32rpx;
-    border-bottom: 4rpx solid #D17310;
-  }
-
-  .t-2E00D5 {
-    color: #2E00D5;
-    font-weight: bold;
-    font-size: 32rpx;
-    border-bottom: 4rpx solid #2E00D5;
-  }
-
-  .drill-1::after {
-    background: linear-gradient(360deg, #DED4FF 0%, #FFFFFF 100%);
-  }
-
-  .drill-2::before {
-    background: linear-gradient(360deg, #FFFFFF 0%, #D28A1F 99%);
-  }
-
-  .drill-2::after {
-    background: linear-gradient(360deg, #FFE0B1 0%, #FFFFFF 100%);
-  }
-
-  .drill-image {
-    width: 100rpx;
-    height: 100rpx;
-  }
-}
-
-.circle, .drill-circle, .library-cricle {
-  text {
-    font-family: YouSheBiaoTiHei;
-    font-size: 34rpx;
-    font-weight: normal;
-    line-height: normal;
-    letter-spacing: 0.05em;
-  }
-}
-
-.library {
-  margin-top: 70rpx;
-  padding: 0 50rpx;
-}
-
-.library-common {
-  position: relative;
-  width: 400rpx;
-  height: 300rpx;
-  border-radius: 15rpx;
-  background: transparent;
-  box-sizing: border-box;
-  box-shadow: 0px 4rpx 10rpx 0px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.library-common::before,
-.library-common::after {
-  content: "";
-  position: absolute;
-  top: -1rpx;
-  right: -1rpx;
-  bottom: -1rpx;
-  left: -1rpx;
-  border-radius: 15rpx;
-  z-index: -1;
-}
-
-.library-common::after {
-  top: 1rpx;
-  right: 1rpx;
-  bottom: 1rpx;
-  left: 1rpx;
-  border-radius: 15rpx;
-}
-
-.library-1::before {
-  background: linear-gradient(360deg, #FFFFFF 0%, #002BA3 99%);
-}
-
-.library-1::after {
-  background: linear-gradient(360deg, #CEE4FF 0%, #FFFFFF 100%);
-}
-
-.library-image {
-  width: 130rpx;
-  height: 130rpx;
-}
-
-.t-002BA3 {
-  color: #002BA3;
-  font-weight: bold;
-  font-size: 32rpx;
-  border-bottom: 4rpx solid #2E00D5;
-}
-
-.library-circle-01 {
-  border: 1rpx solid #002BA3;
-  color: #002BA3;
 }
 </style>

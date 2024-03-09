@@ -1,4 +1,5 @@
 import {apiDomain} from '@/configs/env';
+import store from '@/store/';
 
 const Fly = require('flyio/dist/npm/wx');
 
@@ -8,7 +9,7 @@ fly.config.baseURL = apiDomain;
 let timer = null;
 fly.interceptors.request.use(async (request) => {
 	// 给所有请求添加自定义header
-	request.headers['X-Access-Token'] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MDk3NDIyNDUsInVzZXJuYW1lIjoiYWRtaW4ifQ.037WbDif1XuGvXAzZA8QtJpxFm346_5ItFRotjpG2wI";
+	request.headers['X-Access-Token'] = store.state.token;
 	if (!timer) {
 		timer = setTimeout(() => {
 			wx.showLoading({title: '加载中', mask: true})

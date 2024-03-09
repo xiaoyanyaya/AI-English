@@ -25,7 +25,7 @@ const store = new Vuex.Store({
 	modules,
 	plugins: [
 		createPersistedState({
-			paths: ['openid','loginParams', 'loginInfo', 'userInfo', 'mineInfo', 'provinceList', 'orderDone'], //要持久化的状态，在state里面取，如果有嵌套，可以  a.b.c
+			paths: ['generateContent','loginParams', 'loginInfo', 'userInfo', 'mineInfo', 'provinceList', 'orderDone'], //要持久化的状态，在state里面取，如果有嵌套，可以  a.b.c
 			storage: {
 				getItem: (key) => uni.getStorageSync(key), // 获取
 				setItem: (key, value) => uni.setStorageSync(key, value), // 存储

@@ -65,7 +65,7 @@
           作文题目
         </view>
         <view v-if="pageIndex==0" class="flex align-item-center">
-          <view class="iconfont t-color-1863E5 essay-title-icon">&#xe663;</view>
+          <view class="iconfont t-color-1863E5 essay-title-icon" @click="photograph('title')">&#xe663;</view>
         </view>
       </view>
       <view class="ai-title-box mt-2">
@@ -82,7 +82,7 @@
             {{ pageIndex == 4 || pageIndex == 2 ? 'AI作文范文' : '作文内容' }}
           </view>
           <view v-if="pageIndex<4 && pageIndex!=2" class="flex align-item-center">
-            <view class="iconfont t-color-1863E5 essay-title-icon">&#xe663;</view>
+            <view class="iconfont t-color-1863E5 essay-title-icon" @click="photograph('content')">&#xe663;</view>
             <!--            <view class="iconfont t-color-1863E5 essay-title-icon">&#xed64;</view>-->
             <!--            <view class="iconfont t-color-1863E5 essay-title-icon">&#xe8b0;</view>-->
           </view>
@@ -109,7 +109,7 @@
           <view class="font-weight-bold t-size-36">
             {{ pageIndex == 4 || pageIndex == 2 ? 'AI作文点评' : 'AI作文批改' }}
           </view>
-          <view v-if="pageIndex==6" class="flex align-item-center">
+          <view v-if="pageIndex==6" class="flex align-item-center" @click="photograph('generateContent')">
             <view class="iconfont t-color-1863E5 essay-title-icon">&#xe63e;</view>
             <view class="iconfont t-color-1863E5 essay-title-icon">&#xe63e;</view>
             <view class="iconfont t-color-1863E5 essay-title-icon">&#xe63e;</view>
@@ -144,7 +144,13 @@
 
 <script>
 
-import {addCompositionCollect, addCompositionExercise, getAIGCComment, getAIGCCorrection} from "@/api/composition";
+import {
+  addCompositionCollect,
+  addCompositionExercise,
+  getAIGCComment,
+  getAIGCCorrection,
+  getPhotoRecognition
+} from "@/api/composition";
 import state from "@/store/state";
 import {apiDomain} from "@/configs/env";
 import store from "@/store";
@@ -230,6 +236,52 @@ export default {
   onShow() {
   },
   methods: {
+    photograph(type) {
+      var _this = this;
+      uni.chooseImage({
+        count: 1,
+        success: function (res) {
+          var tempFilePaths = res.tempFilePaths;
+          uni.getFileSystemManager().readFile({
+            filePath: tempFilePaths[0],
+            encoding: 'base64',
+            success: function (data) {
+              var base64Data = data.data;
+
+              uni.showLoading({
+                title: '上传中...'
+              })
+              getPhotoRecognition({
+                imageBase64: base64Data,
+                // imageUrl: tempFilePaths[0],
+                ocrApiName: "accurateOCR",
+                ocrServiceProvider:"tencent"
+              }).then(res => {
+                switch (type) {
+                  case 'title':
+                    _this.essayData.title = res.data.result.ocrText
+                    break;
+                  case 'content':
+                    _this.essayData.content += res.data.result.ocrText
+                    break;
+                  case 'generateContent':
+                    _this.generateContent += res.data.result.ocrText
+                    break;
+                }
+                uni.hideLoading()
+              })
+            },
+            fail: function (err) {
+              console.log('读取文件失败：', err);
+            }
+          });
+        },
+        fail: function (err) {
+          console.log('选择图片失败：', err);
+        }
+      });
+
+    },
     init(index, title) {
       this.pageIndex = index;
       if (index == 0) {

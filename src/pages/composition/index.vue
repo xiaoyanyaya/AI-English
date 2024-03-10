@@ -5,23 +5,43 @@
     </cy-navbar>
 
     <view class="mt-5 px-4">
-      <view class="grid-box">
-        <view class="grid-item flex flex-direction-column justify-content-around align-item-center"
-              v-for="(item, index) in aiTypeList" :key="index"
-              @click="toPage(index)">
-          <image :style="{width: `${item.imageWidth}rpx`}"
-                 :src="`${imageBaseUrl}${item.image}`" mode="widthFix" class="w-100"></image>
-          <view>{{ item.title }}</view>
-          <view class="t-size-20 text-center">{{ item.desc }}</view>
+      <view class="flex align-item-center">
+        <view class="aitype-box-1 flex flex-direction-column justify-content-around align-item-center" @click="toPage(0)">
+          <view>{{ aiTypeList[0].title }}</view>
+          <view class="t-size-22 text-center">{{ aiTypeList[0].desc }}</view>
+          <image :style="{width: `${aiTypeList[0].imageWidth}rpx`}"
+                 :src="`${imageBaseUrl}${aiTypeList[0].image}`" mode="widthFix" class="w-100"></image>
+        </view>
+        <view class="flex flex-direction-column">
+          <view class="aitype-box-2" @click="toPage(1)">
+            <view class="flex align-item-center">
+              <image :style="{width: `${aiTypeList[1].imageWidth}rpx`}"
+                     :src="`${imageBaseUrl}${aiTypeList[1].image}`" mode="widthFix" class="w-100"></image>
+              <view class="font-weight-bold ml-2">{{ aiTypeList[1].title }}</view>
+            </view>
+            <view class="mt-2 ml-1">
+              <view class="t-size-22">{{ aiTypeList[1].desc }}</view>
+            </view>
+          </view>
+          <view class="aitype-box-2 mt-2" @click="toPage(2)">
+            <view class="flex align-item-center">
+              <image :style="{width: `${aiTypeList[2].imageWidth}rpx`}"
+                     :src="`${imageBaseUrl}${aiTypeList[2].image}`" mode="widthFix" class="w-100"></image>
+              <view class="font-weight-bold ml-2">{{ aiTypeList[2].title }}</view>
+            </view>
+            <view class="mt-2 ml-1">
+              <view class="t-size-22">{{ aiTypeList[2].desc }}</view>
+            </view>
+          </view>
         </view>
       </view>
 
       <view @click="toPage(3)"
-        class="composition-box mt-3 flex align-item-center justify-content-around">
+            class="composition-box mt-2 flex align-item-center justify-content-around">
         <view class="flex">
           <image :src="`${imageBaseUrl}/new-2.6.png`" mode="widthFix" class="mr-3"></image>
-          <view class="flex t-color-fff flex-direction-column justify-content-around align-item-center">
-            <view class="">我的作文库</view>
+          <view class="flex flex-direction-column justify-content-around align-item-center">
+            <view class="font-weight-bold">我的作文库</view>
             <view class="t-size-20">作文收藏，随时回顾，巩固学习成果</view>
           </view>
         </view>
@@ -33,14 +53,14 @@
       </view>
       <view class="living-box mt-2 px-2 pb-3 pt-1">
         <view class="flex justify-content-between mt-3 pb-3 t-size-26 living-item"
-          v-for="(item, index) in livingData" :key="index">
+              v-for="(item, index) in livingData" :key="index">
           <view>
-            <view class="t-color-2D6CDA">{{index+1}}、{{item.title}}</view>
-            <view class="t-size-24 mt-2">{{item.desc}}</view>
+            <view class="t-color-2D6CDA">{{ index + 1 }}、{{ item.title }}</view>
+            <view class="t-size-24 mt-2">{{ item.desc }}</view>
           </view>
           <view class="flex t-size-24 t-color-8A8A8A">
-            <view>{{item.username}}</view>
-            <view>{{`(${item.school})`}}</view>
+            <view>{{ item.username }}</view>
+            <view>{{ `(${item.school})` }}</view>
           </view>
         </view>
       </view>
@@ -58,12 +78,12 @@
             </view>
             <view class="t-size-26">
               <view class="flex justify-content-between align-item-center">
-                <view class="t-color-2D6CDA t-color-3D3D3D">{{item.nickname}}</view>
+                <view class="t-color-2D6CDA t-color-3D3D3D">{{ item.nickname }}</view>
                 <view class="t-size-24">
                   <u-rate :count="5" active-color="#FFAB2D" v-model="item.star"></u-rate>
                 </view>
               </view>
-              <view class="mt-1 t-size-22 t-color-8A8A8A">{{item.content}}</view>
+              <view class="mt-1 t-size-22 t-color-8A8A8A">{{ item.content }}</view>
             </view>
           </view>
         </view>
@@ -88,7 +108,7 @@ export default {
         title: '作文训练',
         desc: '作文训练新体验！写作提升轻松练！',
         image: '/new-2.3.png',
-        imageWidth: 80,
+        imageWidth: 50,
       }, {
         title: '作文帮写',
         desc: '考试作文,作业作文AI帮你写',
@@ -143,42 +163,35 @@ export default {
 }
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 page {
   background: #F5FBFD;
 }
 
-.grid-box {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 10px;
+.aitype-box-1 {
+  width: 340rpx;
+  padding: 40rpx 30rpx;
+  height: 336rpx;
+  border-radius: 10rpx;
+  background: linear-gradient(139deg, #FFDDB6 0%, #FFFCF4 98%);
+  color: #442200;
+}
 
-  .grid-item {
-    width: 210rpx;
-    height: 260rpx;
-    border-radius: 10rpx;
-    opacity: 1;
-    color: #FFFFFF;
-    padding: 20rpx 6rpx;
-
-    &:nth-child(1) {
-      background: linear-gradient(180deg, #FFA63E 0%, #FF5F09 100%);
-    }
-
-    &:nth-child(2) {
-      background: linear-gradient(180deg, #39ACFF 0%, #3967FF 100%);
-    }
-
-    &:nth-child(3) {
-      background: linear-gradient(180deg, #66DE45 0%, #2BA121 100%);
-    }
-  }
+.aitype-box-2 {
+  margin-left: 20rpx;
+  width: 340rpx;
+  padding: 20rpx 30rpx;
+  height: 160rpx;
+  border-radius: 10rpx;
+  background: linear-gradient(119deg, #D1E5FB 0%, #F3F3FB 99%);
+  color: #001E53;
 }
 
 .composition-box {
-  height: 140rpx;
+  height: 160rpx;
   border-radius: 10rpx;
-  background: linear-gradient(180deg, #FF8484 0%, #D45454 100%);
+  background: linear-gradient(180deg, #FEE0E0 0%, #FFF7F7 100%);
+  color: #4E0000;
 
   image {
     width: 80rpx;

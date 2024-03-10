@@ -28,4 +28,4 @@ export const getAIGCComment = params => fly.post('/composition/aigc/review', par
 export const getAIGCWrite = params => fly.post('/composition/aigc/text', params)
 
 // 拍照识别接口
-export const getPhotoRecognition = params => fly.get('/util/image/ocr', params)
+export const getPhotoRecognition = params => fly.post('/ocr/record/service', params)

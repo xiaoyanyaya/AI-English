@@ -67,11 +67,16 @@
                       :default-selector="[questionTypes.index]" :range="questionTypes.content"></u-picker>
           </view>
           <view style="width: 250rpx" v-else-if="pageIndex == 0">
-            <view class="grade flex align-item-center border-box px-1 justify-content-around mr-3">
-              <text class="t-size-24 t-color-8A8A8A">{{ '日期' }}</text>
+            <view @click="showTimeDate = true"
+              class="grade flex align-item-center border-box px-1 justify-content-around mr-3">
+              <text class="t-size-24 t-color-8A8A8A">
+                {{ queryParams.createTime ? queryParams.createTime : '日期' }}
+              </text>
               <u-icon name="arrow-down" color="#8A8A8A" size="28"></u-icon>
             </view>
 
+            <u-picker @confirm="timeDateConfirm" @cancel="timeDateCancel"
+              mode="time" v-model="showTimeDate" :params="timeDateParams"></u-picker>
           </view>
           <view class="keywords flex align-item-center border-box pl-3 justify-content-between  t-size-24"
                 @click="showDate = true">
@@ -121,6 +126,7 @@ import {
   getAIGCComposition
 } from '@/api/composition';
 import { sseRequestTask} from "@/jslibs/requestUtils";
+import {param, tr} from "@dcloudio/vue-cli-plugin-uni/packages/postcss/tags";
 
 export default {
   data() {
@@ -133,6 +139,23 @@ export default {
       showDate: false,
 
       contentData: [],
+      queryParams: {
+        pageNo: 1,
+        pageSize: 10,
+        createTime: '',
+        compositionType: '',
+        titleKeywords: ''
+      },
+
+      timeDateParams: {
+        year: true,
+        month: true,
+        day: true,
+        hour: false,
+        minute: false,
+        second: false
+      },
+      showTimeDate: false,
 
       infoKeyword: '',
       questionTypes: {
@@ -167,7 +190,15 @@ export default {
     this.network().getCompositionDictList('composition_type')
     this.network().getCompositionDictList('grade')
   },
+  // 触底加载
+  onReachBottom() {
+    this.queryParams.pageNo += 1
+    this.network().getData(this.pageIndex)
+  },
   methods: {
+    param() {
+      return param
+    },
     async sendRequest() {
       try {
         const response = await sseRequestTask();
@@ -192,25 +223,36 @@ export default {
       this.selectContent[index].index = e[0];
     },
     search() {
-      this.network().getData(1, {
-        composition_type: this.questionTypes.dict[this.questionTypes.index],
-        title_keywords: this.infoKeyword
-      })
+      this.queryParams.compositionType = this.questionTypes.dict[this.questionTypes.index]
+      this.queryParams.titleKeywords = this.infoKeyword
+      this.queryParams.pageNo = 1
+      this.contentData = []
+      this.network().getData(1)
+    },
+    timeDateConfirm(e) {
+      console.log(e)
+      var year = e.year
+      var month = e.month
+      var day = e.day
+      this.queryParams.createTime = year + '-' + month + '-' + day
+    },
+    timeDateCancel() {
+      this.queryParams.createTime = ''
     },
     network() {
       return {
-        getData: async (type, param = {}) => {
+        getData: async (type) => {
           let data = "";
           if (type == 0) {
             this.pageTitle = "我的英语作文库";
-            data = await getCompositionCollectList();
+            data = await getCompositionCollectList(this.queryParams);
           } else {
             this.pageTitle = "选择作文题目";
-            data = await getCompositionList(param);
+            data = await getCompositionList(this.queryParams);
           }
-          this.contentData = data.data.result.records
-          this.contentData.forEach(d => {
+          data.data.result.records.forEach(d => {
             d.createTime = d.createTime.split(' ')[0]
+            this.contentData.push(d)
           })
         },
         getCompositionDictList: async (type) => {

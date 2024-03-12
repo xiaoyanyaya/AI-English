@@ -312,7 +312,7 @@ export default {
           value: ''
         }]
       } else if (index == 2) {
-        this.pageTitle = '作文批改';
+        this.pageTitle = '作文帮写';
         this.descData = [{
           title: '年份',
           value: '2023年'

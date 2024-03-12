@@ -132,7 +132,7 @@ export default {
   data() {
     return {
       pageIndex: 0,
-      pageTitle: "我的英语作文库",
+      pageTitle: "我的作文库",
 
       // 日期
       dateValue: "日期",
@@ -244,7 +244,7 @@ export default {
         getData: async (type) => {
           let data = "";
           if (type == 0) {
-            this.pageTitle = "我的英语作文库";
+            this.pageTitle = "我的作文库";
             data = await getCompositionCollectList(this.queryParams);
           } else {
             this.pageTitle = "选择作文题目";

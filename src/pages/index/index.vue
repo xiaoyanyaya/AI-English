@@ -7,9 +7,10 @@
     <view class="px-4">
 
       <view class="scene-box">
-        <view class="t-color-fff check-teacher mt-2 flex align-item-center justify-content-center">
-          <view>换老师</view>
-          <view class="iconfont ml-2">&#xe652;</view>
+        <view class="check-teacher mt-2 flex align-item-center justify-content-center">
+          <view class="font-weight-bold mr-3">AI虚拟人口语</view>
+          <image :src="`${imageBaseUrl}/img_4.png`" mode="widthFix"></image>
+<!--          <view class="iconfont ml-2">&#xe652;</view>-->
         </view>
         <view class="scene-content">
           <view class="content-text mt-3 mr-2">
@@ -25,7 +26,7 @@
             <view class="flex justify-content-between align-item-center px-3">
               <view class="description flex flex-direction-column align-item-center justify-content-center">
                 <view class="font-weight-bold t-size-36">情景自由聊</view>
-                <view class="t-size-28">每天10分钟 进阶口语达人</view>
+                <view class="t-size-22">每天10分钟 进阶口语达人</view>
               </view>
               <view class="start-btn t-color-fff t-size-28 flex align-item-center justify-content-center"
               @click="$navigateTo(`/pages/virtualCharacter/index`)">
@@ -63,8 +64,8 @@
 
       <view class="ai-grid-container mt-5">
         <view class="ai-tools-box" @click="$navigateTo('/pages/composition/index')">
-          <view class="t-color-3D3D3D font-weight-bold t-size-30 ai-write">AI作文</view>
-          <view class="aparent">Aparentment</view>
+          <view class="t-color-3D3D3D font-weight-bold t-size-30 ai-write">AI满分作文</view>
+          <view class="aparent">作文批改提分神器</view>
           <image :src="`${imageBaseUrl}/img_4.png`" class="ment-image"></image>
           <image :src="`${imageBaseUrl}/img_5.png`" class="identification"></image>
         </view>
@@ -75,13 +76,13 @@
           <image :src="`${imageBaseUrl}/img_6.png`" class="identification"></image>
         </view>
         <view class="ai-tools-box">
-          <view class="t-color-3D3D3D font-weight-bold t-size-30 ai-write">AI学单词</view>
-          <view class="aparent">Aparentment</view>
+          <view class="t-color-3D3D3D font-weight-bold t-size-30 ai-write">AI速记单词</view>
+          <view class="aparent">低成本高效率速记单词</view>
           <image :src="`${imageBaseUrl}/img_4.png`" class="ment-image"></image>
           <image :src="`${imageBaseUrl}/img_7.png`" class="identification2"></image>
         </view>
 
-        <view class="ai-tools-box2 flex align-item-center border-box px-3"
+        <view class="ai-tools-box2 flex align-item-center border-box pl-2 pr-3"
               @click="$navigateTo('/pages/index/question')">
           <image :src="`${imageBaseUrl}/img_8.png`"></image>
           <view class="ml-3">
@@ -99,13 +100,12 @@
               @click="$navigateTo('')">
           <image :src="`${imageBaseUrl}/img_9.png`"></image>
           <view class="ml-3">
-            <view class="title font-weight-bold">
-              <view>AI在线</view>
-              <view>英语老师</view>
+            <view class="title font-weight-bold flex flex-direction-column align-item-center">
+              <view>中考</view>
+              <view>提分课程</view>
             </view>
             <view class="subtitle mt-2">
-              <view>24小时在线</view>
-              <view>帮你解答</view>
+              <view>现在就来看看吧</view>
             </view>
           </view>
         </view>
@@ -146,15 +146,21 @@ page {
 }
 
 .check-teacher {
-  width: 240rpx;
+  width: 280rpx;
   height: 60rpx;
   border-radius: 100rpx;
-  background: #D88422;
+  background: #FFC786;
   float: right;
   font-size: 24rpx;
+  color: #6D3100;
+  position: relative;
 
-  view:nth-child(2) {
-    font-size: 24rpx;
+  image {
+    width: 80rpx;
+    position: absolute;
+    border-bottom-left-radius: 14rpx;
+    right: 0;
+    top: 0;
   }
 }
 
@@ -210,8 +216,8 @@ page {
       }
 
       .start-btn {
-        width: 200rpx;
-        height: 80rpx;
+        width: 240rpx;
+        height: 70rpx;
         border-radius: 100rpx;
         background: linear-gradient(90deg, #6296F3 0%, #022689 97%);
       }
@@ -302,28 +308,64 @@ page {
     position: relative;
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
 
-    image {
-      width: 100rpx;
-      height: 100rpx;
-    }
     .title {
-      color: #6B3400;
       font-size: 26rpx;
+      line-height: 40rpx;
     }
     .subtitle {
-      color: #6B3400;
       font-size: 18rpx;
     }
   }
   .ai-tools-box2 {
     height: 300rpx;
     background: #FFFFFF;
+
+    image {
+      width: 130rpx;
+      height: 130rpx;
+    }
+
+    .title {
+      font-variation-settings: "opsz" auto;
+      font-feature-settings: "kern" on;
+      background: linear-gradient(180deg, #5693FF 0%, #002BA3 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
+    }
+
+    .subtitle {
+      color: #002BA3;
+    }
   }
   .ai-tools-box3 {
     background: linear-gradient(125deg, #FFD07E 2%, #FEF6E8 39%, #EBFBF3 100%);
+
+    image {
+      width: 100rpx;
+      height: 100rpx;
+    }
+
+    .title {
+      font-variation-settings: "opsz" auto;
+      font-feature-settings: "kern" on;
+      color: #6B3400;
+    }
+
+    .subtitle {
+      font-variation-settings: "opsz" auto;
+      font-feature-settings: "kern" on;
+      color: #6B3400;
+    }
   }
   .ai-tools-box4 {
     background: linear-gradient(128deg, #97CDFE 3%, #E8FEFC 35%, #FFF2F2 99%);
+
+    image {
+      width: 120rpx;
+      height: 120rpx;
+    }
   }
 }
 

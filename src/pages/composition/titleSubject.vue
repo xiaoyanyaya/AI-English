@@ -64,7 +64,7 @@
         <view class="font-weight-bold t-size-36">
           作文题目
         </view>
-        <view v-if="pageIndex==0" class="flex align-item-center">
+        <view v-if="pageIndex==0 || pageIndex==2" class="flex align-item-center">
           <view class="iconfont t-color-1863E5 essay-title-icon" @click="photograph('title')">&#xe663;</view>
         </view>
       </view>
@@ -72,8 +72,9 @@
         <u-input v-model="essayData.title"
                  placeholder="请输入作文题目"
                  :clearable="false"
+                 :maxlength="0"
                  :type="'textarea'" :border="false"
-                 :height="500" :auto-height="false"/>
+                 :height="450" :auto-height="false"/>
       </view>
 
       <view class="mt-5 font-weight-bold t-size-36 flex align-item-center justify-content-between">

@@ -23,7 +23,7 @@
       <view class="flex align-item-center">
         <view class="aitype-box-1 flex flex-direction-column justify-content-around align-item-center"
               @click="toPage(0)">
-          <view>{{ aiTypeList[0].title }}</view>
+          <view class="font-weight-bold">{{ aiTypeList[0].title }}</view>
           <view class="t-size-22 text-center">{{ aiTypeList[0].desc }}</view>
           <image :style="{width: `${aiTypeList[0].imageWidth}rpx`}"
                  :src="`${imageBaseUrl}${aiTypeList[0].image}`" mode="widthFix" class="w-100"></image>
@@ -55,7 +55,7 @@
       <view @click="toPage(3)"
             class="composition-box mt-2 flex align-item-center justify-content-around">
         <view class="flex">
-          <image :src="`${imageBaseUrl}/img_a4.png`" mode="widthFix" class="mr-3"></image>
+          <image :src="`${imageBaseUrl}/3-24-03.png`" mode="widthFix" class="mr-3"></image>
           <view class="flex flex-direction-column justify-content-around align-item-center">
             <view class="font-weight-bold">我的作文库</view>
             <view class="t-size-20">作文收藏，随时回顾，巩固学习成果</view>
@@ -74,13 +74,14 @@
       </view>
       <view class="living-box mt-2 px-2 pb-3 pt-1">
         <view class="flex justify-content-between mt-4 pb-4 pl-2 t-size-26 living-item"
-              v-for="(item, index) in livingData" :key="index">
-          <view class="flex align-item-center">
+              v-for="(item, index) in livingData" :key="index"
+              @click="clickLivingData(item, index)">
+          <view class="flex align-item-center" style="width: 450rpx">
             <image :src="`${imageBaseUrl}${item.image}`"
                    mode="widthFix" class="living-item-image"></image>
             <view class="flex flex-direction-column justify-content-around ml-3">
-              <view class="t-color-3D3D3D font-weight-bold">{{item.title}}</view>
-              <view class="mt-2 t-size-22 t-color-8A8A8A">{{item.desc}}</view>
+              <view class="t-color-3D3D3D font-weight-bold">{{item.compositionTitleText}}</view>
+              <view class="mt-2 t-size-22 t-color-8A8A8A table-nowrap-2">{{item.compositionText}}</view>
             </view>
           </view>
           <view class="flex flex-direction-column justify-content-around ml-3 user-info">
@@ -133,24 +134,24 @@ export default {
       aiTypeList: [{
         title: '作文批改',
         desc: '从单词到语法，全方位提高英语写作能力',
-        image: '/img_a5.png',
+        image: '/3-24-01.png',
         imageWidth: 100,
       }, {
-        title: '作文训练',
-        desc: '作文训练新体验！写作提升轻松练！',
+        title: '疯狂挑战',
+        desc: 'AI出题，作文训练新体验！写作提升轻松练！',
         image: '/img_a2.png',
         imageWidth: 50,
       }, {
         title: '作文帮写',
         desc: '考试作文,作业作文AI帮你写',
-        image: '/img_a3.png',
+        image: '/3-24-02.png',
         imageWidth: 50,
       }],
 
       livingData: [{
         image: '/img_a6.png',
-        title: '2023年广东高考作文',
-        desc: '作文题目内容',
+        compositionTitleText: '2023年广东高考作文',
+        compositionText: 'This is good news for the students who are preparing for the exam. The exam will be postponed for a week',
         username: '张三',
         school: '深圳中学',
       }],
@@ -190,11 +191,23 @@ export default {
     }
   },
   methods: {
+    clickLivingData(item, index) {
+      this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=5&pageTitle=AI作文批改&title=${item.compositionTitleText}&content=${item.compositionText}&generateContent=${item.compositionReview || ''}`);
+    },
     toPage(index) {
-      if (index == 3) {
-        this.$navigateTo(`/pages/composition/englishLibrary?type=0`);
-      } else {
-        this.$navigateTo(`/pages/composition/titleSubject?index=${index}`);
+      switch (index) {
+        case 0:
+          this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=0&pageTitle=作文批改`);
+          break;
+        case 1:
+          this.$navigateTo(`/pages/composition/new/crazyChallenge`);
+          break;
+        case 2:
+          this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=2&pageTitle=作文帮写`);
+          break;
+        case 3:
+          this.$navigateTo(`/pages/composition/new/englishLibrary?type=0`);
+          break;
       }
     }
   },
@@ -246,8 +259,8 @@ page {
   padding: 40rpx 30rpx;
   height: 336rpx;
   border-radius: 10rpx;
-  background: linear-gradient(139deg, #FFDDB6 0%, #FFFCF4 98%);
-  color: #442200;
+  background: linear-gradient(139deg, #E0EEFF 0%, #F2F2FB 98%);
+  color: #001E53;
 }
 
 .aitype-box-2, .aitype-box-3 {
@@ -264,15 +277,15 @@ page {
 }
 
 .aitype-box-3 {
-  background: linear-gradient(118deg, #D7FFEB 0%, #FCFEF4 99%);
-  color: #114E00;
+  background: linear-gradient(117deg, #E0EEFF 0%, #F3F3FB 100%);
+  color: #001E53;
 }
 
 .composition-box {
   height: 160rpx;
   border-radius: 10rpx;
-  background: linear-gradient(180deg, #FEE0E0 0%, #FFF7F7 100%);
-  color: #4E0000;
+  background: linear-gradient(139deg, #E0EEFF 0%, #F2F2FB 98%);
+  color: #001E53;
 
   image {
     width: 80rpx;

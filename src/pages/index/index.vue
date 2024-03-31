@@ -14,8 +14,7 @@
         </view>
         <view class="scene-content">
           <view class="content-text mt-3 mr-2">
-            <view>Hi,我是你的英语口语老师</view>
-            <view class="mt-1">Addy，快来找我练习吧！</view>
+            <text class="table-nowrap-2">{{personInfo.intro}}</text>
             <view class="say-hello mr-2 mt-2 flex align-item-center justify-content-center">
               <view></view>
               <view>Say hello</view>
@@ -35,8 +34,7 @@
             </view>
           </view>
           <image
-            :src="`${imageBaseUrl}/img_.png`" mode="widthFix" class="scene-img"></image>
-
+            :src="personInfo.avatarLarge" mode="widthFix" class="scene-img"></image>
         </view>
       </view>
 
@@ -134,9 +132,32 @@
 <script>
 
 import MyMixin from "@/utils/MyMixin";
+import {defaultVirtual} from "@/api/aiFriend";
 
 export default {
   mixins: [MyMixin],
+  data() {
+    return {
+      personInfo: {}
+    }
+  },
+  onLoad() {
+    this.network().defaultVirtual();
+    uni.$on("switchVirtual", () => {
+      this.network().defaultVirtual();
+    })
+  },
+  methods: {
+    network() {
+      return {
+        defaultVirtual: async () => {
+          const res = await defaultVirtual();
+          this.personInfo = res.data.result;
+          console.log(this.personInfo)
+        }
+      }
+    }
+  },
 }
 </script>
 
@@ -156,7 +177,7 @@ page {
   position: relative;
 
   image {
-    width: 80rpx;
+    width: 70rpx;
     position: absolute;
     border-bottom-left-radius: 14rpx;
     right: 0;

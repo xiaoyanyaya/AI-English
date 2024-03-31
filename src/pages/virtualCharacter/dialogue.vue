@@ -31,7 +31,6 @@
         </view>
       </view>
     </view>
-
     <view v-if="isShowPopup">
       <view class="popup-mask" @click="isShowPopup = false"></view>
       <view class="popup-content flex flex-direction-column justify-content-around align-item-center">
@@ -58,7 +57,12 @@
 <script>
 import cyNavbar from "@/components/cy-navbar.vue";
 import cyTabbar from "@/components/cy-tabbar.vue";
+import {getAiDialogue} from "@/api/aiDialogue";
 
+const recorderManager = uni.getRecorderManager();
+const innerAudioContext = uni.createInnerAudioContext();
+
+innerAudioContext.autoplay = true;
 export default {
   components: {cyTabbar, cyNavbar},
   data() {
@@ -95,11 +99,37 @@ export default {
         {title: '', icon: '\ue640', path: ''},
       ],
 
-      isShowPopup: false
+      isShowPopup: false,
+      isStartRecord: false,
     }
   },
   onLoad() {
     this.getSystemInfo();
+    let self = this;
+
+    // 授权录音
+    uni.authorize({
+      scope: 'scope.record',
+      success() {
+        console.log('录音授权成功');
+      },
+      fail() {
+        console.log('录音授权失败');
+      }
+    });
+    // 录音结束事件
+    recorderManager.onStop((res) => {
+      self.voicePath = res.tempFilePath;
+      const tempFilePath = res.tempFilePath;
+      uni.getFileSystemManager().readFile({
+        filePath: tempFilePath,
+        encoding: 'base64',
+        success: (res) => {
+          self.network().getAiDialogue(res.data);
+        }
+      });
+
+    });
   },
   computed: {
     contentBoxStyle() {
@@ -108,8 +138,33 @@ export default {
   },
   methods: {
     clickOptions(index) {
+      if (index === 1) {
+        console.log('开始录音');
+        this.isStartRecord = !this.isStartRecord
+        if (this.isStartRecord) {
+          recorderManager.start({
+            duration: 60000, // 录音的最大时长，单位 ms，最大值 600000（10 分钟）
+            sampleRate: 16000, // 采样率
+            numberOfChannels: 1, // 录音通道数
+            encodeBitRate: 96000, // 编码码率
+            format: 'aac' // 音频格式，支持 'aac' 或 'mp3'
+          });
+          this.optionsList[1].icon = '\ue676';
+        } else {
+          recorderManager.stop();
+          this.optionsList[1].icon = '\ue6e1';
+        }
+      }
       if (index === 3) {
         this.isShowPopup = true;
+      }
+    },
+    playVoice() {
+      console.log('播放录音');
+      console.log(this.voicePath)
+      if (this.voicePath) {
+        innerAudioContext.src = this.voicePath;
+        innerAudioContext.play();
       }
     },
     getSystemInfo() {
@@ -122,6 +177,17 @@ export default {
         }
       });
     },
+    network() {
+      return {
+        getAiDialogue: async (base64) => {
+          const res = await getAiDialogue({
+            voiceType: '16k_zh',
+            voiceData: base64
+          });
+          console.log(res)
+        }
+      }
+    }
   },
 }
 </script>

@@ -33,6 +33,12 @@
       "path": "pages/virtualCharacter/dialogueHistory"
     },
     {
+      "path": "pages/virtualCharacter/dialogueHistoryDetail"
+    },
+    {
+      "path": "pages/full-screen/full-screen"
+    },
+    {
       "path": "pages/virtualCharacter/sceneSwitch"
     },
     {
@@ -45,13 +51,19 @@
       "path": "pages/composition/index"
     },
     {
-      "path": "pages/composition/englishLibrary"
+      "path": "pages/composition/new/titleSubject"
     },
     {
-      "path": "pages/composition/titleSubject"
+      "path": "pages/composition/new/englishLibrary"
     },
     {
-      "path": "pages/composition/titleSubject1"
+      "path": "pages/composition/new/crazyChallenge"
+    },
+    {
+      "path": "pages/composition/new/challengeNumber"
+    },
+    {
+      "path": "pages/composition/new/challengeDetail"
     },
     {
       "path": "pages/me/index"
@@ -79,6 +91,12 @@
     },
     {
       "path": "pages/me/distribution"
+    },
+    {
+      "path": "pages/virtualCharacter/aiFriend"
+    },
+    {
+      "path": "pages/composition/component/searchCondition"
     }
   ],
   "globalStyle": {

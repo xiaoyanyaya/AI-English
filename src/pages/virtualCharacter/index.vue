@@ -1,12 +1,14 @@
 <template>
-  <view>
+  <view class="main-body">
     <cy-navbar showBack>
       <view class="t-size-30">虚拟人对练</view>
     </cy-navbar>
 
     <view class="content-box" :style="contentBoxStyle">
       <view class="mark-bg"></view>
-
+      <view class="flex align-item-center justify-content-center">
+        <image :src="personInfo.avatarLarge" mode="heightFix" class="scene-img"></image>
+      </view>
       <view class="options-btns flex flex-direction-column">
         <view v-for="(item, index) in optionsBtnsMenu" :key="index" class="options-item"
               @click="$navigateTo(item.path)">
@@ -30,7 +32,7 @@
 
       <view class="start-btn font-weight-bold t-size-40 flex justify-content-center align-item-center"
             @click="$navigateTo('/pages/virtualCharacter/dialogue')">
-        跟Jenny练口语
+        跟{{personInfo.name || ''}}练口语
       </view>
 
       <view class="flex justify-content-center notes-box">
@@ -66,6 +68,7 @@
 import cyNavbar from "@/components/cy-navbar.vue";
 import cyTabbar from "@/components/cy-tabbar.vue";
 import MyMixin from "@/utils/MyMixin";
+import {defaultVirtual} from "@/api/aiFriend";
 
 export default {
   mixins: [MyMixin],
@@ -79,12 +82,17 @@ export default {
       },
       optionsBtnsMenu: [],
       selectBtnsMenu: [],
-      isShowPopup: false
+      isShowPopup: false,
+      personInfo: {}
     }
   },
   onLoad() {
     this.getSystemInfo();
     this.init();
+    this.network().defaultVirtual();
+    uni.$on("switchVirtual", () => {
+      this.network().defaultVirtual();
+    })
   },
   computed: {
     contentBoxStyle() {
@@ -143,8 +151,16 @@ export default {
           this.$navigateTo('/pages/virtualCharacter/sceneSwitch');
           break;
         case 1:
-          this.$navigateTo('/pages/common/appearanceSelection');
+          this.$navigateTo('/pages/virtualCharacter/aiFriend');
           break;
+      }
+    },
+    network() {
+      return {
+        defaultVirtual: async () => {
+          const res = await defaultVirtual();
+          this.personInfo = res.data.result;
+        }
       }
     }
   },
@@ -154,7 +170,7 @@ export default {
 <style lang="scss" scoped>
 .content-box {
   overflow: hidden;
-  background-image: url('https://c-ssl.dtstatic.com/uploads/item/202003/31/20200331123100_nBc5m.thumb.1000_0.jpeg');
+  //background-image: url('https://c-ssl.dtstatic.com/uploads/item/202003/31/20200331123100_nBc5m.thumb.1000_0.jpeg');
   background-size: cover;
   position: relative;
 }
@@ -191,6 +207,7 @@ export default {
 
 .select-btns {
   position: absolute;
+  z-index: 3;
   right: 50rpx;
   top: 700rpx;
 
@@ -219,11 +236,16 @@ export default {
   margin-top: 50rpx;
   background: linear-gradient(180deg, rgba(255, 119, 214, 1) 0%, rgba(210, 42, 129, 1) 100%);
 }
-
+.scene-img {
+  height: 800rpx;
+  position: absolute;
+  bottom: 300rpx;
+}
 .start-btn {
   position: absolute;
+  z-index: 3;
   left: 102rpx;
-  bottom: 120rpx;
+  bottom: 200rpx;
   width: 546rpx;
   height: 96rpx;
   border-radius: 331rpx;
@@ -234,7 +256,8 @@ export default {
 
 .notes-box {
   position: absolute;
-  bottom: 20rpx;
+  z-index: 3;
+  bottom: 100rpx;
   width: 750rpx;
   color: #002BA3;
   font-size: 26rpx;
@@ -248,6 +271,7 @@ export default {
   right: 0;
   bottom: 0;
   top: 700rpx;
+  z-index: 2;
   background: linear-gradient(180deg, rgba(232, 242, 255, 0) 0%, rgba(228, 240, 255, 0.77) 38%, #B8D8FF 66%);
 }
 

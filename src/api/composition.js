@@ -29,3 +29,16 @@ export const getAIGCWrite = params => fly.post('/composition/aigc/text', params)
 
 // 拍照识别接口
 export const getPhotoRecognition = params => fly.post('/ocr/record/service', params)
+
+
+// 疯狂挑战 -> 作文题目 -> 本周必战题目接口
+export const getChallengeCompositionWeek = params => fly.get('/composition/library/challenge', params)
+
+// 疯狂挑战 -> 作文题目 -> 题目挑战次数统计
+export const getChallengeCompositionCount = params => fly.get('/composition/favorites/countChallenge', params)
+
+// 疯狂挑战 -> 作文题目 -> 题目挑战者列表
+export const getChallengeCompositionList = params => fly.get('/composition/favorites/queryChallengeList', params)
+
+// 我的作文库 -> 删除收藏（将记录设置为失效）
+export const deleteCompositionCollect = params => fly.post('composition/favorites/updateStatus', params)

@@ -4,7 +4,7 @@ export default {
 		return {
 			// 系统信息
 			systemInfo: {},
-			imageBaseUrl: "http://www.xliai.com/assets"
+			imageBaseUrl: "https://aien.xiaolixb.com/assets"
 		};
 	},
 	onLoad() {

@@ -22,7 +22,7 @@
             <u-icon name="arrow-right-double" color="#1863E5" size="24"></u-icon>
           </view>
         </view>
-        <view class="ai-title-box mt-2">
+        <view class="ai-title-box mt-2" @click.stop="click_input('title')">
           <view v-if="title.isDisabled" class="t-size-26">
             <rich-text :nodes="essayData.title"></rich-text>
           </view>
@@ -31,7 +31,10 @@
                       style="height: 100%; width: 100%;"
                       :disabled="title.isDisabled"
                       :value="essayDataShow.title"
-                      @input="inputTitle"
+                      :focus="title.isFocus"
+                      @focus.stop="focus_input('title')"
+                      @blur="blur_input('title')"
+                      @input="inputTextarea('title', $event)"
                       :maxlength="0"
                       auto-height
                       placeholder="请输入作文题目"></textarea>
@@ -60,7 +63,7 @@
             温馨提示：添加作文题目或作文要求，进行更专业的批改。可以不填。
           </view>
         </view>
-        <view class="ai-content-box mt-2">
+        <view class="ai-content-box mt-2" @click.stop="click_input('content')">
           <view v-if="content.isDisabled" class="t-size-26 pb-3">
             <rich-text :nodes="essayData.content"></rich-text>
           </view>
@@ -68,7 +71,10 @@
             <textarea class="t-size-26"
                       :disabled="content.isDisabled"
                       :value="essayDataShow.content"
-                      @input="inputContent"
+                      :focus="content.isFocus"
+                      @focus.stop="focus_input('content')"
+                      @blur="blur_input('content')"
+                      @input="inputTextarea('content', $event)"
                       :maxlength="0"
                       auto-height
                       placeholder="请输入作文内容"></textarea>
@@ -158,6 +164,7 @@ export default {
         isShowMore: false,
         isShowPhoto: true,
         isDisabled: false,
+        isFocus: false,
       },
       content: {
         isShowContent: true,
@@ -165,6 +172,7 @@ export default {
         isShowAddTilte: false,
         isShowPhoto: true,
         isDisabled: false,
+        isFocus: false,
       },
       otherContent: {
         show: false,
@@ -208,6 +216,11 @@ export default {
     };
   },
   onLoad({title, content, generateContent, pageIndex, pageTitle, compositionType, infoWordNums, infoWriteType}) {
+    uni.$on("cropImage", ({path, type}) => {
+      console.log("cropImage")
+      this.getPhotoRecognition(path, type)
+    })
+
     this.pageTitle = pageTitle;
     this.pageIndex = pageIndex;
     console.log('title', title, 'content', content, 'generateContent', generateContent, 'pageIndex', pageIndex, 'pageTitle', pageTitle)
@@ -315,21 +328,63 @@ export default {
   watch: {
     'essayData.content': {
       handler(val) {
-        this.contentLength = val.match(/[a-zA-Z]+/g).length; // 计算单词数量并赋值给 contentLength
+        console.log(val)
+        if (val.match(/[a-zA-Z]+/g)) {
+          this.contentLength = val.match(/[a-zA-Z]+/g).length; // 计算单词数量并赋值给 contentLength
+        }
       },
       deep: true
     }
   },
   methods: {
+    focus_input(type) {
+      setTimeout(() => {
+        if (type == 'title') {
+          this.title.isFocus = true
+        } else if (type == 'content') {
+          this.content.isFocus = true
+        }
+      }, 100)
+    },
+    blur_input(type) {
+      setTimeout(() => {
+        if (type == 'title') {
+          this.title.isFocus = false
+        } else if (type == 'content') {
+          this.content.isFocus = false
+        }
+      }, 100)
+    },
+    click_input(type) {
+      if (type == 'title') {
+        this.title.isFocus = true
+        console.log('title', this.title.isFocus)
+      } else if (type == 'content') {
+        this.content.isFocus = true
+        console.log('content', this.content.isFocus)
+      }
+    },
     clickAddTitle() {
       this.title.isShowTitle = true
       this.content.isShowAddTilte = false
     },
-    inputTitle(e) {
-      this.essayData.title = e.detail.value
+    inputTextarea(type, e) {
+      console.log(e)
+      if (type == 'title') {
+        this.essayData.title = e.detail.value
+      } else if (type == 'content') {
+        this.essayData.content = e.detail.value
+      }
+      this.pageScrollTo()
     },
-    inputContent(e) {
-      this.essayData.content = e.detail.value
+    pageScrollTo() {
+      uni.createSelectorQuery().select('.body').boundingClientRect(data => {
+        if (data) {
+          uni.pageScrollTo({
+            scrollTop: data.height
+          })
+        }
+      }).exec();
     },
     clickPopupContent(parentIndex, index) {
       this.popupContnet[parentIndex].activeIndex = index;
@@ -376,26 +431,26 @@ export default {
           let infoWriteType = this.popupContnet[2].val[this.popupContnet[2].activeIndex]
           this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=2&pageTitle=AI作文帮写&title=${this.essayData.title}&compositionType=${compositionType}&infoWordNums=${infoWordNums}&infoWriteType=${infoWriteType}`)
           break;
-          case "4":
-            if (this.pageTitle == '作文内容输入页') {
-              if (this.essayData.content == '') {
-                uni.showToast({
-                  title: '请输入作文内容',
-                  mask: true,
-                  icon: 'none'
-                })
-                return;
-              }
+        case "4":
+          if (this.pageTitle == '作文内容输入页') {
+            if (this.essayData.content == '') {
+              uni.showToast({
+                title: '请输入作文内容',
+                mask: true,
+                icon: 'none'
+              })
+              return;
             }
-            this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=4&pageTitle=AI作文批改&title=${this.essayData.title}&content=${this.essayData.content}&generateContent=${this.generateContent}`);
-            break;
+          }
+          this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=4&pageTitle=AI作文批改&title=${this.essayData.title}&content=${this.essayData.content}&generateContent=${this.generateContent}`);
+          break;
       }
     },
-    chooseImage(){
-      return new Promise(resolve=>{
+    chooseImage() {
+      return new Promise(resolve => {
         uni.chooseImage({
-          count:1,
-          success:(res)=> {
+          count: 1,
+          success: (res) => {
             resolve(res.tempFilePaths[0])
           }
         })
@@ -403,48 +458,53 @@ export default {
     },
     photograph(type) {
       var _this = this;
-      _this.chooseImage().then(src=>{
+      _this.chooseImage().then(src => {
         console.log(src);
         uni.navigateTo({
-          url:`/pages/full-screen/full-screen?src=${src}`
+          url: `/pages/full-screen/full-screen?src=${src}&type=${type}`
         })
       })
-      /*var tempFilePaths = res.tempFilePaths;
-          uni.getFileSystemManager().readFile({
-            filePath: tempFilePaths[0],
-            encoding: 'base64',
-            success: function (data) {
-              var base64Data = data.data;
+    },
+    // 识别图片文字
+    getPhotoRecognition(tempFilePath, type) {
+      var _this = this;
+      uni.getFileSystemManager().readFile({
+        filePath: tempFilePath,
+        encoding: 'base64',
+        success: function (data) {
+          var base64Data = data.data;
 
-              uni.showLoading({
-                title: '上传中...'
-              })
-              getPhotoRecognition({
-                imageBase64: base64Data,
-                // imageUrl: tempFilePaths[0],
-                ocrApiName: "accurateOCR",
-                ocrServiceProvider: "tencent"
-              }).then(res => {
-                switch (type) {
-                  case 'title':
-                    _this.essayData.title = res.data.result.ocrText
-                    _this.essayDataShow.title = res.data.result.ocrText
-                    break;
-                  case 'content':
-                    _this.essayData.content += res.data.result.ocrText
-                    _this.essayDataShow.content += res.data.result.ocrText
-                    break;
-                  case 'generateContent':
-                    _this.generateContent += res.data.result.ocrText
-                    break;
-                }
-                uni.hideLoading()
-              })
-            },
-            fail: function (err) {
-              console.log('读取文件失败：', err);
+          uni.showLoading({
+            title: '上传中...'
+          })
+          getPhotoRecognition({
+            imageBase64: base64Data,
+            // imageUrl: tempFilePaths[0],
+            ocrApiName: "accurateOCR",
+            ocrServiceProvider: "tencent"
+          }).then(res => {
+            console.log("tesdasd")
+            console.log(res)
+            switch (type) {
+              case 'title':
+                _this.essayData.title = res.data.result.ocrText
+                _this.essayDataShow.title = res.data.result.ocrText
+                break;
+              case 'content':
+                _this.essayData.content += res.data.result.ocrText
+                _this.essayDataShow.content += res.data.result.ocrText
+                break;
+              case 'generateContent':
+                _this.generateContent += res.data.result.ocrText
+                break;
             }
-          });*/
+            uni.hideLoading()
+          })
+        },
+        fail: function (err) {
+          console.log('读取文件失败：', err);
+        }
+      });
     },
     network() {
       return {
@@ -504,19 +564,22 @@ export default {
               const uint8Array = new Uint8Array(res.data);
               let text = String.fromCharCode.apply(null, uint8Array);
               text = decodeURIComponent(escape(text));
-              console.log(text)
-
+              // text = text.replaceAll("data:\n", "data:")
               let arr = text.split('\n')
+
               arr.forEach((item) => {
+                console.log(item)
+                console.log(item.length)
                 if (item.includes('data:') && !item.includes('[DONE]')) {
                   let text = item.replace('data:', '')
-                  // console.log(text)
-                  /*.replaceAll("「`」", " ").replaceAll("「·」", " ")*/
+                  text = text.replaceAll("「`」"," ").replaceAll("「·」", "<p></p>").replaceAll("「~」", "<p></p>")
+
                   if (type == 'content') {
                     this.essayData.content += text
                   } else if (type == 'generateContent') {
                     this.generateContent += text
                   }
+                  this.pageScrollTo()
                 } else if (item.includes('[DONE]')) {
                   /*var essayData = uni.getStorageSync("essayData")
                   essayData.content = this.essayData.content
@@ -530,6 +593,9 @@ export default {
                   if (this.pageTitle != 'AI作文帮写' || this.generateSuccess) {
                     uni.hideLoading()
                   }
+
+                  // 关闭请求
+                  requestTask.abort()
                 } else {
                   requestTask.abort
                 }
@@ -540,11 +606,11 @@ export default {
         getAIGCCorrection: async (type) => {
           this.$nextTick(() => {
             var params = {
-              "composition_title_text": this.essayData.title,
-              "composition_text": this.essayData.content
+              "compositionTitleText": this.essayData.title,
+              "compositionText": this.essayData.content
             }
             this.network().sseRequestTask({
-              url: 'composition/aigc/correct',
+              url: '/composition/aigc/correct',
               method: 'post',
               data: params,
               type
@@ -554,13 +620,13 @@ export default {
         getAIGCWrite: async (type) => {
           this.$nextTick(() => {
             var params = {
-              "composition_title_text": this.essayData.title,
-              "composition_type": this.compositionType,
-              "info_word_num": this.infoWordNums,
-              "info_write_type": this.infoWriteType
+              "compositionTitleText": this.essayData.title,
+              "compositionType": this.compositionType,
+              "infoWordNum": this.infoWordNums,
+              "infoWriteType": this.infoWriteType
             }
             this.network().sseRequestTask({
-              url: '/composition/aigc/text/',
+              url: '/composition/aigc/text',
               method: 'post',
               data: params,
               type
@@ -569,8 +635,8 @@ export default {
         },
         getAIGCComment: async (type) => {
           let params = {
-            "composition_title_text": this.essayData.title,
-            "composition_text": this.essayData.content
+            "compositionTitleText": this.essayData.title,
+            "compositionText": this.essayData.content
           }
           this.network().sseRequestTask({
             url: 'composition/aigc/review',

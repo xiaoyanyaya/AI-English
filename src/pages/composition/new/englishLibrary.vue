@@ -1,6 +1,6 @@
 <template>
   <view class="pb-5 main-body">
-    <cy-navbar showBack>
+    <cy-navbar showBack @returnPageNum="returnPageNum">
       <view class="t-size-30">{{ pageTitle }}</view>
     </cy-navbar>
 
@@ -197,13 +197,17 @@ export default {
     }, 1000);
 
     uni.$on('update', res => {
-      console.log(111);
       this.swipeClick({
         content: {
           text: '添加'
         }
       })
     })
+  },
+  // 页面销毁
+  onUnload() {
+    uni.$off('compositionSearchParams')
+    uni.$off('update')
   },
   onLoad({type}) {
     this.sendRequest();
@@ -226,6 +230,10 @@ export default {
     this.network().getData(this.pageIndex)
   },
   methods: {
+    returnPageNum() {
+      console.log("触发")
+      uni.$off('compositionSearchParams')
+    },
     contentClick(item) {
       console.log(item)
       this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=5&pageTitle=AI作文批改&title=${item.compositionTitleText}&content=${item.compositionText}&generateContent=${item.compositionReview || ''}`);
@@ -295,6 +303,8 @@ export default {
           }*/
           data.data.result.records.forEach(d => {
             d.createTime = d.createTime.split(' ')[0]
+            d.compositionTitleText = d.compositionTitleText.replace(/<[^>]+>/g, "")
+            d.compositionText = d.compositionText.replace(/<[^>]+>/g, "")
             this.contentData.push(d)
           })
           console.log(this.contentData)

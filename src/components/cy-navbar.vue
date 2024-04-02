@@ -77,6 +77,7 @@ export default {
       });
     },
     returnPageNum(num) {
+      this.$emit('returnPageNum', num)
       uni.navigateBack({
         delta: num
       });

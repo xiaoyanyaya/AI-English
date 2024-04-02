@@ -11,8 +11,8 @@
           <image :src="`${imageBaseUrl}/3-22-01.png`"></image>
         </view>
         <view class="top-content flex-direction-column flex align-item-center justify-content-center px-5">
-          <view class="tags t-size-24 flex align-item-center justify-content-center">
-            真题
+          <view class="tags t-size-20 flex align-item-center justify-content-center">
+            <text class="mr-2">{{challenge.compositionLabel}}</text>
           </view>
           <view class=" t-size-26 mt-1">
 <!--            <view class="mb-1">书面表达（满分 25分）</view>-->
@@ -42,7 +42,7 @@
 
       <view class="evaluate-box mt-5 pb-5" v-for="(item, index) in evaluateData" :key="index">
         <view class="tags t-size-24 flex align-item-center justify-content-center">
-          真题
+          <text class=""> {{item.compositionLabel}}</text>
         </view>
         <view class="content-box pt-3 pb-3 t-size-26">
           <view class="item">
@@ -246,7 +246,7 @@ export default {
 
   .tags {
     position: absolute;
-    left: -50rpx;
+    left: -40rpx;
     top: 10rpx;
     transform: rotate(-45deg);
     width: 150rpx;

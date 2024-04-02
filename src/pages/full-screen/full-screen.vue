@@ -42,6 +42,7 @@
 	export default {
 		data() {
 			return {
+        pageType: "",
 				imageSrc: "",
 				// 蒙版，非黑色区域会裁剪为透明
 				// mask: "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3b890b4-7cb2-4b29-aa78-e652572bdef6/d6bc69ee-cdc0-4a13-a744-d79db42e0dbe.png",
@@ -76,8 +77,9 @@
 				}]
 			}
 		},
-		onLoad(options) {
-			this.imageSrc = decodeURIComponent(options.src)
+		onLoad({src, type}) {
+			this.imageSrc = decodeURIComponent(src)
+      this.pageType = type
 		},
 		mounted() {},
 		methods: {
@@ -96,15 +98,14 @@
 					success: (res) => {
 						let tempFilePaths = res.tempFilePaths[0]
 						this.imageSrc = tempFilePaths
+            console.log("chooseImage", tempFilePaths);
 					}
 				})
 			},
 			onCrop(cb) {
 				this.$refs.croper.crop().then(path => {
-					console.log("path", path);
-					uni.previewImage({
-						urls:[path]
-					})
+					uni.$emit("cropImage", {path, type: this.pageType})
+          uni.navigateBack()
 				})
 			},
 			onRotate(ev){

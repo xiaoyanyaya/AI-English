@@ -566,6 +566,7 @@ export default {
               text = decodeURIComponent(escape(text));
               // text = text.replaceAll("data:\n", "data:")
               let arr = text.split('\n')
+              
 
               arr.forEach((item) => {
                 console.log(item)

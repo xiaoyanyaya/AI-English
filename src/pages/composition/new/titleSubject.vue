@@ -18,7 +18,7 @@
           </view>
           <view class="show-more-box flex align-item-center" v-if="title.isShowMore"
                 @click="showMorePopupup = true">
-            <view class="t-size-22 title mr-1" @click="title.isShowTitle = true">显示更多</view>
+            <view class="t-size-22 title mr-1" @click="title.isShowTitle = true">更多要求</view>
             <u-icon name="arrow-right-double" color="#1863E5" size="24"></u-icon>
           </view>
         </view>
@@ -112,7 +112,9 @@
 
     <view style="height: 100rpx"></view>
     <view class="flex align-item-center justify-content-center">
-      <view class="flex align-item-center t-color-fff justify-content-center btn-box" @click.stop.native="clickBtn">
+      <view class="flex align-item-center t-color-fff justify-content-center btn-box"
+            :style="{background : disabledBtn ? '#D8D8D8' : 'linear-gradient(180deg, #5A95FB 0%, #1258D0 100%)'}"
+            @click.stop.native="clickBtn">
         <view class="mr-2" v-if="btnTitle == '分享'">
           <u-icon name="share" color="#FFFFFF" size="30"></u-icon>
         </view>
@@ -148,7 +150,7 @@
 </template>
 
 <script>
-import {getCompositionDictList, getPhotoRecognition} from "@/api/composition";
+import {addCompositionCollect, getCompositionDictList, getPhotoRecognition} from "@/api/composition";
 import {apiDomain} from "@/configs/env";
 import state from "@/store/state";
 import {tr} from "@dcloudio/vue-cli-plugin-uni/packages/postcss/tags";
@@ -156,6 +158,7 @@ import {tr} from "@dcloudio/vue-cli-plugin-uni/packages/postcss/tags";
 export default {
   data() {
     return {
+      mainId: '',
       pageTitle: '作文批改',
       pageIndex: 0,
       btnTitle: '',
@@ -174,6 +177,7 @@ export default {
         isDisabled: false,
         isFocus: false,
       },
+      disabledBtn: false,
       otherContent: {
         show: false,
         title: '范文及点评',
@@ -215,14 +219,14 @@ export default {
       isGenerateContent: false,
     };
   },
-  onLoad({title, content, generateContent, pageIndex, pageTitle, compositionType, infoWordNums, infoWriteType}) {
+  onLoad({title, content, generateContent, pageIndex, pageTitle, compositionType, infoWordNums, infoWriteType, id}) {
     uni.$on("cropImage", ({path, type}) => {
-      console.log("cropImage")
       this.getPhotoRecognition(path, type)
     })
 
     this.pageTitle = pageTitle;
     this.pageIndex = pageIndex;
+    this.mainId = id;
     console.log('title', title, 'content', content, 'generateContent', generateContent, 'pageIndex', pageIndex, 'pageTitle', pageTitle)
     if (pageIndex == 0) {
       if (pageTitle === '作文批改') {
@@ -324,6 +328,10 @@ export default {
     this.network().getCompositionDictList('student_type')
     this.network().getCompositionDictList('composition_text_wordnum')
     this.network().getCompositionDictList('composition_context_type')
+  },
+  // 页面销毁
+  onUnload() {
+    uni.$off('cropImage')
   },
   watch: {
     'essayData.content': {
@@ -442,7 +450,7 @@ export default {
               return;
             }
           }
-          this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=4&pageTitle=AI作文批改&title=${this.essayData.title}&content=${this.essayData.content}&generateContent=${this.generateContent}`);
+          this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=4&pageTitle=AI作文批改&title=${this.essayData.title}&content=${this.essayData.content}&generateContent=${this.generateContent}&id=${this.mainId}`);
           break;
       }
     },
@@ -473,7 +481,6 @@ export default {
         encoding: 'base64',
         success: function (data) {
           var base64Data = data.data;
-
           uni.showLoading({
             title: '上传中...'
           })
@@ -508,6 +515,10 @@ export default {
     },
     network() {
       return {
+        addCompositionCollect: async (params) => {
+          let data = await addCompositionCollect(params);
+          console.log(data)
+        },
         getCompositionDictList: async (type) => {
           let params = {type}
           let data = await getCompositionDictList(params);
@@ -542,6 +553,7 @@ export default {
                 mask: true,
                 title: '内容生成中...'
               })
+              this.disabledBtn = true
             }, 500)
             const requestTask = uni.request({
               url: `${apiDomain}${url}`,
@@ -564,16 +576,17 @@ export default {
               const uint8Array = new Uint8Array(res.data);
               let text = String.fromCharCode.apply(null, uint8Array);
               text = decodeURIComponent(escape(text));
+              if (!text.startsWith('data:')) {
+                text = 'data:' + text
+              }
               // text = text.replaceAll("data:\n", "data:")
               let arr = text.split('\n')
-              
-
               arr.forEach((item) => {
-                console.log(item)
-                console.log(item.length)
+                console.log(item," item")
+
                 if (item.includes('data:') && !item.includes('[DONE]')) {
                   let text = item.replace('data:', '')
-                  text = text.replaceAll("「`」"," ").replaceAll("「·」", "<p></p>").replaceAll("「~」", "<p></p>")
+                  text = text.replaceAll("「`」", " ").replaceAll("「·」", "<p></p>").replaceAll("「~」", "<p></p>")
 
                   if (type == 'content') {
                     this.essayData.content += text
@@ -581,7 +594,7 @@ export default {
                     this.generateContent += text
                   }
                   this.pageScrollTo()
-                } else if (item.includes('[DONE]')) {
+                } else if (item.includes('data:[DONE]')) {
                   /*var essayData = uni.getStorageSync("essayData")
                   essayData.content = this.essayData.content
                   uni.setStorageSync("essayData", essayData)*/
@@ -593,6 +606,32 @@ export default {
 
                   if (this.pageTitle != 'AI作文帮写' || this.generateSuccess) {
                     uni.hideLoading()
+                    if (this.pageTitle != 'AI作文帮写') {
+                      this.disabledBtn = false
+                    }
+                  }
+                  if (type == 'generateContent') {
+                    console.log(type)
+                    this.disabledBtn = false
+                    // 收藏
+                    this.$nextTick(() => {
+                      var params = {
+                        "compositionLibraryId": this.mainId,
+                        "compositionTitleText": this.essayData.title || '',
+                        "compositionText": this.essayData.content,
+                        "compositionType": "501",
+                        "compositionCorrect": this.generateContent
+                      }
+                      if (this.pageTitle === 'AI作文批改') {
+                        params.compositionFavoritesSource = 2
+                        if (this.pageIndex == 4) {
+                          params.compositionFavoritesSource = 3
+                        }
+                      } else if (this.pageTitle === 'AI作文帮写') {
+                        params.compositionFavoritesSource = 1
+                      }
+                      this.network().addCompositionCollect(params)
+                    })
                   }
 
                   // 关闭请求
@@ -606,6 +645,7 @@ export default {
         },
         getAIGCCorrection: async (type) => {
           this.$nextTick(() => {
+            // 作文批改
             var params = {
               "compositionTitleText": this.essayData.title,
               "compositionText": this.essayData.content
@@ -747,7 +787,6 @@ export default {
   width: 400rpx;
   height: 80rpx;
   border-radius: 163rpx;
-  background: linear-gradient(180deg, #5A95FB 0%, #1258D0 100%);
 }
 
 </style>

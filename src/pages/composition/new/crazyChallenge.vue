@@ -7,7 +7,7 @@
     <view class="px-4 mt-5">
       <view class="top-content-box">
         <view class="bg-image-box flex align-item-center justify-content-center">
-          <view class="title font-weight-bold t-color-fff">每周挑战专题区</view>
+          <view class="title t-size-32 font-weight-bold t-color-fff">每周挑战</view>
           <image :src="`${imageBaseUrl}/3-22-01.png`"></image>
         </view>
         <view class="top-content flex-direction-column flex align-item-center justify-content-center px-5">
@@ -25,13 +25,13 @@
               <image :src="`${imageBaseUrl}${item.icon}`"></image>
               <view class="t-size-26 ml-1">{{item.title}}</view>
               <view v-if="index === 0"
-                    class="t-size-20 t-color-8A8A8A ml-1">({{item.value}})</view>
+                    class="t-size-20 t-color-8A8A8A ml-1">({{challenge.favoritesTimes || 0}})</view>
             </view>
           </view>
         </view>
       </view>
 
-      <view class="flex align-item-center">
+      <view class="flex align-item-center mt-4">
         <view class="school-item mr-3 mt-3"
               :class="{active: item.isActive}"
               @click="clickSChoolType(item, index)"
@@ -40,7 +40,7 @@
         </view>
       </view>
 
-      <view class="evaluate-box mt-5 pb-5" v-for="(item, index) in evaluateData" :key="index">
+      <view class="evaluate-box mt-3 pb-5" v-for="(item, index) in evaluateData" :key="index">
         <view class="tags t-size-24 flex align-item-center justify-content-center">
           <text class=""> {{item.compositionLabel}}</text>
         </view>
@@ -64,7 +64,7 @@
             <image :src="`${imageBaseUrl}${btn.icon}`"></image>
             <view class="t-size-26 ml-1">{{btn.title}}</view>
             <view v-if="btnIndex === 0"
-                  class="t-size-20 t-color-8A8A8A ml-1">({{btn.value}})</view>
+                  class="t-size-20 t-color-8A8A8A ml-1">({{item.favoritesTimes || 0}})</view>
           </view>
         </view>
       </view>
@@ -115,10 +115,10 @@ export default {
   methods: {
     clickBtn(title, data) {
       if (title == '挑战人数') {
-        this.$navigateTo(`/pages/composition/new/challengeNumber?id=${data.id}`)
+        this.$navigateTo(`/pages/composition/new/challengeNumber?id=${data.id}&title=${data.compositionTitleText}&compositionLabel=${data.compositionLabel}`)
       }
       if (title == '立即挑战') {
-        this.$navigateTo(`/pages/composition/new/titleSubject?title=${data.compositionTitleText}&pageIndex=4&pageTitle=作文内容输入页`)
+        this.$navigateTo(`/pages/composition/new/titleSubject?title=${data.compositionTitleText}&pageIndex=4&pageTitle=作文内容输入页&id=${data.id}`)
       }
     },
     clickSChoolType(item, index) {

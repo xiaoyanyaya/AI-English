@@ -5,37 +5,56 @@
     </cy-navbar>
 
     <view class="px-4 mt-4 mb-5">
-      <view class="top-bg">
-        <image src="/static/logo.png"></image>
-      </view>
-
-      <view class="seniority-btn mt-3 flex align-item-center justify-content-center t-color-fff font-weight-bold">
-        <view>排行榜</view>
-      </view>
-    </view>
-
-    <view class="person-list" v-for="(item, index) in personList" :key="index">
-      <view class="item flex align-item-center" :class="{active: item.isSelect}">
-        <view class="sort" :class="{active: item.isSelect}">{{ item.sort }}</view>
-        <view class="avatar">
-          <image :src="item.avatar"></image>
+      <view class="top-content-box">
+        <view class="top-content flex-direction-column flex align-item-center justify-content-center px-5">
+          <view class="tags t-size-24 flex align-item-center justify-content-center">
+            <text class="mr-4">{{compositionLabel}}</text>
+          </view>
+          <view class=" t-size-26 mt-1">
+            <!--            <view class="mb-1">书面表达（满分 25分）</view>-->
+            <rich-text :nodes="title"></rich-text>
+          </view>
         </view>
-        <view class="name" :class="{active: item.isSelect}">{{item.name}}</view>
-        <view class="score font-weight-bold t-size-36">{{item.score}}分</view>
       </view>
-      <view class="px-5">
-        <view class="line-hr"></view>
+
+      <view class="flex align-item-center justify-content-between px-2 mt-5 mb-3">
+        <view class="t-color-3D3D3D t-size-30 font-weight-bold">挑战列表</view>
+        <view class="t-color-8A8A8A t-size-24 flex align-item-center">
+          <view class="iconfont" style="font-size: 40rpx">&#xe6ad;</view>
+          <view class="ml-1">综合排序</view>
+        </view>
+      </view>
+
+      <view class="content-box px-4 pb-2 mb-3" v-for="(item, index) in challengeData" :key="index">
+        <view class="flex justify-content-between align-item-start person-box">
+          <div class="flex person">
+            <view>
+              <image class="avatar" src="/static/logo.png"></image>
+            </view>
+            <view class="ml-3">
+              <view class=" mb-1 t-size-30 font-weight-bold">{{item.userId_dictText}}</view>
+              <view class="t-size-24 t-color-8A8A8A">{{item.createTime}}</view>
+            </view>
+          </div>
+          <div class="collection flex align-item-center">
+            <image class="iconfont" :src="`${imageBaseUrl}/3-22-04.png`"></image>
+            <view class="ml-2 t-size-24 t-color-8A8A8A">收藏({{item.compositionFavoritesSource}})</view>
+          </div>
+        </view>
+        <view class="mt-2 content-text">
+          {{item.compositionCorrect}}
+        </view>
       </view>
     </view>
-
   </view>
 </template>
 
 <script>
-import {tr} from "@dcloudio/vue-cli-plugin-uni/packages/postcss/tags";
-import {getChallengeCompositionList} from "@/api/composition";
+import {getChallengeCompositionList} from "@/api/composition"
+import myMixin from "@/utils/MyMixin";
 
 export default {
+  mixins: [myMixin],
   data() {
     return {
       personList: [{
@@ -64,18 +83,42 @@ export default {
         isSelect: true
       }],
       id: '',
+      title: '',
+      compositionLabel: '',
+      challengeData: [],
+      challenge: {
+        compositionInfo: null,
+        compositionLabel: "AI出题",
+        compositionTitleImage: "",
+        compositionTitleText: "假设你是刘军，在上周末的乡村旅游中，你发现了一些游客的不文明行为。请根据下表信息给某英文报VOICE栏目的编辑写一封邮件，反映这些问题并提出建议。",
+        compositionType: "101",
+        createBy: "admin",
+        createTime: "2024-03-28 18:00:25",
+        favoritesTimes: 0,
+        id: "1762779778687045664",
+        infoCity: "广州市",
+        infoProvince: "广东省",
+        infoPublish: "教育出版社",
+        infoYear: "2023",
+        note: "这是一篇关于人工智能优点的作文",
+        status: 1,
+        updateBy: null,
+        updateTime: null,
+      }
     };
   },
-  onLoad({id}) {
+  onLoad({id, title, compositionLabel}) {
     this.id = id;
+    this.title = title;
+    this.compositionLabel = compositionLabel;
     this.network().getChallengeCompositionList();
   },
   methods: {
     network() {
       return {
         getChallengeCompositionList: async () => {
-          const res = await getChallengeCompositionList({compositionTitleId: this.id});
-          console.log(res.data.result.records)
+          const res = await getChallengeCompositionList({compositionLibraryId: this.id});
+          this.challengeData = res.data.result.records
         }
       }
     }
@@ -84,81 +127,70 @@ export default {
 </script>
 
 <style lang="scss">
-.top-bg {
-  width: 680rpx;
-  height: 300rpx;
+.top-content-box {
+  border-radius: 20rpx;
+  overflow: hidden;
 
-  image {
-    width: 100%;
-    height: 100%;
-  }
-}
+  .top-content {
+    margin-top: -15rpx;
+    width: 670rpx;
+    line-height: 40rpx;
+    padding: 60rpx 50rpx 50rpx 70rpx;
+    background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.38) 100%);
+    position: relative;
 
-.seniority-btn {
-  width: 680rpx;
-  height: 80rpx;
-  border-radius: 184rpx;
-  background: #326ED6;
-}
-
-.person-list {
-
-  .item {
-    padding: 0 40rpx 0 0;
-    width: 750rpx;
-    height: 140rpx;
-    box-sizing: border-box;
-
-    &.active {
-      background: linear-gradient(180deg, #A4C6FF 0%, #CBDEFF 98%);
-    }
-
-    view {
-      display: flex;
-      justify-content: center;
-    }
-
-    .sort {
-      width: 25%;
-
-      &.active {
-        color: #3B49C5;
-      }
-    }
-    .avatar {
-      width: 25%;
-      overflow: hidden;
-
-      image {
-        border-radius: 50%;
-        width: 60rpx;
-        height: 60rpx;
-      }
-    }
-
-    .name {
-      width: 25%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-
-      &.active {
-        color: #3B49C5;
-      }
-    }
-
-    .score {
-      width: 25%;
-      font-family: Source Han Sans;
-      line-height: normal;
-      letter-spacing: 0em;
+    .tags {
+      position: absolute;
+      left: -50rpx;
+      top: 20rpx;
+      transform: rotate(-45deg);
+      width: 220rpx;
+      height: 50rpx;
       color: #DC0C0C;
+      background: #FFDCDC;
     }
   }
 }
 
-.line-hr {
-  height: 1px;
-  background: #E5E5E5;
+.content-box {
+  width: 670rpx;
+  border-radius: 20rpx;
+  opacity: 1;
+  background: #FFFFFF;
 }
+
+.person-box {
+  border-bottom: 1px solid #E5E5E5;
+  padding: 20rpx 0;
+
+  .person {
+    image {
+      width: 80rpx;
+      height: 80rpx;
+      border-radius: 50%;
+    }
+  }
+  .collection {
+    image {
+      width: 40rpx;
+      height: 40rpx;
+    }
+  }
+}
+.content-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-height: 40rpx;
+  // 首行缩进
+  text-indent: 2em;
+  color: #7C6E6E
+
+
+
+;
+}
+
 </style>

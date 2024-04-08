@@ -138,7 +138,7 @@ export default {
         imageWidth: 100,
       }, {
         title: '疯狂挑战',
-        desc: 'AI出题，作文训练新体验！写作提升轻松练！',
+        desc: 'AI出题，历届中高考作文题，等你来挑战！',
         image: '/img_a2.png',
         imageWidth: 50,
       }, {

@@ -51,6 +51,7 @@
         </view>
       </view>
     </view>
+    <button @click="playVoice">播放</button>
   </view>
 </template>
 
@@ -58,6 +59,8 @@
 import cyNavbar from "@/components/cy-navbar.vue";
 import cyTabbar from "@/components/cy-tabbar.vue";
 import {getAiDialogue} from "@/api/aiDialogue";
+import {apiDomain} from "@/configs/env";
+import state from "@/store/state";
 
 const recorderManager = uni.getRecorderManager();
 const innerAudioContext = uni.createInnerAudioContext();
@@ -121,6 +124,7 @@ export default {
     recorderManager.onStop((res) => {
       self.voicePath = res.tempFilePath;
       const tempFilePath = res.tempFilePath;
+      console.log('tempFilePath', tempFilePath)
       uni.getFileSystemManager().readFile({
         filePath: tempFilePath,
         encoding: 'base64',
@@ -180,12 +184,76 @@ export default {
     network() {
       return {
         getAiDialogue: async (base64) => {
-          const res = await getAiDialogue({
-            voiceType: '16k_zh',
-            voiceData: base64
-          });
-          console.log(res)
-        }
+          this.network().sseRequestTask({
+            url: '/digitalhuman/asr/voiceToTextStream',
+            method: 'post',
+            data: {
+              voiceType: 'MP4',
+              voiceData: base64,
+              voiceDataLen: base64.length
+            }
+          })
+        },
+        sseRequestTask: async ({url, data, method = 'POST'}) => {
+          return new Promise((resolve, reject) => {
+            setTimeout(() => {
+              uni.showLoading({
+                mask: true,
+                title: '内容生成中...'
+              })
+              this.disabledBtn = true
+            }, 500)
+            const requestTask = uni.request({
+              url: `${apiDomain}${url}`,
+              timeout: 15000,
+              responseType: 'text',
+              method,
+              enableChunked: true,
+              data,
+              header: {
+                'X-Access-Token': state.token,
+              },
+              success: response => {
+                console.log('response', response)
+                resolve(response)
+              },
+              fail: error => {
+                console.log('error', error)
+              }
+            });
+            requestTask.onHeadersReceived(function (res) {
+            });
+            requestTask.onChunkReceived((res) => {
+              console.log(res)
+
+              /*const uint8Array = new Uint8Array(res.data);
+              let text = String.fromCharCode.apply(null, uint8Array);
+              text = decodeURIComponent(escape(text));
+              if (!text.startsWith('data:')) {
+                text = 'data:' + text
+              }
+              let arr = text.split('\n')
+              arr.forEach((item) => {
+                console.log(item," item")
+
+                if (item.includes('data:') && !item.includes('[DONE]')) {
+                  let text = item.replace('data:', '')
+                  text = text.replaceAll("「`」", " ").replaceAll("「·」", "<p></p>").replaceAll("「~」", "<p></p>")
+
+                  console.log(text, 'text')
+                } else if (item.includes('data:[DONE]')) {
+                  console.log('结束')
+
+
+                  // 关闭请求
+                  requestTask.abort()
+                } else {
+                  requestTask.abort
+                }
+              })*/
+            })
+          })
+        },
       }
     }
   },

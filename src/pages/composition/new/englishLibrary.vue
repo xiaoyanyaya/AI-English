@@ -236,7 +236,7 @@ export default {
     },
     contentClick(item) {
       console.log(item)
-      this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=5&pageTitle=AI作文批改&title=${item.compositionTitleText}&content=${item.compositionText}&generateContent=${item.compositionReview || ''}`);
+      this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=5&pageTitle=AI作文批改&title=${item.compositionTitleText}&content=${item.compositionText}&generateContent=${item.compositionCorrect || ''}`);
     },
     bindClick(e) {
       console.log(e)
@@ -288,7 +288,11 @@ export default {
             id,
             status: 0
           })
-          console.log(data)
+          console.log(data.data.code)
+          if (data.data.code == 200) {
+            this.contentData.splice(this.deleteIndex, 1)
+            this.showDelete = false
+          }
         },
         getData: async (type) => {
           let data = "";

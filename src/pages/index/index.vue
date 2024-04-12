@@ -33,7 +33,7 @@
               </view>
             </view>
           </view>
-          <image
+          <image v-show="personInfo.avatarLarge"
             :src="personInfo.avatarLarge" mode="widthFix" class="scene-img"></image>
         </view>
       </view>
@@ -389,6 +389,4 @@ page {
     }
   }
 }
-
-
 </style>

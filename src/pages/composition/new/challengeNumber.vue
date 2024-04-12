@@ -19,17 +19,17 @@
 
       <view class="flex align-item-center justify-content-between px-2 mt-5 mb-3">
         <view class="t-color-3D3D3D t-size-30 font-weight-bold">挑战列表</view>
-        <view class="t-color-8A8A8A t-size-24 flex align-item-center">
+<!--        <view class="t-color-8A8A8A t-size-24 flex align-item-center">
           <view class="iconfont" style="font-size: 40rpx">&#xe6ad;</view>
           <view class="ml-1">综合排序</view>
-        </view>
+        </view>-->
       </view>
 
       <view class="content-box px-4 pb-2 mb-3" v-for="(item, index) in challengeData" :key="index">
         <view class="flex justify-content-between align-item-start person-box">
           <div class="flex person">
             <view>
-              <image class="avatar" src="/static/logo.png"></image>
+              <image class="avatar" :src="item.avatar"></image>
             </view>
             <view class="ml-3">
               <view class=" mb-1 t-size-30 font-weight-bold">{{item.userId_dictText}}</view>
@@ -118,7 +118,7 @@ export default {
       return {
         getChallengeCompositionList: async () => {
           const res = await getChallengeCompositionList({compositionLibraryId: this.id});
-          this.challengeData = res.data.result.records
+          this.challengeData = res.data.result
         }
       }
     }

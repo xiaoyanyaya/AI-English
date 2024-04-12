@@ -6,7 +6,7 @@
 			</bt-cropper>
 		</view>
 		<view class="footer">
-			<scroll-view :scroll-x="true" class="scroller">
+<!--			<scroll-view :scroll-x="true" class="scroller">
 				<view class="scrollerContainer">
 					<view @click="ratio=0" class="item" :class="{
 						active: ratio==0
@@ -24,16 +24,16 @@
 						</view>
 					</view>
 				</view>
-			</scroll-view>
+			</scroll-view>-->
 			<view class="btnGroup">
 				<view class="btn choose" @click="chooseImage">
-					选择图片
+					取消
 				</view>
 				<view class="btn" @click="onCrop">
-					开始裁切
+					确认
 				</view>
 			</view>
-			<slider @changing="onRotate"></slider>
+<!--			<slider @changing="onRotate"></slider>-->
 		</view>
 	</view>
 </template>
@@ -51,7 +51,7 @@
 				rotate: 0,
 				// 输出的宽高比例
 				// ratio: 3 / 2,
-				ratio: 1 / 1,
+				ratio: 0,
 				activeIndex: 0,
 				ratioList: [{
 					width: 1,
@@ -92,7 +92,8 @@
 				this.ratio = item.width / item.height
 			},
 			chooseImage() {
-				uni.chooseImage({
+        uni.navigateBack()
+				/*uni.chooseImage({
 					count: 1,
 					sizeType: ['original'],
 					success: (res) => {
@@ -100,10 +101,12 @@
 						this.imageSrc = tempFilePaths
             console.log("chooseImage", tempFilePaths);
 					}
-				})
+				})*/
 			},
 			onCrop(cb) {
 				this.$refs.croper.crop().then(path => {
+          console.log("onCrop", path);
+          // uni.$emit("cropImage", {path: this.imageSrc, type: this.pageType})
 					uni.$emit("cropImage", {path, type: this.pageType})
           uni.navigateBack()
 				})
@@ -225,6 +228,7 @@
 			padding-bottom: 20rpx;
 			padding-top: 20rpx;
 			width: 100%;
+      margin-bottom: 100rpx;
 
 			.btn {
 				width: 300rpx;
@@ -237,7 +241,8 @@
 
 				&.choose {
 					margin-right: 20rpx;
-					background-color: #F0AD4E;
+					background-color: #a29d9d;
+        //  background-color: #F0AD4E;
 				}
 			}
 		}

@@ -124,16 +124,29 @@ export default {
     recorderManager.onStop((res) => {
       self.voicePath = res.tempFilePath;
       const tempFilePath = res.tempFilePath;
-      console.log('tempFilePath', tempFilePath)
-      uni.getFileSystemManager().readFile({
-        filePath: tempFilePath,
-        encoding: 'base64',
-        success: (res) => {
-          self.network().getAiDialogue(res.data);
-        }
-      });
 
-    });``
+      uni.getFileSystemManager().getFileInfo({
+        filePath: tempFilePath,
+        success: (res) => {
+          var size = res.size;
+
+          uni.getFileSystemManager().readFile({
+            filePath: tempFilePath,
+            success: (data) => {
+              var arrayBuffer = data.data;
+              self.network().getAiDialogue(uni.arrayBufferToBase64(arrayBuffer), arrayBuffer.byteLength);
+            }
+          });
+          /*uni.getFileSystemManager().readFile({
+            filePath: tempFilePath,
+            encoding: 'base64',
+            success: (res) => {
+              self.network().getAiDialogue(res.data, size);
+            }
+          });*/
+        }
+      })
+    });
   },
   computed: {
     contentBoxStyle() {
@@ -151,7 +164,7 @@ export default {
             sampleRate: 16000, // 采样率
             numberOfChannels: 1, // 录音通道数
             encodeBitRate: 48000, // 编码码率
-            format: 'aac' // 音频格式，支持 'aac' 或 'mp3'
+            format: 'pcm' // 音频格式，支持 'aac' 或 'mp3'
           });
           this.optionsList[1].icon = '\ue676';
         } else {
@@ -183,14 +196,16 @@ export default {
     },
     network() {
       return {
-        getAiDialogue: async (base64) => {
+        getAiDialogue: async (base64, length) => {
+          console.log(base64, 'base64')
+          console.log(length, 'length')
           this.network().sseRequestTask({
             url: '/digitalhuman/asr/voiceToTextStream',
             method: 'post',
             data: {
-              voiceFormat: 'm4a',
+              voiceFormat: 'pcm',
               voiceData: base64,
-              voiceDataLen: base64.length
+              voiceDataLen: length
             }
           })
         },

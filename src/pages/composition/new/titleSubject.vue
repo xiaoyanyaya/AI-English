@@ -15,6 +15,10 @@
               <view class="iconfont t-color-1863E5 essay-title-icon">&#xe663;</view>
               <view class="t-size-22 t-color-1863E5 ml-1">拍照识别</view>
             </view>
+            <view v-if="title.isDisabled" @click="copyContent(essayData.title)" class="flex ml-3 align-item-end" style="margin-top: 2rpx">
+              <view class="iconfont t-color-1863E5 essay-title-icon">&#xe8b0;</view>
+              <view class="t-size-22 t-color-1863E5" style="margin-left: 6rpx">复制</view>
+            </view>
           </view>
           <view class="show-more-box flex align-item-center" v-if="title.isShowMore"
                 @click="showMorePopupup = true">
@@ -52,6 +56,10 @@
               <view class="iconfont t-color-1863E5 essay-title-icon">&#xe663;</view>
               <view class="t-size-22 t-color-1863E5 ml-1">拍照识别</view>
             </view>
+            <view v-if="content.isDisabled" @click="copyContent(essayData.content)" class="flex ml-3 align-item-end" style="margin-top: 2rpx">
+              <view class="iconfont t-color-1863E5 essay-title-icon">&#xe8b0;</view>
+              <view class="t-size-22 t-color-1863E5" style="margin-left: 6rpx">复制</view>
+            </view>
           </view>
           <view class="note flex align-item-center" v-if="content.isShowAddTilte">
             <view class="t-size-22 title mr-1" @click="clickAddTitle">添加题目</view>
@@ -64,7 +72,7 @@
           </view>
         </view>
         <view class="ai-content-box mt-2" @click.stop="click_input('content')">
-          <view v-if="content.isDisabled" class="t-size-26 pb-3">
+          <view v-if="content.isDisabled" class="t-size-28 pb-3" style="line-height: 24px;">
             <rich-text :nodes="essayData.content"></rich-text>
           </view>
           <view v-else>
@@ -91,10 +99,14 @@
             <view class="font-weight-bold t-size-28 ml-3 font-weight-bold">
               {{ otherContent.title }}
             </view>
+            <view v-if="otherContent.isDisabled" @click="copyContent(generateContent)" class="flex ml-3 align-item-end" style="margin-top: 2rpx">
+              <view class="iconfont t-color-1863E5 essay-title-icon">&#xe8b0;</view>
+              <view class="t-size-22 t-color-1863E5" style="margin-left: 6rpx">复制</view>
+            </view>
           </view>
         </view>
         <view class="ai-content-box mt-2">
-          <view v-if="otherContent.isDisabled" class="t-size-26">
+          <view v-if="otherContent.isDisabled" class="t-size-28" style="line-height: 24px;">
             <rich-text :nodes="generateContent"></rich-text>
           </view>
           <view v-else>
@@ -112,14 +124,23 @@
 
     <view style="height: 100rpx"></view>
     <view class="flex align-item-center justify-content-center">
-      <view class="flex align-item-center t-color-fff justify-content-center btn-box"
+      <view v-if="btnTitle != '分享'" class="flex align-item-center t-color-fff justify-content-center btn-box"
             :style="{background : disabledBtn ? '#D8D8D8' : 'linear-gradient(180deg, #5A95FB 0%, #1258D0 100%)'}"
             @click.stop.native="clickBtn">
-        <view class="mr-2" v-if="btnTitle == '分享'">
+        {{ btnTitle }}
+      </view>
+      <button
+        v-else
+        open-type="share"
+        data-name="shareBtn"
+        class="flex align-item-center t-color-fff justify-content-center btn-box pr-5"
+        :style="{background : disabledBtn ? '#D8D8D8' : 'linear-gradient(180deg, #5A95FB 0%, #1258D0 100%)'}"
+      >
+        <view class="mr-2">
           <u-icon name="share" color="#FFFFFF" size="30"></u-icon>
         </view>
         {{ btnTitle }}
-      </view>
+      </button>
     </view>
 
     <u-popup v-model="showMorePopupup" mode="bottom" border-radius="20">
@@ -191,10 +212,10 @@ export default {
       },
       essayDataShow: {
         title: '',
-        content: ''
+        content: `<dev style='line-height: 40px'>`
       },
       contentLength: 0,
-      generateContent: '',
+      generateContent: ``,
 
       showMorePopupup: false,
       popupContnet: [{
@@ -227,6 +248,14 @@ export default {
     this.pageTitle = pageTitle;
     this.pageIndex = pageIndex;
     this.mainId = id;
+    this.essayData.title = title || '';
+    this.essayDataShow.title = title || '';
+    this.essayData.content = content || '';
+    this.essayDataShow.content = content || '';
+    this.generateContent = generateContent || '';
+    this.compositionType = compositionType || '';
+    this.infoWordNums = infoWordNums || '';
+    this.infoWriteType = infoWriteType || '';
     console.log('title', title, 'content', content, 'generateContent', generateContent, 'pageIndex', pageIndex, 'pageTitle', pageTitle)
     if (pageIndex == 0) {
       if (pageTitle === '作文批改') {
@@ -314,16 +343,8 @@ export default {
       this.otherContent.show = true;
       this.otherContent.isDisabled = true;
       this.btnTitle = '分享';
+      this.generateContent = uni.getStorageSync("compositionCorrect");
     }
-
-    this.essayData.title = title || '';
-    this.essayDataShow.title = title || '';
-    this.essayData.content = content || '';
-    this.essayDataShow.content = content || '';
-    this.generateContent = generateContent || '';
-    this.compositionType = compositionType || '';
-    this.infoWordNums = infoWordNums || '';
-    this.infoWriteType = infoWriteType || '';
 
     this.network().getCompositionDictList('student_type')
     this.network().getCompositionDictList('composition_text_wordnum')
@@ -336,7 +357,6 @@ export default {
   watch: {
     'essayData.content': {
       handler(val) {
-        console.log(val)
         if (val.match(/[a-zA-Z]+/g)) {
           this.contentLength = val.match(/[a-zA-Z]+/g).length; // 计算单词数量并赋值给 contentLength
         }
@@ -344,7 +364,31 @@ export default {
       deep: true
     }
   },
+
+  /*onShareAppMessage(res) {
+    if (res.from === "button") {
+      const SRC = `/pagesA/my/visitor/pass-code?`;
+      const path = `${SRC}uuid=${this.uuid}`;
+      // 来自页面内分享按钮
+      return {
+        title: "访客通行码",
+        path,
+        imageUrl: `${this.imgDomain}wxapp/icon1.1/pic_visit.png`,
+      };
+    }
+  },*/
   methods: {
+    copyContent(content) {
+      uni.setClipboardData({
+        data: content,
+        success: function () {
+          uni.showToast({
+            title: '复制成功',
+            icon: 'none'
+          })
+        }
+      })
+    },
     focus_input(type) {
       setTimeout(() => {
         if (type == 'title') {
@@ -398,6 +442,10 @@ export default {
       this.popupContnet[parentIndex].activeIndex = index;
     },
     clickBtn() {
+      if (this.btnTitle == '分享') {
+        uni.share
+        return;
+      }
       switch (this.pageIndex) {
         case '0':
           if (this.pageTitle == '作文批改') {
@@ -456,10 +504,12 @@ export default {
     },
     chooseImage() {
       return new Promise(resolve => {
-        uni.chooseImage({
+        uni.chooseMedia({
           count: 1,
+          mediaType: ['image'],
           success: (res) => {
-            resolve(res.tempFilePaths[0])
+            console.log(res)
+            resolve(res.tempFiles[0].tempFilePath)
           }
         })
       })
@@ -467,14 +517,13 @@ export default {
     photograph(type) {
       var _this = this;
       _this.chooseImage().then(src => {
-        console.log(src);
         uni.navigateTo({
           url: `/pages/full-screen/full-screen?src=${src}&type=${type}`
         })
       })
     },
     // 识别图片文字
-    getPhotoRecognition(tempFilePath, type) {
+    getPhotoRecognition2(tempFilePath, type) {
       var _this = this;
       uni.getFileSystemManager().readFile({
         filePath: tempFilePath,
@@ -490,40 +539,65 @@ export default {
             ocrApiName: "accurateOCR",
             ocrServiceProvider: "tencent"
           }).then(res => {
-            console.log("tesdasd")
-            console.log(res)
             switch (type) {
               case 'title':
                 _this.essayData.title = res.data.result.ocrText
                 _this.essayDataShow.title = res.data.result.ocrText
                 break;
               case 'content':
-                _this.essayData.content += res.data.result.ocrText
-                _this.essayDataShow.content += res.data.result.ocrText
+                _this.essayData.content = res.data.result.ocrText
+                _this.essayDataShow.content = res.data.result.ocrText
                 break;
               case 'generateContent':
-                _this.generateContent += res.data.result.ocrText
+                _this.generateContent = res.data.result.ocrText
                 break;
             }
             uni.hideLoading()
           })
         },
         fail: function (err) {
-          console.log('读取文件失败：', err);
         }
       });
+    },
+    getPhotoRecognition(tempFilePath, type) {
+      var _this = this;
+      uni.uploadFile({
+        url: `https://wapi-dev.aien.xiaolixb.com/v1/ocr/record/serviceByFile`,
+        filePath: tempFilePath,
+        name: 'imageFile',
+        header: {
+          'X-Access-Token': state.token,
+        },
+        success: (uploadFileRes) => {
+          var data = JSON.parse(uploadFileRes.data)
+          console.log(data)
+          switch (type) {
+            case 'title':
+              _this.essayData.title = data.result
+              _this.essayDataShow.title = data.result
+              break;
+            case 'content':
+              _this.essayData.content = data.result
+              _this.essayDataShow.content = data.result
+              break;
+            case 'generateContent':
+              _this.generateContent = data.result
+              break;
+          }
+        },
+        fail: (err) => {
+        }
+      })
     },
     network() {
       return {
         addCompositionCollect: async (params) => {
           let data = await addCompositionCollect(params);
-          console.log(data)
         },
         getCompositionDictList: async (type) => {
           let params = {type}
           let data = await getCompositionDictList(params);
           var result = data.data.result
-          console.log(result)
 
           switch (type) {
             case 'student_type':
@@ -582,7 +656,6 @@ export default {
               // text = text.replaceAll("data:\n", "data:")
               let arr = text.split('\n')
               arr.forEach((item) => {
-                console.log(item," item")
 
                 if (item.includes('data:') && !item.includes('[DONE]')) {
                   let text = item.replace('data:', '')
@@ -602,6 +675,13 @@ export default {
                   if (!this.generateSuccess && type == 'content') {
                     this.network().getAIGCComment('generateContent')
                     this.generateSuccess = true
+                    // (1)、精美句子 (2)、句型学习 (3)、总结和评分 (4)、范文翻译 替换为红色
+                    /*this.essayData.content = this.essayData.content.replaceAll("(1)、精美句子",
+                      "<span style='color: #317cf2'>(1)、精美句子</span>").replaceAll("(2)、句型学习",
+                      "<span style='color: #317cf2'>(2)、句型学习</span>").replaceAll("(3)、总结和评分",
+                      "<span style='color: #317cf2'>(3)、总结和评分</span>").replaceAll("(4)、范文翻译",
+                      "<span style='color: #317cf2'>(4)、范文翻译</span>")*/
+                    // this.essayData.content += "</dev>"
                   }
 
                   if (this.pageTitle != 'AI作文帮写' || this.generateSuccess) {
@@ -611,7 +691,6 @@ export default {
                     }
                   }
                   if (type == 'generateContent') {
-                    console.log(type)
                     this.disabledBtn = false
                     // 收藏
                     this.$nextTick(() => {
@@ -631,7 +710,21 @@ export default {
                         params.compositionFavoritesSource = 1
                       }
                       this.network().addCompositionCollect(params)
+
+                      this.generateContent = this.generateContent
+                        .replaceAll("(1)、精美句子","<span style='color: #317cf2;line-height: 28px;'>(1)、精美句子</span>")
+                        .replaceAll("(2)、句型学习","<span style='color: #317cf2;line-height: 28px;'>(2)、句型学习</span>")
+                        .replaceAll("(3)、总结和评分","<span style='color: #317cf2;line-height: 28px;'>(3)、总结和评分</span>")
+                        .replaceAll("(4)、范文翻译","<span style='color: #317cf2;line-height: 28px;'>(4)、范文翻译</span>")
+                        .replaceAll("(1)、单词纠错","<span style='color: #317cf2;line-height: 28px;'>(1)、单词纠错</span>")
+
+                      this.generateContent = `<span style=''>` + this.generateContent + `</span>`
+                      console.log(this.generateContent)
                     })
+
+                    // (1)、精美句子 (2)、句型学习 (3)、总结和评分 (4)、范文翻译 替换为红色
+                    // line-height
+
                   }
 
                   // 关闭请求

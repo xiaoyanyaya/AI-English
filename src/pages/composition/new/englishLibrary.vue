@@ -187,7 +187,8 @@ export default {
 
       show: false,
       isOpened: 'none',
-      showDelete: false
+      showDelete: false,
+      isModeData: true,
     }
   },
   onReady() {
@@ -236,7 +237,8 @@ export default {
     },
     contentClick(item) {
       console.log(item)
-      this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=5&pageTitle=AI作文批改&title=${item.compositionTitleText}&content=${item.compositionText}&generateContent=${item.compositionCorrect || ''}`);
+      uni.setStorageSync('compositionCorrect', item.compositionCorrect)
+      this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=5&pageTitle=作文详情&title=${item.compositionTitleText}&content=${item.compositionText}`);
     },
     bindClick(e) {
       console.log(e)
@@ -295,22 +297,19 @@ export default {
           }
         },
         getData: async (type) => {
+          if (!this.isModeData) return
           let data = "";
           this.pageTitle = "我的作文库";
           data = await getCompositionCollectList(this.queryParams);
-          /*if (type == 1) {
-            this.pageTitle = "选择作文题目";
-            data = await getCompositionList(this.queryParams);
-          } else {
-            this.pageTitle = "我的作文库";
-            data = await getCompositionCollectList(this.queryParams);
-          }*/
           data.data.result.records.forEach(d => {
             d.createTime = d.createTime.split(' ')[0]
             d.compositionTitleText = d.compositionTitleText.replace(/<[^>]+>/g, "")
             d.compositionText = d.compositionText.replace(/<[^>]+>/g, "")
             this.contentData.push(d)
           })
+          if (data.data.result.records.length < this.queryParams.pageSize) {
+            this.isModeData = false
+          }
           console.log(this.contentData)
         },
         generateTitle: async () => {

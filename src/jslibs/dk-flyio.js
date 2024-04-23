@@ -9,7 +9,9 @@ fly.config.baseURL = apiDomain;
 let timer = null;
 fly.interceptors.request.use(async (request) => {
 	// 给所有请求添加自定义header
-	request.headers['X-Access-Token'] = store.state.token;
+	if (store.state.token != '') {
+		request.headers['X-Access-Token'] = store.state.token;
+	}
 	if (!timer) {
 		timer = setTimeout(() => {
 			wx.showLoading({title: '加载中', mask: true})

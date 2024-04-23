@@ -1,22 +1,15 @@
 <template>
   <view class="pb-5 main-body">
     <cy-navbar showBack>
-      <view class="t-size-30">挑战人数</view>
+      <view class="t-size-30">挑战排行榜</view>
     </cy-navbar>
 
-    <view class="px-4 mt-4 mb-5">
-      <view class="top-bg">
-        <image src="/static/logo.png"></image>
-      </view>
-
-      <view class="seniority-btn mt-3 flex align-item-center justify-content-center t-color-fff font-weight-bold">
-        <view>排行榜</view>
-      </view>
-    </view>
-
     <view class="person-list" v-for="(item, index) in personList" :key="index">
-      <view class="item flex align-item-center" :class="{active: item.isSelect}">
-        <view class="sort" :class="{active: item.isSelect}">{{ item.sort }}</view>
+      <view class="item flex align-item-center justify-content-around" :class="{active: item.isSelect}">
+        <image v-if="item.sort == 1" class="medal" mode="widthFix" :src="`${imageBaseUrl}/3-22-14.png`"></image>
+        <image v-else-if="item.sort == 2" class="medal" mode="widthFix" :src="`${imageBaseUrl}/3-22-13.png`"></image>
+        <image v-else-if="item.sort == 3" class="medal" mode="widthFix" :src="`${imageBaseUrl}/3-22-12.png`"></image>
+        <view v-else class="sort" :class="{active: item.isSelect}">{{ item.sort }}</view>
         <view class="avatar">
           <image :src="item.avatar"></image>
         </view>
@@ -28,14 +21,18 @@
       </view>
     </view>
 
+    <button open-type="getPhoneNumber" @getphonenumber="getPhone">phone</button>
+
   </view>
 </template>
 
 <script>
 import {tr} from "@dcloudio/vue-cli-plugin-uni/packages/postcss/tags";
-import {getChallengeCompositionList} from "@/api/composition";
+import {getChallengeCompositionList, getChallengeCompositionRank} from "@/api/composition";
+import myMixin from "@/utils/MyMixin";
 
 export default {
+  mixins: [myMixin],
   data() {
     return {
       personList: [{
@@ -43,7 +40,7 @@ export default {
         name: '张三',
         score: 100,
         avatar: '/static/logo.png',
-        isSelect: false
+        isSelect: true
       }, {
         sort: 2,
         name: '李四',
@@ -52,7 +49,7 @@ export default {
         isSelect: false
       }, {
         sort: 3,
-        name: '王五',
+        name: '王五1',
         score: 80,
         avatar: '/static/logo.png',
         isSelect: false
@@ -61,21 +58,20 @@ export default {
         name: '赵六',
         score: 70,
         avatar: '/static/logo.png',
-        isSelect: true
+        isSelect: false
       }],
       id: '',
     };
   },
-  onLoad({id}) {
-    this.id = id;
-    this.network().getChallengeCompositionList();
+  onLoad() {
+    this.network().getChallengeCompositionRank();
   },
   methods: {
     network() {
       return {
-        getChallengeCompositionList: async () => {
-          const res = await getChallengeCompositionList({compositionTitleId: this.id});
-          console.log(res.data.result.records)
+        getChallengeCompositionRank: async () => {
+          const res = await getChallengeCompositionRank();
+          console.log(res.data.result)
         }
       }
     }
@@ -84,22 +80,6 @@ export default {
 </script>
 
 <style lang="scss">
-.top-bg {
-  width: 680rpx;
-  height: 300rpx;
-
-  image {
-    width: 100%;
-    height: 100%;
-  }
-}
-
-.seniority-btn {
-  width: 680rpx;
-  height: 80rpx;
-  border-radius: 184rpx;
-  background: #326ED6;
-}
 
 .person-list {
 
@@ -119,7 +99,8 @@ export default {
     }
 
     .sort {
-      width: 25%;
+      width: 100rpx;
+      margin-left: 30rpx;
 
       &.active {
         color: #3B49C5;
@@ -131,9 +112,14 @@ export default {
 
       image {
         border-radius: 50%;
-        width: 60rpx;
-        height: 60rpx;
+        width: 80rpx;
+        height: 80rpx;
       }
+    }
+    .medal {
+      width: 100rpx;
+      margin-bottom: -30rpx;
+      margin-left: 30rpx;
     }
 
     .name {

@@ -1,6 +1,6 @@
 <template>
   <view class="pb-5 body">
-    <cy-navbar showBack>
+    <cy-navbar showBack :isReturnHome="isReturnHome">
       <view class="t-size-30">{{ pageTitle }}</view>
     </cy-navbar>
 
@@ -11,11 +11,11 @@
             <view class="font-weight-bold t-size-28 ml-3 font-weight-bold">
               作文题目
             </view>
-            <view v-if="title.isShowPhoto" class="flex align-item-end ml-5" @click="photograph('title')">
+            <view v-if="title.isShowPhoto" class="flex align-item-center ml-5" @click="photograph('title')">
               <view class="iconfont t-color-1863E5 essay-title-icon">&#xe663;</view>
               <view class="t-size-22 t-color-1863E5 ml-1">拍照识别</view>
             </view>
-            <view v-if="title.isDisabled" @click="copyContent(essayData.title)" class="flex ml-3 align-item-end" style="margin-top: 2rpx">
+            <view v-if="title.isDisabled" @click="copyContent(essayData.title)" class="flex ml-3 align-item-center" style="margin-top: 2rpx">
               <view class="iconfont t-color-1863E5 essay-title-icon">&#xe8b0;</view>
               <view class="t-size-22 t-color-1863E5" style="margin-left: 6rpx">复制</view>
             </view>
@@ -52,11 +52,11 @@
             <view class="font-weight-bold t-size-28 ml-3 font-weight-bold">
               作文内容
             </view>
-            <view v-if="content.isShowPhoto" class="flex align-item-end ml-5" @click="photograph('content')">
+            <view v-if="content.isShowPhoto" class="flex align-item-center ml-5" @click="photograph('content')">
               <view class="iconfont t-color-1863E5 essay-title-icon">&#xe663;</view>
               <view class="t-size-22 t-color-1863E5 ml-1">拍照识别</view>
             </view>
-            <view v-if="content.isDisabled" @click="copyContent(essayData.content)" class="flex ml-3 align-item-end" style="margin-top: 2rpx">
+            <view v-if="content.isDisabled" @click="copyContent(essayData.originContent)" class="flex ml-3 align-item-center" style="margin-top: 2rpx">
               <view class="iconfont t-color-1863E5 essay-title-icon">&#xe8b0;</view>
               <view class="t-size-22 t-color-1863E5" style="margin-left: 6rpx">复制</view>
             </view>
@@ -99,7 +99,7 @@
             <view class="font-weight-bold t-size-28 ml-3 font-weight-bold">
               {{ otherContent.title }}
             </view>
-            <view v-if="otherContent.isDisabled" @click="copyContent(generateContent)" class="flex ml-3 align-item-end" style="margin-top: 2rpx">
+            <view v-if="otherContent.isDisabled" @click="copyContent(originGenerateContent)" class="flex ml-3 align-item-center" style="margin-top: 2rpx">
               <view class="iconfont t-color-1863E5 essay-title-icon">&#xe8b0;</view>
               <view class="t-size-22 t-color-1863E5" style="margin-left: 6rpx">复制</view>
             </view>
@@ -171,7 +171,12 @@
 </template>
 
 <script>
-import {addCompositionCollect, getCompositionDictList, getPhotoRecognition} from "@/api/composition";
+import {
+  addCompositionCollect,
+  getCompositionCollectInfo,
+  getCompositionDictList,
+  getPhotoRecognition
+} from "@/api/composition";
 import {apiDomain} from "@/configs/env";
 import state from "@/store/state";
 import {tr} from "@dcloudio/vue-cli-plugin-uni/packages/postcss/tags";
@@ -208,14 +213,16 @@ export default {
       // 作文
       essayData: {
         title: '',
-        content: ''
+        content: '',
+        originContent: ``
       },
       essayDataShow: {
         title: '',
-        content: `<dev style='line-height: 40px'>`
+        content: `<dev style='line-height: 40px'>`,
       },
       contentLength: 0,
       generateContent: ``,
+      originGenerateContent: ``,
 
       showMorePopupup: false,
       popupContnet: [{
@@ -238,9 +245,13 @@ export default {
       infoWordNums: '',
       infoWriteType: '',
       isGenerateContent: false,
+      // 用于通过点击分享按钮分享
+      shareDataId: '',
+      collectionId: '',
+      isReturnHome: 0,
     };
   },
-  onLoad({title, content, generateContent, pageIndex, pageTitle, compositionType, infoWordNums, infoWriteType, id}) {
+  onLoad({title, content, generateContent, pageIndex, pageTitle, compositionType, infoWordNums, infoWriteType, id, isShowTitle}) {
     uni.$on("cropImage", ({path, type}) => {
       this.getPhotoRecognition(path, type)
     })
@@ -251,6 +262,7 @@ export default {
     this.essayData.title = title || '';
     this.essayDataShow.title = title || '';
     this.essayData.content = content || '';
+    this.essayData.originContent = content || '';
     this.essayDataShow.content = content || '';
     this.generateContent = generateContent || '';
     this.compositionType = compositionType || '';
@@ -311,6 +323,7 @@ export default {
         this.network().getAIGCWrite('content')
       }
     } else if (pageIndex == 4) {
+      this.$set(this.essayData, 'title', uni.getStorageSync("compositionTitleText"))
       if (pageTitle === '作文内容输入页') {
         this.title.isShowTitle = true;
         this.title.isShowPhoto = false;
@@ -343,7 +356,37 @@ export default {
       this.otherContent.show = true;
       this.otherContent.isDisabled = true;
       this.btnTitle = '分享';
-      this.generateContent = uni.getStorageSync("compositionCorrect");
+      this.collectionId = id;
+      var generateContent = uni.getStorageSync("compositionCorrect");
+      this.originGenerateContent = generateContent
+      generateContent = generateContent.replaceAll("\n", "<p></p>")
+        .replaceAll("(1)、精美句子","<span style='color: #317cf2;line-height: 28px;'>(1)、精美句子</span>")
+        .replaceAll("(2)、句型学习","<span style='color: #317cf2;line-height: 28px;'>(2)、句型学习</span>")
+        .replaceAll("(3)、总结和评分","<span style='color: #317cf2;line-height: 28px;'>(3)、总结和评分</span>")
+        .replaceAll("(4)、范文翻译","<span style='color: #317cf2;line-height: 28px;'>(4)、范文翻译</span>")
+        .replaceAll("(1)、单词纠错","<span style='color: #317cf2;line-height: 28px;'>(1)、单词纠错</span>")
+        .replaceAll("(2)、句子纠错","<span style='color: #317cf2;line-height: 28px;'>(2)、句子纠错</span>")
+        .replaceAll("(3)、精美句子","<span style='color: #317cf2;line-height: 28px;'>(3)、精美句子</span>")
+        .replaceAll("(4)、作文优点","<span style='color: #317cf2;line-height: 28px;'>(4)、作文优点</span>")
+        .replaceAll("(5)、作文不足","<span style='color: #317cf2;line-height: 28px;'>(5)、作文不足</span>")
+        .replaceAll("(6)、总结和评分","<span style='color: #317cf2;line-height: 28px;'>(6)、总结和评分</span>")
+        .replaceAll("(7)、改进建议","<span style='color: #317cf2;line-height: 28px;'>(7)、改进建议</span>")
+        .replaceAll("(8)、开放性思考","<span style='color: #317cf2;line-height: 28px;'>(8)、开放性思考</span>")
+        .replaceAll("(9)、参考范文","<span style='color: #317cf2;line-height: 28px;'>(9)、参考范文</span>")
+        .replaceAll("(10)、范文翻译","<span style='color: #317cf2;line-height: 28px;'>(10)、范文翻译</span>")
+      this.generateContent = generateContent
+    } else if (pageIndex == 6) {
+      this.title.isShowTitle = isShowTitle == 1;
+      this.title.isShowPhoto = false;
+      this.title.isDisabled = true;
+      this.content.isShowContent = true;
+      this.content.isShowPhoto = false;
+      this.content.isDisabled = true;
+      this.otherContent.show = true;
+      this.otherContent.isDisabled = true;
+      this.btnTitle = '分享';
+      this.isReturnHome = 1;
+      this.network().getCompositionCollectInfo(id)
     }
 
     this.network().getCompositionDictList('student_type')
@@ -365,18 +408,23 @@ export default {
     }
   },
 
-  /*onShareAppMessage(res) {
+  onShareAppMessage(res) {
+    console.log(res)
+    var isShowTitle = 0;
+    if (this.pageIndex == 2 || this.pageIndex == 5 ) {
+      isShowTitle = 1
+    }
     if (res.from === "button") {
-      const SRC = `/pagesA/my/visitor/pass-code?`;
-      const path = `${SRC}uuid=${this.uuid}`;
+      const SRC = `pages/composition/new/titleSubject?`;
+      const path = `pageIndex=6&id=${this.collectionId}&pageTilte=${this.pageTitle}&isShowTitle=${isShowTitle}`;
       // 来自页面内分享按钮
       return {
-        title: "访客通行码",
-        path,
-        imageUrl: `${this.imgDomain}wxapp/icon1.1/pic_visit.png`,
+        title: this.pageTitle,
+        path: `${SRC}${path}`,
+        // imageUrl: `${this.imgDomain}wxapp/icon1.1/pic_visit.png`,
       };
     }
-  },*/
+  },
   methods: {
     copyContent(content) {
       uni.setClipboardData({
@@ -498,7 +546,7 @@ export default {
               return;
             }
           }
-          this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=4&pageTitle=AI作文批改&title=${this.essayData.title}&content=${this.essayData.content}&generateContent=${this.generateContent}&id=${this.mainId}`);
+          this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=4&pageTitle=AI作文批改&title=${this.essayData.title}&content=${this.essayData.content}&generateContent=${this.generateContent}&id=${this.mainId}&compositionType=${this.compositionType}`);
           break;
       }
     },
@@ -515,11 +563,8 @@ export default {
       })
     },
     photograph(type) {
-      var _this = this;
-      _this.chooseImage().then(src => {
-        uni.navigateTo({
-          url: `/pages/full-screen/full-screen?src=${src}&type=${type}`
-        })
+      uni.navigateTo({
+        url: `/pages/scan-frame/scan-frame?type=${type}`
       })
     },
     // 识别图片文字
@@ -591,8 +636,36 @@ export default {
     },
     network() {
       return {
+        getCompositionCollectInfo: async (id) => {
+          let data = await getCompositionCollectInfo({id});
+          console.log("查看详情", data.data.result)
+          this.essayData.title = data.data.result.compositionTitleText
+          this.essayData.content = data.data.result.compositionText
+          this.originGenerateContent = data.data.result.compositionCorrect
+          var generateContent = data.data.result.compositionCorrect.replaceAll("\n", "<p></p>")
+            .replaceAll("(1)、精美句子","<span style='color: #317cf2;line-height: 28px;'>(1)、精美句子</span>")
+            .replaceAll("(2)、句型学习","<span style='color: #317cf2;line-height: 28px;'>(2)、句型学习</span>")
+            .replaceAll("(3)、总结和评分","<span style='color: #317cf2;line-height: 28px;'>(3)、总结和评分</span>")
+            .replaceAll("(4)、范文翻译","<span style='color: #317cf2;line-height: 28px;'>(4)、范文翻译</span>")
+            .replaceAll("(1)、单词纠错","<span style='color: #317cf2;line-height: 28px;'>(1)、单词纠错</span>")
+        .replaceAll("(2)、句子纠错","<span style='color: #317cf2;line-height: 28px;'>(2)、句子纠错</span>")
+        .replaceAll("(3)、精美句子","<span style='color: #317cf2;line-height: 28px;'>(3)、精美句子</span>")
+        .replaceAll("(4)、作文优点","<span style='color: #317cf2;line-height: 28px;'>(4)、作文优点</span>")
+        .replaceAll("(5)、作文不足","<span style='color: #317cf2;line-height: 28px;'>(5)、作文不足</span>")
+        .replaceAll("(6)、总结和评分","<span style='color: #317cf2;line-height: 28px;'>(6)、总结和评分</span>")
+        .replaceAll("(7)、改进建议","<span style='color: #317cf2;line-height: 28px;'>(7)、改进建议</span>")
+        .replaceAll("(8)、开放性思考","<span style='color: #317cf2;line-height: 28px;'>(8)、开放性思考</span>")
+        .replaceAll("(9)、参考范文","<span style='color: #317cf2;line-height: 28px;'>(9)、参考范文</span>")
+        .replaceAll("(10)、范文翻译","<span style='color: #317cf2;line-height: 28px;'>(10)、范文翻译</span>")
+          this.generateContent = generateContent
+
+        },
         addCompositionCollect: async (params) => {
+          if (!params.compositionType) {
+            params.compositionType = 501
+          }
           let data = await addCompositionCollect(params);
+          this.collectionId = data.data.result.id
         },
         getCompositionDictList: async (type) => {
           let params = {type}
@@ -668,20 +741,11 @@ export default {
                   }
                   this.pageScrollTo()
                 } else if (item.includes('data:[DONE]')) {
-                  /*var essayData = uni.getStorageSync("essayData")
-                  essayData.content = this.essayData.content
-                  uni.setStorageSync("essayData", essayData)*/
+                  this.essayData.originContent = this.essayData.content.replaceAll("<p></p>", "\n")
 
                   if (!this.generateSuccess && type == 'content') {
                     this.network().getAIGCComment('generateContent')
                     this.generateSuccess = true
-                    // (1)、精美句子 (2)、句型学习 (3)、总结和评分 (4)、范文翻译 替换为红色
-                    /*this.essayData.content = this.essayData.content.replaceAll("(1)、精美句子",
-                      "<span style='color: #317cf2'>(1)、精美句子</span>").replaceAll("(2)、句型学习",
-                      "<span style='color: #317cf2'>(2)、句型学习</span>").replaceAll("(3)、总结和评分",
-                      "<span style='color: #317cf2'>(3)、总结和评分</span>").replaceAll("(4)、范文翻译",
-                      "<span style='color: #317cf2'>(4)、范文翻译</span>")*/
-                    // this.essayData.content += "</dev>"
                   }
 
                   if (this.pageTitle != 'AI作文帮写' || this.generateSuccess) {
@@ -694,17 +758,21 @@ export default {
                     this.disabledBtn = false
                     // 收藏
                     this.$nextTick(() => {
+                      // 保留原始，未加html标签的内容
+                      this.originGenerateContent = this.generateContent.replaceAll("<p></p>", "\n")
+
                       var params = {
                         "compositionLibraryId": this.mainId,
                         "compositionTitleText": this.essayData.title || '',
-                        "compositionText": this.essayData.content,
-                        "compositionType": "501",
-                        "compositionCorrect": this.generateContent
+                        "compositionText": this.essayData.originContent,
+                        // "compositionType": "501",
+                        "compositionCorrect": this.originGenerateContent
                       }
                       if (this.pageTitle === 'AI作文批改') {
                         params.compositionFavoritesSource = 2
                         if (this.pageIndex == 4) {
                           params.compositionFavoritesSource = 3
+                          params.compositionType = this.compositionType
                         }
                       } else if (this.pageTitle === 'AI作文帮写') {
                         params.compositionFavoritesSource = 1
@@ -717,13 +785,19 @@ export default {
                         .replaceAll("(3)、总结和评分","<span style='color: #317cf2;line-height: 28px;'>(3)、总结和评分</span>")
                         .replaceAll("(4)、范文翻译","<span style='color: #317cf2;line-height: 28px;'>(4)、范文翻译</span>")
                         .replaceAll("(1)、单词纠错","<span style='color: #317cf2;line-height: 28px;'>(1)、单词纠错</span>")
+        .replaceAll("(2)、句子纠错","<span style='color: #317cf2;line-height: 28px;'>(2)、句子纠错</span>")
+        .replaceAll("(3)、精美句子","<span style='color: #317cf2;line-height: 28px;'>(3)、精美句子</span>")
+        .replaceAll("(4)、作文优点","<span style='color: #317cf2;line-height: 28px;'>(4)、作文优点</span>")
+        .replaceAll("(5)、作文不足","<span style='color: #317cf2;line-height: 28px;'>(5)、作文不足</span>")
+        .replaceAll("(6)、总结和评分","<span style='color: #317cf2;line-height: 28px;'>(6)、总结和评分</span>")
+        .replaceAll("(7)、改进建议","<span style='color: #317cf2;line-height: 28px;'>(7)、改进建议</span>")
+        .replaceAll("(8)、开放性思考","<span style='color: #317cf2;line-height: 28px;'>(8)、开放性思考</span>")
+        .replaceAll("(9)、参考范文","<span style='color: #317cf2;line-height: 28px;'>(9)、参考范文</span>")
+        .replaceAll("(10)、范文翻译","<span style='color: #317cf2;line-height: 28px;'>(10)、范文翻译</span>")
 
                       this.generateContent = `<span style=''>` + this.generateContent + `</span>`
                       console.log(this.generateContent)
                     })
-
-                    // (1)、精美句子 (2)、句型学习 (3)、总结和评分 (4)、范文翻译 替换为红色
-                    // line-height
 
                   }
 

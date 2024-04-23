@@ -39,6 +39,9 @@
       "path": "pages/full-screen/full-screen"
     },
     {
+      "path": "pages/scan-frame/scan-frame"
+    },
+    {
       "path": "pages/virtualCharacter/sceneSwitch"
     },
     {
@@ -61,6 +64,9 @@
     },
     {
       "path": "pages/composition/new/challengeNumber"
+    },
+    {
+      "path": "pages/composition/new/Leaderboard"
     },
     {
       "path": "pages/composition/new/challengeDetail"

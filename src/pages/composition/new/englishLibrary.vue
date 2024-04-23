@@ -53,42 +53,51 @@
         </view>
       </view>
       <view class="flex mt-4" v-else>
-        <view class="flex align-item-center justify-content-between">
-          <view style="width: 250rpx" v-if="pageIndex == 1">
-            <view class="grade flex align-item-center border-box px-1 justify-content-around mr-3"
-                  @click="questionTypes.show = true">
-              <text class="t-size-24 t-color-8A8A8A">{{ questionTypes.value }}</text>
-              <u-icon name="arrow-down" color="#8A8A8A" size="28"></u-icon>
-            </view>
+        <!--        <view class="flex align-item-center justify-content-between">
+                  <view style="width: 250rpx" v-if="pageIndex == 1">
+                    <view class="grade flex align-item-center border-box px-1 justify-content-around mr-3"
+                          @click="questionTypes.show = true">
+                      <text class="t-size-24 t-color-8A8A8A">{{ questionTypes.value }}</text>
+                      <u-icon name="arrow-down" color="#8A8A8A" size="28"></u-icon>
+                    </view>
 
-            <u-picker mode="selector" v-model="questionTypes.show"
-                      @confirm="questionTypesConfirm($event)"
-                      :title="questionTypes.title"
-                      :default-selector="[questionTypes.index]" :range="questionTypes.content"></u-picker>
+                    <u-picker mode="selector" v-model="questionTypes.show"
+                              @confirm="questionTypesConfirm($event)"
+                              :title="questionTypes.title"
+                              :default-selector="[questionTypes.index]" :range="questionTypes.content"></u-picker>
+                  </view>
+                  <view class="keywords flex align-item-center border-box pl-3 justify-content-between  t-size-24"
+                        @click="$navigateTo('/pages/composition/component/searchCondition')">
+                    <input placeholder=" " disabled v-model="infoKeyword"
+                           style="color:#333;flex:1;border:none;font-size: 24rpx;flex:1"/>
+                    <view class="search-box flex"> &lt;!&ndash; @click="search"&ndash;&gt;
+                      <u-icon name="search" color="#FFFFFF" size="28"></u-icon>
+                      <view class="t-color-fff ml-1">搜索</view>
+                    </view>
+                  </view>
+                </view>-->
+        <view class="type-box flex">
+          <view class="btn-1 flex align-item-center justify-content-center"
+                :class="{'active' : isActiveBtn == 1}" @click="clickActiveBtn(1)">
+            我的作文
           </view>
-          <view class="keywords flex align-item-center border-box pl-3 justify-content-between  t-size-24"
-                @click="$navigateTo('/pages/composition/component/searchCondition')">
-            <input placeholder=" " disabled v-model="infoKeyword"
-                   style="color:#333;flex:1;border:none;font-size: 24rpx;flex:1"/>
-            <view class="search-box flex"> <!-- @click="search"-->
-              <u-icon name="search" color="#FFFFFF" size="28"></u-icon>
-              <view class="t-color-fff ml-1">搜索</view>
-            </view>
+          <view class="btn-2 flex align-item-center justify-content-center"
+                :class="{'active' : isActiveBtn == 2}" @click="clickActiveBtn(2)">
+            收藏的作文
           </view>
         </view>
       </view>
 
       <view class="mt-3 parent-content-box" v-for="(item, index) in contentData" :key="index">
-        <view class="sort-box flex align-item-center justify-content-center t-size-22 t-color-fff">{{ index + 1 }}
-        </view>
+        <!--        <view class="sort-box flex align-item-center justify-content-center t-size-22 t-color-fff">{{ index + 1 }}
+                </view>-->
         <uni-swipe-action>
           <uni-swipe-action-item
             @click="bindClick"
           >
             <template v-slot:right>
-              <view class="slot-button">
-                <view @click="bindClick({position:'right',content:{text:'删除'}, index: index})"
-                      class="delete-btn flex flex-direction-column justify-content-center align-item-center">
+              <view class="slot-button" @click="bindClick({position:'right',content:{text:'删除'}, index: index})">
+                <view class="delete-btn flex flex-direction-column justify-content-center align-item-center">
                   <view>
                     <image :src="`${imageBaseUrl}/3-22-15.png`" style="width: 30rpx; height: 30rpx"></image>
                   </view>
@@ -97,28 +106,60 @@
               </view>
             </template>
             <view class="content-box px-3 pb-3 pt-1" @click="contentClick(item)">
-              <view class="flex justify-content-between align-item-center">
-                <view class="content-text"></view>
-                <view class="flex align-item-start">
-                  <view class="mr-1">
-                    <image :src="`${imageBaseUrl}/3-22-04.png`" style="width: 30rpx; height: 30rpx"></image>
+              <!--              <view class="flex justify-content-between align-item-center">
+                              <view class="content-text"></view>
+                              <view class="flex align-item-start">
+                                <view class="mr-1">
+                                  <u-icon name="star-fill" class="t-size-32"
+                                          @click="network().addCompositionCollectOther(item)"
+                                          :class="item.status == 1 ? 't-color-fea831' : 't-color-d9d9d9'"></u-icon>
+                                </view>
+                                <view class="t-size-24 t-color-8A8A8A">{{ item.createTime }}</view>
+                              </view>
+                            </view>
+
+                            <view class="content-text mt-2 table-nowrap">
+                              <text class="t-size-26 t-color-3D3D3D">{{ item.compositionTitleText }}</text>
+                            </view>
+                            <view class="desc-text mt-1 table-nowrap-2">
+                              <text class="t-size-24 t-color-8A8A8A">{{ item.compositionText }}</text>
+                            </view>-->
+
+              <view class="flex justify-content-between align-item-center"
+                    style="height: 120rpx; border-bottom: 1px solid #e9ebee">
+                <view class="flex align-item-center justify-content-center">
+                  <image :src="item.avatar" mode="widthFix" style="width: 80rpx; border-radius: 50rpx"></image>
+                  <view class="ml-3 font-weight-bold t-size-32">{{ item.nickName }}</view>
+                </view>
+                <view class="flex flex-direction-column">
+                  <view class="flex align-item-center">
+                    <image src="/static/logo.png" mode="widthFix" style="width: 30rpx; border-radius: 50%"></image>
+                    <view class="ml-1 t-color-8A8A8A t-size-22">2023-12-16 12:12:12</view>
                   </view>
-                  <view class="t-size-24 t-color-8A8A8A">{{ item.createTime }}</view>
+                  <view class="flex align-item-center mt-1">
+                    <image src="/static/logo.png" mode="widthFix" style="width: 30rpx; border-radius: 50%"></image>
+                    <view class="ml-1 t-color-8A8A8A t-size-22">收藏来源：作文帮写</view>
+                  </view>
                 </view>
               </view>
 
-              <view class="content-text mt-2 table-nowrap">
-                <text class="t-size-26 t-color-3D3D3D">{{ item.compositionTitleText }}</text>
+              <view class="content-text mt-2" v-show="item.compositionTitleText">
+                <view class="font-weight-bold t-size-30">题目：</view>
+                <view class="content-text-mask"></view>
+                <view class="t-size-26 t-color-3D3D3D">{{ item.compositionTitleText }}</view>
               </view>
-              <view class="desc-text mt-1 table-nowrap-2">
-                <text class="t-size-24 t-color-8A8A8A">{{ item.compositionText }}</text>
+              <view class="desc-text mt-2">
+                <view class="font-weight-bold t-size-30">内容：</view>
+                <view class="desc-text-mask"></view>
+                <view class="t-size-24 t-color-8A8A8A" v-html="item.compositionText"></view>
               </view>
             </view>
           </uni-swipe-action-item>
         </uni-swipe-action>
       </view>
 
-      <view v-if="contentData.length < 1" class="flex mt-3 justify-content-center align-item-center t-size-22 t-color-3D3D3D">
+      <view v-if="contentData.length < 1"
+            class="flex mt-3 justify-content-center align-item-center t-size-22 t-color-3D3D3D">
         暂无数据~
       </view>
 
@@ -138,7 +179,7 @@ import {
   getCompositionList,
   getCompositionCollectList,
   getCompositionDictList,
-  getAIGCComposition, deleteCompositionCollect
+  getAIGCComposition, deleteCompositionCollect, getCompositionCollect, deleteCompositionCollectOther
 } from '@/api/composition';
 import {sseRequestTask} from "@/jslibs/requestUtils";
 import {param, tr} from "@dcloudio/vue-cli-plugin-uni/packages/postcss/tags";
@@ -189,6 +230,8 @@ export default {
       isOpened: 'none',
       showDelete: false,
       isModeData: true,
+
+      isActiveBtn: 1,
     }
   },
   onReady() {
@@ -231,6 +274,12 @@ export default {
     this.network().getData(this.pageIndex)
   },
   methods: {
+    initData() {
+      this.contentData = []
+      this.isModeData = true
+      this.queryParams.pageNo = 1
+      this.network().getData()
+    },
     returnPageNum() {
       console.log("触发")
       uni.$off('compositionSearchParams')
@@ -238,7 +287,7 @@ export default {
     contentClick(item) {
       console.log(item)
       uni.setStorageSync('compositionCorrect', item.compositionCorrect)
-      this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=5&pageTitle=作文详情&title=${item.compositionTitleText}&content=${item.compositionText}`);
+      this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=5&pageTitle=作文详情&id=${item.id}&title=${item.compositionTitleText}&content=${item.compositionText}`);
     },
     bindClick(e) {
       console.log(e)
@@ -283,31 +332,57 @@ export default {
     confirmDelete() {
       this.network().deleteCompositionCollect(this.contentData[this.deleteIndex].id)
     },
+    clickActiveBtn(type) {
+      this.isActiveBtn = type
+      this.initData()
+    },
     network() {
       return {
         deleteCompositionCollect: async (id) => {
-          let data = await deleteCompositionCollect({
+          let data = "";
+          let params = {
             id,
             status: 0
-          })
+          }
+          if (this.isActiveBtn == 1) {
+            data = await deleteCompositionCollect(params);
+          } else {
+            data = await deleteCompositionCollectOther(params);
+          }
           console.log(data.data.code)
           if (data.data.code == 200) {
-            this.contentData.splice(this.deleteIndex, 1)
+            this.contentData = []
+            this.queryParams.pageNo = 1
+            this.network().getData(1)
             this.showDelete = false
+            uni.showToast({
+              title: '删除成功',
+              icon: 'none'
+            })
+          } else {
+            uni.showToast({
+              title: '删除失败',
+              icon: 'none'
+            })
           }
         },
-        getData: async (type) => {
+        getData: async () => {
           if (!this.isModeData) return
           let data = "";
           this.pageTitle = "我的作文库";
-          data = await getCompositionCollectList(this.queryParams);
-          data.data.result.records.forEach(d => {
+          if (this.isActiveBtn == 1) {
+            data = await getCompositionCollectList(this.queryParams);
+          } else {
+            data = await getCompositionCollect(this.queryParams);
+          }
+          console.log("数据库", data)
+          data.data.result.forEach(d => {
             d.createTime = d.createTime.split(' ')[0]
             d.compositionTitleText = d.compositionTitleText.replace(/<[^>]+>/g, "")
-            d.compositionText = d.compositionText.replace(/<[^>]+>/g, "")
+            d.compositionText = d.compositionText.replaceAll("\n", "<p></p>")
             this.contentData.push(d)
           })
-          if (data.data.result.records.length < this.queryParams.pageSize) {
+          if (data.data.result.length < this.queryParams.pageSize) {
             this.isModeData = false
           }
           console.log(this.contentData)
@@ -377,8 +452,6 @@ export default {
 }
 
 .parent-content-box {
-  position: relative;
-  z-index: 999;
   overflow: hidden;
   border-radius: 20rpx;
 }
@@ -397,8 +470,6 @@ export default {
   /* #ifdef APP-NVUE */
   justify-content: center;
   /* #endif */
-  height: 214rpx;
-  position: relative;
   background-color: #fff;
   border-bottom-color: #f5f5f5;
   border-bottom-width: 1rpx;
@@ -434,5 +505,58 @@ export default {
 
 .delete-btn {
   width: 100rpx;
+}
+
+.type-box {
+  width: 100%;
+  height: 70rpx;
+  border-radius: 14rpx;
+  overflow: hidden;
+  background: #FFFFFF;
+  box-sizing: border-box;
+  margin-bottom: 20rpx;
+
+  .btn-1 {
+    width: 50%;
+    height: 70rpx;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .btn-2 {
+    width: 50%;
+    height: 70rpx;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .active {
+    background: #3a73d9;
+    color: #FFFFFF;
+  }
+
+
+}
+
+.content-text, .desc-text {
+  position: relative;
+}
+
+.content-text-mask {
+  background: rgba(217, 58, 58, 0.3);
+  position: absolute;
+  top: 26rpx;
+  left: 0;
+  width: 70rpx;
+  height: 14rpx;
+}
+
+.desc-text-mask {
+  background: rgba(58, 115, 217, 0.3);
+  position: absolute;
+  top: 26rpx;
+  left: 0;
+  width: 70rpx;
+  height: 14rpx;
 }
 </style>

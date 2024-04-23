@@ -4,6 +4,12 @@ const actions = {
 		return new Promise((resolve, reject) => {
 			context.commit('SET_CONTENT', data)
 		})
+	},
+	// 保存token
+	setToken(context, data) {
+		return new Promise((resolve, reject) => {
+			context.commit('SET_TOKEN', data)
+		})
 	}
 }
 

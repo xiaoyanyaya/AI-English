@@ -9,3 +9,6 @@ export const getAiDialogueList = params => fly.get('/digitalhuman/chat/session/l
 
 // 聊天记录列表
 export const getAiDialogueRecordList = params => fly.get('/digitalhuman/chat/record/list', params)
+
+// 保存语音转文字
+export const saveVoiceText = params => fly.post('/digitalhuman/asr/saveVoiceText', params)

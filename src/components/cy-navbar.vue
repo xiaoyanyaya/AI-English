@@ -29,6 +29,10 @@ export default {
       type: String,
       default: '#3A73D9'
     },
+    isReturnHome: {
+      type: Number,
+      default: 0
+    }
   },
   computed: {
     statusBarHeight() {
@@ -78,9 +82,16 @@ export default {
     },
     returnPageNum(num) {
       this.$emit('returnPageNum', num)
-      uni.navigateBack({
-        delta: num
-      });
+      if (this.isReturnHome == 1) {
+        uni.reLaunch({
+          url: '/pages/index/index'
+        });
+      } else {
+        uni.navigateBack({
+          delta: num
+        });
+      }
+
     }
   }
 }

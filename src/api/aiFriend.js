@@ -8,3 +8,4 @@ export const switchVirtual = params => fly.post('/digitalhuman/image/switch', pa
 
 // 默认虚拟人
 export const defaultVirtual = params => fly.get('/digitalhuman/image/default', params)
+

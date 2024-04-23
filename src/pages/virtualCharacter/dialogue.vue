@@ -58,14 +58,17 @@
 <script>
 import cyNavbar from "@/components/cy-navbar.vue";
 import cyTabbar from "@/components/cy-tabbar.vue";
-import {getAiDialogue} from "@/api/aiDialogue";
+import {saveVoiceText} from "@/api/aiDialogue";
 import {apiDomain} from "@/configs/env";
 import state from "@/store/state";
 
 const recorderManager = uni.getRecorderManager();
 const innerAudioContext = uni.createInnerAudioContext();
-
 innerAudioContext.autoplay = true;
+
+var plugin = requirePlugin("WechatSI")
+let manager = plugin.getRecordRecognitionManager()
+
 export default {
   components: {cyTabbar, cyNavbar},
   data() {
@@ -104,9 +107,26 @@ export default {
 
       isShowPopup: false,
       isStartRecord: false,
+      currentText:"",
+      sendData: {
+        voiceDuration: 0,
+        voiceFormat: 'mp3',
+        voiceFile: '',
+        voiceDataLen: '',
+        voiceResultText: '',
+        voiceResultTextCn: '',
+        lang: 'en_US'
+      }
     }
   },
   onLoad() {
+    this.translateUsToCn({
+      duration: 1000,
+      tempFilePath: 'https://yuemei-image.oss-cn-beijing.aliyuncs.com/admin/files/ec238130-f6d9-11ee-aa8f-1b0c55bcee41-1712712632515.xlsx',
+      fileSize: 30
+    },'Hey，how are you doing?')
+    this.initRecord()
+
     this.getSystemInfo();
     let self = this;
 
@@ -154,22 +174,69 @@ export default {
     }
   },
   methods: {
+    initRecord: function(){
+      manager.onRecognize = (res) => {
+        console.log("res1", res)
+        console.log("this.currentText1", this.currentText)
+      }
+      // 识别结束事件
+      manager.onStop = (res) => {
+        let text = res.result
+        if(text == '') {
+          console.log('没有说话')
+          return
+        }
+        this.currentText = text
+        this.voicePath = res.tempFilePath;
+        console.log("res2", res)
+        console.log("this.currentText2", this.currentText)
+
+        // 保存发送的数据 英文转换成中文
+        this.translateUsToCn(res, text);
+      }
+    },
+    // 保存发送的数据
+    translateUsToCn(res, text) {
+      plugin.translate({
+        lfrom: 'en_US',
+        lto: 'zh_CN',
+        content: text,
+        success: (result) => {
+          console.log("翻译结果", result)
+          this.sendData.voiceDuration = res.duration
+          this.sendData.voiceFile = res.tempFilePath;
+          this.sendData.voiceDataLen = res.fileSize;
+          this.sendData.voiceResultText = text;
+          this.sendData.voiceResultTextCn = result.result;
+          console.log(this.sendData)
+          this.network().saveVoiceText()
+        },
+        fail: (err) => {
+          console.log("翻译失败", err)
+        }
+      })
+    },
     clickOptions(index) {
       if (index === 1) {
         console.log('开始录音');
         this.isStartRecord = !this.isStartRecord
         if (this.isStartRecord) {
-          recorderManager.start({
+          /*recorderManager.start({
             duration: 60000, // 录音的最大时长，单位 ms，最大值 600000（10 分钟）
             sampleRate: 16000, // 采样率
             numberOfChannels: 1, // 录音通道数
             encodeBitRate: 48000, // 编码码率
             format: 'pcm' // 音频格式，支持 'aac' 或 'mp3'
-          });
+          });*/
           this.optionsList[1].icon = '\ue676';
+          console.log('=======开始====')
+          manager.start({
+            lang: this.sendData.lang,
+          })
         } else {
-          recorderManager.stop();
           this.optionsList[1].icon = '\ue6e1';
+          console.log('=======结束====')
+          manager.stop()
         }
       }
       if (index === 3) {
@@ -208,6 +275,25 @@ export default {
               voiceDataLen: length
             }
           })
+        },
+        saveVoiceText: async () => {
+          uni.uploadFile({
+            url: `https://wapi-dev.aien.xiaolixb.com/v1/digitalhuman/asr/saveVoiceText`,
+            filePath: this.sendData.voiceFile,
+            name: 'file',
+            formData: this.sendData,
+            header: {
+              'X-Access-Token': state.token,
+              'content-type': 'multipart/form-data'
+            },
+            success: (uploadFileRes) => {
+              console.log('uploadFileRes', uploadFileRes)
+            },
+            fail: (error) => {
+              console.log('error', error)
+            }
+          })
+
         },
         sseRequestTask: async ({url, data, method = 'POST'}) => {
           return new Promise((resolve, reject) => {

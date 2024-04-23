@@ -4,6 +4,10 @@ const mutations = {
 	SET_CONTENT: (state, data) => {
 		state.generateContent = data
 	},
+	// 保存token
+	SET_TOKEN: (state, data) => {
+		state.token = data
+	},
 }
 
 export default mutations

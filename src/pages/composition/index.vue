@@ -29,29 +29,24 @@
                  :src="`${imageBaseUrl}${aiTypeList[0].image}`" mode="widthFix" class="w-100"></image>
         </view>
         <view class="flex flex-direction-column">
-          <view class="aitype-box-2" @click="toPage(1)">
-            <view class="flex align-item-center">
-              <image :style="{width: `${aiTypeList[1].imageWidth}rpx`}"
-                     :src="`${imageBaseUrl}${aiTypeList[1].image}`" mode="widthFix" class="w-100"></image>
-              <view class="font-weight-bold ml-2">{{ aiTypeList[1].title }}</view>
-            </view>
-            <view class="mt-2 ml-1">
-              <view class="t-size-22">{{ aiTypeList[1].desc }}</view>
+          <view class="aitype-box-2 flex align-item-center" @click="toPage(1)">
+            <image :style="{width: `${aiTypeList[1].imageWidth}rpx`}"
+                   :src="`${imageBaseUrl}${aiTypeList[1].image}`" mode="widthFix" class="w-100"></image>
+            <view class="ml-3 flex flex-direction-column">
+              <view class="font-weight-bold">{{ aiTypeList[1].title }}</view>
+              <view class="t-size-20 mt-1">{{ aiTypeList[1].desc }}</view>
             </view>
           </view>
-          <view class="aitype-box-3 mt-2" @click="toPage(2)">
-            <view class="flex align-item-center">
-              <image :style="{width: `${aiTypeList[2].imageWidth}rpx`}"
-                     :src="`${imageBaseUrl}${aiTypeList[2].image}`" mode="widthFix" class="w-100"></image>
-              <view class="font-weight-bold ml-2">{{ aiTypeList[2].title }}</view>
-            </view>
-            <view class="mt-2 ml-1">
-              <view class="t-size-22">{{ aiTypeList[2].desc }}</view>
+          <view class="aitype-box-3 mt-2 flex align-item-center" @click="toPage(2)">
+            <image :style="{width: `${aiTypeList[2].imageWidth}rpx`}"
+                   :src="`${imageBaseUrl}${aiTypeList[2].image}`" mode="widthFix" class="w-100"></image>
+            <view class="ml-3 flex flex-direction-column">
+              <view class="font-weight-bold">{{ aiTypeList[2].title }}</view>
+              <view class="t-size-20 mt-1">{{ aiTypeList[2].desc }}</view>
             </view>
           </view>
         </view>
       </view>
-
       <view @click="toPage(3)"
             class="composition-box mt-2 flex align-item-center justify-content-around">
         <view class="flex">
@@ -80,18 +75,18 @@
             <image :src="`${imageBaseUrl}${item.image}`"
                    mode="widthFix" class="living-item-image"></image>
             <view class="flex flex-direction-column justify-content-around ml-3">
-              <view class="t-color-3D3D3D font-weight-bold">{{item.compositionTitleText}}</view>
-              <view class="mt-2 t-size-22 t-color-8A8A8A table-nowrap-2">{{item.compositionText}}</view>
+              <view class="t-color-3D3D3D font-weight-bold">{{ item.compositionTitleText }}</view>
+              <view class="mt-2 t-size-22 t-color-8A8A8A table-nowrap-2">{{ item.compositionText }}</view>
             </view>
           </view>
           <view class="flex flex-direction-column justify-content-around ml-3 user-info">
             <view class="flex align-item-center mb-1">
               <image :src="`${imageBaseUrl}/icon_a1.png`" mode="widthFix" class=""></image>
-              <view class="ml-1 t-color-3D3D3D t-size-22">{{item.username}}</view>
+              <view class="ml-1 t-color-3D3D3D t-size-22">{{ item.username }}</view>
             </view>
             <view class="flex align-item-center mt-1">
               <image :src="`${imageBaseUrl}/icon_a2.png`" mode="widthFix" class=""></image>
-              <view class="ml-1 t-color-3D3D3D t-size-22">{{item.school}}</view>
+              <view class="ml-1 t-color-3D3D3D t-size-22">{{ item.school }}</view>
             </view>
           </view>
         </view>
@@ -138,14 +133,14 @@ export default {
         imageWidth: 100,
       }, {
         title: '疯狂挑战',
-        desc: 'AI出题，历届中高考作文题，等你来挑战！',
-        image: '/img_a2.png',
-        imageWidth: 50,
+        desc: 'AI出题，历届中高考作文题，等你来战！',
+        image: '/4-14-02.png',
+        imageWidth: 200,
       }, {
         title: '作文帮写',
-        desc: '考试作文,作业作文AI帮你写',
-        image: '/3-24-02.png',
-        imageWidth: 50,
+        desc: '考试作文、作业作文，AI帮你写',
+        image: '/img_a2.png',
+        imageWidth: 120,
       }],
 
       livingData: [{
@@ -255,7 +250,7 @@ page {
 }
 
 .aitype-box-1 {
-  width: 340rpx;
+  width: 300rpx;
   padding: 40rpx 30rpx;
   height: 336rpx;
   border-radius: 10rpx;
@@ -265,19 +260,19 @@ page {
 
 .aitype-box-2, .aitype-box-3 {
   margin-left: 20rpx;
-  width: 340rpx;
+  width: 380rpx;
   padding: 20rpx 30rpx;
   height: 160rpx;
   border-radius: 10rpx;
 }
 
 .aitype-box-2 {
-  background: linear-gradient(119deg, #D1E5FB 0%, #F3F3FB 99%);
-  color: #001E53;
+  background: linear-gradient(117deg, #FFDAC6 0%, #F2F2FB 99%);
+  color: #8E4D0D;
 }
 
 .aitype-box-3 {
-  background: linear-gradient(117deg, #E0EEFF 0%, #F3F3FB 100%);
+  background: linear-gradient(119deg, #D1E5FB 0%, #F3F3FB 99%);
   color: #001E53;
 }
 

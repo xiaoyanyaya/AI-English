@@ -8,16 +8,15 @@
       <view class="user-box flex align-item-center justify-content-between border-box px-3">
         <view class="flex align-item-center">
           <viwe class="mr-2 user-img-box flex align-item-center justify-content-center">
-            <image :src="`${imageBaseUrl}/xl-image-42.png`" mode="widthFix" class="user-img"></image>
+            <image :src="userInfo.avatar" mode="widthFix" class="user-img"></image>
           </viwe>
-          <view class="t-color-3D3D3D" v-if="0">未登录用户</view>
-          <view v-if="1" class="ml-3">
+          <view class="t-color-3D3D3D" v-if="!userInfo">未登录用户</view>
+          <view v-if="1" class="ml-3" @click="$navigateTo('/pages/me/personInfo')">
             <view class="t-size-30 t-color-3D3D3D flex align-item-center">
-              <view>小礼AI</view>
-              <image @click="$navigateTo('/pages/me/personInfo')"
-                :src="`${imageBaseUrl}/icon_6.png`" mode="widthFix" class="user-write mt-1 ml-1"></image>
+              <view>{{userInfo.nickName || "小礼AI"}}</view>
+              <image :src="`${imageBaseUrl}/icon_6.png`" mode="widthFix" class="user-write mt-1 ml-1"></image>
             </view>
-            <view class="t-size-24 t-color-8A8A8A mt-1">ID: 123456</view>
+            <view class="t-size-24 t-color-8A8A8A mt-1">会员ID: {{userInfo.memberNo || ""}}</view>
           </view>
         </view>
         <view @click="$navigateTo('/pages/me/setting')">
@@ -66,6 +65,7 @@
 <script>
 
 import MyMixin from '@/utils/MyMixin.js'
+import store from '@/store/';
 export default {
   mixins: [MyMixin],
   data() {
@@ -77,7 +77,9 @@ export default {
         { title: '卡密兑换', image: 'icon_8.png' },
         { title: '联系客服', image: 'icon_9.png' },
         { title: '邀请好友', image: 'icon_10.png' }
-      ]
+      ],
+
+      userInfo: {}
     };
   },
   computed: {
@@ -85,10 +87,24 @@ export default {
       return `background: url(${this.imageBaseUrl}/img_17.png) no-repeat center center; background-size: cover;`
     }
   },
+  onShow() {
+    this.getUserInfo().then(data => {
+      this.userInfo = data
+    })
+    this.initData()
+  },
   methods: {
+    initData() {
+      this.userInfo = store.state.userInfo
+    },
     toPage(index) {
       if (index == 0) this.$navigateTo('/pages/me/distribution')
       if (index == 1) this.$navigateTo('/pages/me/cardConversion')
+    },
+    network() {
+      return {
+
+      }
     }
   },
 }
@@ -115,10 +131,11 @@ page {
     width: 80rpx;
     height: 80rpx;
     border-radius: 50%;
+    overflow: hidden;
   }
   .user-img {
-    width: 40rpx;
-    height: 40rpx;
+    width: 80rpx;
+    height: 80rpx;
   }
 
   .setting-img {

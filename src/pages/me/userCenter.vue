@@ -14,16 +14,16 @@
         <view class="package-grade">
           <view class="package-item mt-4 flex flex-direction-column align-item-center"
                 :class="{ active: item.isActive }"
-                @click="selectPackage(index)"
+                @click="selectPackage(index, item)"
                 v-for="(item, index) in packageList" :key="index">
-            <view class="mt-2">{{ item.name }}</view>
+            <view class="mt-2">{{ item.title }}</view>
             <view class="price mt-2">
               <text>￥</text>
               <text>{{ item.price }}</text>
             </view>
-            <view v-if="item.oriPrice" class="oriPricee mt-1">原价{{ item.oriPrice }}</view>
+            <view v-if="item.marketPrice" class="oriPricee mt-1">原价{{ item.marketPrice }}</view>
             <view class="time-box flex align-item-center justify-content-center t-color-3D3D3D t-size-20">
-              {{ item.timeDesc }}
+              {{ item.note }}
             </view>
           </view>
         </view>
@@ -70,7 +70,7 @@
         class="pay-way mt-5 px-5 pt-5 pb-5 flex align-item-center justify-content-between">
         <view class="t-color-3D3D3D">支付方式</view>
         <view class="flex align-item-center">
-          <view class="t-color-8A8A8A">请选择</view>
+          <view class="t-color-8A8A8A">{{ payWayList[payWay].title || "请选择" }}</view>
           <view class="ml-2">
             <u-icon name="arrow-right" color="#8A8A8A" size="28"></u-icon>
           </view>
@@ -84,17 +84,21 @@
           <view class="t-size-26 t-color-3D3D3D mt-1">实付：</view>
           <view class="t-size-26 t-color-DC0C0C">
             <text class="t-size-28">￥</text>
-            <text class="t-size-40 font-weight-bold">488</text>
+            <text class="t-size-40 font-weight-bold">{{ selectPackageData.price || 0 }}</text>
           </view>
         </view>
-        <view class="pay-btn flex align-item-center justify-content-center t-color-fff">
+        <view class="pay-btn flex align-item-center justify-content-center t-color-fff"
+          @click="vipBuy">
           确认协议并缴费
         </view>
       </view>
 
       <view class="flex mt-2 align-item-center justify-content-center">
-        <view class="cricle2 flex align-item-center justify-content-center">
-          <u-icon name="checkbox-mark" color="#FFFFFF" size="28"></u-icon>
+        <view
+          @click="isAgree = !isAgree"
+          :class="['cricle2', isAgree ? 'isAgree' : 'noAgree']"
+          class="flex align-item-center justify-content-center">
+          <u-icon v-if="isAgree" name="checkbox-mark" color="#FFFFFF" size="28"></u-icon>
         </view>
         <view class="t-size-22 t-color-3D3D3D ml-2">
           已阅读并同意
@@ -114,6 +118,7 @@
         </view>
         <view style="height: 110rpx"></view>
         <view v-for="(item, index) in payWayList" :key="index"
+              @click="clickPayWay(index)"
         class="flex align-item-center item-box">
           <view>
             <image :src="`${imageBaseUrl}${item.image}`" mode="widthFix"></image>
@@ -123,7 +128,6 @@
             <view class="ml-2" v-if="item.isRecommend">推荐</view>
           </view>
         </view>
-
       </view>
     </u-popup>
   </view>
@@ -131,41 +135,14 @@
 
 <script>
 import MyMixin from "@/utils/MyMixin";
+import {vipBuy, vipPackage} from "@/api/me";
 
 export default {
   mixins: [MyMixin],
   data() {
     return {
       // 套餐
-      packageList: [
-        {
-          id: 1,
-          name: '2年卡',
-          price: 488,
-          oriPrice: 776,
-          timeDesc: '不限时长',
-          desc: '直降288元',
-          isActive: true
-        },
-        {
-          id: 2,
-          name: '1年卡',
-          price: 288,
-          oriPrice: 388,
-          timeDesc: '不限时长',
-          desc: '直降100元',
-          isActive: false
-        },
-        {
-          id: 3,
-          name: '3个月卡',
-          price: 98,
-          oriPrice: '',
-          timeDesc: '不限时长',
-          desc: '直降30元',
-          isActive: false
-        }
-      ],
+      packageList: [],
       descMenu: [{
         title: '每天抽空一练，3个月后口语'
       }, {
@@ -173,22 +150,66 @@ export default {
       }, {
         title: '练口语不再枯燥，海量趣味话题'
       }],
-      payWayList: [{
+      payWayList: [/*{
         title: '支付宝',
         image: '/alipay.png',
-        isRecommend: true
-      }, {
+        isRecommend: false
+      }, */{
         title: '微信支付',
         image: '/wechatpay.png',
-        isRecommend: false
+        isRecommend: true
       }],
-      showPayWay: false
+      payWay: 0,
+      // 选中的套餐
+      selectPackageData: {},
+      showPayWay: false,
+      // 是否同意协议
+      isAgree: true
     };
   },
+  onLoad() {
+    this.vipPackage();
+  },
   methods: {
-    selectPackage(index) {
+    clickPayWay(index) {
+      this.payWay = index;
+      this.showPayWay = false;
+    },
+    selectPackage(index, item) {
       this.packageList.forEach((item, i) => {
         item.isActive = i === index;
+      });
+      this.selectPackageData = item
+    },
+    vipPackage() {
+      vipPackage().then(res => {
+        res.data.result.forEach(item => {
+          item.isActive = false;
+        });
+        this.packageList = res.data.result;
+      });
+    },
+    vipBuy() {
+      var data = this.packageList.find(item => item.isActive);
+      if (!data) {
+        uni.showToast({
+          title: '请选择套餐',
+          icon: 'none'
+        });
+        return;
+      }
+      if (!this.isAgree) {
+        uni.showToast({
+          title: '请先同意协议',
+          icon: 'none'
+        })
+        return;
+      }
+
+      vipBuy({
+        vipPackageId: data.id
+      }).then(res => {
+        console.log(res);
       });
     }
   },
@@ -315,10 +336,16 @@ page {
   border-radius: 50%;
 }
 .cricle2 {
-  width: 24px;
-  height: 24px;
-  background: #2D6CDA;
+  width: 50rpx;
+  height: 50rpx;
   border-radius: 50%;
+
+  &.isAgree {
+    background: #2D6CDA;
+  }
+  &.noAgree {
+    border: 1px solid #C0C4CC;
+  }
 }
 
 .pay-price-box {

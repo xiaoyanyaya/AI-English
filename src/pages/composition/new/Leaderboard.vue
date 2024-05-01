@@ -6,60 +6,34 @@
 
     <view class="person-list" v-for="(item, index) in personList" :key="index">
       <view class="item flex align-item-center justify-content-around" :class="{active: item.isSelect}">
-        <image v-if="item.sort == 1" class="medal" mode="widthFix" :src="`${imageBaseUrl}/3-22-14.png`"></image>
-        <image v-else-if="item.sort == 2" class="medal" mode="widthFix" :src="`${imageBaseUrl}/3-22-13.png`"></image>
-        <image v-else-if="item.sort == 3" class="medal" mode="widthFix" :src="`${imageBaseUrl}/3-22-12.png`"></image>
-        <view v-else class="sort" :class="{active: item.isSelect}">{{ item.sort }}</view>
+        <image v-if="item.rankNum == 1" class="medal" mode="widthFix" :src="`${imageBaseUrl}/3-22-14.png`"></image>
+        <image v-else-if="item.rankNum == 2" class="medal" mode="widthFix" :src="`${imageBaseUrl}/3-22-13.png`"></image>
+        <image v-else-if="item.rankNum == 3" class="medal" mode="widthFix" :src="`${imageBaseUrl}/3-22-12.png`"></image>
+        <view v-else class="sort" :class="{active: item.isSelect}">{{ item.rankNum }}</view>
         <view class="avatar">
           <image :src="item.avatar"></image>
         </view>
-        <view class="name" :class="{active: item.isSelect}">{{item.name}}</view>
-        <view class="score font-weight-bold t-size-36">{{item.score}}分</view>
+        <view class="name" :class="{active: item.isSelect}">{{item.nickName}}</view>
+        <view class="score font-weight-bold t-size-36">{{item.nums}}次</view>
       </view>
       <view class="px-5">
         <view class="line-hr"></view>
       </view>
     </view>
 
-    <button open-type="getPhoneNumber" @getphonenumber="getPhone">phone</button>
-
   </view>
 </template>
 
 <script>
 import {tr} from "@dcloudio/vue-cli-plugin-uni/packages/postcss/tags";
-import {getChallengeCompositionList, getChallengeCompositionRank} from "@/api/composition";
+import {getChallengeCompositionList, getChallengeCompositionRank, getChallengeCompositionSelf} from "@/api/composition";
 import myMixin from "@/utils/MyMixin";
 
 export default {
   mixins: [myMixin],
   data() {
     return {
-      personList: [{
-        sort: 1,
-        name: '张三',
-        score: 100,
-        avatar: '/static/logo.png',
-        isSelect: true
-      }, {
-        sort: 2,
-        name: '李四',
-        score: 90,
-        avatar: '/static/logo.png',
-        isSelect: false
-      }, {
-        sort: 3,
-        name: '王五1',
-        score: 80,
-        avatar: '/static/logo.png',
-        isSelect: false
-      }, {
-        sort: 4,
-        name: '赵六',
-        score: 70,
-        avatar: '/static/logo.png',
-        isSelect: false
-      }],
+      personList: [],
       id: '',
     };
   },
@@ -70,9 +44,25 @@ export default {
     network() {
       return {
         getChallengeCompositionRank: async () => {
+          const self = await getChallengeCompositionSelf();
+          const seldData = self.data.result[0];
+          seldData.isSelect = true;
           const res = await getChallengeCompositionRank();
+          const data = res.data.result;
+          // 根据data的
+          // 将自己的数据放在第一位
+          data.forEach((item, index) => {
+            if (item.userId === seldData.userId) {
+              data.splice(index, 1);
+              data.unshift(seldData);
+            }
+          });
+          this.personList = data;
+        },
+        getChallengeCompositionSelf: async () => {
+          const res = await getChallengeCompositionSelf();
           console.log(res.data.result)
-        }
+        },
       }
     }
   },

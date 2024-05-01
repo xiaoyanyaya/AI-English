@@ -60,7 +60,7 @@ import cyNavbar from "@/components/cy-navbar.vue";
 import cyTabbar from "@/components/cy-tabbar.vue";
 import {saveVoiceText} from "@/api/aiDialogue";
 import {apiDomain} from "@/configs/env";
-import state from "@/store/state";
+import store from '@/store/';
 
 const recorderManager = uni.getRecorderManager();
 const innerAudioContext = uni.createInnerAudioContext();
@@ -121,7 +121,7 @@ export default {
   },
   onLoad() {
     this.translateUsToCn({
-      duration: 1000,
+      duration: 13823.606014251709,
       tempFilePath: 'https://yuemei-image.oss-cn-beijing.aliyuncs.com/admin/files/ec238130-f6d9-11ee-aa8f-1b0c55bcee41-1712712632515.xlsx',
       fileSize: 30
     },'Hey，how are you doing?')
@@ -202,8 +202,7 @@ export default {
         lto: 'zh_CN',
         content: text,
         success: (result) => {
-          console.log("翻译结果", result)
-          this.sendData.voiceDuration = res.duration
+          this.sendData.voiceDuration = parseInt(res.duration)
           this.sendData.voiceFile = res.tempFilePath;
           this.sendData.voiceDataLen = res.fileSize;
           this.sendData.voiceResultText = text;
@@ -283,7 +282,7 @@ export default {
             name: 'file',
             formData: this.sendData,
             header: {
-              'X-Access-Token': state.token,
+              'X-Access-Token': store.state.token,
               'content-type': 'multipart/form-data'
             },
             success: (uploadFileRes) => {
@@ -312,7 +311,7 @@ export default {
               enableChunked: true,
               data,
               header: {
-                'X-Access-Token': state.token,
+                'X-Access-Token': store.state.token,
               },
               success: response => {
                 console.log('response', response)

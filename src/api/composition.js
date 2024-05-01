@@ -52,8 +52,11 @@ export const getCompositionCollect = params => fly.get('/composition/collect/lis
 // 我的作文库 -> 收藏他人作文
 export const addCompositionCollectOther = params => fly.post('/composition/collect/add', params)
 
+// 我的作文库 -> 取消收藏（将记录设置为失效）
+export const deleteCompositionCollectOther = params => fly.post('/composition/collect/cancel', params)
+
 // 我的作文库 -> 删除收藏（将记录设置为失效）
-export const deleteCompositionCollectOther = params => fly.post('/composition/collect/updateStatus', params)
+export const deleteCancelCompositionCollectOther = params => fly.post('/composition/collect/updateStatus', params)
 
 
 

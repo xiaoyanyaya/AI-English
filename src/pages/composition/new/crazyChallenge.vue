@@ -69,12 +69,12 @@
             <!--            <view>书面表达（满分 25分）</view>-->
             <rich-text :nodes="item.compositionTitleText"></rich-text>
           </view>
-          <view class="item mt-2">
-            <!--            <view>要点包括：</view>-->
+<!--          <view class="item mt-2">
+            &lt;!&ndash;            <view>要点包括：</view>&ndash;&gt;
             <view>
               <rich-text :nodes="item.note"></rich-text>
             </view>
-          </view>
+          </view>-->
         </view>
         <view class="line-box"></view>
         <view class="mt-5 flex align-item-center btns justify-content-between">
@@ -110,7 +110,7 @@ export default {
     return {
       btnsList: [{
         icon: '/3-22-08.png',
-        title: '挑战人数',
+        title: '挑战次数',
         value: 0
       }, {
         icon: '/3-22-07.png',
@@ -119,7 +119,7 @@ export default {
 
       evaluateBtnsList: [{
         icon: '/3-22-08.png',
-        title: '挑战人数',
+        title: '挑战次数',
         value: 0
       }, {
         icon: '/3-22-07.png',
@@ -150,7 +150,7 @@ export default {
   },
   methods: {
     clickBtn(title, data) {
-      if (title == '挑战人数') {
+      if (title == '挑战次数') {
         this.$navigateTo(`/pages/composition/new/challengeNumber?id=${data.id}&title=${data.compositionTitleText}&compositionLabel=${data.compositionLabel}`)
       }
       if (title == '立即挑战') {
@@ -201,12 +201,14 @@ export default {
           if (!this.isMoreData) return
           let data = await getCompositionList(this.queryParams);
           data.data.result.records.forEach(d => {
+            d.compositionTitleText = d.compositionTitleText.replaceAll("\n", "<br/>")
             this.evaluateData.push(d)
           })
           this.isMoreData = data.data.result.records.length === this.queryParams.pageSize
         },
         getChallengeCompositionWeek: async () => {
           let data = await getChallengeCompositionWeek();
+          data.data.result.compositionTitleText = data.data.result.compositionTitleText.replaceAll("\n", "<br/>")
           this.challenge = data.data.result
         }
       }

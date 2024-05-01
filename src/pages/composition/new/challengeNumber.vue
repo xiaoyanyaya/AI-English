@@ -37,7 +37,7 @@
             </view>
           </div>
           <div class="collection flex align-item-center"
-               @click="network().addCompositionCollectOther(item)">
+               @click="network().addCompositionCollectOther(item, index)">
             <u-icon name="star-fill" class="t-size-32"
                     :class="item.compositionCollectStatus == 1 ? 't-color-fea831' : 't-color-d9d9d9'"></u-icon>
             <!--            <image class="iconfont" :src="`${imageBaseUrl}/3-22-04.png`"></image>-->
@@ -71,6 +71,7 @@ export default {
         pageNo: 1,
         pageSize: 10,
       },
+      isMoreData: true,
     };
   },
   onLoad({id, title, compositionLabel}) {
@@ -88,62 +89,72 @@ export default {
     initData() {
       this.queryParams.pageNo = 1;
       this.challengeData = [];
+      this.isMoreData = true;
       this.network().getChallengeCompositionList();
     },
     network() {
       return {
         getChallengeCompositionList: async () => {
+          if (!this.isMoreData) return;
+
           this.queryParams.compositionLibraryId = this.id;
           const res = await getChallengeCompositionList(this.queryParams);
           res.data.result.forEach(item => {
             item.compositionCorrect = item.compositionCorrect.replaceAll('<p>', '').replaceAll('</p>', '')
+            item.compositionText = item.compositionText.replaceAll('\n', '<br/>')
+            this.challengeData.push(item);
           })
-          this.challengeData = res.data.result
+          this.isMoreData = res.data.result.length === this.queryParams.pageSize;
         },
-        addCompositionCollectOther: async (item) => {
-          console.log(item)
-          if (item.compositionCollectStatus === 1) {
-            deleteCompositionCollectOther({
-              id: item.compositionCollectId,
-              status: 0
-            }).then(res => {
-              console.log(res)
-              if (res.data.code === 200) {
-                uni.showToast({
-                  title: '取消收藏成功',
-                  icon: 'none'
-                })
-                setTimeout(() => {
-                  this.initData();
-                }, 500)
-              } else {
-                uni.showToast({
-                  title: '取消收藏失败',
-                  icon: 'none'
-                })
-              }
-            })
-          } else {
-            addCompositionCollectOther({
-              compositionFavoritesId: item.id
-            }).then(res => {
-              console.log(res)
-              if (res.data.code === 200) {
-                uni.showToast({
-                  title: '收藏成功',
-                  icon: 'none'
-                })
-                setTimeout(() => {
-                  this.initData();
-                }, 500)
-              } else {
-                uni.showToast({
-                  title: '收藏失败',
-                  icon: 'none'
-                })
-              }
-            })
-          }
+        addCompositionCollectOther: async (item, index) => {
+          uni.showLoading({
+            title: item.compositionCollectStatus === 1 ? '取消收藏中...' : '收藏中...',
+            mask: true
+          })
+          var compositionCollectId = item.compositionCollectId
+          var id = item.id
+          setTimeout(() => {
+            if (item.compositionCollectStatus === 1) {
+              deleteCompositionCollectOther({
+                compositionFavoritesId: id
+              }).then(res => {
+                console.log(res, "取消收藏")
+                if (res.data.code === 200) {
+                  uni.showToast({
+                    title: '取消收藏成功',
+                    icon: 'none'
+                  })
+                  this.$set(this.challengeData[index], 'compositionCollectStatus', 0);
+                  this.$set(this.challengeData[index], 'favoritesTimes', this.challengeData[index].favoritesTimes - 1);
+                } else {
+                  uni.showToast({
+                    title: '取消收藏失败',
+                    icon: 'none'
+                  })
+                }
+              })
+            } else {
+              addCompositionCollectOther({
+                compositionFavoritesId: id
+              }).then(res => {
+                console.log(res, "收藏")
+                if (res.data.code === 200) {
+                  uni.showToast({
+                    title: '收藏成功',
+                    icon: 'none'
+                  })
+                  this.$set(this.challengeData[index], 'compositionCollectStatus', 1);
+                  this.$set(this.challengeData[index], 'favoritesTimes', this.challengeData[index].favoritesTimes + 1);
+                } else {
+                  uni.showToast({
+                    title: '收藏失败',
+                    icon: 'none'
+                  })
+                }
+              })
+            }
+            this.$forceUpdate();
+          }, 500)
         }
       }
     }

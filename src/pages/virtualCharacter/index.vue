@@ -91,7 +91,7 @@ export default {
     this.init();
     this.network().defaultVirtual();
     uni.$on("switchVirtual", () => {
-      this.network().defaultVirtual();
+      this.network().defaultVirtual(1);
     })
   },
   computed: {
@@ -102,13 +102,13 @@ export default {
   methods: {
     init() {
       this.optionsBtnsMenu = [
-        {
+        /*{
           title: '赢时长',
           width: 120,
           right: -80,
           icon: `${this.imageBaseUrl}/xl-image-45.png`,
           path: '/pages/virtualCharacter/duration'
-        },
+        },*/
         {
           title: '查看测评报告历史',
           width: 220,
@@ -116,12 +116,12 @@ export default {
           icon: `${this.imageBaseUrl}/xl-image-8.png`,
           path: '/pages/virtualCharacter/dialogueHistory'
         },
-        {
+        /*{
           title: '使用视频',
           width: 140,
           right: -100,
           icon: `${this.imageBaseUrl}/xl-image-37.png`,
-        }
+        }*/
       ],
       this.selectBtnsMenu = [
         {
@@ -157,9 +157,18 @@ export default {
     },
     network() {
       return {
-        defaultVirtual: async () => {
+        defaultVirtual: async (isRefresh) => {
+          if (isRefresh !== 1) {
+            var personInfo = uni.getStorageSync("personInfo");
+            if (personInfo) {
+              this.personInfo = personInfo;
+              return;
+            }
+          }
+
           const res = await defaultVirtual();
           this.personInfo = res.data.result;
+          uni.setStorageSync("personInfo", this.personInfo);
         }
       }
     }

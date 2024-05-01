@@ -10,6 +10,11 @@ const actions = {
 		return new Promise((resolve, reject) => {
 			context.commit('SET_TOKEN', data)
 		})
+	},
+	userInfo(context, data) {
+		return new Promise((resolve, reject) => {
+			context.commit('SET_USERINFO', data)
+		})
 	}
 }
 

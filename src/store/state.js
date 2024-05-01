@@ -1,7 +1,8 @@
 const state = {
 	logisticsInfo: {},
 	generateContent: '',
-	token: ''
+	token: '',
+	userInfo: {},
 }
 
 export default state

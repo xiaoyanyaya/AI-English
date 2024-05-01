@@ -1,6 +1,6 @@
 <template>
   <view>
-    <view class="tabbar-box-display"></view>
+<!--    <view class="tabbar-box-display"></view>
     <view class="tabbar-box flex justify-content-around align-item-center">
       <view v-for="(item, index) in tabbarList" :key="index"
             @click="toPage(item, inedx)"
@@ -14,7 +14,7 @@
               :class="index === currentActive ? 'tabbar-box-color-active' : 'tabbar-box-color'"
         >{{item.title}}</view>
       </view>
-    </view>
+    </view>-->
   </view>
 </template>
 

@@ -68,6 +68,7 @@
 
 <script>
 import MyMixin from "@/utils/MyMixin";
+import {commissionIndex} from "@/api/me";
 
 export default {
   mixins: [MyMixin],
@@ -94,7 +95,17 @@ export default {
         { title: '邀请下级推广员', image: 'icon_15.png' },
       ]
     };
-  }
+  },
+  onLoad() {
+    this.commissionIndex();
+  },
+  methods: {
+    commissionIndex() {
+      commissionIndex().then(res => {
+        console.log(res)
+      });
+    }
+  },
 }
 </script>
 

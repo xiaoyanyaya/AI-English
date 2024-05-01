@@ -178,7 +178,7 @@ import {
   getPhotoRecognition
 } from "@/api/composition";
 import {apiDomain} from "@/configs/env";
-import state from "@/store/state";
+import store from '@/store/';
 import {tr} from "@dcloudio/vue-cli-plugin-uni/packages/postcss/tags";
 
 export default {
@@ -347,7 +347,7 @@ export default {
         this.network().getAIGCCorrection('generateContent')
       }
     } else if (pageIndex == 5) {
-      this.title.isShowTitle = true;
+      this.title.isShowTitle = this.essayData.title != '';
       this.title.isShowPhoto = false;
       this.title.isDisabled = true;
       this.content.isShowContent = true;
@@ -366,7 +366,7 @@ export default {
         .replaceAll("(4)、范文翻译","<span style='color: #317cf2;line-height: 28px;'>(4)、范文翻译</span>")
         .replaceAll("(1)、单词纠错","<span style='color: #317cf2;line-height: 28px;'>(1)、单词纠错</span>")
         .replaceAll("(2)、句子纠错","<span style='color: #317cf2;line-height: 28px;'>(2)、句子纠错</span>")
-        .replaceAll("(3)、精美句子","<span style='color: #317cf2;line-height: 28px;'>(3)、精美句子</span>")
+        .replaceAll("(3)、范文翻译","<span style='color: #317cf2;line-height: 28px;'>(3)、范文翻译</span>")
         .replaceAll("(4)、作文优点","<span style='color: #317cf2;line-height: 28px;'>(4)、作文优点</span>")
         .replaceAll("(5)、作文不足","<span style='color: #317cf2;line-height: 28px;'>(5)、作文不足</span>")
         .replaceAll("(6)、总结和评分","<span style='color: #317cf2;line-height: 28px;'>(6)、总结和评分</span>")
@@ -611,7 +611,7 @@ export default {
         filePath: tempFilePath,
         name: 'imageFile',
         header: {
-          'X-Access-Token': state.token,
+          'X-Access-Token': store.state.token,
         },
         success: (uploadFileRes) => {
           var data = JSON.parse(uploadFileRes.data)
@@ -649,7 +649,7 @@ export default {
             .replaceAll("(4)、范文翻译","<span style='color: #317cf2;line-height: 28px;'>(4)、范文翻译</span>")
             .replaceAll("(1)、单词纠错","<span style='color: #317cf2;line-height: 28px;'>(1)、单词纠错</span>")
         .replaceAll("(2)、句子纠错","<span style='color: #317cf2;line-height: 28px;'>(2)、句子纠错</span>")
-        .replaceAll("(3)、精美句子","<span style='color: #317cf2;line-height: 28px;'>(3)、精美句子</span>")
+        .replaceAll("(3)、范文翻译","<span style='color: #317cf2;line-height: 28px;'>(3)、范文翻译</span>")
         .replaceAll("(4)、作文优点","<span style='color: #317cf2;line-height: 28px;'>(4)、作文优点</span>")
         .replaceAll("(5)、作文不足","<span style='color: #317cf2;line-height: 28px;'>(5)、作文不足</span>")
         .replaceAll("(6)、总结和评分","<span style='color: #317cf2;line-height: 28px;'>(6)、总结和评分</span>")
@@ -694,6 +694,7 @@ export default {
           }
         },
         sseRequestTask: async ({url, data, method = 'POST', type}) => {
+          console.log("store.state.token", store.state.token)
           return new Promise((resolve, reject) => {
             setTimeout(() => {
               uni.showLoading({
@@ -710,7 +711,7 @@ export default {
               enableChunked: true,
               data,
               header: {
-                'X-Access-Token': state.token,
+                'X-Access-Token': store.state.token,
               },
               success: response => {
               },
@@ -786,7 +787,7 @@ export default {
                         .replaceAll("(4)、范文翻译","<span style='color: #317cf2;line-height: 28px;'>(4)、范文翻译</span>")
                         .replaceAll("(1)、单词纠错","<span style='color: #317cf2;line-height: 28px;'>(1)、单词纠错</span>")
         .replaceAll("(2)、句子纠错","<span style='color: #317cf2;line-height: 28px;'>(2)、句子纠错</span>")
-        .replaceAll("(3)、精美句子","<span style='color: #317cf2;line-height: 28px;'>(3)、精美句子</span>")
+        .replaceAll("(3)、范文翻译","<span style='color: #317cf2;line-height: 28px;'>(3)、范文翻译</span>")
         .replaceAll("(4)、作文优点","<span style='color: #317cf2;line-height: 28px;'>(4)、作文优点</span>")
         .replaceAll("(5)、作文不足","<span style='color: #317cf2;line-height: 28px;'>(5)、作文不足</span>")
         .replaceAll("(6)、总结和评分","<span style='color: #317cf2;line-height: 28px;'>(6)、总结和评分</span>")

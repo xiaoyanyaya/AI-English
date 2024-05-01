@@ -105,6 +105,26 @@
       "path": "pages/composition/component/searchCondition"
     }
   ],
+  "tabBar": {
+    "color": "#000000",
+    "selectedColor": "#000000",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "/static/icon_4.png",
+        "selectedIconPath": "/static/icon_2.png"
+      },
+      {
+        "pagePath": "pages/me/index",
+        "text": "会员中心",
+        "iconPath": "/static/icon_3.png",
+        "selectedIconPath": "/static/icon_5.png"
+      }
+    ]
+  },
   "globalStyle": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "uni-app",

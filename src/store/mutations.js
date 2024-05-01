@@ -8,6 +8,10 @@ const mutations = {
 	SET_TOKEN: (state, data) => {
 		state.token = data
 	},
+	SET_USERINFO: (state, data) => {
+		console.log("改变信息", data)
+		state.userInfo = data
+	}
 }
 
 export default mutations

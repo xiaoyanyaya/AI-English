@@ -133,12 +133,12 @@
                 </view>
                 <view class="flex flex-direction-column">
                   <view class="flex align-item-center">
-                    <image src="/static/logo.png" mode="widthFix" style="width: 30rpx; border-radius: 50%"></image>
-                    <view class="ml-1 t-color-8A8A8A t-size-22">2023-12-16 12:12:12</view>
+                    <image :src="`${imageBaseUrl}/4-30-02.png`" mode="widthFix" style="width: 30rpx; border-radius: 50%"></image>
+                    <view class="ml-1 t-color-8A8A8A t-size-22">{{ item.createTime }}</view>
                   </view>
                   <view class="flex align-item-center mt-1">
-                    <image src="/static/logo.png" mode="widthFix" style="width: 30rpx; border-radius: 50%"></image>
-                    <view class="ml-1 t-color-8A8A8A t-size-22">收藏来源：作文帮写</view>
+                    <image :src="`${imageBaseUrl}/4-30-01.png`" mode="widthFix" style="width: 20rpx; "></image>
+                    <view class="ml-1 t-color-8A8A8A t-size-22">收藏来源：{{ item.compositionFavoritesSourceStr || "收藏作文" }}</view>
                   </view>
                 </view>
               </view>
@@ -146,12 +146,12 @@
               <view class="content-text mt-2" v-show="item.compositionTitleText">
                 <view class="font-weight-bold t-size-30">题目：</view>
                 <view class="content-text-mask"></view>
-                <view class="t-size-26 t-color-3D3D3D">{{ item.compositionTitleText }}</view>
+                <rich-text class="t-size-26 t-color-3D3D3D mt-2" style="line-height: 40rpx" :nodes="item.compositionTitleText"></rich-text>
               </view>
               <view class="desc-text mt-2">
                 <view class="font-weight-bold t-size-30">内容：</view>
                 <view class="desc-text-mask"></view>
-                <view class="t-size-24 t-color-8A8A8A" v-html="item.compositionText"></view>
+                <rich-text class="t-size-24 t-color-8A8A8A mt-2" style="line-height: 40rpx" :nodes="item.compositionText"></rich-text>
               </view>
             </view>
           </uni-swipe-action-item>
@@ -179,7 +179,10 @@ import {
   getCompositionList,
   getCompositionCollectList,
   getCompositionDictList,
-  getAIGCComposition, deleteCompositionCollect, getCompositionCollect, deleteCompositionCollectOther
+  getAIGCComposition,
+  deleteCompositionCollect,
+  getCompositionCollect,
+  deleteCancelCompositionCollectOther
 } from '@/api/composition';
 import {sseRequestTask} from "@/jslibs/requestUtils";
 import {param, tr} from "@dcloudio/vue-cli-plugin-uni/packages/postcss/tags";
@@ -330,7 +333,7 @@ export default {
       this.network().getData(1)
     },
     confirmDelete() {
-      this.network().deleteCompositionCollect(this.contentData[this.deleteIndex].id)
+      this.network().deleteCompositionCollect(this.contentData[this.deleteIndex].id, this.deleteIndex)
     },
     clickActiveBtn(type) {
       this.isActiveBtn = type
@@ -338,7 +341,7 @@ export default {
     },
     network() {
       return {
-        deleteCompositionCollect: async (id) => {
+        deleteCompositionCollect: async (id, index) => {
           let data = "";
           let params = {
             id,
@@ -347,11 +350,11 @@ export default {
           if (this.isActiveBtn == 1) {
             data = await deleteCompositionCollect(params);
           } else {
-            data = await deleteCompositionCollectOther(params);
+            data = await deleteCancelCompositionCollectOther(params);
           }
           console.log(data.data.code)
           if (data.data.code == 200) {
-            this.contentData = []
+            this.contentData.splice(index, 1)
             this.queryParams.pageNo = 1
             this.network().getData(1)
             this.showDelete = false
@@ -377,9 +380,22 @@ export default {
           }
           console.log("数据库", data)
           data.data.result.forEach(d => {
-            d.createTime = d.createTime.split(' ')[0]
-            d.compositionTitleText = d.compositionTitleText.replace(/<[^>]+>/g, "")
-            d.compositionText = d.compositionText.replaceAll("\n", "<p></p>")
+            // d.createTime = d.createTime.split(' ')[0]
+            d.compositionTitleText = d.compositionTitleText.replace(/<[^>]+>/g, "").replaceAll("\n", "<br/>")
+            d.compositionText = d.compositionText.replaceAll("\n", "<br/>")
+            d.compositionCorrect = d.compositionCorrect.replaceAll("\n", "<br/>")
+            if (d.compositionFavoritesSource == 1) {
+              d.compositionFavoritesSourceStr = "作文帮写"
+            }
+            if (d.compositionFavoritesSource == 2) {
+              d.compositionFavoritesSourceStr = "作文批改"
+            }
+            if (d.compositionFavoritesSource == 3) {
+              d.compositionFavoritesSourceStr = "疯狂挑战"
+            }
+            if (d.compositionFavoritesSource == 4) {
+              d.compositionFavoritesSourceStr = "收藏他人作文"
+            }
             this.contentData.push(d)
           })
           if (data.data.result.length < this.queryParams.pageSize) {

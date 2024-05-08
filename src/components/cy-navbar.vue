@@ -13,7 +13,7 @@
         <view class="nav-btn"></view>
       </view>
     </view>
-    <view :style="placeholderStyle"></view>
+    <view v-if="!isAbsolute" :style="placeholderStyle"></view>
   </view>
 </template>
 
@@ -32,6 +32,11 @@ export default {
     isReturnHome: {
       type: Number,
       default: 0
+    },
+    // 是否需要消除绝对定位的高度
+    isAbsolute: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -56,6 +61,7 @@ export default {
     },
     placeholderStyle() {
       var navContentHeiht = uni.upx2px(this.navContentHeiht)
+      console.log("navContentHeiht + this.systemInfo.statusBarHeight", navContentHeiht + this.systemInfo.statusBarHeight)
       return `
       height: ${navContentHeiht + this.systemInfo.statusBarHeight}px;
       `

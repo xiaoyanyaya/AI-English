@@ -14,7 +14,7 @@
           </view>
           <view class="info-box flex align-item-center pr-2 pl-2 border-box">
             <view class="image-box flex align-item-center justify-content-centerq">
-              <image mode="widthFix" :src="`${item.avatar}`"></image>
+              <image :src="`${item.avatar}`"></image>
             </view>
             <view class="info ml-3 flex flex-direction-column">
               <view class="flex align-item-end justify-content-between">
@@ -146,6 +146,7 @@ page {
       height: 200rpx;
       image {
         width: 160rpx;
+        height: 200rpx;
       }
     }
 

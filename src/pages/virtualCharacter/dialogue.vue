@@ -1,28 +1,43 @@
 <template>
-  <view>
+  <view class="main-body">
     <cy-navbar showBack>
       <view class="t-size-30">虚拟人对练</view>
     </cy-navbar>
-
+<!--    <button @click="test">test</button>-->
     <view class="content-box" :style="contentBoxStyle">
+      <view class="mark-bg"></view>
+      <view class="flex align-item-center justify-content-center">
+        <image :src="personInfo.avatarLarge" class="scene-img"></image>
+      </view>
+
       <view class="translate-btn pl-4">
-        <image src="/static/logo.png"/>
+<!--        <image :src="`${imageBaseUrl}/s1.png`"/>-->
       </view>
 
       <view class="dialogue-content flex flex-direction-column pl-4">
-        <view v-for="(item, index) in dialogueContent" :key="index">
-          <view class="flex mt-3">
-            <view :class="item.isSelf ? 'self-icon' : 'no-self-icon'"></view>
-            <view>
-              <view>
-                <text>{{ item.content }}</text>
-              </view>
-              <view class="mt-1">
-                <text>{{ item.translate }}</text>
+        <scroll-view :scroll-top="scrollTop" scroll-y="true"
+                     @scroll="scroll"
+                     :scroll-into-view="`item${dialogueContent.length - 1}`"
+                     upper-threshold="0"
+                     lower-threshold="0"
+                     @scrolltoupper="scrollToUpper"
+                     @scrolltolower="scrollToLower"
+                     ref="scrollViewRef"
+                     class="content">
+          <view v-for="(item, index) in dialogueContent" :key="index" :id="`item${index}`">
+            <view class="flex mt-3">
+              <view :class="item.isSelf ? 'self-icon' : 'no-self-icon'"></view>
+              <view style="width: 650rpx;">
+                <view>
+                  <text>{{ item.content }}</text>
+                </view>
+                <view class="mt-1">
+                  <text>{{ item.translate }}</text>
+                </view>
               </view>
             </view>
           </view>
-        </view>
+        </scroll-view>
 
         <view class="options-btns-box flex align-item-center justify-content-around">
           <view v-for="(item, index) in optionsList" :key="index" @click="clickOptions(index)">
@@ -51,16 +66,17 @@
         </view>
       </view>
     </view>
-    <button @click="playVoice">播放</button>
   </view>
 </template>
 
 <script>
 import cyNavbar from "@/components/cy-navbar.vue";
 import cyTabbar from "@/components/cy-tabbar.vue";
-import {saveVoiceText} from "@/api/aiDialogue";
+import {getChatInit, saveVoiceText} from "@/api/aiDialogue";
 import {apiDomain} from "@/configs/env";
 import store from '@/store/';
+import {defaultVirtual} from "@/api/aiFriend";
+import MyMixin from "@/utils/MyMixin";
 
 const recorderManager = uni.getRecorderManager();
 const innerAudioContext = uni.createInnerAudioContext();
@@ -70,6 +86,7 @@ var plugin = requirePlugin("WechatSI")
 let manager = plugin.getRecordRecognitionManager()
 
 export default {
+  mixins: [MyMixin],
   components: {cyTabbar, cyNavbar},
   data() {
     return {
@@ -79,24 +96,7 @@ export default {
         tabbarHeight: 110
       },
       //对话内容
-      dialogueContent: [
-        {
-          icon: '',
-          content: 'Hey，how are you doing?',
-          translate: '嘿，你好吗？',
-          isSelf: true
-        }, {
-          icon: '',
-          content: 'Not very well. I\'m feeling upset today.',
-          translate: '不太好。我今天心情不好。',
-          isSelf: false
-        }, {
-          icon: '',
-          content: 'I\'m sorry to hear that.Have you ever experienced something like this',
-          translate: '听到这个我很难过。你有没有经历过这样的事情？',
-          isSelf: true
-        }
-      ],
+      dialogueContent: [],
 
       optionsList: [
         {title: '', icon: '\ue73c', path: ''},
@@ -116,16 +116,22 @@ export default {
         voiceResultText: '',
         voiceResultTextCn: '',
         lang: 'en_US'
-      }
+      },
+      personInfo: {},
+      scrollTop: 99999,
+      chatInit: {}
     }
   },
   onLoad() {
-    this.translateUsToCn({
-      duration: 13823.606014251709,
-      tempFilePath: 'https://yuemei-image.oss-cn-beijing.aliyuncs.com/admin/files/ec238130-f6d9-11ee-aa8f-1b0c55bcee41-1712712632515.xlsx',
-      fileSize: 30
-    },'Hey，how are you doing?')
+   /* this.translateUsToCn({
+      duration: 14040,
+      tempFilePath: 'wxfile://tmp_1b06c5479ed163d4284a192191d954008d8b3975fe3ac79b.mp3',
+      fileSize: 2200
+    },'Hey，how are you doing?')*/
+
+    this.network().defaultVirtual();
     this.initRecord()
+    this.network().getChatInit();
 
     this.getSystemInfo();
     let self = this;
@@ -174,6 +180,17 @@ export default {
     }
   },
   methods: {
+    test() {
+
+    },
+    scroll(e) {
+    },
+    scrollToUpper(e) {
+      console.log('到顶部了')
+    },
+    scrollToLower(e) {
+      console.log('到底部了')
+    },
     initRecord: function(){
       manager.onRecognize = (res) => {
         console.log("res1", res)
@@ -208,7 +225,23 @@ export default {
           this.sendData.voiceResultText = text;
           this.sendData.voiceResultTextCn = result.result;
           console.log(this.sendData)
+
+          this.dialogueContent.push({
+            icon: '',
+            content: this.sendData.voiceResultText,
+            translate: this.sendData.voiceResultTextCn,
+            isSelf: true
+          })
           this.network().saveVoiceText()
+          this.network().sseRequestTask({
+            url: '/digitalhuman/chat/streamSessionChat',
+            method: 'post',
+            data: {
+              sessionId: this.chatInit.session_id,
+              sseEmitterId: this.chatInit.sse_emitter_id,
+              message: this.sendData.voiceResultText
+            }
+          })
         },
         fail: (err) => {
           console.log("翻译失败", err)
@@ -242,13 +275,9 @@ export default {
         this.isShowPopup = true;
       }
     },
-    playVoice() {
-      console.log('播放录音');
-      console.log(this.voicePath)
-      if (this.voicePath) {
-        innerAudioContext.src = this.voicePath;
-        innerAudioContext.play();
-      }
+    playVoice(voicePath) {
+      innerAudioContext.src = voicePath;
+      innerAudioContext.play();
     },
     getSystemInfo() {
       uni.getSystemInfo({
@@ -260,8 +289,90 @@ export default {
         }
       });
     },
+    pushAiDialog(enText, cnText) {
+      this.dialogueContent.push({
+        icon: '',
+        content: enText,
+        translate: cnText,
+        isSelf: false
+      })
+    },
     network() {
       return {
+        getChatInit: async () => {
+          const res = await getChatInit();
+          this.chatInit = res.data.result
+          this.playVoice(this.chatInit.welcome_speech_voice_file)
+          this.pushAiDialog(this.chatInit.welcome_speech_en, this.chatInit.welcome_speech_cn)
+        },
+        sseRequestTask: async ({url, data, method = 'POST', type}) => {
+          console.log("store.state.token", store.state.token)
+          return new Promise((resolve, reject) => {
+            setTimeout(() => {
+              uni.showLoading({
+                mask: true,
+                title: '思考中...'
+              })
+              this.disabledBtn = true
+            }, 500)
+            const requestTask = uni.request({
+              url: `${apiDomain}${url}`,
+              timeout: 15000,
+              responseType: 'text',
+              method,
+              enableChunked: true,
+              data,
+              header: {
+                'X-Access-Token': store.state.token,
+              },
+              success: response => {
+              },
+              fail: error => {
+              }
+            });
+            requestTask.onHeadersReceived(function (res) {
+              // 初始化
+              this.dialogueContent.push({
+                icon: '',
+                content: '',
+                translate: '',
+                isSelf: false
+              })
+
+              uni.hideLoading()
+            });
+            requestTask.onChunkReceived((res) => {
+              const uint8Array = new Uint8Array(res.data);
+              let text = String.fromCharCode.apply(null, uint8Array);
+              text = decodeURIComponent(escape(text));
+              if (!text.startsWith('data:')) {
+                text = 'data:' + text
+              }
+              let arr = text.split('\n')
+              arr.forEach((item) => {
+                if (item.includes('data:') && !item.includes('[DONE]')) {
+                  let text = item.replace('data:', '')
+                  text = text.replaceAll("「`」", " ").replaceAll("「·」", "<p></p>").replaceAll("「~」", "<p></p>")
+                  console.log(text, 'text')
+                  console.log("this.dialogueContent.length - 1this.dialogueContent.length - 1", this.dialogueContent.length - 1)
+                  this.dialogueContent[this.dialogueContent.length - 1].content += text
+
+                } else if (item.includes('data:[DONE]')) {
+
+                  // 关闭请求
+                  requestTask.abort()
+                } else {
+                  requestTask.abort
+                }
+              })
+            })
+          })
+        },
+        defaultVirtual: async (isRefresh) => {
+          const res = await defaultVirtual();
+          this.personInfo = res.data.result;
+          console.log(this.personInfo, 'personInfo')
+        },
         getAiDialogue: async (base64, length) => {
           console.log(base64, 'base64')
           console.log(length, 'length')
@@ -294,84 +405,23 @@ export default {
           })
 
         },
-        sseRequestTask: async ({url, data, method = 'POST'}) => {
-          return new Promise((resolve, reject) => {
-            setTimeout(() => {
-              uni.showLoading({
-                mask: true,
-                title: '内容生成中...'
-              })
-              this.disabledBtn = true
-            }, 500)
-            const requestTask = uni.request({
-              url: `${apiDomain}${url}`,
-              timeout: 15000,
-              responseType: 'text',
-              method,
-              enableChunked: true,
-              data,
-              header: {
-                'X-Access-Token': store.state.token,
-              },
-              success: response => {
-                console.log('response', response)
-                resolve(response)
-              },
-              fail: error => {
-                console.log('error', error)
-              }
-            });
-            requestTask.onHeadersReceived(function (res) {
-            });
-            requestTask.onChunkReceived((res) => {
-              console.log(res)
-
-              /*const uint8Array = new Uint8Array(res.data);
-              let text = String.fromCharCode.apply(null, uint8Array);
-              text = decodeURIComponent(escape(text));
-              if (!text.startsWith('data:')) {
-                text = 'data:' + text
-              }
-              let arr = text.split('\n')
-              arr.forEach((item) => {
-                console.log(item," item")
-
-                if (item.includes('data:') && !item.includes('[DONE]')) {
-                  let text = item.replace('data:', '')
-                  text = text.replaceAll("「`」", " ").replaceAll("「·」", "<p></p>").replaceAll("「~」", "<p></p>")
-
-                  console.log(text, 'text')
-                } else if (item.includes('data:[DONE]')) {
-                  console.log('结束')
-
-
-                  // 关闭请求
-                  requestTask.abort()
-                } else {
-                  requestTask.abort
-                }
-              })*/
-            })
-          })
-        },
       }
     }
   },
 }
 </script>
 
-<style scoped>
+<style lang="scss" >
 .content-box {
   width: 100vw;
   overflow: hidden;
-  background-image: url('https://c-ssl.dtstatic.com/uploads/item/202003/31/20200331123100_nBc5m.thumb.1000_0.jpeg');
-  background-size: cover;
   position: relative;
 }
 
 .translate-btn {
   position: absolute;
   top: 560rpx;
+  z-index: 100;
 }
 .translate-btn image {
   width: 70rpx;
@@ -385,7 +435,14 @@ export default {
   right: 0;
   bottom: 0;
   top: 630rpx;
+  z-index: 999;
   background: linear-gradient(180deg, rgba(232, 242, 255, 0) 0%, rgba(228, 240, 255, 0.77) 38%, #B8D8FF 66%);
+
+  .content {
+    position: absolute;
+    bottom: 180rpx;
+    height: 600rpx;
+  }
 }
 .self-icon, .no-self-icon {
   width: 20rpx;
@@ -395,10 +452,10 @@ export default {
   margin-top: 12rpx;
 }
 .self-icon {
-  background: #3a73d9;
+  background: #11D051;
 }
 .no-self-icon {
-  background: #11D051;
+  background: #3a73d9;
 }
 
 .options-btns-box {
@@ -453,5 +510,14 @@ export default {
 }
 .end-report .iconfont {
   font-size: 30rpx;
+}
+
+
+.scene-img {
+  height: 820rpx;
+  width: 750rpx;
+  position: absolute;
+  bottom: 300rpx;
+  z-index: 99;
 }
 </style>

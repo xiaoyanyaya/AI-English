@@ -1,5 +1,6 @@
 import {apiDomain} from '@/configs/env';
 import store from '@/store/';
+import {login} from "@/api/user";
 
 const Fly = require('flyio/dist/npm/wx');
 
@@ -30,6 +31,9 @@ fly.interceptors.response.use(
 			wx.hideLoading();
 		}
 		const {data} = response;
+
+		console.log("da111ta", data)
+		console.log("response", response)
 		if (data.error) {
 			wx.showToast({title: data.error.message, icon: 'none', duration: 3000});
 			return Promise.resolve(data);
@@ -50,6 +54,39 @@ fly.interceptors.response.use(
 
 		// 发生网络错误后会走到这里
 		const {status, data} = error.response;
+		if (status === 401) {
+			console.log("testtest")
+			uni.showToast({
+				title: '登录过期，请重新登录',
+				icon: 'none',
+				duration: 1000
+			})
+			// 清除vuex和本地缓存
+			store.dispatch('setToken', '');
+			store.dispatch('userInfo', '');
+			uni.removeStorageSync('personInfo');
+			// 重新登录
+			setTimeout(() => {
+				const pages = getCurrentPages(); // 获取当前页面栈
+				const currentPage = pages[pages.length - 1]; // 获取当前页面
+				const url = `/${currentPage.route}`; // 拼接当前页面路径
+				uni.reLaunch({
+					url: '/pages/login/index?pagePath=' + url
+				})
+			}, 1000)
+			uni.login({
+				provider: 'weixin',
+				success: (res) => {
+
+					/*login({
+						code: res.code
+					}).then(res => {
+						store.dispatch('setToken', res.data.result.token)
+						console.log(store.state.token)
+					});*/
+				}
+			});
+		}
 		console.log('status', status);
 		console.log('data', data)
 	},

@@ -1,13 +1,13 @@
 <template>
   <view class="main-body">
-    <cy-navbar showBack>
+    <cy-navbar showBack isAbsolute>
       <view class="t-size-30">虚拟人对练</view>
     </cy-navbar>
 
     <view class="content-box" :style="contentBoxStyle">
       <view class="mark-bg"></view>
       <view class="flex align-item-center justify-content-center">
-        <image :src="personInfo.avatarLarge" mode="heightFix" class="scene-img"></image>
+        <image :src="personInfo.avatarLarge" class="scene-img"></image>
       </view>
       <view class="options-btns flex flex-direction-column">
         <view v-for="(item, index) in optionsBtnsMenu" :key="index" class="options-item"
@@ -96,7 +96,7 @@ export default {
   },
   computed: {
     contentBoxStyle() {
-      return `height: calc(100vh - ${this.otherHeight.navContentHeiht + this.otherHeight.tabbarHeight - 30}px);`
+      // return `height: calc(100vh - ${this.otherHeight.navContentHeiht + this.otherHeight.tabbarHeight - 30}px);`
     }
   },
   methods: {
@@ -112,7 +112,7 @@ export default {
         {
           title: '查看测评报告历史',
           width: 220,
-          right: -180,
+          right: -190,
           icon: `${this.imageBaseUrl}/xl-image-8.png`,
           path: '/pages/virtualCharacter/dialogueHistory'
         },
@@ -158,17 +158,8 @@ export default {
     network() {
       return {
         defaultVirtual: async (isRefresh) => {
-          if (isRefresh !== 1) {
-            var personInfo = uni.getStorageSync("personInfo");
-            if (personInfo) {
-              this.personInfo = personInfo;
-              return;
-            }
-          }
-
           const res = await defaultVirtual();
           this.personInfo = res.data.result;
-          uni.setStorageSync("personInfo", this.personInfo);
         }
       }
     }
@@ -179,6 +170,7 @@ export default {
 <style lang="scss" scoped>
 .content-box {
   overflow: hidden;
+  height: 100vh;
   //background-image: url('https://c-ssl.dtstatic.com/uploads/item/202003/31/20200331123100_nBc5m.thumb.1000_0.jpeg');
   background-size: cover;
   position: relative;
@@ -187,7 +179,7 @@ export default {
 .options-btns {
   position: absolute;
   left: 50rpx;
-  top: 80rpx;
+  top: 280rpx;
 
   .options-item {
     position: relative;
@@ -207,8 +199,8 @@ export default {
 }
 
 .options-btn-img {
-  width: 120rpx;
-  height: 120rpx;
+  width: 100rpx;
+  height: 100rpx;
   margin-bottom: 50rpx;
   z-index: 2;
   position: relative;
@@ -218,7 +210,7 @@ export default {
   position: absolute;
   z-index: 3;
   right: 50rpx;
-  top: 700rpx;
+  bottom: 400rpx;
 
   image {
     margin-top: 4rpx;
@@ -228,8 +220,8 @@ export default {
 }
 
 .select-btn-box-first, .select-btn-box-last {
-  width: 220rpx;
-  height: 84rpx;
+  width: 210rpx;
+  height: 80rpx;
   border-radius: 15rpx;
   box-sizing: border-box;
   border: 1rpx solid #e5dcdc;
@@ -246,7 +238,8 @@ export default {
   background: linear-gradient(180deg, rgba(255, 119, 214, 1) 0%, rgba(210, 42, 129, 1) 100%);
 }
 .scene-img {
-  height: 800rpx;
+  height: 820rpx;
+  width: 750rpx;
   position: absolute;
   bottom: 300rpx;
 }

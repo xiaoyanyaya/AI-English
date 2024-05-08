@@ -7,7 +7,7 @@
     <view class="px-4">
       <view class="person-info-box px-4 pb-4 mt-5"
             v-for="(parent, parentIndex) in personInfo" :key="parentIndex">
-        <view class="flex align-item-center justify-content-between pt-5 position-relative"
+        <view class="flex align-item-center justify-content-between pt-4 position-relative"
               v-for="(item, index) in parent" :key="index"
               @click="toPage(parentIndex, index)">
           <view v-if="parentIndex == 0 && index == 0" class="chooseAvatar">
@@ -25,7 +25,7 @@
                   class="mr-2 user-img-box flex align-item-center justify-content-center">
               <image :src="item.value" mode="widthFix" class="user-img"></image>
             </viwe>
-            <view v-else>{{ item.value }}</view>
+            <view v-else class="t-size-26 t-color-8A8A8A">{{ item.value }}</view>
             <view class="ml-2">
               <u-icon v-if="item.isShowArrow" name="arrow-right" color="#8A8A8A" size="28"></u-icon>
             </view>

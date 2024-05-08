@@ -38,32 +38,18 @@
               </button>
             </view>
           </view>
-          <image v-show="personInfo.avatarLarge"
-                 :src="personInfo.avatarLarge" mode="widthFix" class="scene-img"></image>
+          <view class="video-container">
+            <video
+              v-if="personInfo.indexDigitalhumanType === 'VIDEO'"
+              :src="personInfo.video"
+              class="scene-img" autoplay loop muted :controls="false"></video>
+            <image v-else
+                   :src="personInfo.avatarLarge" class="scene-img"></image>
+          </view>
+
+
         </view>
       </view>
-
-      <!--      <view class="grid-container mt-5">
-              <view class="share-box flex align-item-center justify-content-around">
-                <view>
-                  <view class="font-weight-bold t-size-28">分享得会员</view>
-                  <view class="t-size-20 mt-1">年卡会员免费拿</view>
-                </view>
-                <view>
-                  <image :src="`${imageBaseUrl}/xl-image-11.png`" class="share-img"></image>
-                </view>
-              </view>
-
-              <view class="share-box flex align-item-center justify-content-around">
-                <view>
-                  <view class="font-weight-bold t-size-28">分享得会员</view>
-                  <view class="t-size-20 mt-1">年卡会员免费拿</view>
-                </view>
-                <view>
-                  <image :src="`${imageBaseUrl}/img_3.png`" class="share-img"></image>
-                </view>
-              </view>
-            </view>-->
 
       <view class="ai-grid-container mt-5">
         <view class="ai-tools-box">
@@ -154,14 +140,14 @@ export default {
     }
   },
   onLoad() {
-    if (store.state.token) {
-      this.network().defaultVirtual();
-    } else {
+    if (!store.state.token) {
       this.network().loginAndGetVirtual();
     }
   },
   onShow() {
-    this.network().defaultVirtual();
+    if (store.state.token) {
+      this.network().defaultVirtual();
+    }
   },
   methods: {
     network() {
@@ -173,16 +159,8 @@ export default {
           }
         },
         defaultVirtual: async () => {
-          var personInfo = uni.getStorageSync("personInfo")
-          if (personInfo) {
-            this.personInfo = personInfo;
-          } else {
-            const res = await defaultVirtual();
-            this.personInfo = res.data.result;
-            if (this.personInfo.avatarLarge) {
-              uni.setStorageSync("personInfo", this.personInfo);
-            }
-          }
+          const res = await defaultVirtual();
+          this.personInfo = res.data.result;
         }
       }
     }
@@ -228,12 +206,30 @@ page {
     z-index: 2;
     border-radius: 40rpx 40rpx 0 0;
 
-    .scene-img {
+
+    .video-container {
+      width: 250rpx;
+      height: 310rpx;
       position: absolute;
+      z-index: 4;
+      top: -112rpx;
+      margin-left: 30rpx;
+      overflow: hidden;
+    }
+
+    /*position: absolute;
       z-index: 3;
       margin-left: 30rpx;
       width: 260rpx;
-      top: -100rpx;
+      height: 300rpx;
+      top: -100rpx;*/
+
+    .scene-img {
+      position: absolute;
+      z-index: 3;
+      width: 270rpx;
+      height: 310rpx;
+      object-fit: cover;
     }
 
     .content-text {
@@ -431,4 +427,6 @@ page {
   z-index: 999;
   opacity: 0;
 }
+
+
 </style>

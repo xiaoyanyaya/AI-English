@@ -103,6 +103,9 @@
     },
     {
       "path": "pages/composition/component/searchCondition"
+    },
+    {
+      "path": "pages/login/index"
     }
   ],
   "tabBar": {

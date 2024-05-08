@@ -46,11 +46,6 @@ export default {
 		},
 		getPhone(res, toPageUr) {
 			if (res.detail.errMsg !== 'getPhoneNumber:ok') {
-				/*uni.showToast({
-					title: '授权失败',
-					icon: 'none',
-					duration: 1000
-				})*/
 				return
 			}
 
@@ -79,6 +74,11 @@ export default {
 						if (toPageUr) {
 							setTimeout(() => {
 								this.$navigateTo(toPageUr);
+							}, 1000)
+						}
+						if (toPageUr === 'back') {
+							setTimeout(() => {
+								uni.navigateBack();
 							}, 1000)
 						}
 					}

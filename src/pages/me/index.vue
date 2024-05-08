@@ -3,15 +3,16 @@
     <cy-navbar>
       <view class="t-size-30">小礼AI极简英语</view>
     </cy-navbar>
-
+<!--    <button @click="test">测试</button>-->
     <view class="px-4 mt-5">
       <view class="user-box flex align-item-center justify-content-between border-box px-3">
         <view class="flex align-item-center">
           <viwe class="mr-2 user-img-box flex align-item-center justify-content-center">
-            <image :src="userInfo.avatar" mode="widthFix" class="user-img"></image>
+            <u-icon size="40" color="#8a8a8a" v-if="!userInfo.memberNo" name="account"></u-icon>
+            <image v-else :src="userInfo.avatar" mode="widthFix" class="user-img"></image>
           </viwe>
-          <view class="t-color-3D3D3D" v-if="!userInfo">未登录用户</view>
-          <view v-if="1" class="ml-3" @click="$navigateTo('/pages/me/personInfo')">
+          <view v-if="!userInfo.memberNo" class="t-color-3D3D3D" @click="loginInfo">点击登录</view>
+          <view v-else class="ml-3" @click="$navigateTo('/pages/me/personInfo')">
             <view class="t-size-30 t-color-3D3D3D flex align-item-center">
               <view>{{userInfo.nickName || "小礼AI"}}</view>
               <image :src="`${imageBaseUrl}/icon_6.png`" mode="widthFix" class="user-write mt-1 ml-1"></image>
@@ -88,12 +89,24 @@ export default {
     }
   },
   onShow() {
-    this.getUserInfo().then(data => {
-      this.userInfo = data
-    })
+    // 如果token存在，就获取用户信息
+    var isAuthPhone = uni.getStorageSync('isAuthPhone')
+    if (store.state.token && isAuthPhone) {
+      this.getUserInfo().then(data => {
+        this.userInfo = data
+      })
+    }
     this.initData()
   },
   methods: {
+    loginInfo() {
+      uni.navigateTo({
+        url: '/pages/login/index'
+      })
+    },
+    test() {
+      this.$store.dispatch('setToken', "123")
+    },
     initData() {
       this.userInfo = store.state.userInfo
     },

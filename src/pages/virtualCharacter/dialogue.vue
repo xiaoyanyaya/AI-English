@@ -1,9 +1,9 @@
 <template>
   <view class="main-body">
-    <cy-navbar showBack>
+    <cy-navbar showBack isAbsolute>
       <view class="t-size-30">虚拟人对练</view>
     </cy-navbar>
-<!--    <button @click="test">test</button>-->
+<!--    <button @click.stop="test" style="position: absolute; top: 200rpx;z-index: 10001">test</button>-->
     <view class="content-box" :style="contentBoxStyle">
       <view class="mark-bg"></view>
       <view class="flex align-item-center justify-content-center">
@@ -17,33 +17,43 @@
       <view class="dialogue-content flex flex-direction-column pl-4">
         <scroll-view :scroll-top="scrollTop" scroll-y="true"
                      @scroll="scroll"
-                     :scroll-into-view="`item${dialogueContent.length - 1}`"
                      upper-threshold="0"
                      lower-threshold="0"
                      @scrolltoupper="scrollToUpper"
                      @scrolltolower="scrollToLower"
                      ref="scrollViewRef"
                      class="content">
-          <view v-for="(item, index) in dialogueContent" :key="index" :id="`item${index}`">
-            <view class="flex mt-3">
+          <view v-for="(item, index) in dialogueContent" :key="index" class="content-item">
+            <view class="flex mt-3" v-if="!item.noShow">
               <view :class="item.isSelf ? 'self-icon' : 'no-self-icon'"></view>
-              <view style="width: 650rpx;">
+              <view style="width: 650rpx;" :class="item.isSelf ? 'self-color' : 'no-self-color'">
                 <view>
-                  <text>{{ item.content }}</text>
+                  <rich-text v-if="item.content" :nodes="item.content"></rich-text>
+                  <image v-else :src="`${imageBaseUrl}/5-10-1.gif`" mode="widthFix" class="waitImage"></image>
                 </view>
                 <view class="mt-1">
-                  <text>{{ item.translate }}</text>
+                  <rich-text>{{ item.translate }}</rich-text>
                 </view>
               </view>
             </view>
           </view>
+          <view style="height: 20rpx; width: 100%"></view>
         </scroll-view>
 
-        <view class="options-btns-box flex align-item-center justify-content-around">
-          <view v-for="(item, index) in optionsList" :key="index" @click="clickOptions(index)">
-            <view class="iconfont btn-icon">{{item.icon}}</view>
-          </view>
+        <view class="speck-btn">
+          <image
+            @longpress="onLongPress"
+            @touchend="onTouchEnd"
+            v-if="!isTlaking" :src="`${imageBaseUrl}/speak.png`" class="speck-icon"></image>
+          <image
+            @longpress="onLongPress"
+            @touchend="onTouchEnd"
+            v-else :src="`${imageBaseUrl}/5-10-2.gif`" class="speck-icon2"></image>
         </view>
+        <view class="btns-box-mp3">
+
+        </view>
+
       </view>
     </view>
     <view v-if="isShowPopup">
@@ -97,13 +107,8 @@ export default {
       },
       //对话内容
       dialogueContent: [],
-
-      optionsList: [
-        {title: '', icon: '\ue73c', path: ''},
-        {title: '', icon: '\ue6e1', path: ''},
-        {title: '', icon: '\ueac2', path: ''},
-        {title: '', icon: '\ue640', path: ''},
-      ],
+      //是否摁住说话
+      isTlaking: false,
 
       isShowPopup: false,
       isStartRecord: false,
@@ -123,11 +128,6 @@ export default {
     }
   },
   onLoad() {
-   /* this.translateUsToCn({
-      duration: 14040,
-      tempFilePath: 'wxfile://tmp_1b06c5479ed163d4284a192191d954008d8b3975fe3ac79b.mp3',
-      fileSize: 2200
-    },'Hey，how are you doing?')*/
 
     this.network().defaultVirtual();
     this.initRecord()
@@ -156,13 +156,13 @@ export default {
         success: (res) => {
           var size = res.size;
 
-          uni.getFileSystemManager().readFile({
+          /*uni.getFileSystemManager().readFile({
             filePath: tempFilePath,
             success: (data) => {
               var arrayBuffer = data.data;
               self.network().getAiDialogue(uni.arrayBufferToBase64(arrayBuffer), arrayBuffer.byteLength);
             }
-          });
+          });*/
           /*uni.getFileSystemManager().readFile({
             filePath: tempFilePath,
             encoding: 'base64',
@@ -181,7 +181,28 @@ export default {
   },
   methods: {
     test() {
-
+      console.log(this.dialogueContent)
+      this.dialogueContent.push({
+        content: "yes, I am fine, how are you?e, how are you?e, how are you?e, how are you?e, how are you?",
+        icon: "",
+        isSelf: true,
+        translate: "嗨，嗨，你吗嗨，你好吗嗨，你好吗嗨，你好吗嗨，你好吗嗨，你好吗嗨，你好吗嗨，你好吗嗨，你好吗嗨，你好吗你好吗？" +  this.dialogueContent.length
+      })
+    },
+    toScrollerViewBottom() {
+      const query = uni.createSelectorQuery().in(this);
+      query.selectAll('.content-item').boundingClientRect(data => {
+        if (data && data.length) {
+          console.log(data, 'data')
+          console.log(data.length, 'data.length')
+          let height = 0;
+          data.forEach(rect => {
+            height += rect.height;
+          });
+          this.scrollTop = height + 10;
+          console.log(height, 'height')
+        }
+      }).exec();
     },
     scroll(e) {
     },
@@ -232,7 +253,16 @@ export default {
             translate: this.sendData.voiceResultTextCn,
             isSelf: true
           })
+          this.toScrollerViewBottom()
           this.network().saveVoiceText()
+
+          // 初始化
+          this.dialogueContent.push({
+            icon: '',
+            content: '',
+            translate: '',
+            isSelf: false
+          })
           this.network().sseRequestTask({
             url: '/digitalhuman/chat/streamSessionChat',
             method: 'post',
@@ -248,25 +278,31 @@ export default {
         }
       })
     },
+    onLongPress() {
+      console.log('长按')
+      this.isTlaking = true
+      uni.vibrateShort({
+        success: function () {
+          console.log('success');
+        }
+      });
+      this.clickOptions(1)
+    },
+    onTouchEnd() {
+      console.log('结束')
+      this.isTlaking = false
+      this.clickOptions(1)
+    },
     clickOptions(index) {
       if (index === 1) {
         console.log('开始录音');
         this.isStartRecord = !this.isStartRecord
         if (this.isStartRecord) {
-          /*recorderManager.start({
-            duration: 60000, // 录音的最大时长，单位 ms，最大值 600000（10 分钟）
-            sampleRate: 16000, // 采样率
-            numberOfChannels: 1, // 录音通道数
-            encodeBitRate: 48000, // 编码码率
-            format: 'pcm' // 音频格式，支持 'aac' 或 'mp3'
-          });*/
-          this.optionsList[1].icon = '\ue676';
           console.log('=======开始====')
           manager.start({
             lang: this.sendData.lang,
           })
         } else {
-          this.optionsList[1].icon = '\ue6e1';
           console.log('=======结束====')
           manager.stop()
         }
@@ -276,8 +312,17 @@ export default {
       }
     },
     playVoice(voicePath) {
-      innerAudioContext.src = voicePath;
-      innerAudioContext.play();
+      uni.downloadFile({
+        url: voicePath,
+        success: (res) => {
+          if (res.statusCode === 200) {
+            console.log('下载成功', res.tempFilePath)
+            innerAudioContext.src = res.tempFilePath;
+            innerAudioContext.obeyMuteSwitch = false;
+            innerAudioContext.play();
+          }
+        }
+      })
     },
     getSystemInfo() {
       uni.getSystemInfo({
@@ -308,13 +353,6 @@ export default {
         sseRequestTask: async ({url, data, method = 'POST', type}) => {
           console.log("store.state.token", store.state.token)
           return new Promise((resolve, reject) => {
-            setTimeout(() => {
-              uni.showLoading({
-                mask: true,
-                title: '思考中...'
-              })
-              this.disabledBtn = true
-            }, 500)
             const requestTask = uni.request({
               url: `${apiDomain}${url}`,
               timeout: 15000,
@@ -331,15 +369,7 @@ export default {
               }
             });
             requestTask.onHeadersReceived(function (res) {
-              // 初始化
-              this.dialogueContent.push({
-                icon: '',
-                content: '',
-                translate: '',
-                isSelf: false
-              })
 
-              uni.hideLoading()
             });
             requestTask.onChunkReceived((res) => {
               const uint8Array = new Uint8Array(res.data);
@@ -356,9 +386,18 @@ export default {
                   console.log(text, 'text')
                   console.log("this.dialogueContent.length - 1this.dialogueContent.length - 1", this.dialogueContent.length - 1)
                   this.dialogueContent[this.dialogueContent.length - 1].content += text
+                  this.toScrollerViewBottom()
 
                 } else if (item.includes('data:[DONE]')) {
-
+                  this.dialogueContent.push({
+                    content: "",
+                    icon: "",
+                    noShow: true,
+                    isSelf: true,
+                    translate: ""
+                  })
+                  // 结束
+                  console.log('结束结束结束结束结束结束结束结束结束结束结束结束结束结束结束结束结束结束结束结束')
                   // 关闭请求
                   requestTask.abort()
                 } else {
@@ -387,6 +426,8 @@ export default {
           })
         },
         saveVoiceText: async () => {
+          console.log(this.sendData, 'this.sendData')
+          this.sendData.sessionId = this.chatInit.session_id;
           uni.uploadFile({
             url: `https://wapi-dev.aien.xiaolixb.com/v1/digitalhuman/asr/saveVoiceText`,
             filePath: this.sendData.voiceFile,
@@ -441,7 +482,7 @@ export default {
   .content {
     position: absolute;
     bottom: 180rpx;
-    height: 600rpx;
+    height: 560rpx;
   }
 }
 .self-icon, .no-self-icon {
@@ -519,5 +560,48 @@ export default {
   position: absolute;
   bottom: 300rpx;
   z-index: 99;
+}
+
+.btns-box-mp3 {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 750rpx;
+  height: 150rpx;
+  background: linear-gradient(180deg, #FFFFFF 0%, #E7F0FF 100%);
+}
+
+.self-color {
+  color: #7C7C7C;
+}
+
+.no-self-icon {
+  color: #3D3D3D;
+}
+
+.speck-btn {
+  position: fixed;
+  bottom: 80rpx;
+  left: 0;
+  z-index: 1001;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  .speck-icon {
+    width: 150rpx;
+    height: 150rpx;
+  }
+
+  .speck-icon2 {
+    position: fixed;
+    bottom: 40rpx;
+    width: 220rpx;
+    height: 220rpx;
+  }
+}
+
+.waitImage {
+  width: 50rpx;
 }
 </style>

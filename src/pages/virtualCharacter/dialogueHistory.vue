@@ -10,7 +10,7 @@
 
     <view class="px-4 pb-5">
       <view class="mt-5" v-for="(item,index) in contentData" :key="index" @click="clickContent(item)">
-        <view class="t-size-26">2024.01.01</view>
+        <view class="t-size-26">{{item.chatDate}}</view>
         <view class="box mt-2">
           <view class="top flex justify-content-between align-item-center px-3">
             <view class="flex align-item-center">

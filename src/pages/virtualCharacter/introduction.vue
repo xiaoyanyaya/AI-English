@@ -45,10 +45,11 @@ export default {
   },
   onLoad() {
     this.data = uni.getStorageSync("sceneData")
+    console.log(this.data)
   },
   methods: {
     toPage() {
-      this.$navigateTo("/pages/virtualCharacter/dialogue");
+      this.$navigateTo("/pages/virtualCharacter/dialogue?sceneId=" + this.data.id);
     }
   },
 }

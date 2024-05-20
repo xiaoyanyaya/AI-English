@@ -133,10 +133,10 @@ export default {
       palyIndex: 0,
     }
   },
-  onLoad() {
+  onLoad(res) {
     this.network().defaultVirtual();
     this.initRecord()
-    this.network().getChatInit();
+    this.network().getChatInit(res.sceneId);
     // this.test()
 
     this.getSystemInfo();
@@ -359,8 +359,15 @@ export default {
     },
     network() {
       return {
-        getChatInit: async () => {
-          const res = await getChatInit();
+        getChatInit: async (sceneld) => {
+          let res;
+          if (sceneld) {
+            res = await getChatInit({
+              sceneld: sceneld
+            });
+          } else {
+            res = await getChatInit();
+          }
           this.chatInit = res.data.result
           this.playVoice(this.chatInit.welcome_speech_voice_file)
           this.pushAiDialog(this.chatInit.welcome_speech_en, this.chatInit.welcome_speech_cn)
@@ -405,6 +412,7 @@ export default {
               }
               let arr = text.split('\n')
               arr.forEach((item) => {
+                console.log(item, 'item')
                 if (item.includes('data:') && !item.includes('[DONE]')) {
                   let text = item.replace('data:', '')
                   text = text.replaceAll("「`」", " ").replaceAll("「·」", "<p></p>").replaceAll("「~」", "<p></p>")

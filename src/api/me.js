@@ -32,3 +32,13 @@ export const directPromoters = params => fly.get('/distribution/promotion/referr
 export const orderList = params => fly.get('/distribution/promotion/order/list', params)
 //直推用户 /distribution/promotion/referral/directReferrals
 export const directReferrals = params => fly.get('/distribution/promotion/referral/directReferrals', params)
+
+
+// 用户协议 /article/userAgreement/detail
+export const userAgreement = params => fly.get('/article/userAgreement/detail', params)
+// 隐私政策 /article/privacyPolicy/detail
+export const privacyPolicy = params => fly.get('/article/privacyPolicy/detail', params)
+// 使用帮助 /article/userGuide/detail
+export const userGuide = params => fly.get('/article/userGuide/detail', params)
+// 关于 /article/aboutUs/detail
+export const aboutUs = params => fly.get('/article/aboutUs/detail', params)

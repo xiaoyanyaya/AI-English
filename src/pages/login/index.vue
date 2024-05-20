@@ -97,7 +97,10 @@ export default {
       }
     },
     notLogin() {
-      uni.navigateBack();
+      // uni.navigateBack();
+      uni.switchTab({
+        url: '/pages/index/index'
+      })
     }
   },
 }
@@ -114,7 +117,7 @@ export default {
 
 .authorize-info {
   padding: 0 50rpx;
-  padding-top: 200rpx;
+  padding-top: 220rpx;
   display: flex;
   align-items: center;
   width: 100%;
@@ -141,7 +144,7 @@ export default {
   justify-content: flex-start;
   // padding: 0.5rem 0.5rem 0 0.5rem;
   position: fixed;
-  bottom: 90rpx;
+  bottom: 120rpx;
   left: 74rpx;
 
   img {
@@ -180,7 +183,7 @@ export default {
 .authorize-sub {
   // padding: 504rpx 0.5rem 0 0.5rem;
   position: fixed;
-  bottom: 150rpx;
+  bottom: 180rpx;
   left: 60rpx;
 
   .btn-login  {
@@ -193,7 +196,7 @@ export default {
     margin-bottom: 32rpx;
     // background: #333333;
     color: #3A73D9!important;
-    border: 2rpx solid #3A73D9;
+    border: 1rpx solid #3A73D9;
     color: #ffffff;
   }
 

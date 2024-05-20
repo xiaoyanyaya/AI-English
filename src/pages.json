@@ -102,10 +102,16 @@
       "path": "pages/virtualCharacter/aiFriend"
     },
     {
+      "path": "pages/virtualCharacter/introduction"
+    },
+    {
       "path": "pages/composition/component/searchCondition"
     },
     {
       "path": "pages/login/index"
+    },
+    {
+      "path": "pages/me/content"
     }
   ],
   "tabBar": {

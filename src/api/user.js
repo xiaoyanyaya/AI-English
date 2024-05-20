@@ -5,3 +5,5 @@ export const login = params => fly.get('/weixin/getWxLoginInfo', params)
 
 // 小程序用户手机信息
 export const getPhone = params => fly.get('/weixin/getWxPhoneInfo', params)
+
+

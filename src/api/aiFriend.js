@@ -9,3 +9,17 @@ export const switchVirtual = params => fly.post('/digitalhuman/image/switch', pa
 // 默认虚拟人
 export const defaultVirtual = params => fly.get('/digitalhuman/image/default', params)
 
+// 场景分类 /digitalhuman/scene/category/list
+export const sceneCategoryList = params => fly.get('/digitalhuman/scene/category/list', params)
+
+// 可选场景 /digitalhuman/scene/list
+export const sceneList = params => fly.get('/digitalhuman/scene/list', params)
+
+// 切换场景 /digitalhuman/scene/switch
+export const sceneSwitch = params => fly.post('/digitalhuman/scene/switch', params)
+
+// 自定义场景-生成随机话题 /digitalhuman/scene/randomSceneName
+export const randomSceneName = params => fly.get('/digitalhuman/scene/randomSceneName', params)
+
+// 自定义场景-确定随机话题 /digitalhuman/scene/customScene
+export const customScene = params => fly.post('/digitalhuman/scene/customScene', params)

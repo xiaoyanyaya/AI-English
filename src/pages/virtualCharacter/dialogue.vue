@@ -31,8 +31,12 @@
                   <rich-text v-if="item.content" :nodes="item.content"></rich-text>
                   <image v-else :src="`${imageBaseUrl}/5-10-1.gif`" mode="widthFix" class="waitImage"></image>
                 </view>
-                <view class="mt-1">
-                  <rich-text>{{ item.translate }}</rich-text>
+                <view class="mt-1 flex" v-if="" @click="playVoice(item.mp3Url)">
+                  <view style="margin-top: 8rpx" class="mr-2">{{ item.translate }}</view>
+                  <view v-if="item.mp3Url" class="paly-btn">
+                    <image v-if="!item.isPlay" :src="`${imageBaseUrl}/5-19-03.png`" @click="playVoice(item.mp3Url, index)"></image>
+                    <image v-else :src="`${imageBaseUrl}/5-19-02.gif`"></image>
+                  </view>
                 </view>
               </view>
             </view>
@@ -82,7 +86,7 @@
 <script>
 import cyNavbar from "@/components/cy-navbar.vue";
 import cyTabbar from "@/components/cy-tabbar.vue";
-import {getChatInit, saveVoiceText} from "@/api/aiDialogue";
+import {getAiVoiceResult, getChatInit, saveVoiceText} from "@/api/aiDialogue";
 import {apiDomain} from "@/configs/env";
 import store from '@/store/';
 import {defaultVirtual} from "@/api/aiFriend";
@@ -124,14 +128,16 @@ export default {
       },
       personInfo: {},
       scrollTop: 99999,
-      chatInit: {}
+      chatInit: {},
+      deviceBrand: 'android',
+      palyIndex: 0,
     }
   },
   onLoad() {
-
     this.network().defaultVirtual();
     this.initRecord()
     this.network().getChatInit();
+    // this.test()
 
     this.getSystemInfo();
     let self = this;
@@ -154,25 +160,12 @@ export default {
       uni.getFileSystemManager().getFileInfo({
         filePath: tempFilePath,
         success: (res) => {
-          var size = res.size;
-
-          /*uni.getFileSystemManager().readFile({
-            filePath: tempFilePath,
-            success: (data) => {
-              var arrayBuffer = data.data;
-              self.network().getAiDialogue(uni.arrayBufferToBase64(arrayBuffer), arrayBuffer.byteLength);
-            }
-          });*/
-          /*uni.getFileSystemManager().readFile({
-            filePath: tempFilePath,
-            encoding: 'base64',
-            success: (res) => {
-              self.network().getAiDialogue(res.data, size);
-            }
-          });*/
         }
       })
     });
+    innerAudioContext.onEnded((res) => {
+      this.dialogueContent[this.palyIndex].isPlay = false
+    })
   },
   computed: {
     contentBoxStyle() {
@@ -182,35 +175,26 @@ export default {
   methods: {
     test() {
       console.log(this.dialogueContent)
-      this.dialogueContent.push({
-        content: "yes, I am fine, how are you?e, how are you?e, how are you?e, how are you?e, how are you?",
+      this.dialogueContent = [{
+        content: "Hey,how are you doing?",
+        icon: "",
+        isSelf: false,
+        isPlay: false,
+        translate: "嗨，你好吗？"
+      }, {
+        content: "Hello, where are you from?",
         icon: "",
         isSelf: true,
-        translate: "嗨，嗨，你吗嗨，你好吗嗨，你好吗嗨，你好吗嗨，你好吗嗨，你好吗嗨，你好吗嗨，你好吗嗨，你好吗嗨，你好吗你好吗？" +  this.dialogueContent.length
-      })
-    },
-    toScrollerViewBottom() {
-      const query = uni.createSelectorQuery().in(this);
-      query.selectAll('.content-item').boundingClientRect(data => {
-        if (data && data.length) {
-          console.log(data, 'data')
-          console.log(data.length, 'data.length')
-          let height = 0;
-          data.forEach(rect => {
-            height += rect.height;
-          });
-          this.scrollTop = height + 10;
-          console.log(height, 'height')
-        }
-      }).exec();
-    },
-    scroll(e) {
-    },
-    scrollToUpper(e) {
-      console.log('到顶部了')
-    },
-    scrollToLower(e) {
-      console.log('到底部了')
+        isPlay: false,
+        mp3Url: "https://wapi-dev.aien.xiaolixb.com/v1/sys/common/static/digitalhuman/voice/tmp_1236bf6ffc82f634cfbf88a88d4de5197b759db275700abf_1716113891940.mp3",
+        translate: "你好，你是哪里你是哪里人你是哪里人你是哪里人你是哪里人人"
+      }, {
+        content: "Your sentence is correct. Great job! Now, it's my turn to ask: What's your favorite subject in school and why?",
+        icon: "",
+        isSelf: false,
+        isPlay: false,
+        translate: ""
+      }]
     },
     initRecord: function(){
       manager.onRecognize = (res) => {
@@ -233,6 +217,27 @@ export default {
         this.translateUsToCn(res, text);
       }
     },
+    toScrollerViewBottom() {
+      const query = uni.createSelectorQuery().in(this);
+      query.selectAll('.content-item').boundingClientRect(data => {
+        if (data && data.length) {
+          console.log(data, 'data')
+          console.log(data.length, 'data.length')
+          let height = 0;
+          data.forEach(rect => {
+            height += rect.height;
+          });
+          this.scrollTop = height + 10;
+          console.log(height, 'height')
+        }
+      }).exec();
+    },
+    scroll(e) {
+    },
+    scrollToUpper(e) {
+    },
+    scrollToLower(e) {
+    },
     // 保存发送的数据
     translateUsToCn(res, text) {
       plugin.translate({
@@ -245,22 +250,23 @@ export default {
           this.sendData.voiceDataLen = res.fileSize;
           this.sendData.voiceResultText = text;
           this.sendData.voiceResultTextCn = result.result;
-          console.log(this.sendData)
 
           this.dialogueContent.push({
             icon: '',
             content: this.sendData.voiceResultText,
             translate: this.sendData.voiceResultTextCn,
+            isPlay: false,
             isSelf: true
           })
           this.toScrollerViewBottom()
-          this.network().saveVoiceText()
+          this.network().saveVoiceText(this.dialogueContent.length - 1)
 
           // 初始化
           this.dialogueContent.push({
             icon: '',
             content: '',
             translate: '',
+            isPlay: false,
             isSelf: false
           })
           this.network().sseRequestTask({
@@ -274,36 +280,29 @@ export default {
           })
         },
         fail: (err) => {
-          console.log("翻译失败", err)
         }
       })
     },
     onLongPress() {
-      console.log('长按')
       this.isTlaking = true
       uni.vibrateShort({
         success: function () {
-          console.log('success');
         }
       });
       this.clickOptions(1)
     },
     onTouchEnd() {
-      console.log('结束')
       this.isTlaking = false
       this.clickOptions(1)
     },
     clickOptions(index) {
       if (index === 1) {
-        console.log('开始录音');
         this.isStartRecord = !this.isStartRecord
         if (this.isStartRecord) {
-          console.log('=======开始====')
           manager.start({
             lang: this.sendData.lang,
           })
         } else {
-          console.log('=======结束====')
           manager.stop()
         }
       }
@@ -311,24 +310,39 @@ export default {
         this.isShowPopup = true;
       }
     },
-    playVoice(voicePath) {
-      uni.downloadFile({
-        url: voicePath,
-        success: (res) => {
-          if (res.statusCode === 200) {
-            console.log('下载成功', res.tempFilePath)
-            innerAudioContext.src = res.tempFilePath;
-            innerAudioContext.obeyMuteSwitch = false;
-            innerAudioContext.play();
+    playVoice(voicePath, index) {
+      console.log(voicePath, 'voicePath')
+      // 判断当前设备
+      if (index) {
+        console.log(index, 'index')
+        this.dialogueContent[index].isPlay = true
+        this.palyIndex = index
+      }
+      if (this.deviceBrand === 'android') {
+        innerAudioContext.obeyMuteSwitch = false;
+        uni.downloadFile({
+          url: voicePath,
+          success: (res) => {
+            console.log(res, 'res')
+            if (res.statusCode === 200) {
+              innerAudioContext.src = res.tempFilePath;
+              innerAudioContext.play();
+            }
           }
-        }
-      })
+        })
+      } else {
+        innerAudioContext.src = voicePath;
+        innerAudioContext.obeyMuteSwitch = false;
+        innerAudioContext.play();
+      }
+
     },
     getSystemInfo() {
       uni.getSystemInfo({
         success: (res) => {
+          console.log(res, '设备信息')
+          this.deviceBrand = res.platform;
           this.otherHeight.statusBarHeight = res.statusBarHeight;
-
           // upx转px
           this.otherHeight.navContentHeiht = uni.upx2px(this.otherHeight.navContentHeiht);
         }
@@ -339,6 +353,7 @@ export default {
         icon: '',
         content: enText,
         translate: cnText,
+        isPlay: false,
         isSelf: false
       })
     },
@@ -350,8 +365,18 @@ export default {
           this.playVoice(this.chatInit.welcome_speech_voice_file)
           this.pushAiDialog(this.chatInit.welcome_speech_en, this.chatInit.welcome_speech_cn)
         },
+        getAiVoiceResult: async () => {
+          const res = await getAiVoiceResult({
+            sessionId: this.chatInit.session_id
+          });
+          console.log("获取内容详细")
+          console.log(res.data.result, 'res')
+          console.log(this.dialogueContent)
+          this.dialogueContent[this.dialogueContent.length - 1].translate = res.data.result.messageTextCn
+          this.dialogueContent[this.dialogueContent.length - 1].mp3Url = res.data.result.voiceFile
+          this.playVoice(res.data.result.voiceFile)
+        },
         sseRequestTask: async ({url, data, method = 'POST', type}) => {
-          console.log("store.state.token", store.state.token)
           return new Promise((resolve, reject) => {
             const requestTask = uni.request({
               url: `${apiDomain}${url}`,
@@ -383,25 +408,22 @@ export default {
                 if (item.includes('data:') && !item.includes('[DONE]')) {
                   let text = item.replace('data:', '')
                   text = text.replaceAll("「`」", " ").replaceAll("「·」", "<p></p>").replaceAll("「~」", "<p></p>")
-                  console.log(text, 'text')
-                  console.log("this.dialogueContent.length - 1this.dialogueContent.length - 1", this.dialogueContent.length - 1)
                   this.dialogueContent[this.dialogueContent.length - 1].content += text
                   this.toScrollerViewBottom()
 
                 } else if (item.includes('data:[DONE]')) {
-                  this.dialogueContent.push({
-                    content: "",
-                    icon: "",
-                    noShow: true,
-                    isSelf: true,
-                    translate: ""
-                  })
-                  // 结束
-                  console.log('结束结束结束结束结束结束结束结束结束结束结束结束结束结束结束结束结束结束结束结束')
+                  console.log("关闭请求data:[DONE]")
                   // 关闭请求
                   requestTask.abort()
+                  setTimeout(() => {
+                    this.network().getAiVoiceResult()
+                  }, 2000)
                 } else {
-                  requestTask.abort
+                  console.log("关闭请求 else")
+                  requestTask.abort()
+                  setTimeout(() => {
+                    this.network().getAiVoiceResult()
+                  }, 2000)
                 }
               })
             })
@@ -410,11 +432,8 @@ export default {
         defaultVirtual: async (isRefresh) => {
           const res = await defaultVirtual();
           this.personInfo = res.data.result;
-          console.log(this.personInfo, 'personInfo')
         },
         getAiDialogue: async (base64, length) => {
-          console.log(base64, 'base64')
-          console.log(length, 'length')
           this.network().sseRequestTask({
             url: '/digitalhuman/asr/voiceToTextStream',
             method: 'post',
@@ -425,7 +444,7 @@ export default {
             }
           })
         },
-        saveVoiceText: async () => {
+        saveVoiceText: async (index) => {
           console.log(this.sendData, 'this.sendData')
           this.sendData.sessionId = this.chatInit.session_id;
           uni.uploadFile({
@@ -438,7 +457,9 @@ export default {
               'content-type': 'multipart/form-data'
             },
             success: (uploadFileRes) => {
-              console.log('uploadFileRes', uploadFileRes)
+              var data = JSON.parse(uploadFileRes.data)
+              this.dialogueContent[index].mp3Url = data.message
+              console.log(this.dialogueContent, 'this.dialogueContent')
             },
             fail: (error) => {
               console.log('error', error)
@@ -603,5 +624,18 @@ export default {
 
 .waitImage {
   width: 50rpx;
+}
+
+.paly-btn {
+  display: flex;
+  justify-content: flex-end;
+  color: #1863E5;
+  font-size: 28rpx;
+  margin-top: 10rpx;
+
+  image {
+    width: 40rpx;
+    height: 30rpx;
+  }
 }
 </style>

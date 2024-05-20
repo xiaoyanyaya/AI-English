@@ -8,7 +8,7 @@
       <view class="person-info-box px-4 pb-4 mt-4">
         <view class="flex align-item-center justify-content-between pt-4 mt-1"
               v-for="(item, index) in menuList" :key="index"
-              @click="toPage(parentIndex, index)">
+              @click="toPage(item)">
           <view class="flex align-item-center">
 <!--            <image :src="`${imageBaseUrl}/${item.image}`" class="ml-1" mode="widthFix"></image>-->
             <view class="ml-2">{{item.title}}</view>
@@ -29,13 +29,19 @@ export default {
   data() {
     return {
       menuList: [
-        { title: '用户协议', image: 'icon_7.png' },
-        { title: '隐私政策', image: 'icon_8.png' },
-        { title: '使用帮助', image: 'icon_9.png' },
-        { title: '关于', image: 'icon_10.png' }
+        { index: 0, title: '用户协议', image: 'icon_7.png' },
+        { index: 1, title: '隐私政策', image: 'icon_8.png' },
+        { index: 2, title: '使用帮助', image: 'icon_9.png' },
+        { index: 3, title: '关于', image: 'icon_10.png' }
       ]
     };
-  }
+  },
+  methods: {
+    toPage(item) {
+      console.log("test", item)
+      this.$navigateTo(`/pages/me/content?type=${item.index}&title=${item.title}`);
+    }
+  },
 }
 </script>
 

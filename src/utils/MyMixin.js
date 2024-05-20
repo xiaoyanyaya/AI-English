@@ -24,6 +24,7 @@ export default {
 			uni.getSystemInfo({
 				success: (res) => {
 					this.systemInfo = res;
+					console.log('设备信息:', res);
 					console.log('状态栏高度:', res.statusBarHeight);
 				}
 			});

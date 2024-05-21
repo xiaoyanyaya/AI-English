@@ -112,7 +112,10 @@
     },
     {
       "path": "pages/me/content"
-    }
+    },
+	{
+	  "path": "pages/word/index"
+	}
   ],
   "tabBar": {
     "color": "#000000",

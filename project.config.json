@@ -24,5 +24,7 @@
   "editorSetting": {
     "tabIndent": "insertSpaces",
     "tabSize": 2
-  }
+  },
+  "miniprogramRoot": "dist/dev/mp-weixin/",
+  "srcMiniprogramRoot": "dist/dev/mp-weixin/"
 }

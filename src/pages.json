@@ -1,144 +1,170 @@
 {
-  "easycom": {
-    "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue",
-    "^cy-(.*)": "@/components/cy-$1.vue"
-  },
-  "pages": [
-    //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-    {
-      "path": "pages/index/index"
-    },
-    {
-      "path": "pages/index/question"
-    },
-    {
-      "path": "pages/index/questionDetail"
-    },
-    {
-      "path": "pages/index/aiLecture"
-    },
-    {
-      "path": "pages/index/generateResult"
-    },
-    {
-      "path": "pages/virtualCharacter/index"
-    },
-    {
-      "path": "pages/virtualCharacter/dialogue"
-    },
-    {
-      "path": "pages/virtualCharacter/duration"
-    },
-    {
-      "path": "pages/virtualCharacter/dialogueHistory"
-    },
-    {
-      "path": "pages/virtualCharacter/dialogueHistoryDetail"
-    },
-    {
-      "path": "pages/full-screen/full-screen"
-    },
-    {
-      "path": "pages/scan-frame/scan-frame"
-    },
-    {
-      "path": "pages/virtualCharacter/sceneSwitch"
-    },
-    {
-      "path": "pages/common/appearanceSelection"
-    },
-    {
-      "path": "pages/virtualCharacter/resultReport"
-    },
-    {
-      "path": "pages/composition/index"
-    },
-    {
-      "path": "pages/composition/new/titleSubject"
-    },
-    {
-      "path": "pages/composition/new/englishLibrary"
-    },
-    {
-      "path": "pages/composition/new/crazyChallenge"
-    },
-    {
-      "path": "pages/composition/new/challengeNumber"
-    },
-    {
-      "path": "pages/composition/new/Leaderboard"
-    },
-    {
-      "path": "pages/composition/new/challengeDetail"
-    },
-    {
-      "path": "pages/me/index"
-    },
-    {
-      "path": "pages/me/personInfo"
-    },
-    {
-      "path": "pages/me/updateInfo"
-    },
-    {
-      "path": "pages/me/selectGrade"
-    },
-    {
-      "path": "pages/me/selectInterest"
-    },
-    {
-      "path": "pages/me/userCenter"
-    },
-    {
-      "path": "pages/me/setting"
-    },
-    {
-      "path": "pages/me/cardConversion"
-    },
-    {
-      "path": "pages/me/distribution"
-    },
-    {
-      "path": "pages/virtualCharacter/aiFriend"
-    },
-    {
-      "path": "pages/virtualCharacter/introduction"
-    },
-    {
-      "path": "pages/composition/component/searchCondition"
-    },
-    {
-      "path": "pages/login/index"
-    },
-    {
-      "path": "pages/me/content"
-    }
-  ],
-  "tabBar": {
-    "color": "#000000",
-    "selectedColor": "#000000",
-    "backgroundColor": "#ffffff",
-    "borderStyle": "black",
-    "list": [
-      {
-        "pagePath": "pages/index/index",
-        "text": "首页",
-        "iconPath": "/static/icon_4.png",
-        "selectedIconPath": "/static/icon_2.png"
-      },
-      {
-        "pagePath": "pages/me/index",
-        "text": "会员中心",
-        "iconPath": "/static/icon_3.png",
-        "selectedIconPath": "/static/icon_5.png"
-      }
-    ]
-  },
-  "globalStyle": {
-    "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "uni-app",
-    "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8",
-    "navigationStyle": "custom"
-  }
+	"easycom": {
+		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue",
+		"^cy-(.*)": "@/components/cy-$1.vue"
+	},
+	"pages": [
+		//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index"
+		},
+		{
+			"path": "pages/index/question"
+		},
+		{
+			"path": "pages/index/questionDetail"
+		},
+		{
+			"path": "pages/index/aiLecture"
+		},
+		{
+			"path": "pages/index/generateResult"
+		},
+		{
+			"path": "pages/virtualCharacter/index"
+		},
+		{
+			"path": "pages/virtualCharacter/dialogue"
+		},
+		{
+			"path": "pages/virtualCharacter/duration"
+		},
+		{
+			"path": "pages/virtualCharacter/dialogueHistory"
+		},
+		{
+			"path": "pages/virtualCharacter/dialogueHistoryDetail"
+		},
+		{
+			"path": "pages/full-screen/full-screen"
+		},
+		{
+			"path": "pages/scan-frame/scan-frame"
+		},
+		{
+			"path": "pages/virtualCharacter/sceneSwitch"
+		},
+		{
+			"path": "pages/common/appearanceSelection"
+		},
+		{
+			"path": "pages/virtualCharacter/resultReport"
+		},
+		{
+			"path": "pages/composition/index"
+		},
+		{
+			"path": "pages/composition/new/titleSubject"
+		},
+		{
+			"path": "pages/composition/new/englishLibrary"
+		},
+		{
+			"path": "pages/composition/new/crazyChallenge"
+		},
+		{
+			"path": "pages/composition/new/challengeNumber"
+		},
+		{
+			"path": "pages/composition/new/Leaderboard"
+		},
+		{
+			"path": "pages/composition/new/challengeDetail"
+		},
+		{
+			"path": "pages/me/index"
+		},
+		{
+			"path": "pages/me/personInfo"
+		},
+		{
+			"path": "pages/me/updateInfo"
+		},
+		{
+			"path": "pages/me/selectGrade"
+		},
+		{
+			"path": "pages/me/selectInterest"
+		},
+		{
+			"path": "pages/me/userCenter"
+		},
+		{
+			"path": "pages/me/setting"
+		},
+		{
+			"path": "pages/me/cardConversion"
+		},
+		{
+			"path": "pages/me/distribution"
+		},
+		{
+			"path": "pages/virtualCharacter/aiFriend"
+		},
+		{
+			"path": "pages/virtualCharacter/introduction"
+		},
+		{
+			"path": "pages/composition/component/searchCondition"
+		},
+		{
+			"path": "pages/login/index"
+		},
+		{
+			"path": "pages/me/content"
+		}
+	],
+	"subPackages": [{
+		"root": "pages/word",
+		"pages": [{
+				"path": "index"
+			}, {
+				"path": "class"
+			},
+			{
+				"path": "textbook"
+			},
+			{
+				"path": "wordList"
+			},
+			{
+				"path": "set"
+			},
+			{
+				"path": "dictation"
+			},
+			{
+				"path": "definition"
+			},
+			{
+				"path": "answer"
+			}
+		]
+	}],
+	"tabBar": {
+		"color": "#000000",
+		"selectedColor": "#000000",
+		"backgroundColor": "#ffffff",
+		"borderStyle": "black",
+		"list": [{
+				"pagePath": "pages/index/index",
+				"text": "首页",
+				"iconPath": "/static/icon_4.png",
+				"selectedIconPath": "/static/icon_2.png"
+			},
+			{
+				"pagePath": "pages/me/index",
+				"text": "会员中心",
+				"iconPath": "/static/icon_3.png",
+				"selectedIconPath": "/static/icon_5.png"
+			}
+		]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8",
+		"navigationStyle": "custom"
+	}
 }

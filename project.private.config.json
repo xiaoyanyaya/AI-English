@@ -3,5 +3,18 @@
   "projectname": "ai-english",
   "setting": {
     "compileHotReLoad": true
+  },
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "pages/word/index",
+          "pathName": "pages/word/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        }
+      ]
+    }
   }
 }

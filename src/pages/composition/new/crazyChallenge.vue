@@ -86,6 +86,12 @@
             <view v-if="btnIndex === 0"
                   class="t-size-20 t-color-8A8A8A ml-1">({{ item.favoritesTimes || 0 }})
             </view>
+            <button
+              v-if="btnIndex === 2"
+              open-type="share"
+              data-name="shareBtn"
+              class="share-btn">
+            </button>
           </view>
         </view>
       </view>
@@ -136,7 +142,8 @@ export default {
       isMoreData: true,
       challenge: {},
       evaluateData: [],
-      schoolTypeList: []
+      schoolTypeList: [],
+      clickData: {}
     };
   },
   onLoad() {
@@ -148,8 +155,24 @@ export default {
     this.queryParams.pageNo += 1
     this.network().getCompositionList()
   },
+  onShareAppMessage(res) {
+    console.log(res)
+    if (res.from === "button") {
+      var data = this.clickData
+      uni.setStorageSync('compositionTitleText', data.compositionTitleText)
+      const SRC = `/pages/composition/new/titleSubject?`;
+      const path = `pageIndex=4&pageTitle=作文内容输入页&id=${data.id}&compositionType=${data.compositionType}`;
+      // 来自页面内分享按钮
+      return {
+        title: this.pageTitle,
+        path: `${SRC}${path}`,
+        // imageUrl: `${this.imgDomain}wxapp/icon1.1/pic_visit.png`,
+      };
+    }
+  },
   methods: {
     clickBtn(title, data) {
+      this.clickData = data
       if (title == '挑战次数') {
         this.$navigateTo(`/pages/composition/new/challengeNumber?id=${data.id}&title=${data.compositionTitleText}&compositionLabel=${data.compositionLabel}`)
       }
@@ -341,5 +364,12 @@ export default {
   width: 670rpx;
   height: 1rpx;
   background: #D8D8D8;
+}
+
+.share-btn {
+  width: 200rpx;
+  height: 80rpx;
+  position: absolute;
+  opacity: 0;
 }
 </style>

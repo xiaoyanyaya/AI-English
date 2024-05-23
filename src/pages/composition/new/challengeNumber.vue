@@ -25,7 +25,9 @@
                 </view>-->
       </view>
 
-      <view v-show="challengeData.length > 0" class="content-box px-4 pb-2 mb-3" v-for="(item, index) in challengeData" :key="index">
+      <view v-show="challengeData.length > 0" class="content-box px-4 pb-2 mb-3" v-for="(item, index) in challengeData"
+            @click="clickChallenge(item)"
+            :key="index">
         <view class="flex justify-content-between align-item-start person-box">
           <div class="flex person">
             <view>
@@ -91,6 +93,9 @@ export default {
       this.challengeData = [];
       this.isMoreData = true;
       this.network().getChallengeCompositionList();
+    },
+    clickChallenge(item) {
+      this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=6&id=${item.id}&pageTilte=作文详情&isShowTitle=1`);
     },
     network() {
       return {

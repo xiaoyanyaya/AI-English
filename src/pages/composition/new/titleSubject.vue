@@ -395,6 +395,7 @@ export default {
       this.content.isDisabled = true;
       this.otherContent.show = true;
       this.otherContent.isDisabled = true;
+      this.pageTitle = pageTitle;
       this.btnTitle = '分享';
       this.isReturnHome = 1;
       this.network().getCompositionCollectInfo(id)

@@ -59,7 +59,7 @@
                   size="mini" type="primary"
                   open-type="getPhoneNumber"
                   @getphonenumber="getPhone($event, '/pages/composition/index')"></button>
-          <view class="t-color-3D3D3D font-weight-bold t-size-30 ai-write">AI满分作文</view>
+          <view class="t-color-3D3D3D font-weight-bold t-size-30 ai-write">AI高分作文</view>
           <view class="aparent">作文批改提分神器</view>
           <image :src="`${imageBaseUrl}/img_4.png`" class="ment-image"></image>
           <image :src="`${imageBaseUrl}/img_5.png`" class="identification"></image>

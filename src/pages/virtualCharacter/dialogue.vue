@@ -31,10 +31,10 @@
                   <rich-text v-if="item.content" :nodes="item.content"></rich-text>
                   <image v-else :src="`${imageBaseUrl}/5-10-1.gif`" mode="widthFix" class="waitImage"></image>
                 </view>
-                <view class="mt-1 flex" v-if="" @click="playVoice(item.mp3Url)">
+                <view class="mt-1 flex" @click.native.stop="playVoice(item.mp3Url, index, item)">
                   <view style="margin-top: 8rpx" class="mr-2">{{ item.translate }}</view>
                   <view v-if="item.mp3Url" class="paly-btn">
-                    <image v-if="!item.isPlay" :src="`${imageBaseUrl}/5-19-03.png`" @click="playVoice(item.mp3Url, index)"></image>
+                    <image v-if="!item.isPlay" :src="`${imageBaseUrl}/5-19-03.png`"></image>
                     <image v-else :src="`${imageBaseUrl}/5-19-02.gif`"></image>
                   </view>
                 </view>
@@ -133,6 +133,10 @@ export default {
       palyIndex: 0,
     }
   },
+  // 页面销毁
+  onUnload() {
+    innerAudioContext.stop()
+  },
   onLoad(res) {
     this.network().defaultVirtual();
     this.initRecord()
@@ -164,7 +168,7 @@ export default {
       })
     });
     innerAudioContext.onEnded((res) => {
-      this.dialogueContent[this.palyIndex].isPlay = false
+      this.dialogueContent.forEach(d => d.isPlay = false)
     })
   },
   computed: {
@@ -174,7 +178,6 @@ export default {
   },
   methods: {
     test() {
-      console.log(this.dialogueContent)
       this.dialogueContent = [{
         content: "Hey,how are you doing?",
         icon: "",
@@ -193,25 +196,21 @@ export default {
         icon: "",
         isSelf: false,
         isPlay: false,
+        mp3Url: "https://wapi-dev.aien.xiaolixb.com/v1/sys/common/static/digitalhuman/voice/tmp_1236bf6ffc82f634cfbf88a88d4de5197b759db275700abf_1716113891940.mp3",
         translate: ""
       }]
     },
     initRecord: function(){
       manager.onRecognize = (res) => {
-        console.log("res1", res)
-        console.log("this.currentText1", this.currentText)
       }
       // 识别结束事件
       manager.onStop = (res) => {
         let text = res.result
         if(text == '') {
-          console.log('没有说话')
           return
         }
         this.currentText = text
         this.voicePath = res.tempFilePath;
-        console.log("res2", res)
-        console.log("this.currentText2", this.currentText)
 
         // 保存发送的数据 英文转换成中文
         this.translateUsToCn(res, text);
@@ -221,14 +220,11 @@ export default {
       const query = uni.createSelectorQuery().in(this);
       query.selectAll('.content-item').boundingClientRect(data => {
         if (data && data.length) {
-          console.log(data, 'data')
-          console.log(data.length, 'data.length')
           let height = 0;
           data.forEach(rect => {
             height += rect.height;
           });
           this.scrollTop = height + 10;
-          console.log(height, 'height')
         }
       }).exec();
     },
@@ -285,6 +281,7 @@ export default {
     },
     onLongPress() {
       this.isTlaking = true
+      innerAudioContext.stop()
       uni.vibrateShort({
         success: function () {
         }
@@ -310,27 +307,38 @@ export default {
         this.isShowPopup = true;
       }
     },
-    playVoice(voicePath, index) {
-      console.log(voicePath, 'voicePath')
+    playVoice(voicePath, index, item) {
+      if (item && item.isPlay) {
+        return
+      }
+
       // 判断当前设备
-      if (index) {
-        console.log(index, 'index')
-        this.dialogueContent[index].isPlay = true
+      this.dialogueContent.forEach(d => d.isPlay = false)
+      if (index !== undefined) {
+        this.$set(this.dialogueContent[index], 'isPlay', true)
         this.palyIndex = index
       }
+      console.log(this.deviceBrand, 'this.deviceBrand')
+      console.log(this.deviceBrand === 'android', 'this.deviceBrand')
+      console.log(voicePath, 'voicePath')
       if (this.deviceBrand === 'android') {
-        innerAudioContext.obeyMuteSwitch = false;
         uni.downloadFile({
           url: voicePath,
           success: (res) => {
-            console.log(res, 'res')
+            console.log("下载文件", res)
             if (res.statusCode === 200) {
+              console.log("安卓播放文件")
+              console.log(res.tempFilePath, 'res.tempFilePath')
               innerAudioContext.src = res.tempFilePath;
               innerAudioContext.play();
             }
+          },
+          fail: (error) => {
+            console.log(error, 'error')
           }
         })
       } else {
+        console.log("苹果播放文件")
         innerAudioContext.src = voicePath;
         innerAudioContext.obeyMuteSwitch = false;
         innerAudioContext.play();
@@ -340,7 +348,6 @@ export default {
     getSystemInfo() {
       uni.getSystemInfo({
         success: (res) => {
-          console.log(res, '设备信息')
           this.deviceBrand = res.platform;
           this.otherHeight.statusBarHeight = res.statusBarHeight;
           // upx转px
@@ -348,11 +355,12 @@ export default {
         }
       });
     },
-    pushAiDialog(enText, cnText) {
+    pushAiDialog(enText, cnText, url) {
       this.dialogueContent.push({
         icon: '',
         content: enText,
         translate: cnText,
+        mp3Url: url,
         isPlay: false,
         isSelf: false
       })
@@ -370,18 +378,22 @@ export default {
           }
           this.chatInit = res.data.result
           this.playVoice(this.chatInit.welcome_speech_voice_file)
-          this.pushAiDialog(this.chatInit.welcome_speech_en, this.chatInit.welcome_speech_cn)
+          this.pushAiDialog(this.chatInit.welcome_speech_en, this.chatInit.welcome_speech_cn, this.chatInit.welcome_speech_voice_file)
         },
         getAiVoiceResult: async () => {
           const res = await getAiVoiceResult({
             sessionId: this.chatInit.session_id
           });
-          console.log("获取内容详细")
-          console.log(res.data.result, 'res')
-          console.log(this.dialogueContent)
+          console.log(res.data.result, 'res.data.result')
           this.dialogueContent[this.dialogueContent.length - 1].translate = res.data.result.messageTextCn
           this.dialogueContent[this.dialogueContent.length - 1].mp3Url = res.data.result.voiceFile
-          this.playVoice(res.data.result.voiceFile)
+          setTimeout(() => {
+            this.toScrollerViewBottom()
+          }, 300)
+
+          setTimeout(() => {
+            this.playVoice(res.data.result.voiceFile)
+          }, 2000)
         },
         sseRequestTask: async ({url, data, method = 'POST', type}) => {
           return new Promise((resolve, reject) => {
@@ -412,26 +424,23 @@ export default {
               }
               let arr = text.split('\n')
               arr.forEach((item) => {
-                console.log(item, 'item')
-                if (item.includes('data:') && !item.includes('[DONE]')) {
+                if (item.includes('data:') && !item.includes('[DONE]') && !item.includes('[END]')) {
                   let text = item.replace('data:', '')
                   text = text.replaceAll("「`」", " ").replaceAll("「·」", "<p></p>").replaceAll("「~」", "<p></p>")
                   this.dialogueContent[this.dialogueContent.length - 1].content += text
                   this.toScrollerViewBottom()
 
-                } else if (item.includes('data:[DONE]')) {
-                  console.log("关闭请求data:[DONE]")
+                } else if (item.includes('[END]')) {
                   // 关闭请求
+                  console.log("关闭请求")
                   requestTask.abort()
-                  setTimeout(() => {
-                    this.network().getAiVoiceResult()
-                  }, 2000)
+                  this.network().getAiVoiceResult()
                 } else {
-                  console.log("关闭请求 else")
+                  /*console.log("关闭请求 else")
                   requestTask.abort()
                   setTimeout(() => {
                     this.network().getAiVoiceResult()
-                  }, 2000)
+                  }, 2000)*/
                 }
               })
             })
@@ -453,7 +462,6 @@ export default {
           })
         },
         saveVoiceText: async (index) => {
-          console.log(this.sendData, 'this.sendData')
           this.sendData.sessionId = this.chatInit.session_id;
           uni.uploadFile({
             url: `https://wapi-dev.aien.xiaolixb.com/v1/digitalhuman/asr/saveVoiceText`,
@@ -470,7 +478,6 @@ export default {
               console.log(this.dialogueContent, 'this.dialogueContent')
             },
             fail: (error) => {
-              console.log('error', error)
             }
           })
 

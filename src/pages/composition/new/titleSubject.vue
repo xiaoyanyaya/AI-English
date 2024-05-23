@@ -277,6 +277,10 @@ export default {
         this.otherContent.show = false;
         this.btnTitle = 'AI作文批改';
       } else if (pageTitle === 'AI作文批改') {
+        var essayDataContent = uni.getStorageSync("essayDataContent")
+        this.essayData.content = essayDataContent || ''
+        this.essayData.originContent = essayDataContent || '';
+
         this.title.isShowTitle = title != '';
         this.title.isShowPhoto = false;
         this.title.isDisabled = true;
@@ -306,6 +310,9 @@ export default {
         this.btnTitle = "AI作文帮写"
       }
       if (pageTitle === 'AI作文帮写') {
+        var essayDataTitle = uni.getStorageSync("essayDataTitle")
+        this.essayData.title = essayDataTitle || ''
+
         this.title.isShowTitle = false;
         this.title.isShowPhoto = false;
         this.content.isShowContent = true;
@@ -331,6 +338,10 @@ export default {
         this.content.isShowContent = true;
         this.btnTitle = 'AI作文批改';
       } else if (pageTitle === 'AI作文批改') {
+        var essayDataContent = uni.getStorageSync("essayDataContent")
+        this.essayData.content = essayDataContent || ''
+        this.essayData.originContent = essayDataContent || '';
+
         this.title.isShowTitle = false;
         this.title.isShowPhoto = false;
         this.content.isShowContent = true;
@@ -514,7 +525,8 @@ export default {
               return;
             }
           }
-          this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=${this.pageIndex}&pageTitle=AI作文批改&title=${this.essayData.title}&content=${this.essayData.content}&generateContent=${this.generateContent}`);
+          uni.setStorageSync("essayDataContent", this.essayData.content)
+          this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=${this.pageIndex}&pageTitle=AI作文批改&title=${this.essayData.title}&generateContent=${this.generateContent}`);
           break;
 
         case "1":
@@ -533,7 +545,8 @@ export default {
           let compositionType = this.popupContnet[0].val[this.popupContnet[0].activeIndex]
           let infoWordNums = this.popupContnet[1].val[this.popupContnet[1].activeIndex]
           let infoWriteType = this.popupContnet[2].val[this.popupContnet[2].activeIndex]
-          this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=2&pageTitle=AI作文帮写&title=${this.essayData.title}&compositionType=${compositionType}&infoWordNums=${infoWordNums}&infoWriteType=${infoWriteType}`)
+          uni.setStorageSync("essayDataTitle", this.essayData.title)
+          this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=2&pageTitle=AI作文帮写&compositionType=${compositionType}&infoWordNums=${infoWordNums}&infoWriteType=${infoWriteType}`)
           break;
         case "4":
           if (this.pageTitle == '作文内容输入页') {
@@ -546,7 +559,8 @@ export default {
               return;
             }
           }
-          this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=4&pageTitle=AI作文批改&title=${this.essayData.title}&content=${this.essayData.content}&generateContent=${this.generateContent}&id=${this.mainId}&compositionType=${this.compositionType}`);
+          uni.setStorageSync("essayDataContent", this.essayData.content)
+          this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=4&pageTitle=AI作文批改&title=${this.essayData.title}&generateContent=${this.generateContent}&id=${this.mainId}&compositionType=${this.compositionType}`);
           break;
       }
     },

@@ -8,7 +8,7 @@
 				<view class="headTitle-bar"></view>
 			</view>
 			<view class="headAudio">
-				<view class="headAudio-box">
+				<view class="headAudio-box" @click="play(allData.audioUsa)">
 					<text>英</text>
 					<text class="headAudio-boxC">['{{allData.symbolUk}}]</text>
 					<image :src="imageBaseUrl+'/word/5-21-31.png'" mode=""></image>
@@ -64,7 +64,7 @@
 						{{allData.wordFormat}}
 					</view>
 				</view>
-				<view class="contentText-item"  v-if="allData.wordSentence">
+				<view class="contentText-item" v-if="allData.wordSentence">
 					<view class="contentText-itemTitle">
 						例句
 						<view class="contentText-itemTitle-bar"></view>
@@ -106,6 +106,7 @@
 </template>
 
 <script>
+	const innerAudioContext = uni.createInnerAudioContext();
 	import MyMixin from "@/utils/MyMixin";
 	import {
 		wordEn
@@ -116,14 +117,14 @@
 			return {
 				backColor: 'transparent',
 				tab: 0,
-				data:{
-					wordEn:''
+				data: {
+					wordEn: ''
 				},
-				allData:{}
+				allData: {}
 			}
 		},
 		onLoad(e) {
-			this.data.wordEn=e.wordEn
+			this.data.wordEn = e.wordEn
 			this.getWordEn()
 			console.log(e.wordEn)
 		},
@@ -135,9 +136,17 @@
 			}
 		},
 		methods: {
-			async getWordEn(){
+			async getWordEn() {
 				let data = await wordEn(this.data);
-				this.allData=data.data.result
+				this.allData = data.data.result
+			},
+			play(src) {
+				innerAudioContext.src = src;
+				const timout = setTimeout(() => {
+					clearTimeout(timout)
+					innerAudioContext.play()
+					console.log(1)
+				}, 500)
 			},
 			toNav(urls) {
 				uni.navigateTo({
@@ -260,7 +269,8 @@
 		padding: 30rpx 50rpx;
 		margin-top: 50rpx;
 	}
-	.contentText-item{
+
+	.contentText-item {
 		margin-bottom: 40rpx;
 	}
 
@@ -281,5 +291,6 @@
 	.contentText-itemText {
 		color: #8A8A8A;
 		font-size: 30rpx;
+		white-space: pre-line;
 	}
 </style>

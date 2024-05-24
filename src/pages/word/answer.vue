@@ -95,7 +95,7 @@
 			</view>
 		</view>
 		<view class="charts-box" v-if="tab==0">
-			<qiun-data-charts type="column" :opts="opts" :chartData="chartData" />
+			<qiun type="column" :opts="opts" :chartData="chartData" />
 		</view>
 		<view class="button">
 			<view class="buttonLeft">
@@ -112,8 +112,12 @@
 
 <script>
 	import MyMixin from "@/utils/MyMixin";
+	import qiun from "@/pages/word/components/qiun-data-charts/components/qiun-data-charts/qiun-data-charts.vue";  
 	export default {
 		mixins: [MyMixin],
+		components:{
+			qiun
+		},
 		data() {
 			return {
 				backColor: 'transparent',

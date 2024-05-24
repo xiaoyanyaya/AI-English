@@ -32,15 +32,16 @@
 				<u-icon name="plus" size="30"></u-icon><text>新建任务</text>
 			</view>
 			<view class="list">
-				<view class="listItem" :class="i==0?'listItemOn':''" v-for="(item,i) in list" :key="item.id"
-					@click="toNav('/pages/word/wordList?unitId='+item.id)">
-					<image class="listItem-img" :src="imageBaseUrl + (i==0?'/word/5-21-24.png':'/word/5-21-23.png')"
+				<view class="listItem" :class="item.lessonReviewStatus==0?'listItemOn':''" v-for="(item,i) in list"
+					:key="item.id" @click="toNav('/pages/word/wordList?unitId='+item.id+'&id='+id)">
+					<image class="listItem-img"
+						:src="imageBaseUrl + (item.lessonReviewStatus==0?'/word/5-21-24.png':'/word/5-21-23.png')"
 						mode="widthFix"></image>
 					<view class="listItem-name">
-						{{item.unitName}}
+						{{item.unitName||item.lessonName}}
 					</view>
 					<view class="listItem-right">
-						<view class="listItem-rightTop">
+						<view class="listItem-rightTop" v-if="item.challengeNums">
 							挑战人数：<text style="font-weight: 600;">{{item.challengeNums}}</text>
 						</view>
 						<view class="listItem-rightBottom">
@@ -59,9 +60,9 @@
 					单词数量
 				</view>
 				<view class="popupSelect-list">
-					<view class="popupSelect-listItem" v-for="(item,i) in 6" @click="selectNum=i"
+					<view class="popupSelect-listItem" v-for="(item,i) in wordNumData" :key="item.value" @click="selectNum=i"
 						:class="selectNum==i?'popupSelect-listItem-select':''">
-						10
+						{{item.text}}
 					</view>
 				</view>
 			</view>
@@ -80,7 +81,9 @@
 <script>
 	import MyMixin from "@/utils/MyMixin";
 	import {
-		unitList
+		unitList,
+		lessonList,
+		wordNum
 	} from "@/api/word";
 	export default {
 		mixins: [MyMixin],
@@ -92,11 +95,10 @@
 				selectNum: 0,
 				data: {
 					bookId: 0,
-					pageNo:1
 				},
 				list: [],
 				bookData: {},
-				page:0
+				wordNumData:[]
 			}
 		},
 		onLoad(e) {
@@ -114,25 +116,20 @@
 		},
 		methods: {
 			async getUnit() {
-				let data = await unitList(this.data);
-				if (this.data.pageNo == 1) {
-					this.list = data.data.result.records
-				} else {
-					this.list.push(...data.data.result.records)
+				if (this.id == 0) {
+					let data = await unitList(this.data);
+					this.list = data.data.result
+				} else if (this.id == 1) {
+					let data = await lessonList(this.data);
+					this.list = data.data.result
+					let res = await wordNum();
+					this.wordNumData=res.data.result
 				}
-				this.page = data.data.result.pages
 			},
 			toNav(urls) {
 				uni.navigateTo({
 					url: urls
 				})
-			}
-		},
-		onReachBottom() {
-			if (this.page > this.data.pageNo) {
-				this.data.pageNo = this.data.pageNo++
-				console.log(this.data.pageNo++)
-				this.getUnit()
 			}
 		}
 	}

@@ -70,7 +70,7 @@
           <image :src="`${imageBaseUrl}/img_4.png`" class="ment-image"></image>
           <image :src="`${imageBaseUrl}/img_6.png`" class="identification"></image>
         </view>
-        <view class="ai-tools-box">
+        <view class="ai-tools-box" @click="$navigateTo('/pages/word/index')">
           <view class="t-color-3D3D3D font-weight-bold t-size-30 ai-write">AI速记单词</view>
           <view class="aparent">低成本高效率速记单词</view>
           <image :src="`${imageBaseUrl}/img_4.png`" class="ment-image"></image>

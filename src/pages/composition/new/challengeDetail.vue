@@ -5,7 +5,7 @@
     </cy-navbar>
 
     <view class="mt-5 flex flex-direction-column align-item-center justify-content-center">
-      <image src="/static/logo.png" class="avatar"></image>
+      <image :src="imageBaseUrl + '/logo.png'" class="avatar"></image>
       <view class="name t-size-40 font-weight-bold mt-5 t-color-3D3D3D">Jogn Doe</view>
       <view class="flex mt-3 align-item-center justify-content-around score-box">
         <view class="flex flex-direction-column align-item-center justify-content-center"
@@ -41,7 +41,9 @@
 </template>
 
 <script>
+import MyMixin from "@/utils/MyMixin";
 export default {
+  mixins: [MyMixin],
   data() {
     return {
       scoreNumber: [{

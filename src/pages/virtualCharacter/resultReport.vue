@@ -9,7 +9,7 @@
       <view class="ml-5 mr-5 mt-3 px-3 py-3 person-info">
         <view class="flex align-item-center">
           <view class="mr-4 avatar flex justify-content-center align-item-center">
-            <image src="/static/logo.png" mode="aspectFill"></image>
+            <image :src="imageBaseUrl + '/logo.png'" mode="aspectFill"></image>
           </view>
           <view class="t-size-30 font-weight-bold">
             <text>小李飞刀</text>

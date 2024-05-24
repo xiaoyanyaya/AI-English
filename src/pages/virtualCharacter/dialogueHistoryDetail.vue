@@ -8,7 +8,7 @@
       <view class="top-content border-box pt-4 pb-3 px-5">
         <view class="flex justify-content-between">
           <view class="flex align-item-center ml-3">
-            <image src="/static/logo.png" style="width: 50rpx; height: 50rpx;border-radius: 50%"></image>
+            <image :src="imageBaseUrl + '/logo.png'" style="width: 50rpx; height: 50rpx;border-radius: 50%"></image>
             <view class="t-size-26 ml-2">自由对话</view>
           </view>
           <view>

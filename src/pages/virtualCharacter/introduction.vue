@@ -22,6 +22,7 @@
             <view class="t-color-3D3D3D t-size-28"
             style="line-height: 38rpx">{{data.targetCn}}</view>
           </view>
+
           <view class="t-size-24 mt-2 ml-4" style="color: #868686">
             {{data.targetEn}}
           </view>

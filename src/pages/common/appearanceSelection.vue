@@ -23,7 +23,7 @@
           <view class="grid-item" v-for="(item, index) in publicTemplateList" :key="index" v-if="index < 4">
             <view v-if="index === 0" class="flex flex-direction-column align-item-center">
               <view class="mt-3">
-                <image class="uploa-image" src="/static/logo.png" mode="widthFix"></image>
+                <image class="uploa-image" :src="imageBaseUrl + '/logo.png'" mode="widthFix"></image>
               </view>
               <view><text class="t-size-24">上传或生成</text></view>
             </view>
@@ -41,7 +41,7 @@
           <view class="grid-item" v-for="(item, index) in publicTemplateList" :key="index" v-if="index < 4">
             <view v-if="index === 0" class="flex flex-direction-column align-item-center">
               <view class="mt-3">
-                <image class="uploa-image" src="/static/logo.png" mode="widthFix"></image>
+                <image class="uploa-image" :src="imageBaseUrl + '/logo.png'" mode="widthFix"></image>
               </view>
               <view><text class="t-size-24">上传或生成</text></view>
             </view>
@@ -70,7 +70,9 @@
 </template>
 
 <script>
+import MyMixin from "@/utils/MyMixin";
 export default {
+  mixins: [MyMixin],
   data() {
     return {
       pageType: '',

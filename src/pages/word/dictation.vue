@@ -47,7 +47,7 @@
 				</view>
 			</view>
 			<view class="controlItem">
-				<image :src="imageBaseUrl + '/word/5-21-29.png'" mode=""></image>
+				<image :src="imageBaseUrl + '/word/play_s.png'" mode=""></image>
 				<view class="controlItem-text">
 					下一个
 				</view>

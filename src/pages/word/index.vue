@@ -75,7 +75,7 @@
 				<view class="item-box-select">
 					<view class="item-box-selectItem" v-for="(item,i) in typeData" :key="item.id" @click="toNav('/pages/word/wordList?id=2&unitId='+item.id)">
 						<view class="item-box-selectItem-head">
-							<image :src="imageBaseUrl+item.unitImage" mode="heightFix"></image>
+							<image :src="item.unitImage" mode="heightFix"></image>
 						</view>
 						<view class="item-box-selectItem-name">
 							{{item.unitName}}

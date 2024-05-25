@@ -60,8 +60,8 @@
 					单词数量
 				</view>
 				<view class="popupSelect-list">
-					<view class="popupSelect-listItem" v-for="(item,i) in wordNumData" :key="item.value" @click="selectNum=i"
-						:class="selectNum==i?'popupSelect-listItem-select':''">
+					<view class="popupSelect-listItem" v-for="(item,i) in wordNumData" :key="item.value"
+						@click="selectClick(item.value)" :class="selectNum==item.value?'popupSelect-listItem-select':''">
 						{{item.text}}
 					</view>
 				</view>
@@ -70,7 +70,7 @@
 				<view class="popupButton-l" @click="show=false">
 					取消
 				</view>
-				<view class="popupButton-r" @click="show=false">
+				<view class="popupButton-r" @click="addBook">
 					确认
 				</view>
 			</view>
@@ -83,7 +83,8 @@
 	import {
 		unitList,
 		lessonList,
-		wordNum
+		wordNum,
+		addLessonOutline
 	} from "@/api/word";
 	export default {
 		mixins: [MyMixin],
@@ -98,7 +99,7 @@
 				},
 				list: [],
 				bookData: {},
-				wordNumData:[]
+				wordNumData: []
 			}
 		},
 		onLoad(e) {
@@ -123,7 +124,40 @@
 					let data = await lessonList(this.data);
 					this.list = data.data.result
 					let res = await wordNum();
-					this.wordNumData=res.data.result
+					this.wordNumData = res.data.result
+					this.selectNum=res.data.result[0].value
+				}
+			},
+			selectClick(num){
+				this.selectNum=num
+			},
+			async addBook() {
+				console.log(1)
+				var data={
+					bookId:this.data.bookId ,
+					worNum:this.selectNum
+				}
+				let res = await addLessonOutline(data);
+				if(res.data.code==200){
+					this.toNav('/pages/word/wordList?unitId='+res.data.result.id+'&id=1')
+				}else{
+					uni.showModal({
+					   title:res.data.message,
+					    success: function (res) {
+					        if (res.confirm) {
+					            console.log('用户点击确定');
+					            // 执行操作
+					        } else if (res.cancel) {
+					            console.log('用户点击取消');
+					            // 操作取消
+					        }
+					    }
+					});
+					// uni.showToast({
+					// 	title:res.data.message,
+					// 	icon:"error",
+					// 	duration:2000
+					// })
 				}
 			},
 			toNav(urls) {
@@ -148,8 +182,8 @@
 	}
 
 	.headL image {
-		width: 180rpx;
-		height: 214rpx;
+		width: 170rpx;
+		height: 224rpx;
 		margin-right: 30rpx;
 	}
 
@@ -173,16 +207,16 @@
 	.headR-lineText {
 		font-size: 20rpx;
 		color: #3A73D9;
-		margin-top: 22rpx;
+		margin-top: 30rpx;
 	}
 
 	.listItem {
 		display: flex;
 		background: linear-gradient(138deg, #EDFFE8 33%, #FFFFFF 68%);
 		width: 100%;
-		padding: 16rpx 30rpx;
+		padding: 24rpx 30rpx;
 		align-items: center;
-		margin-bottom: 20rpx;
+		margin-bottom: 30rpx;
 		box-sizing: border-box;
 		border-radius: 10rpx;
 		box-shadow: 2rpx 2rpx 2rpx rgba(58, 115, 217, 0.3);

@@ -32,3 +32,6 @@ export const addLesson = params => fly.get('/word/lesson/addLessonForExamOutline
 
 // 查询配置
 export const wordNum = params => fly.get('/word/config/query/word_lesson_word_num',params)
+
+// 添加学习任务
+export const addLessonOutline = params => fly.get('/word/lesson/addLessonForExamOutline',params)

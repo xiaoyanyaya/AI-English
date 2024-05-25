@@ -112,7 +112,7 @@
 		},
 		onPageScroll(e) {
 			if (e.scrollTop > 20) {
-				this.backColor = '#fff'
+				this.backColor = '#DEF0FF'
 			} else {
 				this.backColor = 'transparent'
 			}
@@ -123,12 +123,15 @@
 				if (this.id == 0) {
 					let data = await wordList(this.data);
 					this.allData = data.data.result
+					uni.getStorageSync('wordList',data.data.result)
 				} else if (this.id == 1) {
 					let data = await dictList(this.dataB);
 					this.allData = data.data.result.records
+					uni.getStorageSync('wordList',data.data.result)
 				} else if (this.id == 2) {
 					let data = await lessonWordList(this.data)
 					this.allData = data.data.result
+					uni.getStorageSync('wordList',data.data.result)
 				}
 			},
 			play(src, id) {
@@ -194,8 +197,21 @@
 		padding-bottom: 200rpx;
 	}
 
+	.title {
+		position: fixed;
+		background: #DEF0FF;
+		width: 100%;
+		padding-bottom: 30rpx;
+		z-index: 1;
+		top: 120rpx;
+		left: 0;
+		padding-left: 55rpx;
+		padding-top: 20rpx;
+	}
+
 	.content {
 		padding: 30rpx 55rpx;
+		padding-top: 90rpx;
 	}
 
 	.list {
@@ -236,13 +252,14 @@
 		font-size: 22rpx;
 		margin-bottom: 2rpx;
 		white-space: pre-line;
+		line-height: 36rpx;
 	}
 
 	.listItem-r {
 		background: #F7A751;
 		border-radius: 50rpx;
 		color: #fff;
-		font-size: 24rpx;
+		font-size: 20rpx;
 		height: 50rpx;
 		line-height: 50rpx;
 		padding: 0 20rpx;

@@ -102,6 +102,20 @@
 				</view>
 			</view>
 		</view>
+		<view class="controller">
+			<view class="controllerItem">
+				<image :src="imageBaseUrl + '/word/pre_s.png'" mode=""></image>
+				<view class="">
+					上一个
+				</view>
+			</view>
+			<view class="controllerItem">
+				<image :src="imageBaseUrl + '/word/next_s.png'" mode=""></image>
+				<view class="">
+					下一个
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -126,7 +140,7 @@
 		onLoad(e) {
 			this.data.wordEn = e.wordEn
 			this.getWordEn()
-			console.log(e.wordEn)
+			uni.getStorageSync('wordList');
 		},
 		onPageScroll(e) {
 			if (e.scrollTop > 20) {
@@ -292,5 +306,31 @@
 		color: #8A8A8A;
 		font-size: 30rpx;
 		white-space: pre-line;
+		line-height: 42rpx;
+		margin-top: 10rpx;
+	}
+
+	.controller {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-top: 80rpx;
+	}
+
+	.controllerItem {
+		margin-right: 212rpx;
+		text-align: center;
+		font-size: 24rpx;
+		color: #8A8A8A;
+	}
+
+	.controllerItem:nth-child(2) {
+		margin-right: 0;
+	}
+
+	.controller image {
+		width: 28rpx;
+		height: 34rpx;
+		margin-bottom: 6rpx;
 	}
 </style>

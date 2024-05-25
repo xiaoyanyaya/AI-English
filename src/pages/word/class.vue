@@ -12,7 +12,8 @@
 				</view>
 			</view>
 			<view class="list">
-				<view class="listItem" v-for="(item,i) in list" @click="toNav('/pages/word/textbook?id='+id+'&bookId='+item.id,item)">
+				<view class="listItem" v-for="(item,i) in list"
+					@click="toNav('/pages/word/textbook?id='+id+'&bookId='+item.id,item)">
 					<view class="listItem-top">
 						<image :src="item.bookImage" mode=""></image>
 						<view class="listItem-topText">
@@ -91,7 +92,7 @@
 				this.getData.bookType = id
 				this.getBook()
 			},
-			toNav(urls,data) {
+			toNav(urls, data) {
 				uni.setStorageSync('bookData', data);
 				uni.navigateTo({
 					url: urls
@@ -126,7 +127,8 @@
 	.tab {
 		display: flex;
 		align-items: center;
-		overflow-x: scroll;
+		justify-content: space-around;
+		/* overflow-x: scroll; */
 		white-space: nowrap;
 		margin-bottom: 35rpx;
 	}
@@ -136,7 +138,7 @@
 	}
 
 	.tabItem {
-		margin-right: 96rpx;
+		/* margin-right: 96rpx; */
 		font-size: 26rpx
 	}
 
@@ -151,13 +153,17 @@
 	.list {
 		display: flex;
 		flex-wrap: wrap;
-		justify-content: space-between;
 	}
 
 	.listItem {
 		margin-bottom: 60rpx;
 		text-align: center;
 		width: 200rpx;
+		margin-right: 20rpx;
+	}
+
+	.listItem:nth-child(3n) {
+		margin-right: 0;
 	}
 
 	.listItem-top {

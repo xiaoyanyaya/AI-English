@@ -158,9 +158,8 @@
         </uni-swipe-action>
       </view>
 
-      <view v-if="contentData.length < 1"
-            class="flex mt-3 justify-content-center align-item-center t-size-22 t-color-3D3D3D">
-        暂无数据~
+      <view class="flex align-item-center justify-content-center" v-if="contentData.length < 1">
+        <image :src="`${imageBaseUrl}/nodata.png`" style="width: 400rpx; height: 400rpx"></image>
       </view>
 
     </view>

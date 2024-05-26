@@ -97,8 +97,8 @@
       </view>
     </view>
 
-    <view v-show="!isMoreData" class="mt-5 flex align-item-center justify-content-center">
-      <view class="t-line-32 t-color-8A8A8A">没有更多数据了~</view>
+    <view v-show="evaluateData.length < 1" class="mt-5 flex align-item-center justify-content-center">
+      <image :src="`${imageBaseUrl}/nodata.png`" style="width: 400rpx; height: 400rpx"></image>
     </view>
   </view>
 </template>

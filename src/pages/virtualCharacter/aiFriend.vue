@@ -3,6 +3,10 @@
     <cy-navbar showBack>
       <view class="t-size-30">选择AI朋友</view>
     </cy-navbar>
+
+    <view class="flex align-item-center justify-content-center" v-show="personList.length < 1">
+      <image :src="`${imageBaseUrl}/nodata.png`" style="width: 400rpx; height: 400rpx"></image>
+    </view>
     <view class="px-4 mt-4">
       <view class="flex flex-direction-column align-item-center">
         <view class="item mb-5" :class="{active: item.isSelected}"

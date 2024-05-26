@@ -8,6 +8,10 @@
       <image :src="`${imageBaseUrl}/xl-image-49.png`" mode="widthFix" class="dialogue-img"></image>
     </view>-->
 
+    <view class="flex align-item-center justify-content-center" v-show="contentData.length < 1">
+      <image :src="`${imageBaseUrl}/nodata.png`" style="width: 400rpx; height: 400rpx"></image>
+    </view>
+
     <view class="px-4 pb-5">
       <view class="mt-5" v-for="(item,index) in contentData" :key="index" @click="clickContent(item)">
         <view class="t-size-26">{{item.chatDate}}</view>

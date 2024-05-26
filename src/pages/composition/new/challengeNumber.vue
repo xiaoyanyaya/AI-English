@@ -51,7 +51,7 @@
         </view>
       </view>
       <view class="flex align-item-center justify-content-center" v-show="challengeData.length < 1">
-        <view class="t-line-32 t-color-818181" style="margin-top: 150rpx">未有挑战者，快来挑战吧!</view>
+        <image :src="`${imageBaseUrl}/nodata.png`" style="width: 400rpx; height: 400rpx"></image>
       </view>
     </view>
   </view>

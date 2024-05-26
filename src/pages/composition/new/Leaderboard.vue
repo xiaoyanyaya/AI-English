@@ -21,6 +21,10 @@
       </view>
     </view>
 
+    <view v-if="personList.length < 1" class="flex align-item-center justify-content-center">
+      <image :src="`${imageBaseUrl}/nodata.png`" style="width: 400rpx; height: 400rpx"></image>
+    </view>
+
   </view>
 </template>
 

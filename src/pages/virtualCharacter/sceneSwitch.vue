@@ -23,9 +23,9 @@
           :list="optinsList" :current="currentOptions" @change="changeOptions"></u-tabs>
       </view>
 
-      <view v-if="gripCellList.length < 1"
-            class="flex mt-3 justify-content-center align-item-center t-size-26 t-color-3D3D3D">
-        暂无数据~
+
+      <view class="flex align-item-center justify-content-center" v-if="gripCellList.length < 1">
+        <image :src="`${imageBaseUrl}/nodata.png`" style="width: 400rpx; height: 400rpx"></image>
       </view>
       <view v-else class="flex flex-wrap grid-container">
         <view class="grip-cell mt-2" v-for="(item, index) in gripCellList" :key="index" @click="clickGripCell(item)">
@@ -141,7 +141,7 @@ export default {
         sceneCategoryList: async () => {
           sceneCategoryList().then(res => {
             that.optinsList = res.data.result
-            that.optinsList.unshift({name: '全部', id: 0})
+            that.optinsList.unshift({name: '全部', id: ""})
             that.initData();
           })
         },

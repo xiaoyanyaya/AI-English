@@ -49,6 +49,9 @@
 						</view>
 					</view>
 				</view>
+				<view class="study" v-if="list.length<1">
+					<image :src="imageBaseUrl + '/word/new_study.png'" mode="widthFix"></image>
+				</view>
 			</view>
 		</view>
 		<u-popup v-model="show" mode="bottom" border-radius="14">
@@ -342,5 +345,11 @@
 	.popupSelect-listItem-select {
 		background: #E5F1FF;
 		border: 2rpx solid #1863E5;
+	}
+	.study{
+		text-align: center;
+	}
+	.study image{
+		width: 380rpx;
 	}
 </style>

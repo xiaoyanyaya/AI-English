@@ -10,6 +10,13 @@
       "list": [
         {
           "name": "pages/word/index",
+          "pathName": "pages/word/dictation",
+          "query": "id=1795292812664188929&lessonId=1795036110282899458",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/index",
           "pathName": "pages/word/index",
           "query": "",
           "launchMode": "default",

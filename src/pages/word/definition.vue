@@ -1,8 +1,8 @@
 <template>
-	<view class="main pb-5" :style="{ backgroundImage: 'url(' + imageBaseUrl + '/word/5-22-01.png)' }">
-		<cy-navbar :showBack="true" :bgColor="backColor">
-		</cy-navbar>
-		<view class="head">
+	<view class="main pb-5">
+		<view class="head" :style="{ backgroundImage: 'url(' + imageBaseUrl + '/word/word_bg.png)' }" ref="head">
+			<cy-navbar :showBack="true" :bgColor="backColor">
+			</cy-navbar>
 			<view class="headTitle">
 				{{allData.wordEn}}
 				<view class="headTitle-bar"></view>
@@ -19,8 +19,6 @@
 					{{allData.wordCn}}
 				</view>
 			</view>
-		</view>
-		<view class="content">
 			<view class="tab">
 				<view class="tabItem" @click="tab=0" :class="tab==0?'tabItem-select':''">
 					AI单词讲解
@@ -31,85 +29,55 @@
 					<image v-if="tab==1" :src="imageBaseUrl+'/word/5-21-32.png'" mode=""></image>
 				</view>
 			</view>
+		</view>
+		<!-- <view class="content">
+			<view class="tab">
+				<view class="tabItem" @click="tab=0" :class="tab==0?'tabItem-select':''">
+					AI单词讲解
+					<image v-if="tab==0" :src="imageBaseUrl+'/word/5-21-32.png'" mode=""></image>
+				</view>
+				<view class="tabItem" @click="tab=1" :class="tab==1?'tabItem-select':''">
+					AI记词技巧
+					<image v-if="tab==1" :src="imageBaseUrl+'/word/5-21-32.png'" mode=""></image>
+				</view>
+			</view>
+		</view> -->
+		<view class="content" :style="{height:'calc(100vh - 160rpx - '+height+'rpx )'}">
 			<view class="contentText" v-if="tab==1">
-				<view class="contentText-item" v-if="allData.wordAiSkill">
+				<view class="contentText-item" v-for="(item,i) in allData.skillItemList" :key="i" v-if="allData.skillItemList">
 					<view class="contentText-itemTitle">
-						中文谐音
-						<view class="contentText-itemTitle-bar"></view>
+						{{item.itemIndex}}{{item.itemName}}
 					</view>
 					<view class="contentText-itemText">
-						{{allData.wordAiSkill}}
+						{{item.itemText}}
 					</view>
 				</view>
-				<view class="contentText-item" v-if="false">
-					<view class="contentText-itemTitle">
-						词根词缀
-						<view class="contentText-itemTitle-bar"></view>
-					</view>
-					<view class="contentText-itemText">
-						比较级：superior
-					</view>
-					<view class="contentText-itemText">
-						比较级：superior
-					</view>
+				<view v-if="allData.skillItemList.length<1" class="contentText-img">
+					<image :src="imageBaseUrl+'/nodata.png'" mode="widthFix"></image>
 				</view>
 			</view>
 			<view class="contentText" v-if="tab==0">
-				<view class="contentText-item" v-if="allData.wordFormat">
+				<view class="contentText-item" v-for="(item,i) in allData.explainItemList" v-if="allData.explainItemList">
 					<view class="contentText-itemTitle">
-						词形词态
-						<view class="contentText-itemTitle-bar"></view>
+						{{item.itemIndex}}{{item.itemName}}
 					</view>
 					<view class="contentText-itemText">
-						{{allData.wordFormat}}
+						{{item.itemText}}
 					</view>
 				</view>
-				<view class="contentText-item" v-if="allData.wordSentence">
-					<view class="contentText-itemTitle">
-						例句
-						<view class="contentText-itemTitle-bar"></view>
-					</view>
-					<view class="contentText-itemText">
-						{{allData.wordSentence}}
-					</view>
-				</view>
-				<view class="contentText-item" v-if="allData.wordPhrase">
-					<view class="contentText-itemTitle">
-						短语词组
-						<view class="contentText-itemTitle-bar"></view>
-					</view>
-					<view class="contentText-itemText">
-						{{allData.wordPhrase}}
-					</view>
-				</view>
-				<view class="contentText-item" v-if="allData.wordSynonym">
-					<view class="contentText-itemTitle">
-						同义词
-						<view class="contentText-itemTitle-bar"></view>
-					</view>
-					<view class="contentText-itemText">
-						{{allData.wordSynonym}}
-					</view>
-				</view>
-				<view class="contentText-item" v-if="allData.wordCognate">
-					<view class="contentText-itemTitle">
-						同根词
-						<view class="contentText-itemTitle-bar"></view>
-					</view>
-					<view class="contentText-itemText">
-						{{allData.wordCognate}}
-					</view>
+				<view v-else class="contentText-img">
+					<image :src="imageBaseUrl+'/nodata.png'" mode="widthFix"></image>
 				</view>
 			</view>
 		</view>
 		<view class="controller">
-			<view class="controllerItem">
+			<view class="controllerItem" @click="previous">
 				<image :src="imageBaseUrl + '/word/pre_s.png'" mode=""></image>
 				<view class="">
 					上一个
 				</view>
 			</view>
-			<view class="controllerItem">
+			<view class="controllerItem" @click="next">
 				<image :src="imageBaseUrl + '/word/next_s.png'" mode=""></image>
 				<view class="">
 					下一个
@@ -134,17 +102,28 @@
 				data: {
 					wordEn: ''
 				},
-				allData: {}
+				allData: {},
+				wordList: {},
+				height: 0,
+				lista: []
 			}
 		},
 		onLoad(e) {
+			var that = this
 			this.data.wordEn = e.wordEn
 			this.getWordEn()
-			uni.getStorageSync('wordList');
+			this.wordList = uni.getStorageSync('wordList');
+			this.$nextTick(() => {
+				const query = uni.createSelectorQuery().in(this);
+				query.select('.head').boundingClientRect(rect => {
+					that.height = rect.height * 2 // 输出元素的高度
+				}).exec();
+			});
+			console.log(this.list, 'okkkkk')
 		},
 		onPageScroll(e) {
 			if (e.scrollTop > 20) {
-				this.backColor = '#fff'
+				this.backColor = 'transparent'
 			} else {
 				this.backColor = 'transparent'
 			}
@@ -153,19 +132,170 @@
 			async getWordEn() {
 				let data = await wordEn(this.data);
 				this.allData = data.data.result
+				if (this.allData.wordFormat) {
+					var res = {
+						name: '词形词态',
+						data: 'allData.wordFormat'
+					}
+					this.lista.push(res)
+				}
+				if (this.allData.wordSentence) {
+					var res = {
+						name: '例句',
+						data: 'allData.wordSentence'
+					}
+					this.lista.push(res)
+				}
+				if (this.allData.wordPhrase) {
+					var res = {
+						name: '短词语组',
+						data: 'allData.wordPhrase'
+					}
+					this.lista.push(res)
+				}
+				if (this.allData.wordSynonym) {
+					var res = {
+						name: '同义词',
+						data: 'allData.wordSynonym'
+					}
+					this.lista.push(res)
+				}
+				if (this.allData.wordCognate) {
+					var res = {
+						name: '同根词',
+						data: 'allData.wordCognate'
+					}
+					this.lista.push(res)
+				}
 			},
 			play(src) {
-				innerAudioContext.src = src;
-				const timout = setTimeout(() => {
-					clearTimeout(timout)
+				if (uni.getSystemInfoSync().platform === 'ios') {
+					innerAudioContext.src = encodeURI(src);
+					// console.log(innerAudioContext.src)
 					innerAudioContext.play()
-					console.log(1)
-				}, 500)
+					innerAudioContext.onEnded(() => {
+						console.log('音频播放结束');
+					});
+					// console.log('ios')
+					// bgAudioManager.src = src
+					// bgAudioManager.play()
+					// bgAudioManager.onEnded(()=>{
+					// 	bgAudioManager.stop()
+					// })
+				} else {
+					uni.showLoading({
+						title: '加载中'
+					});
+					uni.downloadFile({
+						url: src,
+						success: (res) => {
+							if (res.statusCode === 200) {
+								uni.hideLoading();
+								innerAudioContext.src = res.tempFilePath;
+								innerAudioContext.play()
+								innerAudioContext.onEnded(() => {
+									console.log('音频播放结束');
+								});
+							}
+						},
+						fail: (error) => {
+							console.log(error, 'error')
+						}
+					})
+				}
 			},
 			toNav(urls) {
 				uni.navigateTo({
 					url: urls
 				})
+			},
+			next() {
+				let index = this.wordList.findIndex(obj => obj.wordEn === this.data.wordEn)
+				if (index !== -1) {
+					// 如果找到了目标对象
+					if (index < this.wordList.length - 1) {
+						// 如果目标对象不是数组的最后一个元素，那么可以获取下一个对象的id
+						let previousObj = this.wordList[index + 1];
+						let previousId = previousObj.wordEn;
+						this.data.wordEn = previousId
+						this.getWordEn()
+						console.log('下一个对象的id是:', previousId);
+					} else {
+						// 如果目标对象是数组的最后一个元素，那么没有下一个对象
+						uni.showModal({
+							title: '这是最后一个单词~',
+							success: function(res) {
+								if (res.confirm) {
+									console.log('用户点击确定');
+									// 执行操作
+								} else if (res.cancel) {
+									console.log('用户点击取消');
+									// 操作取消
+								}
+							}
+						});
+						console.log('这是数组的最后一个对象，没有下一个对象');
+					}
+				} else {
+					// 如果没有找到目标对象
+					uni.showModal({
+						title: '未找到单词~',
+						success: function(res) {
+							if (res.confirm) {
+								console.log('用户点击确定');
+								// 执行操作
+							} else if (res.cancel) {
+								console.log('用户点击取消');
+								// 操作取消
+							}
+						}
+					});
+					console.log('在数组中未找到id为', this.data.wordEn, '的对象');
+				}
+			},
+			previous() {
+				let index = this.wordList.findIndex(obj => obj.wordEn === this.data.wordEn)
+				if (index !== -1) {
+					// 如果找到了目标对象
+					if (index > 0) {
+						// 如果目标对象不是数组的第一个元素，那么可以获取上一个对象的id
+						let previousObj = this.wordList[index - 1];
+						let previousId = previousObj.wordEn;
+						this.data.wordEn = previousId
+						this.getWordEn()
+						console.log('上一个对象的id是:', previousId);
+					} else {
+						// 如果目标对象是数组的第一个元素，那么没有上一个对象
+						uni.showModal({
+							title: '这是第一个单词~',
+							success: function(res) {
+								if (res.confirm) {
+									console.log('用户点击确定');
+									// 执行操作
+								} else if (res.cancel) {
+									console.log('用户点击取消');
+									// 操作取消
+								}
+							}
+						});
+						console.log('这是数组的第一个对象，没有上一个对象');
+					}
+				} else {
+					// 如果没有找到目标对象
+					uni.showModal({
+						title: '未找到单词~',
+						success: function(res) {
+							if (res.confirm) {
+								console.log('用户点击确定');
+								// 执行操作
+							} else if (res.cancel) {
+								console.log('用户点击取消');
+								// 操作取消
+							}
+						}
+					});
+					console.log('在数组中未找到id为', this.data.wordEn, '的对象');
+				}
 			}
 		}
 	}
@@ -184,10 +314,13 @@
 	}
 
 	.head {
-		margin: 0 66rpx;
 		text-align: center;
-		border-bottom: 2rpx dashed #1863E5;
 		padding-bottom: 50rpx;
+		background-size: 100% 100%;
+		/* position: fixed; */
+		width: 100%;
+		/* top: 0;
+		z-index: 1; */
 	}
 
 	.headTitle {
@@ -236,9 +369,12 @@
 	}
 
 	.headText {
-		margin-top: 33rpx;
+		margin: 0rpx 66rpx;
+		margin-top: 30rpx;
 		color: #3D3D3D;
 		font-size: 30rpx;
+		border-bottom: 2rpx dashed #1863E5;
+		padding-bottom: 40rpx;
 	}
 
 	.headText-item {
@@ -246,13 +382,20 @@
 	}
 
 	.content {
-		padding: 0 40rpx;
+		/* padding-top: 520rpx; */
+		padding-bottom: 100rpx;
+		overflow-y: scroll;
+	}
+
+	.content::-webkit-scrollbar {
+		width: 0;
 	}
 
 	.tab {
 		display: flex;
 		margin-top: 50rpx;
 		justify-content: space-around;
+		padding: 0 50rpx;
 	}
 
 	.tabItem {
@@ -278,10 +421,10 @@
 
 	.contentText {
 		border-radius: 30rpx;
-		background: rgba(255, 255, 255, 0.3);
-		border: 3rpx solid #ADCBFF;
+		background: #fff;
+		/* border: 3rpx solid #ADCBFF; */
 		padding: 30rpx 50rpx;
-		margin-top: 50rpx;
+		/* margin-top: 50rpx; */
 	}
 
 	.contentText-item {
@@ -292,6 +435,7 @@
 		display: inline;
 		position: relative;
 		font-size: 30rpx;
+		font-weight: 600;
 	}
 
 	.contentText-itemTitle-bar {
@@ -304,7 +448,7 @@
 
 	.contentText-itemText {
 		color: #8A8A8A;
-		font-size: 30rpx;
+		font-size: 28rpx;
 		white-space: pre-line;
 		line-height: 42rpx;
 		margin-top: 10rpx;
@@ -315,6 +459,12 @@
 		align-items: center;
 		justify-content: center;
 		margin-top: 80rpx;
+		position: fixed;
+		bottom: 0;
+		width: 100%;
+		padding: 36rpx 0;
+		border-top: 2rpx solid #BFBFBF;
+		background: #fff;
 	}
 
 	.controllerItem {
@@ -332,5 +482,14 @@
 		width: 28rpx;
 		height: 34rpx;
 		margin-bottom: 6rpx;
+	}
+	
+	.contentText-img{
+		text-align: center;
+		margin-top: 50rpx;
+	}
+
+	.contentText-img image{
+		width: 400rpx;
 	}
 </style>

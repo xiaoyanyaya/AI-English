@@ -57,7 +57,7 @@
 					</view>
 				</view>
 			</view>
-			<view class="button" @click="toNav('/pages/word/set')">
+			<view class="button" @click="toNav('/pages/word/set?id='+(id==1?dataB.lessonId:allData.id))">
 				立即挑战
 			</view>
 		</view>
@@ -123,15 +123,15 @@
 				if (this.id == 0) {
 					let data = await wordList(this.data);
 					this.allData = data.data.result
-					uni.getStorageSync('wordList',data.data.result)
+					uni.setStorageSync('wordList', data.data.result.wordLessonDictList)
 				} else if (this.id == 1) {
 					let data = await dictList(this.dataB);
 					this.allData = data.data.result.records
-					uni.getStorageSync('wordList',data.data.result)
+					uni.setStorageSync('wordList', data.data.result.records)
 				} else if (this.id == 2) {
 					let data = await lessonWordList(this.data)
 					this.allData = data.data.result
-					uni.getStorageSync('wordList',data.data.result)
+					uni.setStorageSync('wordList', data.data.result.wordLessonDictList)
 				}
 			},
 			play(src, id) {
@@ -141,7 +141,8 @@
 				// innerAudioContext.src = src;
 				console.log(uni.getSystemInfoSync().platform)
 				if (uni.getSystemInfoSync().platform === 'ios') {
-					innerAudioContext.src = src;
+					innerAudioContext.src = encodeURI(src);
+					console.log(innerAudioContext.src)
 					innerAudioContext.play()
 					innerAudioContext.onEnded(() => {
 						console.log('音频播放结束');

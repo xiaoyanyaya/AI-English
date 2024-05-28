@@ -13,7 +13,7 @@
 			</view>
 			<view class="list">
 				<view class="listItem" v-for="(item,i) in list"
-					@click="toNav('/pages/word/textbook?id='+id+'&bookId='+item.id,item)">
+					@click="toNav('/pages/word/textbook?id='+id+'&bookId='+item.id,item)" v-if="list.length>0">
 					<view class="listItem-top">
 						<image :src="item.bookImage" mode=""></image>
 						<view class="listItem-topText">
@@ -26,6 +26,12 @@
 					<view class="listItem-textB">
 						{{item.bookName}}
 					</view>
+				</view>
+				<view class="nodata" v-if="list.length==0">
+					<image :src="imageBaseUrl + '/nodata.png'" mode=""></image>
+					<!-- <view class="nodataText">
+						暂无数据
+					</view> -->
 				</view>
 			</view>
 		</view>
@@ -198,5 +204,21 @@
 	.listItem-textB {
 		font-size: 26rpx;
 		margin-top: 4rpx;
+	}
+	.nodata image{
+		width: 500rpx;
+		height: 500rpx;
+	}
+	.nodata{
+		position: relative;
+		left: 0;
+		right: 0;
+		margin: auto;
+		margin-top: 200rpx;
+	}
+	.nodataText{
+		position: relative;
+		top: -180rpx;
+		text-align: center;
 	}
 </style>

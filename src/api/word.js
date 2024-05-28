@@ -31,7 +31,19 @@ export const wordEn = params => fly.get('/word/dict/queryByWordEn', params)
 export const addLesson = params => fly.get('/word/lesson/addLessonForExamOutline', params)
 
 // 查询配置
-export const wordNum = params => fly.get('/word/config/query/word_lesson_word_num',params)
+export const wordNum = params => fly.get('/word/config/query/word_lesson_word_num', params)
 
 // 添加学习任务
-export const addLessonOutline = params => fly.get('/word/lesson/addLessonForExamOutline',params)
+export const addLessonOutline = params => fly.get('/word/lesson/addLessonForExamOutline', params)
+
+// 开始学习
+export const reviewStart = params => fly.post('/word/review/start', params)
+
+// 下一个单词
+export const reviewNext = params => fly.post('/word/review/dict/learnWord', params)
+
+// 完成学习
+export const reviewFinish = params => fly.post('/word/review/finish', params)
+
+// 查看学习情况
+export const reviewList = params => fly.get('/word/review/list', params)

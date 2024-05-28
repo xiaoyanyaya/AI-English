@@ -1,12 +1,15 @@
 <template>
-	<view class="pb-5 main">
+	<view class="main">
 		<cy-navbar :showBack="true">
 			<view class="t-size-30">AI单词速记</view>
 		</cy-navbar>
 		<view class="px-4">
 			<view class="search-box">
 				<image :src="imageBaseUrl + '/word/icon3.png'" mode=""></image>
-				AI查单词
+				<input type="text" name="" id="" placeholder="AI查单词" v-model="value">
+				<view v-if="value.length>0" class="search-boxIcon" @click="toNav('/pages/word/definition?wordEn='+value)">
+					搜索
+				</view>
 			</view>
 			<view class="item-box px-3 py-3">
 				<view class="item-box-title">
@@ -57,9 +60,9 @@
 					</view>
 				</view>
 			</view>
-			<view class="item-box px-3 py-3 mt-4">
+			<view class="item-boxB py-3 mt-4">
 				<view class="item-box-title">
-					<view class="item-box-titleLeft">
+					<view class="item-box-titleLeft pl-3" >
 						<view class="item-box-titleLeft-icon"></view>
 						专题词汇
 					</view>
@@ -109,6 +112,7 @@
 			return {
 				typeData: [],
 				typePages: 0,
+				value:'',
 				getData: {
 					bookType: 101,
 					pageNo: 1,
@@ -152,6 +156,7 @@
 	.main {
 		background: linear-gradient(180deg, #E9F5FF 0%, #F9FCFF 100%);
 		min-height: 100vh;
+		padding-bottom: 200rpx;
 	}
 
 	.headItem-title {
@@ -177,7 +182,8 @@
 		display: flex;
 		align-items: center;
 		margin: 30rpx 0 40rpx 0;
-		font-size: 24rpx
+		font-size: 24rpx;
+		position: relative;
 	}
 
 	.search-box image {
@@ -320,25 +326,31 @@
 
 	.item-box-selectItem-head image {
 		height: 127rpx;
-		margin-top: 20rpx;
 	}
 
 	.item-box-selectItem-head {
-		padding: 20rpx;
+		margin-bottom: 26rpx;
 	}
 
 	.item-box-selectItem {
 		width: 202rpx;
+		background: #fff;
+		padding: 20rpx;
+		padding-bottom: 25rpx;
+		border-radius: 10rpx;
 	}
 
 	.item-box-select {
 		display: flex;
 		justify-content: space-around;
+		margin-top: 20rpx;
 	}
 
 	.item-box-selectItem-text {
 		font-size: 20rpx;
 		color: #3A73D9;
+		margin-bottom: 5rpx;
+		margin-top: 10rpx;
 	}
 
 	.item-box-selectItem-textB {
@@ -349,5 +361,21 @@
 	.item-box-selectItem-name {
 		font-size: 26rpx;
 		margin-bottom: 6rpx;
+	}
+	
+	.search-boxIcon{
+		background: #E9F5FF;
+		width: 100rpx;
+		height: 50rpx;
+		line-height: 50rpx;
+		text-align: center;
+		border-radius: 40rpx;
+		color: #1863E5;
+		position: absolute;
+		right: 40rpx;
+	}
+	.search-box input{
+		flex: 1;
+		margin-right: 100rpx;
 	}
 </style>

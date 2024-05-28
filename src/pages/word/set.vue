@@ -9,10 +9,12 @@
 					单词释义
 				</view>
 				<view class="listItem-list">
-					<view class="listItem-listButton listItem-listButton-select">
+					<view class="listItem-listButton" :class="setData.show?'listItem-listButton-select':''"
+						@click="setData.show=true">
 						显示
 					</view>
-					<view class="listItem-listButton">
+					<view class="listItem-listButton" :class="!setData.show?'listItem-listButton-select':''"
+						@click="setData.show=false">
 						不显示
 					</view>
 				</view>
@@ -22,13 +24,16 @@
 					朗读次数
 				</view>
 				<view class="listItem-list">
-					<view class="listItem-listButton listItem-listButton-select">
+					<view class="listItem-listButton" :class="setData.num==3?'listItem-listButton-select':''"
+						@click="setData.num=3">
 						3次
 					</view>
-					<view class="listItem-listButton">
+					<view class="listItem-listButton" :class="setData.num==2?'listItem-listButton-select':''"
+						@click="setData.num=2">
 						2次
 					</view>
-					<view class="listItem-listButton">
+					<view class="listItem-listButton" :class="setData.num==1?'listItem-listButton-select':''"
+						@click="setData.num=1">
 						1次
 					</view>
 				</view>
@@ -58,7 +63,7 @@
 			<view class="button-l">
 				取消
 			</view>
-			<view class="button-r" @click="toNav('/pages/word/dictation')">
+			<view class="button-r" @click="toLearning()">
 				确认
 			</view>
 		</view>
@@ -67,17 +72,35 @@
 
 <script>
 	import MyMixin from "@/utils/MyMixin";
+	import {
+		reviewStart
+	} from "@/api/word";
 	export default {
 		mixins: [MyMixin],
-		data(){
-			return{
-				
+		data() {
+			return {
+				setData: {
+					show: true,
+					num: 3
+				},
+				data:{
+					lessonId:0
+				}
 			}
 		},
-		methods:{
-			toNav(urls){
+		onLoad(e){
+			this.data.lessonId=e.id
+		},
+		methods: {
+			async toLearning() {
+				uni.setStorageSync('setData', this.setData);
+				let data = await reviewStart(this.data);
+				var urls='/pages/word/dictation?id='+data.data.result.id+'&lessonId='+data.data.result.lessonId
+				this.toNav(urls)
+			},
+			toNav(urls) {
 				uni.navigateTo({
-					url:urls
+					url: urls
 				})
 			}
 		}
@@ -85,18 +108,21 @@
 </script>
 
 <style>
-	.listItem-title{
+	.listItem-title {
 		font-size: 26rpx;
 		margin-bottom: 20rpx;
 	}
-	.listItem{
+
+	.listItem {
 		margin-bottom: 40rpx;
 	}
-	.listItem-list{
+
+	.listItem-list {
 		display: flex;
 		flex-wrap: wrap;
 	}
-	.listItem-listButton{
+
+	.listItem-listButton {
 		border-radius: 10rpx;
 		width: 178rpx;
 		height: 73rpx;
@@ -106,14 +132,17 @@
 		margin-right: 48rpx;
 		margin-bottom: 20rpx;
 	}
-	.listItem-listButton:nth-child(3n){
+
+	.listItem-listButton:nth-child(3n) {
 		margin-right: 0;
 	}
-	.listItem-listButton-select{
+
+	.listItem-listButton-select {
 		background: #E5F1FF;
 		border: 2rpx solid #1863E5;
 	}
-	.button{
+
+	.button {
 		position: fixed;
 		bottom: 70rpx;
 		display: flex;
@@ -121,7 +150,8 @@
 		align-items: center;
 		width: 100%;
 	}
-	.button-l{
+
+	.button-l {
 		color: rgba(19, 89, 209, 1);
 		border: 2rpx solid rgba(19, 89, 209, 1);
 		width: 200rpx;
@@ -131,7 +161,8 @@
 		border-radius: 150rpx;
 		margin-right: 50rpx;
 	}
-	.button-r{
+
+	.button-r {
 		width: 200rpx;
 		height: 80rpx;
 		line-height: 80rpx;

@@ -123,7 +123,7 @@
 				if (this.id == 0) {
 					let data = await wordList(this.data);
 					this.allData = data.data.result
-					uni.setStorageSync('wordList', data.data.result.wordLessonDictList)
+					uni.setStorageSync('wordList', data.data.result)
 				} else if (this.id == 1) {
 					let data = await dictList(this.dataB);
 					this.allData = data.data.result.records
@@ -131,7 +131,7 @@
 				} else if (this.id == 2) {
 					let data = await lessonWordList(this.data)
 					this.allData = data.data.result
-					uni.setStorageSync('wordList', data.data.result.wordLessonDictList)
+					uni.setStorageSync('wordList', data.data.result)
 				}
 			},
 			play(src, id) {

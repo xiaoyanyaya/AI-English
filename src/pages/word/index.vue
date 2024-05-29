@@ -330,6 +330,8 @@
 
 	.item-box-selectItem-head {
 		margin-bottom: 26rpx;
+		display: flex;
+		justify-content: center;
 	}
 
 	.item-box-selectItem {

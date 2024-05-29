@@ -5,7 +5,7 @@
 		</cy-navbar>
 		<view class="title">
 			<view class="titleText">
-				八年级上册Unit2
+				{{word.unitFullName}}
 			</view>
 			<view class="titleSet" v-if="false">
 				<u-icon name="setting" size="42"></u-icon>
@@ -31,9 +31,16 @@
 			{{wordData.wordCn}}
 		</view>
 		<view class="inputWord">
-			<uMessageInput @finish="finish" :inactive-color="answer"
+			<!-- <uMessageInput @finish="finish" :inactive-color="answer" :value="inputValue"
 				:maxlength="wordData.wordEn?wordData.wordEn.length:2" mode="bottomLine" width="30" font-size="30">
-			</uMessageInput>
+			</uMessageInput> -->
+			<view class="inputWord-input" v-for="(item,i) in verificationCode" :key="i">
+				<input type="text" :maxlength="item.maxlength" :value="item.value" @confirm="handleConfirm(i)"
+					@input="handleInput($event,i)" :ref="'input'+i" />
+			</view>
+			<view class="success" v-if="answer=='#5AC591'">
+				<u-icon name='checkbox-mark' :color="answer"></u-icon>
+			</view>
 		</view>
 		<view class="control">
 			<view class="controlItem" @click="play(wordData.audioUsa)">
@@ -49,7 +56,7 @@
 					{{playing?'暂停':'播放'}}
 				</view>
 			</view>
-			<view class="controlItem" @click="next()">
+			<view class="controlItem" @click="handleClickWithDebounce()">
 				<image :src="imageBaseUrl + '/word/play_s.png'" mode=""></image>
 				<view class="controlItem-text">
 					下一个
@@ -85,9 +92,9 @@
 	import MyMixin from "@/utils/MyMixin";
 	import uCircleProgressVue from "uview-ui/components/u-circle-progress/u-circle-progress.vue"
 	import uMessageInput from "uview-ui/components/u-message-input/u-message-input.vue"
-	// import {
-	// 	wordEn
-	// } from "@/api/word";
+	import {
+		reviewNext
+	} from "@/api/word";
 	export default {
 		mixins: [MyMixin],
 		components: {
@@ -104,6 +111,7 @@
 		data() {
 			return {
 				backColor: 'transparent',
+				word: {},
 				data: {
 					wordEn: ''
 				},
@@ -118,45 +126,146 @@
 				onOff: true,
 				playing: false,
 				timeout: '',
-				show: false
+				show: false,
+				id: 0,
+				inputValue: '',
+				timer: null, // 用于存储定时器的变量
+				verificationCode: [],
+				currentFocus: 0 // 当前聚焦的input索引
 			}
 		},
 		onLoad(e) {
 			console.log(e)
-			this.wordList = uni.getStorageSync('wordList')
+			this.word = uni.getStorageSync('wordList')
+			this.wordList = this.word.wordLessonDictList
 			this.setData = uni.getStorageSync('setData')
 			this.lessonId = e.lessonId
+			this.id = e.id
 		},
 		onShow() {
-			this.getWordEn()
+			this.getWordEn(0)
+		},
+		mounted() {
+			// 页面加载时，自动聚焦到第一个输入框
+			this.nextInput(0);
 		},
 		methods: {
+			handleInput(event, index) {
+				// 更新当前输入框的值
+				const value = event.detail.value;
+				this.$set(this.verificationCode[index], 'value', value);
+
+				// 如果当前输入框的值长度等于其最大长度
+				if (value.length === this.verificationCode[index].maxlength) {
+					this.nextInput(index);
+				}
+			},
+			handleConfirm(index) {
+				// 处理用户点击键盘的完成按钮时的情况
+				if (this.verificationCode[index].value.length < this.verificationCode[index].maxlength) {
+					// 如果输入未满，则跳转到下一个input
+					this.nextInput(index);
+				}
+			},
+			nextInput(index) {
+				// 获取下一个输入框的索引
+				const nextIndex = index + 1;
+				// 检查是否还有下一个输入框
+				if (nextIndex < this.verificationCode.length) {
+					// 设置下一个输入框获取焦点
+					this.$nextTick(() => {
+							console.log(this.$refs.input1,'111111111')
+						// const input = this.$refs[`input${nextIndex}`][0];
+						if (input) {
+							input.focus();
+							this.currentFocus = nextIndex;
+						}
+					});
+				}
+			},
+			debounce(func, wait) {
+				let timeout;
+				return function() {
+					const context = this;
+					const args = arguments;
+					clearTimeout(timeout);
+					timeout = setTimeout(function() {
+						func.apply(context, args);
+					}, wait);
+				};
+			},
+			handleClickWithDebounce() {
+				const debouncedHandleClick = this.debounce(this.next, 1500); // 设置1.5秒的防抖时间
+				debouncedHandleClick();
+			},
+			async next() {
+				let stringWithSpacesRestored = '';
+				let currentIndex = 0;
+
+				for (let i = 0; i < this.wordData.wordEn.length; i++) {
+					stringWithSpacesRestored += this.wordData.wordEn[i];
+					while (this.spaceIndices.length > 0 && this.spaceIndices[0] === currentIndex) {
+						stringWithSpacesRestored += ' '; // 在原始空格的位置添加空格
+						this.spaceIndices.shift(); // 移除已处理的空格位置
+					}
+					currentIndex++;
+				}
+				var getData = {
+					reviewId: this.id,
+					lessonId: this.lessonId,
+					wordIndex: this.wordData.wordIndex,
+					wordEn: stringWithSpacesRestored,
+					userAnswer: stringWithSpacesRestored
+				}
+				let data = await reviewNext(getData);
+				if (data.data.code == 200) {
+					this.inputValue = ' '
+					this.num = 0
+					this.answer = "#606266"
+					innerAudioContext.pause()
+					this.onOff = false
+					clearTimeout(this.timeout);
+					this.getWordEn(this.wordData.wordIndex)
+				} else {
+					console.log('记录失败')
+				}
+			},
 			finish(e) {
 				if (this.wordData.wordEn.toLowerCase() == e.toLowerCase()) {
 					console.log('成功')
 					this.answer = '#5AC591'
+					clearTimeout(timeout)
+					let timeout = setTimeout(obj => {
+						this.next()
+					}, 2000)
 				} else {
-					this.answer = false
 					console.log('失败')
 					this.answer = '#EB7171'
 					this.show = true
-					setTimeout(obj => {
+					clearTimeout(timeout)
+					let timeout = setTimeout(obj => {
 						this.show = false
 					}, 2000)
 				}
 			},
-			async getWordEn() {
-				this.wordData = this.wordList.find(obj => obj.lessonId == this.lessonId)
+			async getWordEn(index) {
+				this.onOff = true
+				this.wordData = this.wordList[index]
+				this.verificationCode = Array(this.wordData.wordEn.length).fill({
+					value: '',
+					maxlength: 1
+				})
+				// console.log(this.verificationCode)
 				// 记录空格的位置
 				for (let i = 0; i < this.wordData.wordEn.length; i++) {
-					if (this.wordData.wordEn[i] === ' ') {
-						this.spaceIndices.push(i);
-					}
+					// if (this.wordData.wordEn[i] === ' ') {
+					this.spaceIndices.push(i);
 				}
 				this.wordData.wordEn = this.wordData.wordEn.replace(/\s/g, '');
 				for (var i = 0; i < this.setData.num; i++) {
 					if (this.onOff) {
 						await this.autoPlay(this.wordData.audioUsa)
+						console.log(this.num, i)
 						this.num = i + 1
 						if (this.num == this.setData.num) {
 							this.playing = false
@@ -171,7 +280,6 @@
 					innerAudioContext.play()
 					innerAudioContext.onEnded(() => {
 						console.log('音频播放结束');
-						that.playing = false
 					});
 				} else {
 					uni.showLoading({
@@ -186,7 +294,6 @@
 								innerAudioContext.play()
 								innerAudioContext.onEnded(() => {
 									console.log('音频播放结束');
-									that.playing = false
 								});
 							}
 						},
@@ -197,43 +304,48 @@
 				}
 			},
 			autoPlay(src) {
-				var that = this
-				return new Promise(resolve => {
-					that.playing = true
-					that.timeout = setTimeout(() => {
-						if (uni.getSystemInfoSync().platform === 'ios') {
-							innerAudioContext.src = encodeURI(src);
-							innerAudioContext.play()
-							innerAudioContext.onEnded(() => {
-								console.log('音频播放结束');
-							});
-						} else {
-							uni.showLoading({
-								title: '加载中'
-							});
-							uni.downloadFile({
-								url: src,
-								success: (res) => {
-									if (res.statusCode === 200) {
-										uni.hideLoading();
-										innerAudioContext.src = res.tempFilePath;
-										innerAudioContext.play()
-										innerAudioContext.onEnded(() => {
-											console.log('音频播放结束');
-										});
+				if (src) {
+					var that = this
+					return new Promise(resolve => {
+						that.playing = true
+						that.timeout = setTimeout(() => {
+							if (uni.getSystemInfoSync().platform === 'ios') {
+								innerAudioContext.src = encodeURI(src);
+								innerAudioContext.play()
+								innerAudioContext.onEnded(() => {
+									console.log('音频播放结束');
+								});
+							} else {
+								uni.showLoading({
+									title: '加载中'
+								});
+								uni.downloadFile({
+									url: src,
+									success: (res) => {
+										if (res.statusCode === 200) {
+											uni.hideLoading();
+											innerAudioContext.src = res.tempFilePath;
+											innerAudioContext.play()
+											innerAudioContext.onEnded(() => {
+												console.log('音频播放结束');
+											});
+										}
+									},
+									fail: (error) => {
+										console.log(error, 'error')
 									}
-								},
-								fail: (error) => {
-									console.log(error, 'error')
-								}
-							})
-						}
-						console.log('异步操作完成');
-						resolve();
-					}, 3000); // 假设每次操作需要1秒
-				});
+								})
+							}
+							console.log('异步操作完成');
+							resolve();
+						}, 3000); // 假设每次操作需要1秒
+					});
+				}
 			},
 			async pause() {
+				if (this.num == 3) {
+					return
+				}
 				if (this.onOff) {
 					innerAudioContext.pause()
 					this.onOff = false
@@ -241,10 +353,10 @@
 					this.playing = false
 				} else {
 					this.onOff = true
-					for (var i = 0; i < this.setData.num - this.num; i++) {
+					for (var i = 0; i < this.setData.num + 1 - this.num; i++) {
 						if (this.onOff) {
 							await this.autoPlay(this.wordData.audioUsa)
-							this.num = i + 1
+							this.num = this.num + 1
 							if (this.num == this.setData.num) {
 								this.playing = false
 							}
@@ -262,6 +374,12 @@
 					url: urls
 				})
 			},
+		},
+		beforeDestroy() {
+			// 在组件销毁前清除可能存在的定时器
+			if (this.timer) {
+				clearTimeout(this.timer);
+			}
 		}
 	}
 </script>
@@ -462,5 +580,25 @@
 
 	.popup-contentImg {
 		margin-top: 60rpx;
+	}
+
+	.success {
+		display: flex;
+		justify-content: center;
+		margin-top: 20rpx;
+	}
+
+	.inputWord {
+		display: flex;
+		justify-content: center;
+	}
+
+	.inputWord-input {}
+
+	.inputWord-input input {
+		border-bottom: 2rpx solid black;
+		width: 32rpx;
+		margin-right: 22rpx;
+		font-size: 50rpx;
 	}
 </style>

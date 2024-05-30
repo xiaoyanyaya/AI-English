@@ -93,6 +93,8 @@ import {defaultVirtual} from "@/api/aiFriend";
 import MyMixin from "@/utils/MyMixin";
 
 const recorderManager = uni.getRecorderManager();
+const innerAudioContext = uni.createInnerAudioContext();
+innerAudioContext.autoplay = true;
 
 var plugin = requirePlugin("WechatSI")
 let manager = plugin.getRecordRecognitionManager()
@@ -129,16 +131,13 @@ export default {
       chatInit: {},
       deviceBrand: 'android',
       palyIndex: 0,
-      innerAudioContext: {},
     }
   },
   // 页面销毁
   onUnload() {
-    thi.innerAudioContext.stop()
+    innerAudioContext.stop()
   },
   onLoad(res) {
-    this.innerAudioContext = uni.createInnerAudioContext();
-    this.innerAudioContext.autoplay = true;
     this.network().defaultVirtual();
     this.initRecord()
     this.network().getChatInit(res.sceneId);
@@ -168,7 +167,7 @@ export default {
         }
       })
     });
-    this.innerAudioContext.onEnded((res) => {
+    innerAudioContext.onEnded((res) => {
       this.dialogueContent.forEach(d => d.isPlay = false)
     })
   },
@@ -282,7 +281,7 @@ export default {
     },
     onLongPress() {
       this.isTlaking = true
-      this.innerAudioContext.stop()
+      innerAudioContext.stop()
       uni.vibrateShort({
         success: function () {
         }
@@ -313,9 +312,6 @@ export default {
         return
       }
 
-      this.innerAudioContext = uni.createInnerAudioContext();
-      this.innerAudioContext.autoplay = true;
-
       // 判断当前设备
       this.dialogueContent.forEach(d => d.isPlay = false)
       if (index !== undefined) {
@@ -328,11 +324,13 @@ export default {
           url: voicePath,
           timeout: 6000000,
           success: (res) => {
+            console.log(res, '下载内容')
             if (res.statusCode === 200) {
-              this.innerAudioContext.src = res.tempFilePath;
-              this.innerAudioContext.onCanplay(() => {
-                console.log(this.innerAudioContext, "音频信息显示")
-                this.innerAudioContext.play();
+              console.log(res.tempFilePath, 'res.tempFilePath')
+              innerAudioContext.src = res.tempFilePath;
+              innerAudioContext.onCanplay(() => {
+                console.log(innerAudioContext, "音频信息")
+                innerAudioContext.play();
               })
             }
           },
@@ -342,9 +340,9 @@ export default {
         })
       } else {
         console.log("苹果播放文件")
-        this.innerAudioContext.src = voicePath;
-        this.innerAudioContext.obeyMuteSwitch = false;
-        this.innerAudioContext.play();
+        innerAudioContext.src = voicePath;
+        innerAudioContext.obeyMuteSwitch = false;
+        innerAudioContext.play();
       }
 
     },

@@ -162,11 +162,11 @@ export default {
       self.voicePath = res.tempFilePath;
       const tempFilePath = res.tempFilePath;
 
-      uni.getFileSystemManager().getFileInfo({
+      /*uni.getFileSystemManager().getFileInfo({
         filePath: tempFilePath,
         success: (res) => {
         }
-      })
+      })*/
     });
     this.innerAudioContext.onEnded((res) => {
       this.dialogueContent.forEach(d => d.isPlay = false)
@@ -179,27 +179,15 @@ export default {
   },
   methods: {
     test() {
-      this.dialogueContent = [{
-        content: "Hey,how are you doing?",
-        icon: "",
-        isSelf: false,
-        isPlay: false,
-        translate: "嗨，你好吗？"
-      }, {
+      this.dialogueContent.push({
         content: "Hello, where are you from?",
         icon: "",
         isSelf: true,
         isPlay: false,
         mp3Url: "https://wapi-dev.aien.xiaolixb.com/v1/sys/common/static/digitalhuman/voice/tmp_1236bf6ffc82f634cfbf88a88d4de5197b759db275700abf_1716113891940.mp3",
         translate: "你好，你是哪里你是哪里人你是哪里人你是哪里人你是哪里人人"
-      }, {
-        content: "Your sentence is correct. Great job! Now, it's my turn to ask: What's your favorite subject in school and why?",
-        icon: "",
-        isSelf: false,
-        isPlay: false,
-        mp3Url: "https://wapi-dev.aien.xiaolixb.com/v1/sys/common/static/digitalhuman/voice/tmp_1236bf6ffc82f634cfbf88a88d4de5197b759db275700abf_1716113891940.mp3",
-        translate: ""
-      }]
+      })
+      this.toScrollerViewBottom()
     },
     initRecord: function(){
       manager.onRecognize = (res) => {
@@ -223,17 +211,19 @@ export default {
         if (data && data.length) {
           let height = 0;
           data.forEach(rect => {
-            height += rect.height;
+            height += rect.height + 20;
           });
-          this.scrollTop = height + 10;
+          this.scrollTop = height;
         }
       }).exec();
     },
     scroll(e) {
     },
     scrollToUpper(e) {
+      console.log('顶部', e)
     },
     scrollToLower(e) {
+      console.log('底部', e)
     },
     // 保存发送的数据
     translateUsToCn(res, text) {

@@ -45,5 +45,8 @@ export const reviewNext = params => fly.post('/word/review/dict/learnWord', para
 // 完成学习
 export const reviewFinish = params => fly.post('/word/review/finish', params)
 
-// 查看学习情况
-export const reviewList = params => fly.get('/word/review/list', params)
+// 查看答题情况
+export const reviewList = params => fly.get('/word/review/queryById', params)
+
+// 查看答题情况
+export const queryReviewList = params => fly.get('/word/review/dict/queryListByReviewId', params)

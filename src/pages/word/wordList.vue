@@ -107,6 +107,7 @@
 			} else if (e.id == 2) {
 				this.data.unitId = e.unitId
 			}
+			this.id = uni.getStorageSync('wordType');
 			this.getWord()
 			this.bookData = uni.getStorageSync('bookData')
 		},

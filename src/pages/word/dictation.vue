@@ -22,7 +22,7 @@
 			</uCircleProgressVue>
 		</view>
 		<view class="hit">
-			{{answerShow?wordData.wordEn:'答案提示显示区'}}
+			{{answerShow?wordDetails.spellAnswer:'答案提示显示区'}}
 		</view>
 		<view class="definition" v-if="setData.show">
 			{{"['"+wordData.symbolUsa+"]"}}
@@ -35,8 +35,11 @@
 				:maxlength="wordData.wordEn?wordData.wordEn.length:2" mode="bottomLine" width="30" font-size="30">
 			</uMessageInput> -->
 			<view class="inputWord-input" v-for="(item,i) in verificationCode" :key="i">
-				<input type="text" :maxlength="item.maxlength" :value="item.value" @confirm="handleConfirm(i)"
-					@input="handleInput($event,i)" :ref="'input'+i" />
+				<input type="text" :maxlength="item.maxlength" :value="item.value" @input="handleInput($event,i)"
+					:focus="item.focus" v-if="wordDetails.spellQuestioin.charAt(i)=='_'" />
+				<view class="inputWord-input-text" v-else>
+					{{wordDetails.spellQuestioin.charAt(i)}}
+				</view>
 			</view>
 			<view class="success" v-if="answer=='#5AC591'">
 				<u-icon name='checkbox-mark' :color="answer"></u-icon>
@@ -89,11 +92,22 @@
 <script>
 	const innerAudioContext = uni.createInnerAudioContext();
 	innerAudioContext.playbackRate = 0.8
+	const findUnderscoreIndexes = (str) => {
+		const indexes = [];
+		for (let i = 0; i < str.length; i++) {
+			if (str[i] != '_') {
+				indexes.push(i);
+			}
+		}
+		return indexes;
+	};
 	import MyMixin from "@/utils/MyMixin";
 	import uCircleProgressVue from "uview-ui/components/u-circle-progress/u-circle-progress.vue"
 	import uMessageInput from "uview-ui/components/u-message-input/u-message-input.vue"
 	import {
-		reviewNext
+		reviewNext,
+		wordEn,
+		reviewFinish
 	} from "@/api/word";
 	export default {
 		mixins: [MyMixin],
@@ -112,9 +126,6 @@
 			return {
 				backColor: 'transparent',
 				word: {},
-				data: {
-					wordEn: ''
-				},
 				wordList: [],
 				answerShow: false,
 				wordData: {},
@@ -122,6 +133,7 @@
 				spaceIndices: [],
 				answer: '#606266',
 				lessonId: 0,
+				wordDetails: {},
 				num: 0,
 				onOff: true,
 				playing: false,
@@ -131,7 +143,6 @@
 				inputValue: '',
 				timer: null, // 用于存储定时器的变量
 				verificationCode: [],
-				currentFocus: 0 // 当前聚焦的input索引
 			}
 		},
 		onLoad(e) {
@@ -147,40 +158,34 @@
 		},
 		mounted() {
 			// 页面加载时，自动聚焦到第一个输入框
-			this.nextInput(0);
+			// this.nextInput(0);
 		},
 		methods: {
 			handleInput(event, index) {
+				var that = this
 				// 更新当前输入框的值
 				const value = event.detail.value;
-				this.$set(this.verificationCode[index], 'value', value);
-
+				this.verificationCode[index].value = value
+				// this.$set(this.verificationCode[index], 'value', value);
 				// 如果当前输入框的值长度等于其最大长度
 				if (value.length === this.verificationCode[index].maxlength) {
-					this.nextInput(index);
-				}
-			},
-			handleConfirm(index) {
-				// 处理用户点击键盘的完成按钮时的情况
-				if (this.verificationCode[index].value.length < this.verificationCode[index].maxlength) {
-					// 如果输入未满，则跳转到下一个input
-					this.nextInput(index);
-				}
-			},
-			nextInput(index) {
-				// 获取下一个输入框的索引
-				const nextIndex = index + 1;
-				// 检查是否还有下一个输入框
-				if (nextIndex < this.verificationCode.length) {
-					// 设置下一个输入框获取焦点
-					this.$nextTick(() => {
-							console.log(this.$refs.input1,'111111111')
-						// const input = this.$refs[`input${nextIndex}`][0];
-						if (input) {
-							input.focus();
-							this.currentFocus = nextIndex;
+					this.verificationCode[index].focus = false
+					if (index + 1 != this.verificationCode.length) {
+						console.log(findUnderscoreIndexes(this.wordDetails.spellQuestioin))
+						if(findUnderscoreIndexes(this.wordDetails.spellQuestioin).length>=1){
+							findUnderscoreIndexes(this.wordDetails.spellQuestioin).forEach(function(element, i, array) {
+								if (element == index + 1) {
+									that.verificationCode[index + 2].focus = true
+								} else {
+									that.verificationCode[index + 1].focus = true
+								}
+							})
+						}else{
+							this.verificationCode[index + 1].focus = true
 						}
-					});
+					} else {
+						this.finish()
+					}
 				}
 			},
 			debounce(func, wait) {
@@ -219,19 +224,40 @@
 				}
 				let data = await reviewNext(getData);
 				if (data.data.code == 200) {
-					this.inputValue = ' '
 					this.num = 0
 					this.answer = "#606266"
 					innerAudioContext.pause()
 					this.onOff = false
 					clearTimeout(this.timeout);
 					this.getWordEn(this.wordData.wordIndex)
+					console.log(data.data.result.wordIndex, this.wordList.length)
+					if (data.data.result.wordIndex == this.wordList.length - 1) {
+						var passData = {
+							id: this.id
+						}
+						let data = await reviewFinish(passData)
+						this.toNav('/pages/word/answer?id='+this.id)
+					}
 				} else {
 					console.log('记录失败')
 				}
 			},
 			finish(e) {
-				if (this.wordData.wordEn.toLowerCase() == e.toLowerCase()) {
+				function concatenateNonEmptyValues(array) {
+					return array.reduce((accumulator, item) => {
+						const value = item.value;
+						if (value !== null && value !== undefined && value !== '') {
+							// 如果value不是空值，则添加到累积字符串中
+							return accumulator + value;
+						}
+						// 如果value是空值，则直接返回累积字符串
+						return accumulator;
+					}, ''); // 初始化累积字符串为空字符串
+				}
+
+				var answer = concatenateNonEmptyValues(this.verificationCode);
+				console.log(this.wordDetails.spellAnswer.toLowerCase(), answer.toLowerCase())
+				if (this.wordDetails.spellAnswer.toLowerCase() == answer.toLowerCase()) {
 					console.log('成功')
 					this.answer = '#5AC591'
 					clearTimeout(timeout)
@@ -251,11 +277,34 @@
 			async getWordEn(index) {
 				this.onOff = true
 				this.wordData = this.wordList[index]
-				this.verificationCode = Array(this.wordData.wordEn.length).fill({
-					value: '',
-					maxlength: 1
-				})
-				// console.log(this.verificationCode)
+				var newData = {
+					wordEn: this.wordData.wordEn
+				}
+				let data = await wordEn(newData);
+				this.wordDetails = data.data.result
+				Array.prototype.fillPlus = function(item) {
+						// 深拷贝
+						function copy(object) {
+							let data = object instanceof Array ? [] : {}
+							for (const [key, value] of Object.entries(object)) {
+								data[key] = typeof value == 'object' ? copy(value) : value;
+							}
+							return data
+						}
+						// 手动填充数据
+						const data = []
+						for (let index = 0; index < this.length; index++) {
+							data[index] = copy(item);
+						}
+						return data
+					},
+					this.verificationCode = new Array(data.data.result.spellQuestioin.length).fillPlus({
+						value: '',
+						maxlength: 1,
+						focus: false,
+					})
+				this.verificationCode[0].focus = true
+				console.log(this.verificationCode)
 				// 记录空格的位置
 				for (let i = 0; i < this.wordData.wordEn.length; i++) {
 					// if (this.wordData.wordEn[i] === ' ') {
@@ -545,14 +594,14 @@
 		text-align: center;
 		position: absolute;
 		background: #fff;
-		top: 0;
-		bottom: 0;
+		top: 400rpx;
 		left: 0;
 		right: 0;
 		margin: auto;
 		width: 508rpx;
 		height: 382rpx;
 		border-radius: 20rpx;
+		z-index: 1;
 	}
 
 	.popup-contentImg image {
@@ -586,6 +635,7 @@
 		display: flex;
 		justify-content: center;
 		margin-top: 20rpx;
+		margin-left: 20rpx;
 	}
 
 	.inputWord {
@@ -598,7 +648,16 @@
 	.inputWord-input input {
 		border-bottom: 2rpx solid black;
 		width: 32rpx;
-		margin-right: 22rpx;
-		font-size: 50rpx;
+		margin-right: 14rpx;
+		font-size: 34rpx;
+		text-align: center;
+	}
+
+	.inputWord-input-text {
+		white-space: pre-line;
+		font-size: 34rpx;
+		width: 32rpx;
+		margin-right: 14rpx;
+		text-align: center;
 	}
 </style>

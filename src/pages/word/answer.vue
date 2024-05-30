@@ -4,12 +4,13 @@
 			<view class="t-size-30">八年级上册Unit 2</view>
 		</cy-navbar>
 		<view class="head">
-			<image :src="imageBaseUrl+'/word/5-22-02.png'" mode="widthFix"></image>
+			<image v-if="data.reviewResult==0" :src="imageBaseUrl+'/word/5-22-02.png'" mode="widthFix"></image>
+			<image v-if="data.reviewResult==1" :src="imageBaseUrl+'/word/5-22-03.png'" mode="widthFix"></image>
 		</view>
 		<view class="statistics">
 			<view class="statisticsItem">
 				<view class="statisticsItem-top">
-					88
+					{{data.reviewScore}}
 				</view>
 				<view class="statisticsItem-bottom">
 					分数
@@ -25,7 +26,7 @@
 			</view>
 			<view class="statisticsItem">
 				<view class="statisticsItem-top">
-					200s
+					{{data.costTimes}}s
 				</view>
 				<view class="statisticsItem-bottom">
 					用时
@@ -41,15 +42,15 @@
 			</view>
 		</view>
 		<view class="list" v-if="tab==1">
-			<view class="listItem" v-for="(item,i) in 15">
+			<view class="listItem" v-for="(item,i) in data.wordReviewDictList">
 				<view class="listItem-l">
-					<view class="listItem-lL" :class="i==0?'red':''||i==1?'greey':''">
+					<view class="listItem-lL" :class="item.answerResult==2?'red':''||item.answerResult==1?'greey':''">
 						{{i+1}}
 					</view>
 					<view class="listItem-lR">
 						<view class="listItem-lR-t">
 							<view class="listItem-lR-tName">
-								apple
+								{{item.wordEn}}
 							</view>
 							<view class="listItem-lR-tHit">
 								['aepl]
@@ -60,9 +61,10 @@
 						</view>
 					</view>
 				</view>
-				<view class="listItem-r" :class="i==0?'redFont':''||i==1?'greeyFont':''">
-					<text v-if="i==0">× 错误</text>
-					<text v-else-if="i==1">√ 正确</text>
+				<view class="listItem-r"
+					:class="item.answerResult==2?'redFont':''||item.answerResult==1?'greeyFont':''">
+					<text v-if="item.answerResult==2">× 错误</text>
+					<text v-else-if="item.answerResult==1">√ 正确</text>
 					<text v-else>× 跳过</text>
 				</view>
 			</view>
@@ -89,7 +91,8 @@
 				</view>
 			</view>
 			<view class="resultList">
-				<view class="resultList-item" v-for="(item,i) in 15" :class="i==0?'red':''||i==1?'greey':''">
+				<view class="resultList-item" v-for="(item,i) in data.wordReviewDictList"
+					:class="item.answerResult==2?'red':''||item.answerResult==1?'greey':''">
 					{{i+1}}
 				</view>
 			</view>
@@ -98,11 +101,15 @@
 			<qiun type="column" :opts="opts" :chartData="chartData" />
 		</view>
 		<view class="button">
-			<view class="buttonLeft">
+			<view class="buttonLeft" @click="toNav('/pages/word/wordList?id='+wrodType+'&unitId='+data.lessonId)">
 				<image :src="imageBaseUrl + '/word/5-21-26.png'" mode=""></image>
 				重新挑战
 			</view>
-			<view class="buttonRight">
+			<view class="buttonLeft" @click="toNav('/pages/word/index')">
+				<u-icon name="home" size="32"></u-icon>
+				<text style="margin-left: 10rpx;">回到首页</text>
+			</view>
+			<view class="buttonRight" @click="toNav('/pages/word/textbook?id='+wrodType+'&bookid='+bookData.id)">
 				<image :src="imageBaseUrl + '/word/5-21-29.png'" mode=""></image>
 				挑战下一关
 			</view>
@@ -112,10 +119,14 @@
 
 <script>
 	import MyMixin from "@/utils/MyMixin";
-	import qiun from "@/pages/word/components/qiun-data-charts/components/qiun-data-charts/qiun-data-charts.vue";  
+	import qiun from "@/pages/word/components/qiun-data-charts/components/qiun-data-charts/qiun-data-charts.vue";
+	import {
+		reviewList,
+		queryReviewList
+	} from "@/api/word.js"
 	export default {
 		mixins: [MyMixin],
-		components:{
+		components: {
 			qiun
 		},
 		data() {
@@ -123,6 +134,7 @@
 				backColor: 'transparent',
 				tab: 0,
 				chartData: {},
+				id: 0,
 				opts: {
 					timing: "easeOut",
 					duration: 1000,
@@ -131,7 +143,7 @@
 					color: ["#A1C3FF", "#4FC455", "#F06B6B", "#BFBFBF", "#73C0DE", "#3CA272", "#FC8452", "#9A60B4",
 						"#ea7ccc"
 					],
-					pixelRatio:2,
+					pixelRatio: 2,
 					padding: [15, 15, 0, 5],
 					fontSize: 13,
 					fontColor: "#666666",
@@ -248,7 +260,10 @@
 							data: []
 						}
 					}
-				}
+				},
+				data: {},
+				bookData: {},
+				wrodType: ''
 			}
 		},
 		onReady() {
@@ -261,7 +276,25 @@
 				this.backColor = 'transparent'
 			}
 		},
+		onLoad(e) {
+			this.id = e.id
+			this.getData()
+			this.bookData = uni.getStorageSync('bookData')
+			this.wrodType = uni.getStorageSync('wrodType')
+		},
 		methods: {
+			async getData() {
+				var dataPass = {
+					id: this.id
+				}
+				// var dataPassB = {
+				// 	reviewId: this.id
+				// }
+				let data = await reviewList(dataPass)
+				// let dataA = await queryReviewList(dataPassB)
+				console.log(data)
+				this.data = data.data.result
+			},
 			getServerData() {
 				//模拟从服务器获取数据时的延时
 				setTimeout(() => {
@@ -270,16 +303,16 @@
 						categories: [""],
 						series: [{
 							name: "总数",
-							data: [15]
+							data: [this.data.totalWordNum]
 						}, {
 							name: "正确",
-							data: [10]
+							data: [this.data.correctWordNum]
 						}, {
 							name: "错误",
-							data: [2]
+							data: [this.data.errorWordNum]
 						}, {
 							name: "跳过",
-							data: [3]
+							data: [this.data.totalWordNum-this.data.correctWordNum-this.data.errorWordNum]
 						}]
 					};
 					this.chartData = JSON.parse(JSON.stringify(res));
@@ -427,7 +460,6 @@
 		display: flex;
 		flex-wrap: wrap;
 		padding: 0 80rpx;
-		justify-content: space-between;
 		margin-bottom: 50rpx;
 	}
 

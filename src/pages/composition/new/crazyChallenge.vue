@@ -1,5 +1,5 @@
 <template>
-  <view class="pb-5 main-body">
+  <view class="pb-5 main-body"> <!--style="min-height: 100vh; background: #F5FBFD"-->
     <cy-navbar showBack>
       <view class="t-size-30">疯狂挑战</view>
     </cy-navbar>
@@ -15,7 +15,7 @@
             <image style="width: 400rpx" class="mt-2" mode="widthFix" :src="`${imageBaseUrl}/4-14-03.png`"></image>
             <view class="review mt-2 flex align-item-center justify-content-center">
               <view class="click t-size-22 mr-1">点击查看排名</view>
-              <image style="width: 24rpx" mode="widthFix" :src="`${imageBaseUrl}/4-14-05.png`"></image>
+              <image style="width: 24rpx" mode="widthFix" :src="`${imageBaseUrl}/6-2-03.png`"></image>
             </view>
           </view>
           <view>
@@ -26,8 +26,8 @@
 
       <view class="top-content-box">
         <view class="bg-image-box flex align-item-center justify-content-center">
-          <view class="title t-size-32 font-weight-bold t-color-fff">每周挑战</view>
-          <image :src="`${imageBaseUrl}/3-22-01.png`"></image>
+          <view class="title t-size-32 font-weight-bold t-color-fff">每周挑战题专区</view>
+<!--          <image :src="`${imageBaseUrl}/3-22-01.png`"></image>-->
         </view>
         <view class="top-content flex-direction-column flex align-item-center justify-content-center px-5">
           <view class="tags t-size-20 flex align-item-center justify-content-center">
@@ -41,7 +41,7 @@
             <view class="flex align-item-center justify-content-center btns-box"
                   v-for="(item, index) in btnsList" :key="index"
                   @click="clickBtn(item.title, challenge)">
-              <image :src="`${imageBaseUrl}${item.icon}`"></image>
+              <image :src="`${imageBaseUrl}${item.icon}`" mode="widthFix"></image>
               <view class="t-size-26 ml-1">{{ item.title }}</view>
               <view v-if="index === 0"
                     class="t-size-20 t-color-8A8A8A ml-1">({{ challenge.favoritesTimes || 0 }})
@@ -51,7 +51,7 @@
         </view>
       </view>
 
-      <view class="flex align-item-center mt-4">
+      <view class="flex align-item-center mt-3 ml-2">
         <view class="school-item mr-3 mt-3"
               :class="{active: item.isActive}"
               @click="clickSChoolType(item, index)"
@@ -81,7 +81,7 @@
           <view class="flex align-item-center justify-content-center btns-box"
                 v-for="(btn, btnIndex) in evaluateBtnsList" :key="btnIndex"
                 @click="clickBtn(btn.title, item)">
-            <image :src="`${imageBaseUrl}${btn.icon}`"></image>
+            <image :src="`${imageBaseUrl}${btn.icon}`" mode="widthFix"></image>
             <view class="t-size-26 ml-1">{{ btn.title }}</view>
             <view v-if="btnIndex === 0"
                   class="t-size-20 t-color-8A8A8A ml-1">({{ item.favoritesTimes || 0 }})
@@ -255,10 +255,11 @@ export default {
     border-radius: 10rpx;
     opacity: 1;
     letter-spacing: 2rpx;
-    background: linear-gradient(102deg, #FFE5DD -3%, rgba(255, 248, 246, 0.76) 99%);
+    background: linear-gradient(103deg, #FFFFFF -4%, rgba(255, 255, 255, 0.76) 99%);
+    //background: linear-gradient(102deg, #FFE5DD -3%, rgba(255, 248, 246, 0.76) 99%);
 
     .click {
-      color: #B43E16;
+      color: #003DAB;
     }
   }
 }
@@ -271,6 +272,7 @@ export default {
     width: 670rpx;
     height: 100rpx;
     position: relative;
+    background: #FF9B6D;
 
     .title {
       position: absolute;
@@ -291,7 +293,8 @@ export default {
     width: 670rpx;
     height: 320rpx;
     opacity: 1;
-    background: linear-gradient(180deg, #FFFFFF 0%, rgba(193, 218, 250) 100%);
+    background: #FFF7F5;
+    //background: linear-gradient(180deg, #FFFFFF 0%, rgba(193, 218, 250) 100%);
     position: relative;
     overflow: hidden;
 

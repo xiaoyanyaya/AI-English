@@ -116,12 +116,12 @@ export default {
           icon: `${this.imageBaseUrl}/xl-image-8.png`,
           path: '/pages/virtualCharacter/dialogueHistory'
         },
-        /*{
+        {
           title: '使用视频',
           width: 140,
           right: -100,
           icon: `${this.imageBaseUrl}/xl-image-37.png`,
-        }*/
+        }
       ],
       this.selectBtnsMenu = [
         {

@@ -25,6 +25,10 @@ export default {
       type: Boolean,
       default: false
     },
+    showBgColor: {
+      type: Boolean,
+      default: true
+    },
     bgColor: {
       type: String,
       default: '#3A73D9'
@@ -41,18 +45,20 @@ export default {
   },
   computed: {
     statusBarHeight() {
-      return `
-      padding-top: ${this.systemInfo.statusBarHeight}px;
-      background: ${this.bgColor};
-      `
+      var style = `padding-top: ${this.systemInfo.statusBarHeight}px;`
+      if (this.showBgColor) {
+        style += `background: ${this.bgColor};`
+      }
+      return style
     },
     contentStyle() {
-      return `
-      background: ${this.bgColor};
-      position: fixed;
+      var style = `position: fixed;
       z-index: 9999;
-      top: 0;
-      `
+      top: 0;`
+      if (this.showBgColor) {
+        style += `background: ${this.bgColor};`
+      }
+      return style
     },
     navContentStyle() {
       return `

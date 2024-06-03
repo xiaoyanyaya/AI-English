@@ -61,6 +61,9 @@
     },
     {
       "path": "pages/login/index"
+    },
+    {
+      "path": "pages/me/selectLevel"
     }
   ],
   "subPackages": [
@@ -177,7 +180,7 @@
   },
   "globalStyle": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "uni-app",
+    "navigationBarTitleText": "小礼学霸",
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8",
     "navigationStyle": "custom"

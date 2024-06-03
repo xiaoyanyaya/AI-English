@@ -53,29 +53,6 @@
         </view>
       </view>
       <view class="flex mt-4" v-else>
-        <!--        <view class="flex align-item-center justify-content-between">
-                  <view style="width: 250rpx" v-if="pageIndex == 1">
-                    <view class="grade flex align-item-center border-box px-1 justify-content-around mr-3"
-                          @click="questionTypes.show = true">
-                      <text class="t-size-24 t-color-8A8A8A">{{ questionTypes.value }}</text>
-                      <u-icon name="arrow-down" color="#8A8A8A" size="28"></u-icon>
-                    </view>
-
-                    <u-picker mode="selector" v-model="questionTypes.show"
-                              @confirm="questionTypesConfirm($event)"
-                              :title="questionTypes.title"
-                              :default-selector="[questionTypes.index]" :range="questionTypes.content"></u-picker>
-                  </view>
-                  <view class="keywords flex align-item-center border-box pl-3 justify-content-between  t-size-24"
-                        @click="$navigateTo('/pages/composition/component/searchCondition')">
-                    <input placeholder=" " disabled v-model="infoKeyword"
-                           style="color:#333;flex:1;border:none;font-size: 24rpx;flex:1"/>
-                    <view class="search-box flex"> &lt;!&ndash; @click="search"&ndash;&gt;
-                      <u-icon name="search" color="#FFFFFF" size="28"></u-icon>
-                      <view class="t-color-fff ml-1">搜索</view>
-                    </view>
-                  </view>
-                </view>-->
         <view class="type-box flex">
           <view class="btn-1 flex align-item-center justify-content-center"
                 :class="{'active' : isActiveBtn == 1}" @click="clickActiveBtn(1)">
@@ -106,39 +83,22 @@
               </view>
             </template>
             <view class="content-box px-3 pb-3 pt-1" @click="contentClick(item)">
-              <!--              <view class="flex justify-content-between align-item-center">
-                              <view class="content-text"></view>
-                              <view class="flex align-item-start">
-                                <view class="mr-1">
-                                  <u-icon name="star-fill" class="t-size-32"
-                                          @click="network().addCompositionCollectOther(item)"
-                                          :class="item.status == 1 ? 't-color-fea831' : 't-color-d9d9d9'"></u-icon>
-                                </view>
-                                <view class="t-size-24 t-color-8A8A8A">{{ item.createTime }}</view>
-                              </view>
-                            </view>
-
-                            <view class="content-text mt-2 table-nowrap">
-                              <text class="t-size-26 t-color-3D3D3D">{{ item.compositionTitleText }}</text>
-                            </view>
-                            <view class="desc-text mt-1 table-nowrap-2">
-                              <text class="t-size-24 t-color-8A8A8A">{{ item.compositionText }}</text>
-                            </view>-->
-
-              <view class="flex justify-content-between align-item-center"
+              <view class="flex align-item-center"
                     style="height: 120rpx; border-bottom: 1px solid #e9ebee">
                 <view class="flex align-item-center justify-content-center">
                   <image :src="item.avatar" mode="widthFix" style="width: 80rpx; border-radius: 50rpx"></image>
-                  <view class="ml-3 font-weight-bold t-size-32">{{ item.nickName }}</view>
                 </view>
                 <view class="flex flex-direction-column">
-                  <view class="flex align-item-center">
-                    <image :src="`${imageBaseUrl}/4-30-02.png`" mode="widthFix" style="width: 30rpx; border-radius: 50%"></image>
-                    <view class="ml-1 t-color-8A8A8A t-size-22">{{ item.createTime }}</view>
-                  </view>
-                  <view class="flex align-item-center mt-1">
-                    <image :src="`${imageBaseUrl}/4-30-01.png`" mode="widthFix" style="width: 20rpx; "></image>
-                    <view class="ml-1 t-color-8A8A8A t-size-22">收藏来源：{{ item.compositionFavoritesSourceStr || "收藏作文" }}</view>
+                  <view class="ml-4 font-weight-bold t-size-32">{{ item.nickName }}</view>
+                  <view class="ml-3 mt-1 flex justify-content-between" style="flex :1; width: 100%">
+                    <view class="flex align-item-center">
+                      <image :src="`${imageBaseUrl}/4-30-02.png`" mode="widthFix" style="width: 30rpx; border-radius: 50%"></image>
+                      <view class="ml-1 t-color-8A8A8A t-size-22">{{ item.createTime }}</view>
+                    </view>
+                    <view class="flex align-item-center ">
+                      <image :src="`${imageBaseUrl}/4-30-01.png`" mode="widthFix" style="width: 20rpx; "></image>
+                      <view class="ml-1 t-color-8A8A8A t-size-22">收藏来源：{{ item.compositionFavoritesSourceStr || "收藏作文" }}</view>
+                    </view>
                   </view>
                 </view>
               </view>

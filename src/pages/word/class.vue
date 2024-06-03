@@ -68,7 +68,6 @@
 			} else {
 				this.getData.bookProperties = 102
 			}
-			this.getClass()
 		},
 		onPageScroll(e) {
 			if (e.scrollTop > 20) {
@@ -76,6 +75,9 @@
 			} else {
 				this.backColor = 'transparent'
 			}
+		},
+		onShow(){
+			this.getClass()
 		},
 		methods: {
 			async getClass() {

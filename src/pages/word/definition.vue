@@ -10,7 +10,7 @@
 			<view class="headAudio">
 				<view class="headAudio-box" @click="play(allData.audioUsa)">
 					<text>英</text>
-					<text class="headAudio-boxC">['{{allData.symbolUk}}]</text>
+					<text class="headAudio-boxC">['{{allData.symbolUsa}}]</text>
 					<image :src="imageBaseUrl+'/word/5-21-31.png'" mode=""></image>
 				</view>
 			</view>
@@ -70,7 +70,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="controller">
+		<view class="controller" v-if="state==0">
 			<view class="controllerItem" @click="previous">
 				<image :src="imageBaseUrl + '/word/pre_s.png'" mode=""></image>
 				<view class="">
@@ -105,12 +105,16 @@
 				allData: {},
 				wordList: {},
 				height: 0,
-				lista: []
+				lista: [],
+				state:0
 			}
 		},
 		onLoad(e) {
 			var that = this
 			this.data.wordEn = e.wordEn
+			if(e.state){
+				this.state=e.state
+			}
 			this.getWordEn()
 			this.wordList = uni.getStorageSync('wordList');
 			this.$nextTick(() => {

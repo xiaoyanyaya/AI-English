@@ -33,7 +33,8 @@
 			</view>
 			<view class="list">
 				<view class="listItem" :class="item.lessonReviewStatus==0?'listItemOn':''" v-for="(item,i) in list"
-					:key="item.id" @click="toNav('/pages/word/wordList?unitId='+item.id+'&id='+id)">
+					:key="item.id"
+					@click="toNav('/pages/word/wordList?unitId='+item.id+'&id='+id+'&title='+item.lessonName)">
 					<image class="listItem-img"
 						:src="imageBaseUrl + (item.lessonReviewStatus==0?'/word/5-21-24.png':'/word/5-21-23.png')"
 						mode="widthFix"></image>
@@ -64,7 +65,8 @@
 				</view>
 				<view class="popupSelect-list">
 					<view class="popupSelect-listItem" v-for="(item,i) in wordNumData" :key="item.value"
-						@click="selectClick(item.value)" :class="selectNum==item.value?'popupSelect-listItem-select':''">
+						@click="selectClick(item.value)"
+						:class="selectNum==item.value?'popupSelect-listItem-select':''">
 						{{item.text}}
 					</view>
 				</view>
@@ -108,7 +110,6 @@
 		onLoad(e) {
 			this.id = e.id
 			this.data.bookId = e.bookId
-			this.getUnit()
 			this.bookData = uni.getStorageSync('bookData');
 		},
 		onPageScroll(e) {
@@ -117,6 +118,9 @@
 			} else {
 				this.backColor = 'transparent'
 			}
+		},
+		onShow() {
+			this.getUnit()
 		},
 		methods: {
 			async getUnit() {
@@ -128,33 +132,33 @@
 					this.list = data.data.result
 					let res = await wordNum();
 					this.wordNumData = res.data.result
-					this.selectNum=res.data.result[0].value
+					this.selectNum = res.data.result[0].value
 				}
 			},
-			selectClick(num){
-				this.selectNum=num
+			selectClick(num) {
+				this.selectNum = num
 			},
 			async addBook() {
 				console.log(1)
-				var data={
-					bookId:this.data.bookId ,
-					worNum:this.selectNum
+				var data = {
+					bookId: this.data.bookId,
+					wordNum: this.selectNum
 				}
 				let res = await addLessonOutline(data);
-				if(res.data.code==200){
-					this.toNav('/pages/word/wordList?unitId='+res.data.result.id+'&id=1')
-				}else{
+				if (res.data.code == 200) {
+					this.toNav('/pages/word/wordList?unitId=' + res.data.result.id + '&id=1')
+				} else {
 					uni.showModal({
-					   title:res.data.message,
-					    success: function (res) {
-					        if (res.confirm) {
-					            console.log('用户点击确定');
-					            // 执行操作
-					        } else if (res.cancel) {
-					            console.log('用户点击取消');
-					            // 操作取消
-					        }
-					    }
+						title: res.data.message,
+						success: function(res) {
+							if (res.confirm) {
+								console.log('用户点击确定');
+								// 执行操作
+							} else if (res.cancel) {
+								console.log('用户点击取消');
+								// 操作取消
+							}
+						}
 					});
 					// uni.showToast({
 					// 	title:res.data.message,
@@ -346,10 +350,12 @@
 		background: #E5F1FF;
 		border: 2rpx solid #1863E5;
 	}
-	.study{
+
+	.study {
 		text-align: center;
 	}
-	.study image{
+
+	.study image {
 		width: 380rpx;
 	}
 </style>

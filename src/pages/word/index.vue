@@ -7,7 +7,7 @@
 			<view class="search-box">
 				<image :src="imageBaseUrl + '/word/icon3.png'" mode=""></image>
 				<input type="text" name="" id="" placeholder="AI查单词" v-model="value">
-				<view v-if="value.length>0" class="search-boxIcon" @click="toNav('/pages/word/definition?wordEn='+value)">
+				<view v-if="value.length>0" class="search-boxIcon" @click="toNav('/pages/word/definition?wordEn='+value+'&state=1')">
 					搜索
 				</view>
 			</view>
@@ -66,14 +66,14 @@
 						<view class="item-box-titleLeft-icon"></view>
 						专题词汇
 					</view>
-					<view class="item-box-titleRight">
+					<!-- <view class="item-box-titleRight">
 						<view class="item-box-titleRight-icon" @click="reduce()" v-if="getData.pageNo != 1">
 							<image :src="imageBaseUrl + '/word/leftIcon.png'" mode=""></image>
 						</view>
 						<view class="item-box-titleRight-icon ml-3" @click="plus()" v-if="getData.pageNo != typePages">
 							<image :src="imageBaseUrl + '/word/rightIcon.png'" mode=""></image>
 						</view>
-					</view>
+					</view> -->
 				</view>
 				<view class="item-box-select">
 					<view class="item-box-selectItem" v-for="(item,i) in typeData" :key="item.id" @click="toNav('/pages/word/wordList?id=2&unitId='+item.id)">
@@ -93,7 +93,7 @@
 				</view>
 			</view>
 		</view>
-		<wordTab></wordTab>
+		<wordTab :type="0"></wordTab>
 	</view>
 </template>
 
@@ -114,9 +114,7 @@
 				typePages: 0,
 				value:'',
 				getData: {
-					bookType: 101,
-					pageNo: 1,
-					pageSize: 3
+					bookType: 101
 				}
 			}
 		},
@@ -131,8 +129,8 @@
 			},
 			async getList() {
 				let data = await listByBookType(this.getData);
-				this.typeData = data.data.result.records
-				this.typePages = data.data.result.pages
+				this.typeData = data.data.result
+				// this.typePages = data.data.result.pages
 			},
 			plus() {
 				if (this.getData.pageNo != this.typePages) {
@@ -220,11 +218,17 @@
 	.item-box-titleRight {
 		display: flex;
 	}
+	
+	.item-box-titleRight-icon{
+		display: flex;
+		align-items: center;
+	}
 
 	.item-box-titleRight-icon image {
-		width: 33rpx;
-		height: 33rpx;
+		width: 50rpx;
+		height: 50rpx;
 		border-radius: 50%;
+		size: 0;
 	}
 
 	.item-box-l .item-box-listItem-text {
@@ -255,13 +259,6 @@
 		bottom: 32rpx;
 	}
 
-	.bottomTab {
-		position: fixed;
-		bottom: 0;
-		background: #fff;
-		height: 150rpx;
-		width: 100%;
-	}
 
 	.item-box-listItem-img {
 		width: 120rpx;
@@ -340,12 +337,15 @@
 		padding: 20rpx;
 		padding-bottom: 25rpx;
 		border-radius: 10rpx;
+		margin-right: 30rpx;
 	}
 
 	.item-box-select {
 		display: flex;
-		justify-content: space-around;
+		/* justify-content: space-around; */
 		margin-top: 20rpx;
+		overflow-y: auto;
+		white-space: nowrap;
 	}
 
 	.item-box-selectItem-text {

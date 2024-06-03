@@ -3,7 +3,7 @@
 		<cy-navbar :showBack="true" :bgColor="backColor"></cy-navbar>
 		<view class="content">
 			<view class="title">
-				{{id==0?allData.unitFullName:bookData.bookType_dictText+bookData.bookSecondType_dictText}}
+				{{id==0?allData.unitFullName:bookData.bookType_dictText+bookData.bookSecondType_dictText}} {{title?title:''}}
 			</view>
 			<view class="list">
 				<view class="listItem" v-for="(item,i) in allData.wordLessonDictList" :key="item.id" v-if="id==0||id==2"
@@ -57,7 +57,7 @@
 					</view>
 				</view>
 			</view>
-			<view class="button" @click="toNav('/pages/word/set?id='+(id==1?dataB.lessonId:allData.id))">
+			<view class="button" @click="toNav('/pages/word/set?id='+(id==1?dataB.lessonId:allData.id)+'&title='+(title?title:''))">
 				立即挑战
 			</view>
 		</view>
@@ -95,20 +95,28 @@
 				bookData: {},
 				audioSrc: '',
 				gif: false,
-				selectId: 0
+				selectId: 0,
+				title:''
 			}
 		},
 		onLoad(e) {
-			this.id = e.id
+			if(e.title){
+				this.title=e.title
+			}
+			if(e.id){
+				this.id = e.id
+				uni.setStorageSync('wordType',e.id);
+			}else{
+				this.id = uni.getStorageSync('wordType');
+			}
 			if (e.id == 0) {
 				this.data.unitId = e.unitId
 			} else if (e.id == 1) {
 				this.dataB.lessonId = e.unitId
+				console.log(e.unitId)
 			} else if (e.id == 2) {
 				this.data.unitId = e.unitId
 			}
-			this.id = uni.getStorageSync('wordType');
-			this.getWord()
 			this.bookData = uni.getStorageSync('bookData')
 		},
 		onPageScroll(e) {
@@ -118,9 +126,11 @@
 				this.backColor = 'transparent'
 			}
 		},
+		onShow(){
+			this.getWord()
+		},
 		methods: {
 			async getWord() {
-				console.log(this.id)
 				if (this.id == 0) {
 					let data = await wordList(this.data);
 					this.allData = data.data.result
@@ -208,7 +218,7 @@
 		top: 120rpx;
 		left: 0;
 		padding-left: 55rpx;
-		padding-top: 20rpx;
+		padding-top: 30rpx;
 	}
 
 	.content {

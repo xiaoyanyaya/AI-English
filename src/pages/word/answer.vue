@@ -1,7 +1,7 @@
 <template>
 	<view class="main">
 		<cy-navbar :showBack="true" :bgColor="backColor">
-			<view class="t-size-30">八年级上册Unit 2</view>
+			<view class="t-size-30">{{wordList.lessonFullName?wordList.lessonFullName:bookData.bookFullName}}</view>
 		</cy-navbar>
 		<view class="head">
 			<image v-if="data.reviewResult==0" :src="imageBaseUrl+'/word/5-22-02.png'" mode="widthFix"></image>
@@ -16,7 +16,7 @@
 					分数
 				</view>
 			</view>
-			<view class="statisticsItem">
+			<view class="statisticsItem" v-if="false">
 				<view class="statisticsItem-top">
 					70%
 				</view>
@@ -44,7 +44,7 @@
 		<view class="list" v-if="tab==1">
 			<view class="listItem" v-for="(item,i) in data.wordReviewDictList">
 				<view class="listItem-l">
-					<view class="listItem-lL" :class="item.answerResult==2?'red':''||item.answerResult==1?'greey':''">
+					<view class="listItem-lL" :class="item.answerResult==0?'red':''||item.answerResult==1?'greey':''">
 						{{i+1}}
 					</view>
 					<view class="listItem-lR">
@@ -53,17 +53,17 @@
 								{{item.wordEn}}
 							</view>
 							<view class="listItem-lR-tHit">
-								['aepl]
+								{{"['"+item.symbolUsa+"]"}}
 							</view>
 						</view>
 						<view class="listItem-lR-b">
-							苹果
+							{{item.wordCn}}
 						</view>
 					</view>
 				</view>
 				<view class="listItem-r"
-					:class="item.answerResult==2?'redFont':''||item.answerResult==1?'greeyFont':''">
-					<text v-if="item.answerResult==2">× 错误</text>
+					:class="item.answerResult==0?'redFont':''||item.answerResult==1?'greeyFont':''">
+					<text v-if="item.answerResult==0">× 错误</text>
 					<text v-else-if="item.answerResult==1">√ 正确</text>
 					<text v-else>× 跳过</text>
 				</view>
@@ -92,7 +92,7 @@
 			</view>
 			<view class="resultList">
 				<view class="resultList-item" v-for="(item,i) in data.wordReviewDictList"
-					:class="item.answerResult==2?'red':''||item.answerResult==1?'greey':''">
+					:class="item.answerResult==0?'red':''||item.answerResult==1?'greey':''">
 					{{i+1}}
 				</view>
 			</view>
@@ -101,7 +101,7 @@
 			<qiun type="column" :opts="opts" :chartData="chartData" />
 		</view>
 		<view class="button">
-			<view class="buttonLeft" @click="toNav('/pages/word/wordList?id='+wrodType+'&unitId='+data.lessonId)">
+			<view class="buttonLeft" @click="toNav('/pages/word/wordList?id='+wordType+'&unitId='+(wordList.unitId?wordList.unitId:data.lessonId))">
 				<image :src="imageBaseUrl + '/word/5-21-26.png'" mode=""></image>
 				重新挑战
 			</view>
@@ -109,7 +109,7 @@
 				<u-icon name="home" size="32"></u-icon>
 				<text style="margin-left: 10rpx;">回到首页</text>
 			</view>
-			<view class="buttonRight" @click="toNav('/pages/word/textbook?id='+wrodType+'&bookid='+bookData.id)">
+			<view class="buttonRight" @click="toNav('/pages/word/textbook?id='+wordType+'&bookId='+bookData.id)">
 				<image :src="imageBaseUrl + '/word/5-21-29.png'" mode=""></image>
 				挑战下一关
 			</view>
@@ -263,7 +263,8 @@
 				},
 				data: {},
 				bookData: {},
-				wrodType: ''
+				wordType: '',
+				wordList:[]
 			}
 		},
 		onReady() {
@@ -280,7 +281,8 @@
 			this.id = e.id
 			this.getData()
 			this.bookData = uni.getStorageSync('bookData')
-			this.wrodType = uni.getStorageSync('wrodType')
+			this.wordList = uni.getStorageSync('wordList')
+			this.wordType = uni.getStorageSync('wordType')
 		},
 		methods: {
 			async getData() {

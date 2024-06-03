@@ -85,17 +85,21 @@
 				},
 				data:{
 					lessonId:0
-				}
+				},
+				title:''
 			}
 		},
 		onLoad(e){
 			this.data.lessonId=e.id
+			if(e.title){
+				this.title=e.title
+			}
 		},
 		methods: {
 			async toLearning() {
 				uni.setStorageSync('setData', this.setData);
 				let data = await reviewStart(this.data);
-				var urls='/pages/word/dictation?id='+data.data.result.id+'&lessonId='+data.data.result.lessonId
+				var urls='/pages/word/dictation?id='+data.data.result.id+'&lessonId='+data.data.result.lessonId+'&title='+(this.title?this.title:'')
 				this.toNav(urls)
 			},
 			toNav(urls) {

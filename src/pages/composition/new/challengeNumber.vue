@@ -47,7 +47,7 @@
           </div>
         </view>
         <view class="mt-2 content-text">
-          {{ item.compositionText }}
+          <rich-text :nodes="item.compositionText"></rich-text>
         </view>
       </view>
       <view class="flex align-item-center justify-content-center" v-show="challengeData.length < 1">
@@ -95,7 +95,7 @@ export default {
       this.network().getChallengeCompositionList();
     },
     clickChallenge(item) {
-      this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=6&id=${item.id}&pageTilte=作文详情&isShowTitle=1`);
+      this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=7&id=${item.id}&pageTilte=作文详情&isShowTitle=1`);
     },
     network() {
       return {

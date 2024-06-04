@@ -2,7 +2,7 @@
 import {getPhone, login} from "@/api/user";
 import store from "@/store";
 import { apiDomain } from "@/configs/env";
-import {baseInfo} from "@/api/me";
+import {baseInfo, basicData} from "@/api/me";
 
 export default {
 	data() {
@@ -40,10 +40,22 @@ export default {
 							// store.dispatch('generateContent', text)
 							resolve(res);
 							this.$store.dispatch('setToken', res.data.result.token)
+							this.getBasicData(res.data.result.isNew)
 						});
 					}
 				});
 			});
+		},
+		getBasicData(isNew = false) {
+			basicData().then(data => {
+				console.log(data, "基础数据")
+				uni.setStorageSync("basicData", data.data.result)
+				setTimeout(() => {
+					if (isNew) {
+						this.$navigateTo('/pages/me/selectLevel?pageForm=login')
+					}
+				},500)
+			})
 		},
 		getPhone(res, toPageUr) {
 			if (res.detail.errMsg !== 'getPhoneNumber:ok') {

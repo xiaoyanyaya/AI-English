@@ -1,7 +1,7 @@
 <template>
   <view class="pb-5">
-    <cy-navbar show-back>
-      <view class="t-size-30">选择年级</view>
+    <cy-navbar :show-back="pageForm != 'login'">
+      <view class="t-size-30">选择英语等级</view>
     </cy-navbar>
 
     <view class="px-4">
@@ -11,7 +11,7 @@
         <view class="px-4 pb-5 mt-5">
           <view class="item mt-3 flex align-item-center border-box px-3"
                 :class="{active: item.isSelect}"
-                @click="selectLevel(index)"
+                @click="selectLevel(index, item)"
                 v-for="(item, index) in englishLevelList" :key="index">
             <view class="cricle-parent flex align-item-center justify-content-center"
                   :class="{active: item.isSelect}">
@@ -31,25 +31,42 @@
 <script>
 
 import MyMixin from "@/utils/MyMixin";
+import {modifyEnglishLevel} from "@/api/me";
 export default {
   mixins: [MyMixin],
   data() {
     return {
-      englishLevelList: [
-        {title: '新手A1：词汇量少，对话困难', value: '', isSelect: true},
-        {title: '新手A2：词汇量少，对话困难', value: '', isSelect: false},
-        {title: '初级B1：词汇量适中，对话基本', value: '', isSelect: false},
-        {title: '中级B2：词汇量丰富，对话流利', value: '', isSelect: false},
-        {title: '高级C1：词汇量丰富，对话流利', value: '', isSelect: false},
-        {title: '高级C2：词汇量丰富，对话流利', value: '', isSelect: false}
-      ],
+      englishLevelList: [],
+      pageForm: ""
     };
   },
+  onLoad({pageForm}) {
+    this.pageForm = pageForm || "";
+    var basicData = uni.getStorageSync('basicData')
+    var currEnglishLevel = basicData.currEnglishLevel || "";
+    var data = basicData.dictCodeList.english_level
+    console.log("data", basicData.dictCodeList.english_level)
+    data.forEach((item, index) => {
+      item.isSelect = item.value === currEnglishLevel;
+    });
+    this.englishLevelList = data;
+  },
   methods: {
-    selectLevel(index) {
+    selectLevel(index, item) {
+      console.log(index, item)
       this.englishLevelList.forEach((item, i) => {
         item.isSelect = i === index
       })
+      modifyEnglishLevel({englishLevel: item.value}).then(res => {
+        this.getBasicData()
+        uni.showToast({
+          title: '设置成功',
+          icon: 'none'
+        })
+        if (this.pageForm === 'login') {
+          this.$navigateTo('/pages/me/selectGrade')
+        }
+      });
     },
   },
 }

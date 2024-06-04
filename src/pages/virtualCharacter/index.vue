@@ -12,10 +12,15 @@
       <view class="options-btns flex flex-direction-column">
         <view v-for="(item, index) in optionsBtnsMenu" :key="index" class="options-item"
               @click="$navigateTo(item.path)">
-          <view class="item-title t-size-24 flex align-item-center justify-content-center"
+          <view @click="$navigateTo('/pages/me/selectLevel')"
+            v-if="item.title == '切换'" class="switch-level flex align-item-center justify-content-center">
+            <image :src="`${imageBaseUrl}/6-3-01.png`" mode="widthFix" class="mr-1" style="width: 24rpx;"></image>
+            新手
+          </view>
+          <view v-if="item.title != '切换'" class="item-title t-size-24 flex align-item-center justify-content-center"
             :style="{width: `${item.width}rpx`, right: `${item.right}rpx`}"
           >{{item.title}}</view>
-          <image :src="item.icon" mode="widthFix" class="options-btn-img"></image>
+          <image v-if="item.title != '切换'" :src="item.icon" mode="widthFix" class="options-btn-img"></image>
         </view>
       </view>
 
@@ -102,13 +107,13 @@ export default {
   methods: {
     init() {
       this.optionsBtnsMenu = [
-        /*{
-          title: '赢时长',
+        {
+          title: '切换',
           width: 120,
           right: -80,
           icon: `${this.imageBaseUrl}/xl-image-45.png`,
           path: '/pages/virtualCharacter/duration'
-        },*/
+        },
         {
           title: '查看测评报告历史',
           width: 220,
@@ -116,12 +121,12 @@ export default {
           icon: `${this.imageBaseUrl}/xl-image-8.png`,
           path: '/pages/virtualCharacter/dialogueHistory'
         },
-        {
+        /*{
           title: '使用视频',
           width: 140,
           right: -100,
           icon: `${this.imageBaseUrl}/xl-image-37.png`,
-        }
+        }*/
       ],
       this.selectBtnsMenu = [
         {
@@ -168,6 +173,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.switch-level {
+  width: 140rpx;
+  height: 60rpx;
+  border-radius: 50rpx;
+  background: #DBEBFF;
+  box-sizing: border-box;
+  border: 3rpx solid #6B9BEF;
+  position: absolute;
+  top: -100rpx;
+  color: #2A67D2;
+  font-size: 26rpx;
+  letter-spacing: 0.15em;
+}
+
 .content-box {
   overflow: hidden;
   height: 100vh;

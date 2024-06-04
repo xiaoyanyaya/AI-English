@@ -63,9 +63,9 @@
           <image :src="`${imageBaseUrl}/new-2.1.png`" mode="widthFix" class="small-image"></image>
           <view class="t-size-26 font-weight-bold ml-2">批改实例</view>
         </view>
-        <view class="circle-box flex align-item-center justify-content-center mr-2">
+<!--        <view class="circle-box flex align-item-center justify-content-center mr-2">
           <u-icon name="arrow-right" color="#FFFFFF" size="20"></u-icon>
-        </view>
+        </view>-->
       </view>
       <view class="living-box mt-2 px-2 pb-3 pt-1">
         <view class="flex justify-content-between mt-4 pb-4 pl-2 t-size-26 living-item"
@@ -94,7 +94,7 @@
 
       <view class="flex align-item-center ml-3 mt-6">
         <image :src="`${imageBaseUrl}/new-2.2.png`" mode="widthFix" class="small-image"></image>
-        <view class="t-size-26 font-weight-bold ml-2">热门评论（6）</view>
+        <view class="t-size-26 font-weight-bold ml-2">热门评论（3008）</view>
       </view>
       <view class="common-box mt-2 px-2 pb-3 pt-1">
         <view class="flex justify-content-between mt-3 pb-3 t-size-26 common-item"
@@ -147,23 +147,23 @@ export default {
         image: '/img_a6.png',
         compositionTitleText: '2023年广东高考作文',
         compositionText: 'This is good news for the students who are preparing for the exam. The exam will be postponed for a week',
-        username: '张三',
+        username: '刘子轩',
         school: '深圳中学',
       }],
 
       commonData: [{
-        nickname: '灰太狼',
-        content: '这款工具的作文批改功能非常细致，从单词拼写、语法错误到篇章结构，都能给出准确的建议。',
+        nickname: 'alex',
+        content: '作文批改太棒了，从单词拼写、语法解析、好辞好句、作文优缺点、总结评分、参考范文等，非常详细。',
         image: '/new-2.7.png',
         star: 5,
       }, {
-        nickname: '灰太狼',
-        content: '这款工具的作文批改功能非常细致，从单词拼写、语法错误到篇章结构，都能给出准确的建议。',
+        nickname: '王丽蓉',
+        content: '作文帮写帮了大忙，我英语不好，指导不了孩子写作文，这个功能能直接写出范文给孩子参考。',
         image: '/new-2.8.png',
         star: 5,
       }, {
-        nickname: '灰太狼',
-        content: '这款工具的作文批改功能非常细致，从单词拼写、语法错误到篇章结构，都能给出准确的建议。',
+        nickname: 'Jack',
+        content: '我已经挑战了最近5年的全国高考作文题，还邀请了同学来挑战，有点意思。',
         image: '/new-2.9.png',
         star: 5,
       }],

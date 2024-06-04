@@ -251,7 +251,7 @@ export default {
       isReturnHome: 0,
     };
   },
-  onLoad({title, content, generateContent, pageIndex, pageTitle, compositionType, infoWordNums, infoWriteType, id, isShowTitle}) {
+  onLoad({title, content, generateContent, returnHome, pageIndex, pageTitle, compositionType, infoWordNums, infoWriteType, id, isShowTitle}) {
     uni.$on("cropImage", ({path, type}) => {
       this.getPhotoRecognition(path, type)
     })
@@ -337,6 +337,7 @@ export default {
         this.title.isDisabled = true;
         this.content.isShowContent = true;
         this.btnTitle = 'AI作文批改';
+        this.isReturnHome = returnHome || 0;
       } else if (pageTitle === 'AI作文批改') {
         var essayDataContent = uni.getStorageSync("essayDataContent")
         this.essayData.content = essayDataContent || ''
@@ -386,7 +387,7 @@ export default {
         .replaceAll("(9)、参考范文","<span style='color: #317cf2;line-height: 28px;'>(9)、参考范文</span>")
         .replaceAll("(10)、范文翻译","<span style='color: #317cf2;line-height: 28px;'>(10)、范文翻译</span>")
       this.generateContent = generateContent
-    } else if (pageIndex == 6) {
+    } else if (pageIndex == 6 || pageIndex == 7) {
       this.title.isShowTitle = isShowTitle == 1;
       this.title.isShowPhoto = false;
       this.title.isDisabled = true;
@@ -397,7 +398,7 @@ export default {
       this.otherContent.isDisabled = true;
       this.pageTitle = pageTitle;
       this.btnTitle = '分享';
-      this.isReturnHome = 1;
+      this.isReturnHome = pageIndex == 6 ? 1 : 0;
       this.network().getCompositionCollectInfo(id)
     }
 

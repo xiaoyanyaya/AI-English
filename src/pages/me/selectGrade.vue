@@ -10,16 +10,16 @@
       <view class="grade-grap mt-4">
         <view class="grade-box mt-1 flex justify-content-center"
         v-for="(item, index) in gradeList" :key="index"
-        @click="selectGrade(index)">
+        @click="selectGrade(index, item)">
           <image class="mt-2"
-                 :style="{width: `${item.width}rpx`}"
+                 style="width: 130rpx"
                  :src="`${imageBaseUrl}${item.image}`" mode="widthFix"></image>
           <view class="criteria" :style="{background: `${item.color}`}"></view>
           <view class="criteria2" :style="{background: `${item.color}`}"></view>
           <view class="criteria3" :style="{background: `${item.color}`}"></view>
           <view class="grade-btn flex align-item-center justify-content-center"
                 :class="item.isSelect ? 'active' : ''">
-            七年级
+            {{item.title}}
           </view>
         </view>
       </view>
@@ -31,25 +31,41 @@
 <script>
 
 import MyMixin from "@/utils/MyMixin";
+import {modifyEnglishLevel, modifyGrade} from "@/api/me";
 export default {
   mixins: [MyMixin],
   data() {
     return {
       // 年级列表
-      gradeList: [
-        {title: '七年级', image:'/img_18.png', color:'#E1EDFF', width: 130, isSelect: true},
-        {title: '八年级', image:'/img_19.png', color:'#FFE8CF', width: 180, isSelect: false},
-        {title: '九年级', image:'/img_20.png', color:'#E9FFE1', width: 120, isSelect: false},
-        {title: '高一', image:'/img_21.png', color:'#FFD3CF', width: 160, isSelect: false},
-        {title: '高二', image:'/img_22.png', color:'#FFFCE1', width: 90, isSelect: false},
-        {title: '高三', image:'/img_23.png', color:'#FFDEEE', width: 110, isSelect: false}
-      ]
+      gradeList: [],
+      pageForm: ""
     };
   },
+  onLoad({pageForm}) {
+    this.pageForm = pageForm || "";
+    var basicData = uni.getStorageSync('basicData')
+    var currGrade = basicData.currGrade || "";
+    let color = ['#E1EDFF', '#FFE8CF', '#E9FFE1', '#FFD3CF', '#FFFCE1', '#FFDEEE']
+    var data = basicData.dictCodeList.grade
+    console.log("data", data)
+    data.forEach((item, index) => {
+      item.isSelect = item.value === currGrade;
+      item.image = `/img_18.png`;
+      item.color = color[index % color.length];
+    });
+    this.gradeList = data;
+  },
   methods: {
-    selectGrade(index) {
+    selectGrade(index, item) {
       this.gradeList.forEach((item, i) => {
         item.isSelect = i === index;
+      });
+      modifyEnglishLevel({grade: item.value}).then(res => {
+        this.getBasicData()
+        uni.showToast({
+          title: '设置成功',
+          icon: 'none'
+        })
       });
     }
   },

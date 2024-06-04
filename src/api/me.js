@@ -42,3 +42,10 @@ export const privacyPolicy = params => fly.get('/article/privacyPolicy/detail', 
 export const userGuide = params => fly.get('/article/userGuide/detail', params)
 // 关于 /article/aboutUs/detail
 export const aboutUs = params => fly.get('/article/aboutUs/detail', params)
+
+// 基础数据 /app/common/basicData get
+export const basicData = params => fly.get('/app/common/basicData', params)
+// 会员修改英语水平 /member/modifyEnglishLevel post
+export const modifyEnglishLevel = params => fly.post('/member/modifyEnglishLevel', params)
+// 会员修改年级 /member/modifyGrade post
+export const modifyGrade = params => fly.post('/member/modifyGrade', params)

@@ -5,24 +5,33 @@
 		</cy-navbar>
 		<view class="title">
 			<view class="titleText">
-				{{word.unitFullName}}
+				{{word.unitFullName?word.unitFullName:title}}
 			</view>
 			<view class="titleSet" v-if="false">
 				<u-icon name="setting" size="42"></u-icon>
 			</view>
 		</view>
-		<view class="num">
+		<!-- <view class="num">
 			第{{wordData.wordIndex}}个/共{{wordList.length}}个
-		</view>
+		</view> -->
 		<view class="frequency">
-			<uCircleProgressVue active-color="#2979ff" :percent="(num/setData.num)*100">
-				<view class="u-progress-content">
-					<text class='u-progress-info'>{{num}}次</text>
-				</view>
-			</uCircleProgressVue>
+			<view class="frequencyLeft">
+				<u-line-progress inactive-color="#FDF5EC" active-color="#FFAB2D" height="40"
+					:percent="(wordData.wordIndex/wordList.length)*100">
+					<view class="frequencyLeft-text">
+						{{wordData.wordIndex}}/{{wordList.length}}
+					</view>
+				</u-line-progress>
+			</view>
+			<view class="frequencyRight">
+				{{stayTime}}
+			</view>
 		</view>
-		<view class="hit">
+		<!-- <view class="hit">
 			{{answerShow?wordDetails.spellAnswer:'答案提示显示区'}}
+		</view> -->
+		<view class="playImg" @click="num==setData.num?play(wordData.audioUsa):''">
+			<image :src="imageBaseUrl + (playing?'/word/5-31-01.gif':'/word/speaker.png')" mode=""></image>
 		</view>
 		<view class="definition" v-if="setData.show">
 			{{"['"+wordData.symbolUsa+"]"}}
@@ -31,46 +40,61 @@
 			{{wordData.wordCn}}
 		</view>
 		<view class="inputWord">
-			<!-- <uMessageInput @finish="finish" :inactive-color="answer" :value="inputValue"
-				:maxlength="wordData.wordEn?wordData.wordEn.length:2" mode="bottomLine" width="30" font-size="30">
-			</uMessageInput> -->
-			<view class="inputWord-input" v-for="(item,i) in verificationCode" :key="i">
-				<input type="text" :maxlength="item.maxlength" :value="item.value" @input="handleInput($event,i)"
-					:focus="item.focus" v-if="wordDetails.spellQuestioin.charAt(i)=='_'" />
-				<view class="inputWord-input-text" v-else>
-					{{wordDetails.spellQuestioin.charAt(i)}}
+			<view class="inputWord-input" v-for="(item,i) in wordDetails.spellQuestioin" :key="i">
+				<!-- <input type="text" adjust-position :maxlength="item.maxlength" :value="item.value"
+					@input="handleInput($event,i)" :focus="item.focus"
+					v-if="wordDetails.spellQuestioin.charAt(i)=='_'" /> -->
+				<view class="inputWord-input-text" :class="item!='_'?'inputWord-input-textB' :''">
+					<text v-if="item!='_'" :style="{'color': answer}">{{item}}</text>
 				</view>
 			</view>
 			<view class="success" v-if="answer=='#5AC591'">
 				<u-icon name='checkbox-mark' :color="answer"></u-icon>
 			</view>
+			<view class="inputWord-input" @click="deleteWord()" @longpress="longpressDeleteWord">
+				<image :src="imageBaseUrl+'/word/5-31-02.png'" mode=""></image>
+				<view class="inputWord-inputIcon">
+					<u-icon name="close"></u-icon>
+				</view>
+			</view>
 		</view>
-		<view class="control">
-			<view class="controlItem" @click="play(wordData.audioUsa)">
-				<image :src="imageBaseUrl + '/word/5-21-26.png'" mode=""></image>
-				<view class="controlItem-text">
+		<!-- <view class="control">
+			<view class="controlItem" @click="num==setData.num?play(wordData.audioUsa):''">
+				<image v-if="num!=setData.num" :src="imageBaseUrl + '/word/5-21-26.png'" mode=""></image>
+				<image v-else :src="imageBaseUrl + '/word/5-29-02.png'" mode=""></image>
+				<view class="controlItem-text" :class="num==setData.num?'controlItem-textBlue':''">
 					重读
 				</view>
 			</view>
-			<view class="controlItemC" @click="pause()">
-				<image :src="playing?imageBaseUrl + '/word/5-21-28.png':imageBaseUrl + '/word/5-21-27.png'" mode="">
+			<view class="controlItemC" @click="num!=setData.num?pause():''">
+				<image v-if="num!=setData.num"
+					:src="playing?imageBaseUrl + '/word/5-21-28.png':imageBaseUrl + '/word/5-21-27.png'" mode="">
 				</image>
-				<view class="controlItem-text">
+				<image v-else :src="imageBaseUrl + '/word/5-29-07.png'" mode="">
+				</image>
+				<view class="controlItem-text" :class="num!=setData.num?'controlItem-textBlue':''">
 					{{playing?'暂停':'播放'}}
 				</view>
 			</view>
-			<view class="controlItem" @click="handleClickWithDebounce()">
-				<image :src="imageBaseUrl + '/word/play_s.png'" mode=""></image>
-				<view class="controlItem-text">
+			<view class="controlItem" @click="!debounceShow?handleClickWithDebounce():''">
+				<image :src="debounceShow?imageBaseUrl + '/word/play_s.png':imageBaseUrl + '/word/5-29-01.png'" mode="">
+				</image>
+				<view class="controlItem-text" :class="!debounceShow?'controlItem-textBlue':''">
 					下一个
 				</view>
 			</view>
-		</view>
-		<view class="leftSidebar" @click="answerShow=!answerShow">
+		</view> -->
+		<!-- <view class="leftSidebar" @click="answerShow=!answerShow">
 			答案提示
 		</view>
 		<view class="rightSidebar" @click="toNav('/pages/word/definition')">
 			词汇讲解
+		</view> -->
+		<view class="keys">
+			<view class="keysItem" v-for="(item,i) in shuffledStr" @click="selectWord(item,i)"
+				:class="selectWordIndex.find(obj=>obj===i)>=0?'keysItem-select':''">
+				{{item}}
+			</view>
 		</view>
 		<view v-if="show" class="popup">
 			<view class="popup-back" @click="show=false"></view>
@@ -83,6 +107,21 @@
 				</view>
 				<view class="popup-contentButton" @click="show=false">
 					确认
+				</view>
+			</view>
+		</view>
+		<view class="controller">
+			<view class="controllerItem" @click="!debounceShow?handleClickWithDebounce(0):''"
+				v-show="wordData.wordIndex!=1">
+				<image :src="imageBaseUrl + (!debounceShow?'/word/6-1-01.png':'/word/pre_s.png')" mode=""></image>
+				<view class="" :class="!debounceShow?'controlItem-textBlue':''">
+					上一个
+				</view>
+			</view>
+			<view class="controllerItem" @click="!debounceShow?handleClickWithDebounce(1):''">
+				<image :src="imageBaseUrl + (!debounceShow?'/word/6-1-02.png':'/word/next_s.png')" mode=""></image>
+				<view class="" :class="!debounceShow?'controlItem-textBlue':''">
+					下一个
 				</view>
 			</view>
 		</view>
@@ -102,8 +141,7 @@
 		return indexes;
 	};
 	import MyMixin from "@/utils/MyMixin";
-	import uCircleProgressVue from "uview-ui/components/u-circle-progress/u-circle-progress.vue"
-	import uMessageInput from "uview-ui/components/u-message-input/u-message-input.vue"
+
 	import {
 		reviewNext,
 		wordEn,
@@ -111,9 +149,12 @@
 	} from "@/api/word";
 	export default {
 		mixins: [MyMixin],
-		components: {
-			uCircleProgressVue,
-			uMessageInput
+		watch: {
+			'wordDetails.spellQuestioin'(newval, oldval) {
+				if (!newval.includes('_')) {
+					this.finish()
+				}
+			}
 		},
 		onPageScroll(e) {
 			if (e.scrollTop > 20) {
@@ -124,6 +165,9 @@
 		},
 		data() {
 			return {
+				startTime: 0, // 记录开始时间
+				stayTime: '0秒', // 展示停留时间
+				timer: null, // 计时器
 				backColor: 'transparent',
 				word: {},
 				wordList: [],
@@ -143,15 +187,31 @@
 				inputValue: '',
 				timer: null, // 用于存储定时器的变量
 				verificationCode: [],
+				debounceShow: false,
+				title: '',
+				shuffledStr: [],
+				selectWordIndex: [],
+				errorNum:1
 			}
 		},
 		onLoad(e) {
-			console.log(e)
 			this.word = uni.getStorageSync('wordList')
-			this.wordList = this.word.wordLessonDictList
+			if (this.word.wordLessonDictList) {
+				this.wordList = this.word.wordLessonDictList
+			} else {
+				this.wordList = this.word
+			}
 			this.setData = uni.getStorageSync('setData')
 			this.lessonId = e.lessonId
 			this.id = e.id
+			if (e.title) {
+				this.title = e.title
+			}
+			console.log(this.title)
+			// 页面加载时开始计时
+			this.startTime = Date.now();
+			this.timer = setInterval(this.updateStayTime, 1000); // 每秒更新一次停留时间
+
 		},
 		onShow() {
 			this.getWordEn(0)
@@ -161,66 +221,207 @@
 			// this.nextInput(0);
 		},
 		methods: {
-			handleInput(event, index) {
+			longpressDeleteWord() {
+				this.selectWordIndex = []
+				this.wordDetails.spellQuestioin = this.wordDetails.spellQuestioin.replace(/[a-zA-Z]/g, '_')
+			},
+			replaceLastAlphabetSequenceWithUnderscore(str) {
+				// 使用正则表达式的全局标志g来找到所有的字母，然后使用函数作为replace的第二个参数
+				// 该函数会在每次匹配时调用，并可以通过$&获取匹配到的内容
+				// 使用数组来记录所有匹配到的字母的索引
+				let letterIndices = [];
+				// 第一次使用matchAll来找到所有字母及其索引
+				const matches = str.matchAll(/[a-zA-Z]/g);
+				for (const match of matches) {
+					letterIndices.push(match.index);
+				}
+				// 如果没有找到字母，直接返回原字符串
+				if (letterIndices.length === 0) {
+					return str;
+				}
+				// 获取最后一个字母的索引
+				const lastIndex = letterIndices[letterIndices.length - 1];
+				// 使用replace方法和函数参数来替换最后一个字母
+				return str.replace(/[a-zA-Z]/g, (match, index) => {
+					// 检查当前匹配的索引是否是最后一个字母的索引
+					console.log(index === lastIndex)
+					return index === lastIndex ? '_' : match;
+				});
+			},
+			deleteWord() {
+				this.selectWordIndex.pop()
+				this.wordDetails.spellQuestioin = this.replaceLastAlphabetSequenceWithUnderscore(this.wordDetails
+					.spellQuestioin);
+				console.log(this.wordDetails.spellQuestioin)
+			},
+			selectWord(item, i) {
+				if (!this.selectWordIndex.find(item => item === i)) {
+					if (this.selectWordIndex.length < this.wordDetails.spellAnswer.length) {
+						this.selectWordIndex.push(i)
+					}
+					if (this.wordDetails.spellQuestioin.indexOf('_') != -1) {
+						this.wordDetails.spellQuestioin = this.replaceCharAt(this.wordDetails.spellQuestioin, this
+							.wordDetails
+							.spellQuestioin.indexOf('_'), item)
+					}
+				}
+			},
+			replaceCharAt(str, index, newChar) {
+				// 检查索引是否有效
+				if (index < 0 || index >= str.length) {
+					return str; // 或者可以抛出错误
+				}
+				// 转换为字符数组
+				let chars = str.split('');
+				// 替换指定下标的字符
+				chars[index] = newChar;
+				// 转换回字符串
+				let newStr = chars.join('');
+				return newStr;
+			},
+			shuffleString(str) {
+				// 转换为字符数组
+				let chars = str.split('');
+				// 打乱数组顺序
+				chars.sort(() => 0.5 - Math.random());
+				return chars;
+			},
+			updateStayTime() {
+				// 更新停留时间
+				const currentTime = Date.now();
+				const elapsedTime = currentTime - this.startTime;
+				const seconds = Math.floor(elapsedTime / 1000);
+				this.stayTime = this.formatTime(seconds);
+			},
+			formatTime(seconds) {
+				// 格式化时间
+				const minutes = Math.floor(seconds / 60);
+				const hours = Math.floor(minutes / 60);
+				let displayTime = '';
+				if (hours > 0) {
+					displayTime += `${hours}小时`;
+				}
+				if (minutes > 0) {
+					displayTime += `${minutes % 60}分`;
+				}
+				displayTime += `${seconds % 60}秒`;
+				return displayTime;
+			},
+			handleBlur(event, index) {
 				var that = this
-				// 更新当前输入框的值
-				const value = event.detail.value;
-				this.verificationCode[index].value = value
-				// this.$set(this.verificationCode[index], 'value', value);
-				// 如果当前输入框的值长度等于其最大长度
-				if (value.length === this.verificationCode[index].maxlength) {
-					this.verificationCode[index].focus = false
+				if (this.verificationCode[index].value.length == 1) {
 					if (index + 1 != this.verificationCode.length) {
-						console.log(findUnderscoreIndexes(this.wordDetails.spellQuestioin))
-						if(findUnderscoreIndexes(this.wordDetails.spellQuestioin).length>=1){
-							findUnderscoreIndexes(this.wordDetails.spellQuestioin).forEach(function(element, i, array) {
+						if (findUnderscoreIndexes(this.wordDetails.spellQuestioin).length >= 1) {
+							findUnderscoreIndexes(this.wordDetails.spellQuestioin).forEach(function(element, i,
+								array) {
 								if (element == index + 1) {
 									that.verificationCode[index + 2].focus = true
 								} else {
+									console.log(event)
+									console.log(that.verificationCode[index])
 									that.verificationCode[index + 1].focus = true
 								}
 							})
-						}else{
+						} else {
 							this.verificationCode[index + 1].focus = true
 						}
 					} else {
 						this.finish()
 					}
+				} else {
+					console.log(index)
+					if (index != 0) {
+						if (findUnderscoreIndexes(this.wordDetails.spellQuestioin).length >= 1) {
+							findUnderscoreIndexes(this.wordDetails.spellQuestioin).forEach(function(element, i,
+								array) {
+								console.log(element, index)
+								if (element == index - 1) {
+									that.verificationCode[index - 2].focus = true
+								} else {
+									that.verificationCode[index - 1].focus = true
+								}
+							})
+						} else {
+							this.verificationCode[index - 1].focus = true
+						}
+					}
 				}
 			},
-			debounce(func, wait) {
+			handleInput(event, index) {
+				var that = this
+				// 更新当前输入框的值
+				var value = ""
+				if (event.detail.value) {
+					value = event.detail.value;
+				}
+				this.verificationCode[index].value = value
+				// this.$set(this.verificationCode[index], 'value', value);
+				// 如果当前输入框的值长度等于其最大长度
+				this.verificationCode[index].focus = false
+				if (this.verificationCode[index].value.length == 1) {
+					if (index + 1 != this.verificationCode.length) {
+						if (findUnderscoreIndexes(this.wordDetails.spellQuestioin).length >= 1) {
+							findUnderscoreIndexes(this.wordDetails.spellQuestioin).forEach(function(element, i,
+								array) {
+								if (element == index + 1) {
+									that.verificationCode[index + 2].focus = true
+								} else {
+									console.log(event)
+									console.log(that.verificationCode[index])
+									that.verificationCode[index + 1].focus = true
+								}
+							})
+						} else {
+							this.verificationCode[index + 1].focus = true
+						}
+					} else {
+						this.finish()
+					}
+				} else {
+					console.log(index)
+					if (index != 0) {
+						if (findUnderscoreIndexes(this.wordDetails.spellQuestioin).length >= 1) {
+							findUnderscoreIndexes(this.wordDetails.spellQuestioin).forEach(function(element, i,
+								array) {
+								console.log(element, index)
+								if (element == index - 1) {
+									that.verificationCode[index - 2].focus = true
+								} else {
+									that.verificationCode[index - 1].focus = true
+								}
+							})
+						} else {
+							this.verificationCode[index - 1].focus = true
+						}
+					}
+				}
+				console.log(this.verificationCode[index].focus)
+			},
+			debounce(func, wait, e) {
 				let timeout;
+				const that = this;
 				return function() {
 					const context = this;
 					const args = arguments;
 					clearTimeout(timeout);
 					timeout = setTimeout(function() {
-						func.apply(context, args);
+						func(e)
+						that.debounceShow = false
 					}, wait);
 				};
 			},
-			handleClickWithDebounce() {
-				const debouncedHandleClick = this.debounce(this.next, 1500); // 设置1.5秒的防抖时间
+			handleClickWithDebounce(e) {
+				this.debounceShow = true
+				const debouncedHandleClick = this.debounce(this.next, 1500, e); // 设置1.5秒的防抖时间
 				debouncedHandleClick();
 			},
-			async next() {
-				let stringWithSpacesRestored = '';
-				let currentIndex = 0;
-
-				for (let i = 0; i < this.wordData.wordEn.length; i++) {
-					stringWithSpacesRestored += this.wordData.wordEn[i];
-					while (this.spaceIndices.length > 0 && this.spaceIndices[0] === currentIndex) {
-						stringWithSpacesRestored += ' '; // 在原始空格的位置添加空格
-						this.spaceIndices.shift(); // 移除已处理的空格位置
-					}
-					currentIndex++;
-				}
+			async next(e) {
 				var getData = {
 					reviewId: this.id,
 					lessonId: this.lessonId,
 					wordIndex: this.wordData.wordIndex,
-					wordEn: stringWithSpacesRestored,
-					userAnswer: stringWithSpacesRestored
+					wordEn: this.wordData.wordEn,
+					userAnswer: this.wordDetails.spellQuestioin
 				}
 				let data = await reviewNext(getData);
 				if (data.data.code == 200) {
@@ -229,54 +430,56 @@
 					innerAudioContext.pause()
 					this.onOff = false
 					clearTimeout(this.timeout);
-					this.getWordEn(this.wordData.wordIndex)
-					console.log(data.data.result.wordIndex, this.wordList.length)
+					console.log(e)
+					if (e == 1) {
+						this.getWordEn(this.wordData.wordIndex)
+					} else {
+						this.getWordEn(this.wordData.wordIndex - 2)
+					}
+					this.longpressDeleteWord()
+					this.errorNum=1
 					if (data.data.result.wordIndex == this.wordList.length - 1) {
 						var passData = {
 							id: this.id
 						}
 						let data = await reviewFinish(passData)
-						this.toNav('/pages/word/answer?id='+this.id)
+						this.toNav('/pages/word/answer?id=' + this.id)
 					}
 				} else {
 					console.log('记录失败')
 				}
 			},
 			finish(e) {
-				function concatenateNonEmptyValues(array) {
-					return array.reduce((accumulator, item) => {
-						const value = item.value;
-						if (value !== null && value !== undefined && value !== '') {
-							// 如果value不是空值，则添加到累积字符串中
-							return accumulator + value;
-						}
-						// 如果value是空值，则直接返回累积字符串
-						return accumulator;
-					}, ''); // 初始化累积字符串为空字符串
-				}
-
-				var answer = concatenateNonEmptyValues(this.verificationCode);
-				console.log(this.wordDetails.spellAnswer.toLowerCase(), answer.toLowerCase())
-				if (this.wordDetails.spellAnswer.toLowerCase() == answer.toLowerCase()) {
+				if (this.wordDetails.wordEn.toLowerCase() == this.wordDetails.spellQuestioin.toLowerCase()) {
 					console.log('成功')
 					this.answer = '#5AC591'
 					clearTimeout(timeout)
 					let timeout = setTimeout(obj => {
-						this.next()
+						this.next(1)
 					}, 2000)
 				} else {
-					console.log('失败')
+					console.log('失败',this.errorNum)
 					this.answer = '#EB7171'
-					this.show = true
-					clearTimeout(timeout)
-					let timeout = setTimeout(obj => {
-						this.show = false
-					}, 2000)
+					if(this.errorNum==3){
+						this.errorNum=this.errorNum++
+						clearTimeout(timeout)
+						let timeout = setTimeout(obj => {
+							this.next(1)
+						}, 2000)
+					}else{
+						this.errorNum=this.errorNum+1
+						this.show = true
+						clearTimeout(timeout)
+						let timeout = setTimeout(obj => {
+							this.show = false
+						}, 2000)
+					}
 				}
 			},
 			async getWordEn(index) {
 				this.onOff = true
 				this.wordData = this.wordList[index]
+				console.log(this.wordData)
 				var newData = {
 					wordEn: this.wordData.wordEn
 				}
@@ -304,13 +507,15 @@
 						focus: false,
 					})
 				this.verificationCode[0].focus = true
-				console.log(this.verificationCode)
+				this.shuffledStr = this.shuffleString(this.wordDetails.spellAnswer + this.wordDetails
+					.spellAnswerNoise);
+				console.log(this.shuffledStr)
 				// 记录空格的位置
-				for (let i = 0; i < this.wordData.wordEn.length; i++) {
-					// if (this.wordData.wordEn[i] === ' ') {
-					this.spaceIndices.push(i);
-				}
-				this.wordData.wordEn = this.wordData.wordEn.replace(/\s/g, '');
+				// for (let i = 0; i < this.wordData.wordEn.length; i++) {
+				// 	// if (this.wordData.wordEn[i] === ' ') {
+				// 	this.spaceIndices.push(i);
+				// }
+				// this.wordData.wordEn = this.wordData.wordEn.replace(/\s/g, '');
 				for (var i = 0; i < this.setData.num; i++) {
 					if (this.onOff) {
 						await this.autoPlay(this.wordData.audioUsa)
@@ -324,11 +529,13 @@
 			},
 			play(src) {
 				var that = this
+				that.playing = true
 				if (uni.getSystemInfoSync().platform === 'ios') {
 					innerAudioContext.src = encodeURI(src);
 					innerAudioContext.play()
 					innerAudioContext.onEnded(() => {
 						console.log('音频播放结束');
+						that.playing = false
 					});
 				} else {
 					uni.showLoading({
@@ -343,6 +550,7 @@
 								innerAudioContext.play()
 								innerAudioContext.onEnded(() => {
 									console.log('音频播放结束');
+									that.playing = false
 								});
 							}
 						},
@@ -454,8 +662,7 @@
 	}
 
 	.titleText {
-		font-size: 35rpx;
-		font-weight: 600;
+		font-size: 30rpx;
 	}
 
 	.titleSet {
@@ -485,6 +692,15 @@
 	.frequency {
 		display: flex;
 		justify-content: center;
+		padding: 0 70rpx;
+		margin-top: 58rpx;
+		margin-bottom: 95rpx;
+		align-items: center;
+	}
+
+	.frequencyLeft {
+		flex: 1;
+		margin-right: 28rpx;
 	}
 
 	.hit {
@@ -532,8 +748,8 @@
 
 	.controlItemC {
 		text-align: center;
-		color: rgba(25, 100, 229, 1);
 		font-size: 30rpx;
+		color: rgba(138, 138, 138, 1);
 	}
 
 	.controlItemC image {
@@ -592,16 +808,17 @@
 
 	.popup-content {
 		text-align: center;
-		position: absolute;
+		position: fixed;
 		background: #fff;
-		top: 400rpx;
+		top: 0rpx;
+		bottom: 0;
 		left: 0;
 		right: 0;
 		margin: auto;
 		width: 508rpx;
 		height: 382rpx;
 		border-radius: 20rpx;
-		z-index: 1;
+		z-index: 99999;
 	}
 
 	.popup-contentImg image {
@@ -641,9 +858,14 @@
 	.inputWord {
 		display: flex;
 		justify-content: center;
+		margin-left: 10rpx;
 	}
 
-	.inputWord-input {}
+	.inputWord-input {
+		display: flex;
+		align-items: center;
+		position: relative;
+	}
 
 	.inputWord-input input {
 		border-bottom: 2rpx solid black;
@@ -657,7 +879,113 @@
 		white-space: pre-line;
 		font-size: 34rpx;
 		width: 32rpx;
-		margin-right: 14rpx;
+		margin-right: 12rpx;
 		text-align: center;
+		border-bottom: 2rpx solid black;
+		height: 48rpx;
+	}
+
+	.inputWord-input-textB {
+		border-bottom: 0rpx solid black;
+	}
+
+	.controlItem-textBlue {
+		color: rgba(25, 100, 229, 1);
+	}
+
+	.u-active {
+		/* border-radius: 30rpx; */
+	}
+
+	.playImg {
+		display: flex;
+		justify-content: center;
+		margin-bottom: 59rpx;
+	}
+
+	.playImg image {
+		width: 126rpx;
+		height: 94rpx;
+	}
+
+	.keys {
+		display: flex;
+		margin-top: 112rpx;
+		padding: 0 40rpx;
+		flex-wrap: wrap;
+		padding-bottom: 160rpx;
+	}
+
+	.keysItem {
+		border-radius: 10rpx;
+		border: 2rpx solid #517EF1;
+		background: #F1F6FF;
+		width: 90rpx;
+		height: 90rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 40rpx;
+		margin-right: 26rpx;
+		margin-bottom: 30rpx;
+	}
+
+	.keysItem:nth-child(6n) {
+		margin-right: 0;
+	}
+
+	.controller {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-top: 80rpx;
+		position: fixed;
+		bottom: 0;
+		width: 100%;
+		padding: 36rpx 0;
+		border-top: 2rpx solid #BFBFBF;
+		background: #fff;
+	}
+
+	.controllerItem {
+		margin-right: 212rpx;
+		text-align: center;
+		font-size: 24rpx;
+		color: #8A8A8A;
+	}
+
+	.controllerItem:nth-child(2) {
+		margin-right: 0;
+	}
+
+	.controller image {
+		width: 28rpx;
+		height: 34rpx;
+		margin-bottom: 6rpx;
+	}
+
+	.frequencyLeft-text {
+		padding-left: 20rpx;
+		color: black;
+	}
+
+	.inputWord-input image {
+		width: 68rpx;
+		height: 38rpx;
+		margin-left: 24rpx;
+	}
+
+	.inputWord-inputIcon {
+		color: #fff;
+		position: absolute;
+		font-size: 22rpx;
+		right: 20rpx;
+		margin: auto;
+	}
+
+	.keysItem-select {
+		border: 2rpx solid #E06D25;
+		background: #FAB472;
+		color: #fff;
 	}
 </style>

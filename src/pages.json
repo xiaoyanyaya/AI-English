@@ -93,7 +93,13 @@
         },
         {
           "path": "answer"
-        }
+        },
+		{
+		  "path": "reverseForgetting/index"
+		},
+		{
+		  "path": "reverseForgetting/review"
+		}
       ]
     },
     {

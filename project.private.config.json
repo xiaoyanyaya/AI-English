@@ -10,15 +10,15 @@
       "list": [
         {
           "name": "pages/word/index",
-          "pathName": "pages/word/answer",
-          "query": "id=1796092854153031682",
+          "pathName": "pages/word/index",
+          "query": "",
           "launchMode": "default",
           "scene": null
         },
         {
           "name": "pages/word/index",
-          "pathName": "pages/word/index",
-          "query": "",
+          "pathName": "pages/word/answer",
+          "query": "id=1796092854153031682",
           "launchMode": "default",
           "scene": null
         },

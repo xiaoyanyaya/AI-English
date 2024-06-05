@@ -9,6 +9,20 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/index/index",
+          "pathName": "pages/index/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/word/reverseForgetting/wrongWords",
+          "pathName": "pages/word/reverseForgetting/wrongWords",
+          "query": "id=1797883613810356225",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "pages/word/index",
           "pathName": "pages/word/index",
           "query": "",

@@ -1,13 +1,18 @@
 <template>
 	<view class="main">
-		<cy-navbar :showBack="true" :bgColor="backColor"></cy-navbar>
+		<!-- <cy-navbar :showBack="true" :bgColor="backColor">
+			<view class="t-size-30">单词列表</view>
+		</cy-navbar> -->
 		<view class="content">
-			<view class="title">
-				{{id==0?allData.unitFullName:bookData.bookType_dictText+bookData.bookSecondType_dictText}} {{title?title:''}}
-			</view>
+			<u-sticky offset-top="200">
+				<view class="title">
+					{{id==0||id==2||id==3?allData.unitFullName:bookData.bookType_dictText+bookData.bookSecondType_dictText+title}}
+					<!-- {{title?title:''}} -->
+				</view>
+			</u-sticky>
 			<view class="list">
-				<view class="listItem" v-for="(item,i) in allData.wordLessonDictList" :key="item.id" v-if="id==0||id==2"
-					@click="play(item.audioUsa,item.id)">
+				<view class="listItem" v-for="(item,i) in allData.wordLessonDictList" :key="item.id" v-if="id==0||id==2||id==3"
+					@click="item.audioUsa?play(item.audioUsa,item.id):''">
 					<view class="listItem-l">
 						<image v-if="gif&&selectId==item.id" class="listItem-lGif"
 							:src="imageBaseUrl + '/word/in_play.gif'" mode=""></image>
@@ -31,9 +36,12 @@
 					<view class="listItem-r" @click.stop="toNav('/pages/word/definition?wordEn='+item.wordEn)">
 						词汇讲解
 					</view>
+					<view class="listItem" v-if="id==3">
+						
+					</view>
 				</view>
 				<view class="listItem" v-for="(item,i) in allData" :key="item.id" v-if="id==1"
-					@click="play(item.audioUsa)">
+					@click="item.audioUsa?play(item.audioUsa):''">
 					<view class="listItem-l">
 						<u-icon name="volume-up" size="36" color="rgba(24, 99, 229, 1)"></u-icon>
 					</view>
@@ -52,12 +60,13 @@
 							</view>
 						</view>
 					</view>
-					<view class="listItem-r" @click="toNav('/pages/word/definition?wordEn='+item.wordEn)">
+					<view class="listItem-r" @click="toNav('/pages/word/definition?wordEn='+item.wordEn+'&id=1')">
 						词汇讲解
 					</view>
 				</view>
 			</view>
-			<view class="button" @click="toNav('/pages/word/set?id='+(id==1?dataB.lessonId:allData.id)+'&title='+(title?title:''))">
+			<view class="button"
+				@click="toNav('/pages/word/set?id='+(id==1?dataB.lessonId:allData.id)+'&title='+(title?title:''))">
 				立即挑战
 			</view>
 		</view>
@@ -66,6 +75,7 @@
 </template>
 
 <script>
+	// import uSticky from "@/node_modules/uview-ui/components/u-sticky"
 	// const bgAudioManager = uni.getBackgroundAudioManager();
 	const innerAudioContext = uni.createInnerAudioContext();
 	innerAudioContext.autoplay = true
@@ -76,7 +86,8 @@
 	import {
 		wordList,
 		dictList,
-		lessonWordList
+		lessonWordList,
+		queryById
 	} from "@/api/word";
 	export default {
 		mixins: [MyMixin],
@@ -91,22 +102,26 @@
 					lessonId: 0,
 					pageSize: 99
 				},
+				dataC:{
+					id:0
+				},
 				allData: {},
 				bookData: {},
 				audioSrc: '',
 				gif: false,
 				selectId: 0,
-				title:''
+				title: '',
+				
 			}
 		},
 		onLoad(e) {
-			if(e.title){
-				this.title=e.title
+			if (e.title) {
+				this.title = e.title
 			}
-			if(e.id){
+			if (e.id) {
 				this.id = e.id
-				uni.setStorageSync('wordType',e.id);
-			}else{
+				uni.setStorageSync('wordType', e.id);
+			} else {
 				this.id = uni.getStorageSync('wordType');
 			}
 			if (e.id == 0) {
@@ -116,6 +131,8 @@
 				console.log(e.unitId)
 			} else if (e.id == 2) {
 				this.data.unitId = e.unitId
+			} else if (e.id == 3) {
+				this.dataC.id = e.unitId
 			}
 			this.bookData = uni.getStorageSync('bookData')
 		},
@@ -126,7 +143,7 @@
 				this.backColor = 'transparent'
 			}
 		},
-		onShow(){
+		onShow() {
 			this.getWord()
 		},
 		methods: {
@@ -141,6 +158,10 @@
 					uni.setStorageSync('wordList', data.data.result.records)
 				} else if (this.id == 2) {
 					let data = await lessonWordList(this.data)
+					this.allData = data.data.result
+					uni.setStorageSync('wordList', data.data.result)
+				}else if(this.id == 3){
+					let data = await queryById(this.dataC)
 					this.allData = data.data.result
 					uni.setStorageSync('wordList', data.data.result)
 				}
@@ -210,20 +231,20 @@
 	}
 
 	.title {
-		position: fixed;
+	/* 	position: fixed; */
 		background: #DEF0FF;
 		width: 100%;
 		padding-bottom: 30rpx;
 		z-index: 1;
-		top: 120rpx;
+		/* top: 120rpx; */
 		left: 0;
-		padding-left: 55rpx;
-		padding-top: 30rpx;
+		/* padding-left: 55rpx; */
+		/* padding-top: 30rpx; */
 	}
 
 	.content {
 		padding: 30rpx 55rpx;
-		padding-top: 90rpx;
+		/* padding-top: 90rpx; */
 	}
 
 	.list {

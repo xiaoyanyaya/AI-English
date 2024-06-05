@@ -7,61 +7,195 @@
 			<view class="headLeft">
 				<view class="headLeft-icon"></view>单词复习列表
 			</view>
-			<view class="headRight">
+			<view class="headRight" @click="show=true">
 				<text>艾宾浩斯遗忘曲线</text><u-icon name="question-circle-fill"></u-icon>
 			</view>
 		</view>
 		<view class="list">
-			<view class="listItem">
+			<view class="listItem" v-for="(items,index) in bookData" :key="index">
 				<view class="listItem-title">
-					今天
+					{{items.planDateName}}
 				</view>
 				<view class="listItem-content">
-					<view class="listItem-contentBook">
-						<view class="listItem-contentBook-top">
-							<view class="listItem-contentBook-topTitle">
-								人教版 初中英语 （八年级上）
+					<view class="listItem-contentBook" v-for="(item,i) in items.wordLessonList" :key="item.id"
+						@click="toNav('/pages/word/wordList?id=3'+'&unitId='+item.id)">
+						<view class="listItem-contentBook-head">
+							<view class="listItem-contentBook-top">
+								<view class="listItem-contentBook-topTitle">
+									{{item.lessonFullName}}
+								</view>
+								<view class="listItem-contentBook-topDate" v-if="false">
+
+								</view>
 							</view>
-							<view class="listItem-contentBook-topDate">
-								2024-03-27 17:08:00
+							<view class="listItem-contentBook-bottom">
+								<view class="listItem-contentBook-bottomL">
+									{{item.lessonName}}
+								</view>
+								<view class="listItem-contentBook-bottomC" v-if="false">
+									<text>正确（16）</text>/<text class="listItem-contentBook-bottomC-no">错误（0）</text>
+								</view>
+							</view>
+							<view class="listItem-contentBook-icon" @click.stop="launch(item.id)"
+								:class="item.click?'listItem-contentBook-icons':''">
+								<image :src="imageBaseUrl+'/word/6-4-02.png'" mode=""></image>
 							</view>
 						</view>
-						<view class="listItem-contentBook-bottom">
-							<view class="listItem-contentBook-bottomL">
-								Unit1
+						<view class="listItem-contentBook-tab" v-show="item.click">
+							<view class="listItem-contentBook-tabItem" @click.stop="tabClick(0)"
+								:class="tabNum==0?'listItem-contentBook-tabItem-select':''">
+								已复习历程
 							</view>
-							<view class="listItem-contentBook-bottomC">
-								<text>正确（16）</text>/<text class="listItem-contentBook-bottomC-no">错误（0）</text>
+							<view class="listItem-contentBook-tabItem" @click.stop="tabClick(1)"
+								:class="tabNum==1?'listItem-contentBook-tabItem-select':''">
+								待复习计划
 							</view>
-							<view class="listItem-contentBook-bottomR">
-								<div class="progress" style="--progress: 80%; --last: 0%;" data-progress="80%"></div>
-
-								<!-- <view class="listItem-contentBook-bottomR-icon" ></view> -->
+						</view>
+						<view class="listItem-contentBook-form" v-show="item.click">
+							<view class="listItem-contentBook-formTitle">
+								<view class="listItem-contentBook-formTitle-item" style="width: 20%;">
+									日期
+								</view>
+								<view class="listItem-contentBook-formTitle-item" style="width: 20%;">
+									用时(min)
+								</view>
+								<view class="listItem-contentBook-formTitle-item" style="width: 20%;">
+									正确数
+								</view>
+								<view class="listItem-contentBook-formTitle-item" style="width: 20%;">
+									错误数
+								</view>
+								<view class="listItem-contentBook-formTitle-item" style="width: 20%;">
+									结果
+								</view>
+							</view>
+							<view class="listItem-contentBook-formList" v-for="(item,i) in tabData" :key="item.id">
+								<view class="listItem-contentBook-formList-item" style="width: 20%;">
+									{{item.reviewDate}}
+								</view>
+								<view class="listItem-contentBook-formList-item" style="width: 20%;">
+									{{item.costTimes?item.costTimes:'-'}}
+								</view>
+								<view class="listItem-contentBook-formList-item" style="width: 20%;">
+									{{item.correctWordNum?item.correctWordNum:'-'}}
+								</view>
+								<view class="listItem-contentBook-formList-item" style="width: 20%;">
+									{{item.errorWordNum?item.errorWordNum:'-'}}
+								</view>
+								<view class="listItem-contentBook-formList-item" style="width: 20%;">
+									{{item.reviewResult==1?'通过':'失败'}}
+								</view>
 							</view>
 						</view>
 					</view>
 				</view>
 			</view>
 		</view>
+		<view class="imgs" @click="toNav('/pages/word/reverseForgetting/wrongWords')">
+			<image :src="imageBaseUrl+'/word/6-4-01.png'" mode=""></image>
+		</view>
+		<u-popup v-model="show" mode="center" border-radius="20">
+			<view class="popup">
+				<view class="popupHead">
+					<u-icon name="close" @click="show=false"></u-icon>
+				</view>
+				<view class="popupContent">
+					<image :src="imageBaseUrl+'/word/6-4-03.jpg'" mode=""></image>
+					<view class="popupContent-text">
+						<view class="popupContent-textItem">
+							艾宾浩斯记忆曲线是德国心理学家艾宾浩斯通过大量实验得出的关于记忆遗忘规律的曲线。
+						</view>
+						<view class="popupContent-textItem">
+							它揭示了遗忘的速度在记忆初期较快，随后逐渐减慢的稳定规律。根据这一规律，人们可以制定科学的复习策略，从而更有效地记住单词。
+						</view>
+						<view class="popupContent-textItem">
+							对于记英语单词来说，艾宾浩斯记忆曲线具有显著的指导作用。
+						</view>
+
+						<view class="popupContent-textItem">
+							通过遵循遗忘规律，及时复习，并结合多样化学习方式，可以提高单词记忆的效率，使记忆更加牢固。
+						</view>
+						<view class="popupContent-textItem">
+							因此，艾宾浩斯记忆曲线是帮助我们快速记住单词并提高学习效率的有力工具。
+						</view>
+					</view>
+				</view>
+			</view>
+		</u-popup>
 		<wordTab :type="1"></wordTab>
 	</view>
 </template>
 
 <script>
+	import MyMixin from "@/utils/MyMixin";
 	import luanqingProgressbar from '@/pages/word/components/luanqing-progressbar/luanqing-progressbar.vue'
 	import wordTab from '@/pages/word/components/word-tabbar/index.vue'
+	import {
+		getUserLessonList,
+		queryListByLessonId
+	} from "@/api/word"
 	export default {
+		mixins: [MyMixin],
 		components: {
 			wordTab
 		},
 		data() {
 			return {
-
+				bookData: [],
+				tabData: [],
+				show: false,
+				tabNum:0
 			}
 		},
-		onShow() {},
+		onShow() {
+			this.getData()
+		},
 		methods: {
-
+			toNav(urls) {
+				uni.navigateTo({
+					url: urls
+				})
+			},
+			tabClick(i) {
+				this.tabData=this.tabAllData[i].wordReviewList
+				this.tabNum=i
+			},
+			async getData() {
+				var that = this
+				let data = await getUserLessonList()
+				this.bookData = data.data.result
+				this.bookData.forEach(function(item, i) {
+					item.wordLessonList.forEach(function(items, index) {
+						that.bookData[i].wordLessonList[index].click = false
+					})
+				})
+			},
+			async tab(id) {
+				var res = {
+					lessonId: id
+				}
+				let data = await queryListByLessonId(res)
+				this.tabAllData = data.data.result
+				this.tabData = data.data.result[0].wordReviewList
+			},
+			launch(id) {
+				var that = this
+				this.bookData.forEach(function(item, i) {
+					item.wordLessonList.forEach(function(items, index) {
+						if (that.bookData[i].wordLessonList[index].id == id) {
+							if (that.bookData[i].wordLessonList[index].click == false) {
+								that.bookData[i].wordLessonList[index].click = true
+								that.tab(id)
+							} else {
+								that.bookData[i].wordLessonList[index].click = false
+							}
+						} else {
+							that.bookData[i].wordLessonList[index].click = false
+						}
+					})
+				})
+				this.bookData = JSON.parse(JSON.stringify(this.bookData));
+			}
 		}
 	}
 </script>
@@ -76,6 +210,7 @@
 	.main {
 		background: linear-gradient(180deg, #ECF6FF 0%, #F7FCFF 100%);
 		min-height: 100vh;
+		padding-bottom: 160rpx;
 	}
 
 	.head {
@@ -130,28 +265,34 @@
 
 	.list {
 		padding: 40rpx;
-		padding-top: 20rpx;
+		padding-top: 0;
 	}
 
 	.listItem {
-		background: #fff;
+		/* background: #fff; */
 	}
 
 	.listItem-title {
 		color: #8A8A8A;
 		font-size: 24rpx;
 		padding: 20rpx 40rpx;
+		background: #fff;
+		margin-bottom: 30rpx;
+		border-radius: 10rpx;
+		margin-top: 30rpx;
 	}
 
-	.listItem-content {
-		border-top: 2rpx solid #ECF6FF;
-		padding: 30rpx;
-	}
+	.listItem-content {}
 
 	.listItem-contentBook {
-		background: #EFF6FF;
-		border-radius: 10rpx;
-		padding: 10rpx 30rpx 20rpx 30rpx;
+		background: #fff;
+		margin-top: 30rpx;
+	}
+
+	.listItem-contentBook-head {
+		background: linear-gradient(180deg, #D6E8FF 0%, #FFFFFF 100%);
+		padding: 25rpx 40rpx 25rpx 40rpx;
+		border-radius: 10rpx 10rpx 0 0;
 	}
 
 	.listItem-contentBook-top {
@@ -159,11 +300,12 @@
 		justify-content: space-between;
 		align-items: center;
 		font-size: 20rpx;
-		margin-bottom: 26rpx;
+		margin-bottom: 22rpx;
 	}
 
 	.listItem-contentBook-topTitle {
 		color: #1863E5;
+		font-size: 24rpx;
 	}
 
 	.listItem-contentBook-topDate {
@@ -173,7 +315,7 @@
 	.listItem-contentBook-bottom {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
+		justify-content: center;
 	}
 
 	.listItem-contentBook-bottomL {
@@ -192,7 +334,8 @@
 	}
 
 	.listItem-contentBook-bottomC-no {
-		color: #DC0C0C;
+		color: #DC0C0C !important;
+		margin-left: 12rpx;
 	}
 
 	.listItem-contentBook-bottomR {
@@ -218,6 +361,111 @@
 		left: -4rpx;
 		top: -4rpx;
 	}
+
+	.listItem-contentBook-tab {
+		display: flex;
+		align-items: center;
+		justify-content: space-around;
+		padding: 0 60rpx;
+		margin-top: 30rpx;
+	}
+
+	.listItem-contentBook-tabItem {
+		color: #8A8A8A;
+		font-size: 24rpx;
+	}
+
+	.listItem-contentBook-tabItem-select {
+		color: #E79315;
+		border-bottom: 4rpx solid #E79315;
+		padding-bottom: 6rpx;
+	}
+
+	.listItem-contentBook-form {
+		margin-top: 20rpx;
+	}
+
+	.listItem-contentBook-formTitle {
+		display: flex;
+		font-size: 24rpx;
+		text-align: center;
+		padding: 16rpx;
+	}
+
+	.listItem-contentBook-formList {
+		display: flex;
+		color: #878787;
+		font-size: 20rpx;
+		text-align: center;
+		padding: 16rpx;
+	}
+
+	.listItem-contentBook-formList:nth-child(even) {
+		background: #F9F9F9;
+	}
+
+	.listItem-contentBook-icon {
+		display: flex;
+		justify-content: center;
+		margin-top: 20rpx;
+		transform: rotateX(180deg);
+	}
+
+	.imgs {
+		display: flex;
+		justify-content: center;
+	}
+
+	.imgs image {
+		width: 670rpx;
+		height: 180rpx;
+	}
+
+	.listItem-contentBook-icon image {
+		width: 24rpx;
+		height: 24rpx;
+	}
+
+	.listItem-contentBook-icons {
+		transform: rotateX(0deg);
+	}
+
+	.popup {
+		width: 588rpx;
+		border-radius: 20rpx;
+	}
+
+	.popupHead {
+		background: linear-gradient(180deg, rgba(195, 216, 255, 0.5) 0%, rgba(255, 255, 255, 0.5) 100%);
+		height: 65rpx;
+		font-size: 24rpx;
+		text-align: right;
+		padding-right: 50rpx;
+		line-height: 65rpx;
+	}
+
+	.popupContent {
+		padding: 15rpx 58rpx;
+		padding-bottom: 42rpx;
+	}
+
+	.popupContent image {
+		width: 470rpx;
+		height: 292rpx;
+		margin-bottom: 38rpx;
+	}
+
+	.popupContent-textItem {
+		margin-bottom: 20rpx;
+		font-size: 22rpx;
+		color: #555555;
+		text-indent: 40rpx;
+		line-height: 34rpx;
+	}
+
+	/* .popupContent-text{
+		white-space: pre;
+	} */
 
 	/* .progress {
 		width: 90px;

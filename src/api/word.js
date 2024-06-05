@@ -4,7 +4,7 @@ import fly from '@/jslibs/dk-flyio'
 export const listByBookType = params => fly.get('/word/unit/listByBookType', params)
 
 // 查询学历分类
-export const educationType = params => fly.get('/word/config/query/education_type', params)
+export const educationType = params => fly.get('/app/common/query/education_type', params)
 
 // 查询书籍列表
 export const bookList = params => fly.get('/word/book/list', params)
@@ -31,7 +31,7 @@ export const wordEn = params => fly.get('/word/dict/queryByWordEn', params)
 export const addLesson = params => fly.get('/word/lesson/addLessonForExamOutline', params)
 
 // 查询配置
-export const wordNum = params => fly.get('/word/config/query/word_lesson_word_num', params)
+export const wordNum = params => fly.get('/app/common/query/word_lesson_word_num', params)
 
 // 添加学习任务
 export const addLessonOutline = params => fly.get('/word/lesson/addLessonForExamOutline', params)
@@ -50,3 +50,20 @@ export const reviewList = params => fly.get('/word/review/queryById', params)
 
 // 查看答题情况
 export const queryReviewList = params => fly.get('/word/review/dict/queryListByReviewId', params)
+
+// 抗遗忘----------------------------------------------------------------------------
+
+// 查询课时列表
+export const getUserLessonList = params => fly.get('/word/lesson/getUserLessonList', params)
+
+// 复习及待复习历程
+export const queryListByLessonId = params => fly.get('/word/review/queryListByLessonId', params)
+
+// 单词列表
+export const queryById = params => fly.get('/word/lesson/queryById', params)
+
+// 错词本列表
+export const queryWordWrongDict = params => fly.get('/word/wrong/dict/queryWordWrongDict', params)
+
+// 错词本删除
+export const updateStatus = params => fly.get('/word/wrong/dict/updateStatus', params)

@@ -7,6 +7,9 @@
 			<view class="search-box">
 				<image :src="imageBaseUrl + '/word/icon3.png'" mode=""></image>
 				<input type="text" name="" id="" placeholder="AI查单词" v-model="value">
+				<view class="search-box-icon" @click="value=''">
+					<u-icon v-if="value.length>0" name="close-circle"></u-icon>
+				</view>
 				<view v-if="value.length>0" class="search-boxIcon" @click="toNav('/pages/word/definition?wordEn='+value+'&state=1')">
 					搜索
 				</view>
@@ -44,7 +47,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="item-boxBottom" :style="{ backgroundImage: 'url(' + imageBaseUrl + '/word/back.png)' }">
+				<view class="item-boxBottom" :style="{ backgroundImage: 'url(' + imageBaseUrl + '/word/back.png)' }" v-if="false">
 					<view class="item-boxBottom-content">
 						<view class="item-boxBottom-contentLeft">
 							<view class="item-boxBottom-contentLeft-title">
@@ -87,7 +90,7 @@
 							{{item.wordNums}}个单词
 						</view>
 						<view class="item-box-selectItem-textB">
-							挑战次数：{{item.challengeNums}}次
+							挑战次数：{{item.reviewNum}}次
 						</view>
 					</view>
 				</view>
@@ -376,8 +379,12 @@
 		position: absolute;
 		right: 40rpx;
 	}
+	.search-box-icon{
+		position: absolute;
+		right: 160rpx;
+	}
 	.search-box input{
 		flex: 1;
-		margin-right: 100rpx;
+		margin-right: 150rpx;
 	}
 </style>

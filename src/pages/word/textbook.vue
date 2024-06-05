@@ -1,7 +1,7 @@
 <template>
 	<view class="main">
 		<cy-navbar :showBack="true" :bgColor="backColor">
-			<view class="t-size-30" v-if="id==0">教材词汇速记</view>
+			<view class="t-size-30" v-if="id==0">教材单元列表</view>
 			<view class="t-size-30" v-if="id==1">考纲词汇速记</view>
 		</cy-navbar>
 		<view class="py-2 px-4">
@@ -19,7 +19,7 @@
 					<view class="headR-num">
 						共{{bookData.wordNums}}个单词
 					</view>
-					<view class="headR-line">
+					<view class="headR-line" v-if="false">
 						<view class="headR-lineText">
 							学习进度35%
 						</view>

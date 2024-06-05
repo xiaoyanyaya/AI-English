@@ -191,7 +191,7 @@
 				title: '',
 				shuffledStr: [],
 				selectWordIndex: [],
-				errorNum:1
+				errorNum: 1
 			}
 		},
 		onLoad(e) {
@@ -219,6 +219,16 @@
 		mounted() {
 			// 页面加载时，自动聚焦到第一个输入框
 			// this.nextInput(0);
+		},
+		onHide() {
+			console.log(innerAudioContext,'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+			innerAudioContext.pause()
+			clearTimeout(this.timeout);
+		},
+		onUnload(){
+			console.log(innerAudioContext,'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+			innerAudioContext.pause()
+			clearTimeout(this.timeout);
 		},
 		methods: {
 			longpressDeleteWord() {
@@ -416,12 +426,13 @@
 				debouncedHandleClick();
 			},
 			async next(e) {
+				var regex = /[a-zA-Z]/
 				var getData = {
 					reviewId: this.id,
 					lessonId: this.lessonId,
 					wordIndex: this.wordData.wordIndex,
 					wordEn: this.wordData.wordEn,
-					userAnswer: this.wordDetails.spellQuestioin
+					userAnswer: regex.test(this.wordDetails.spellQuestioin) ? this.wordDetails.spellQuestioin : ''
 				}
 				let data = await reviewNext(getData);
 				if (data.data.code == 200) {
@@ -437,8 +448,8 @@
 						this.getWordEn(this.wordData.wordIndex - 2)
 					}
 					this.longpressDeleteWord()
-					this.errorNum=1
-					if (data.data.result.wordIndex == this.wordList.length - 1) {
+					this.errorNum = 1
+					if (data.data.result.wordIndex == this.wordList.length) {
 						var passData = {
 							id: this.id
 						}
@@ -458,16 +469,16 @@
 						this.next(1)
 					}, 2000)
 				} else {
-					console.log('失败',this.errorNum)
+					console.log('失败', this.errorNum)
 					this.answer = '#EB7171'
-					if(this.errorNum==3){
-						this.errorNum=this.errorNum++
+					if (this.errorNum == 3) {
+						this.errorNum = this.errorNum++
 						clearTimeout(timeout)
 						let timeout = setTimeout(obj => {
 							this.next(1)
 						}, 2000)
-					}else{
-						this.errorNum=this.errorNum+1
+					} else {
+						this.errorNum = this.errorNum + 1
 						this.show = true
 						clearTimeout(timeout)
 						let timeout = setTimeout(obj => {
@@ -538,9 +549,9 @@
 						that.playing = false
 					});
 				} else {
-					uni.showLoading({
-						title: '加载中'
-					});
+					// uni.showLoading({
+					// 	title: '加载中'
+					// });
 					uni.downloadFile({
 						url: src,
 						success: (res) => {
@@ -573,9 +584,9 @@
 									console.log('音频播放结束');
 								});
 							} else {
-								uni.showLoading({
-									title: '加载中'
-								});
+								// uni.showLoading({
+								// 	title: '加载中'
+								// });
 								uni.downloadFile({
 									url: src,
 									success: (res) => {
@@ -877,7 +888,7 @@
 
 	.inputWord-input-text {
 		white-space: pre-line;
-		font-size: 34rpx;
+		font-size: 38rpx;
 		width: 32rpx;
 		margin-right: 12rpx;
 		text-align: center;

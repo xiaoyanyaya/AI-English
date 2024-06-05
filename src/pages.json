@@ -99,6 +99,9 @@
 		},
 		{
 		  "path": "reverseForgetting/review"
+		},
+		{
+		  "path": "reverseForgetting/wrongWords"
 		}
       ]
     },

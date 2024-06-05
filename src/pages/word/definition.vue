@@ -4,17 +4,17 @@
 			<cy-navbar :showBack="true" :bgColor="backColor">
 			</cy-navbar>
 			<view class="headTitle">
-				{{allData.wordEn}}
+				{{allData.wordEn?allData.wordEn:data.wordEn}}
 				<view class="headTitle-bar"></view>
 			</view>
-			<view class="headAudio">
-				<view class="headAudio-box" @click="play(allData.audioUsa)">
+			<view class="headAudio" v-if="allData.symbolUsa">
+				<view class="headAudio-box" @click="allData.audioUsa?play(allData.audioUsa):''">
 					<text>英</text>
 					<text class="headAudio-boxC">['{{allData.symbolUsa}}]</text>
 					<image :src="imageBaseUrl+'/word/5-21-31.png'" mode=""></image>
 				</view>
 			</view>
-			<view class="headText">
+			<view class="headText" v-if="allData.wordCn">
 				<view class="headText-item">
 					{{allData.wordCn}}
 				</view>
@@ -52,7 +52,7 @@
 						{{item.itemText}}
 					</view>
 				</view>
-				<view v-if="allData.skillItemList.length<1" class="contentText-img">
+				<view v-if="allData?allData.skillItemList.length<1:true" class="contentText-img">
 					<image :src="imageBaseUrl+'/nodata.png'" mode="widthFix"></image>
 				</view>
 			</view>
@@ -65,7 +65,7 @@
 						{{item.itemText}}
 					</view>
 				</view>
-				<view v-else class="contentText-img">
+				<view v-if="allData.explainItemList?allData.explainItemList.length<1:true" class="contentText-img">
 					<image :src="imageBaseUrl+'/nodata.png'" mode="widthFix"></image>
 				</view>
 			</view>
@@ -116,7 +116,11 @@
 				this.state=e.state
 			}
 			this.getWordEn()
-			this.wordList = uni.getStorageSync('wordList');
+			if(e.id==1){
+				this.wordList = uni.getStorageSync('wordList');
+			}else{
+				this.wordList = uni.getStorageSync('wordList').wordLessonDictList;
+			}
 			this.$nextTick(() => {
 				const query = uni.createSelectorQuery().in(this);
 				query.select('.head').boundingClientRect(rect => {
@@ -187,9 +191,9 @@
 					// 	bgAudioManager.stop()
 					// })
 				} else {
-					uni.showLoading({
-						title: '加载中'
-					});
+					// uni.showLoading({
+					// 	title: '加载中'
+					// });
 					uni.downloadFile({
 						url: src,
 						success: (res) => {
@@ -258,6 +262,7 @@
 				}
 			},
 			previous() {
+				console.log(this.wordList)
 				let index = this.wordList.findIndex(obj => obj.wordEn === this.data.wordEn)
 				if (index !== -1) {
 					// 如果找到了目标对象

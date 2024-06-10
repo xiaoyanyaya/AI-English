@@ -13,7 +13,7 @@
 					抗遗忘复习
 				</view>
 			</view>
-			<view class="bottomTab-item">
+			<view class="bottomTab-item" @click="toNav('/pages/word/chanllenge/index')">
 				<image :src="imageBaseUrl + (type==2?'/word/5-21-21.png':'/word/5-21-22.png')" mode="heightFix"></image>
 				<view class="bottomTab-itemText" :class="type==2?'bottomTab-itemTextBlur':''">
 					疯狂挑战

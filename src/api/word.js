@@ -25,7 +25,7 @@ export const dictList = params => fly.get('/word/lesson/dict/list', params)
 export const lessonWordList = params => fly.get('/word/lesson/queryByUnitId', params)
 
 // 查询单词讲解
-export const wordEn = params => fly.get('/word/dict/queryByWordEn', params)
+export const getWordEn = params => fly.get('/word/dict/queryByWordEn', params)
 
 // 添加课时
 export const addLesson = params => fly.get('/word/lesson/addLessonForExamOutline', params)
@@ -44,6 +44,12 @@ export const reviewNext = params => fly.post('/word/review/dict/learnWord', para
 
 // 完成学习
 export const reviewFinish = params => fly.post('/word/review/finish', params)
+
+// /word/challenge/finish 疯狂挑战 - 完成挑战 get
+export const challengeFinish = params => fly.get('/word/challenge/finish', params)
+
+// 疯狂挑战 - 挑战 - 回答一个单词 word/challenge/dict/challengeWord get
+export const challengeWord = params => fly.get('/word/challenge/dict/challengeWord', params)
 
 // 查看答题情况
 export const reviewList = params => fly.get('/word/review/queryById', params)

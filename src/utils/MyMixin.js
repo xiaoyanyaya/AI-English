@@ -20,6 +20,37 @@ export default {
 		// this.login();
 	},
 	methods: {
+		// 根据需求截取字符串
+		getNameWithEllipsis(name, maxLength) {
+			if (name.length > maxLength) {
+				return name.slice(0, maxLength) + '...';
+			} else {
+				return name;
+			}
+		},
+		// 字母乱序
+		shuffleString(str) {
+			// 转换为字符数组
+			let chars = str.split('');
+			// 打乱数组顺序
+			chars.sort(() => 0.5 - Math.random());
+			return chars;
+		},
+		// 时间格式化
+		formatTime(seconds) {
+			// 格式化时间
+			const minutes = Math.floor(seconds / 60);
+			const hours = Math.floor(minutes / 60);
+			let displayTime = '';
+			if (hours > 0) {
+				displayTime += `${hours}小时`;
+			}
+			if (minutes > 0) {
+				displayTime += `${minutes % 60}分`;
+			}
+			displayTime += `${seconds % 60}秒`;
+			return displayTime;
+		},
 		getSystemInfo() {
 			uni.getSystemInfo({
 				success: (res) => {

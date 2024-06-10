@@ -3,11 +3,13 @@
     <view :style="contentStyle">
       <view :style="statusBarHeight"></view>
       <view class="nav-content" :style="navContentStyle">
-        <view class="nav-icon ml-1 flex align-item-center">
-          <span v-show="showBack" @click="returnPageNum(1)" class="iconfont nav-icon-css">&#xe837;</span>
+        <view class="nav-icon ml-2 flex align-item-center">
+          <span v-show="showBack" @click="returnPageNum(1)"
+                :style="{color: textColor}"
+                class="iconfont nav-icon-css">&#xe837;</span>
 <!--          <image v-show="showBack" src="/static/logo.png" class="avatar-css"></image>-->
         </view>
-        <view class="nav-slot mr-1">
+        <view class="nav-slot mr-1" :style="{color: textColor}">
           <slot></slot>
         </view>
         <view class="nav-btn"></view>
@@ -32,6 +34,10 @@ export default {
     bgColor: {
       type: String,
       default: '#3A73D9'
+    },
+    textColor: {
+      type: String,
+      default: '#fff'
     },
     isReturnHome: {
       type: Number,

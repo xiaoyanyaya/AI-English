@@ -684,25 +684,23 @@ export default {
           this.collectionId = data.data.result.id
         },
         getCompositionDictList: async (type) => {
-          let params = {type}
-          let data = await getCompositionDictList(params);
-          var result = data.data.result
+          var result = uni.getStorageSync("basicData").dictCodeList;
 
           switch (type) {
             case 'student_type':
-              result.forEach(d => {
+              result.book_type.forEach(d => {
                 this.popupContnet[0].content.push(d.text)
                 this.popupContnet[0].val.push(d.value)
               })
               break;
             case 'composition_text_wordnum':
-              result.forEach(d => {
+              result.word_lesson_word_num.forEach(d => {
                 this.popupContnet[1].content.push(d.text)
                 this.popupContnet[1].val.push(d.value)
               })
               break;
             case 'composition_context_type':
-              result.forEach(d => {
+              result.composition_type.forEach(d => {
                 this.popupContnet[2].content.push(d.text)
                 this.popupContnet[2].val.push(d.value)
               })
@@ -864,7 +862,7 @@ export default {
             "compositionText": this.essayData.content
           }
           this.network().sseRequestTask({
-            url: 'composition/aigc/review',
+            url: '/composition/aigc/review',
             method: 'post',
             data: params,
             type

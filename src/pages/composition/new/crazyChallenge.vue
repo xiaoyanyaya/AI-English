@@ -198,14 +198,11 @@ export default {
     network() {
       return {
         getCompositionDictList: async (type) => {
-          let params = {type}
-          let data = await getCompositionDictList(params);
-          var result = data.data.result
-          console.log(result)
+          var result = uni.getStorageSync("basicData").dictCodeList;
 
           switch (type) {
             case 'composition_type_challenge':
-              result.forEach((d, index) => {
+              result.composition_type_challenge.forEach((d, index) => {
                 this.schoolTypeList.push({
                   name: d.text,
                   value: d.value,

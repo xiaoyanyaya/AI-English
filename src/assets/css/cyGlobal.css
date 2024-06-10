@@ -313,6 +313,9 @@
 .t-color-DC0C0C {
     color: #DC0C0C;
 }
+.t-color-43A71C {
+    color: #43A71C;
+}
 .t-color-999 {
     color: #999999;
 }
@@ -382,7 +385,15 @@
 .t-color-1863E5 {
     color: #1863E5
 }
-
+.t-color-24A800 {
+    color: #24A800;
+}
+.t-color-878787 {
+    color: #878787;
+}
+.t-color-DC0C0C {
+    color: #DC0C0C;
+}
 /** 文字大小 */
 .t-size-48 {
     font-size: 48rpx;

@@ -1,8 +1,7 @@
 <template>
 	<view class="main">
-		<!-- <cy-navbar :showBack="true" :bgColor="backColor">
-			<view class="t-size-30">单词列表</view>
-		</cy-navbar> -->
+		 <cy-navbar :showBack="true" :bgColor="backColor" textColor="#3D3D3D">
+		</cy-navbar>
 		<view class="content">
 			<u-sticky offset-top="200">
 				<view class="title">
@@ -37,7 +36,7 @@
 						词汇讲解
 					</view>
 					<view class="listItem" v-if="id==3">
-						
+
 					</view>
 				</view>
 				<view class="listItem" v-for="(item,i) in allData" :key="item.id" v-if="id==1"
@@ -111,7 +110,7 @@
 				gif: false,
 				selectId: 0,
 				title: '',
-				
+
 			}
 		},
 		onLoad(e) {

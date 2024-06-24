@@ -77,6 +77,9 @@
           上一个
         </view>
       </view>
+      <view class="button t-color-fff flex align-item-center justify-content-center" @click="chanllenge">
+        立即挑战
+      </view>
       <view class="controllerItem" @click="next">
         <image :src="imageBaseUrl + '/word/6-1-02.png'" mode=""></image>
         <view class="t-color-1863E5">
@@ -110,7 +113,9 @@ export default {
       state: 0,
 
       // 是否显示上一个下一个按钮
-      showBtn: 1
+      showBtn: 1,
+      pageType: "",
+      unitId: "",
     }
   },
   onLoad(e) {
@@ -118,6 +123,12 @@ export default {
     this.data.wordEn = e.wordEn
     if (e.state) {
       this.state = e.state
+    }
+    if (e.pageType) {
+      this.pageType = e.pageType
+    }
+    if (e.unitId) {
+      this.unitId = e.unitId
     }
     this.getWordEn()
     if (e.showBtn) {
@@ -182,6 +193,9 @@ export default {
         this.lista.push(res)
       }
     },
+    chanllenge() {
+      this.toNav('/pages/word/set?id='+this.unitId+'&pageType='+this.pageType)
+    },
     play(src) {
       if (uni.getSystemInfoSync().platform === 'ios') {
         innerAudioContext.src = encodeURI(src);
@@ -224,6 +238,8 @@ export default {
       })
     },
     next() {
+      console.log("this.wordList", this.wordList)
+      console.log("this.data.wordEn", this.data.wordEn)
       let index = this.wordList.findIndex(obj => obj.wordEn === this.data.wordEn)
       if (index !== -1) {
         // 如果找到了目标对象
@@ -472,23 +488,27 @@ export default {
 .controller {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   margin-top: 80rpx;
   position: fixed;
   bottom: 0;
   width: 100%;
-  padding: 36rpx 0;
+  padding: 36rpx 50rpx;
   border-top: 2rpx solid #BFBFBF;
   background: #fff;
 }
 
 .controllerItem {
-  margin-right: 212rpx;
   text-align: center;
   font-size: 24rpx;
   color: #8A8A8A;
 }
-
+.button {
+  width: 206rpx;
+  height: 80rpx;
+  border-radius: 201rpx;
+  background: linear-gradient(180deg, #5692F9 0%, #1863E5 100%);
+}
 .controllerItem:nth-child(2) {
   margin-right: 0;
 }

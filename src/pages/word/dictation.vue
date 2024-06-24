@@ -79,6 +79,7 @@
 <script>
 import MyMixin from "@/utils/MyMixin";
 import {challengeFinish, challengeWord, getWordEn, reviewFinish, reviewNext} from "@/api/word";
+import {challengeFinishPost} from "../../api/word";
 
 export default {
   mixins: [MyMixin],
@@ -114,10 +115,15 @@ export default {
       // 页面是否初始化完毕
       isInit: false,
 
+      // 当前页面类型
+      pageType: '',
       playing: false,
     }
   },
-  onLoad({id, lessonId}) {
+  onLoad({id, lessonId, pageType}) {
+    this.pageType = pageType
+    console.log("pageType", pageType)
+
     this.id = id
     this.lessonId = lessonId
     this.setData = uni.getStorageSync('setData')
@@ -156,7 +162,7 @@ export default {
 
         // val 全部填写完毕
         if (val.every(item => item.value) && this.currentTopicData.currentTopicStatus === 'normal') {
-          this.network().reviewNext()
+          this.network().reviewNext(false, true)
         }
       },
       deep: true
@@ -185,20 +191,31 @@ export default {
     // 下一题
     async nextTopic() {
       if (this.currentTopic > 0) {
-        // 记录当前题目的答题时间
+        // 记录当前题目的答题数据
         this.topicDataCache.push(this.currentTopicData)
       }
+
       if (this.currentTopic < this.totalTopic) {
+        if (this.currentTopicData.currentTopicStatus === 'normal') {
+          this.network().reviewNext(true)
+        }
+
         this.isInit = false
         this.currentTopic++
         this.currentTopicData = this.topicList[this.currentTopic - 1]
         this.network().getWordEn()
         this.currentTopicData.selectWordIndex = []
-      }
-      if (this.currentTopic === this.totalTopic) {
-        let data = await reviewFinish({reviewId: this.id})
-        console.log("答题完成", data)
+      } else if (this.currentTopic === this.totalTopic) {
+
+        // 判断是挑战还是复习
+        let data = {}
+        if (this.pageType == "challenge") {
+          data = await challengeFinishPost({id: this.id});
+        } else {
+          data = await reviewFinish({id: this.id});
+        }
         this.$navigateTo('/pages/word/answer?id=' + this.id)
+
       }
     },
     // 点击播放按钮
@@ -335,28 +352,50 @@ export default {
           this.wordFormat();
           this.isInit = true
         },
-        reviewNext: async () => {
+        reviewNext: async (isSkip = false, isNext = false) => {
           var getData = {
-            reviewId: this.id,
-            lessonId: this.lessonId,
-            wordIndex: this.currentTopic + 1,
+            wordIndex: this.currentTopic,
+            questionAnswer: this.currentTopicData.wordEn,
             wordEn: this.currentTopicData.wordEn,
             userAnswer: this.currentTopicData.wordFilling.map(item => item.value).join(''),
           }
-          let res = await reviewNext(getData);
-          console.log("回答完毕", res)
+
+          // 判断是挑战还是复习
+          let res;
+          if (this.pageType = "challenge") {
+            getData = {
+              ...getData,
+              challengeId: this.id
+            }
+            res = await challengeWord(getData);
+          } else {
+            getData = {
+              ...getData,
+              reviewId: this.id,
+              lessonId: this.lessonId,
+            }
+            res = await reviewNext(getData);
+          }
+          if (isSkip) return
+
           if (res.data.code == 200 && res.data.result.answerResult == 1) {
             // 正确
             this.currentTopicData.currentTopicStatus = 'success'
 
-            if (this.currentTopic < this.totalTopic) {
+            if (this.currentTopic < this.totalTopic && isNext) {
               // 下一题
               setTimeout(() => {
                 this.nextTopic()
               }, 500)
             } else {
               // 完成
-              let data = await reviewFinish({id: this.id})
+              let data = {}
+              // 判断是挑战还是复习
+              if (this.pageType == "challenge") {
+                data = await challengeFinishPost({id: this.id});
+              } else {
+                data = await reviewFinish({id: this.id});
+              }
               console.log("答题完成", data)
               this.$navigateTo('/pages/word/answer?id=' + this.id)
             }

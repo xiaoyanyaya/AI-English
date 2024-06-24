@@ -48,8 +48,14 @@ export const reviewFinish = params => fly.post('/word/review/finish', params)
 // /word/challenge/finish 疯狂挑战 - 完成挑战 get
 export const challengeFinish = params => fly.get('/word/challenge/finish', params)
 
+// 疯狂挑战 - 开始挑战 https://wapi-dev.aien.xiaolixb.com/v1/word/challenge/start post
+export const challengeStart = params => fly.post('/word/challenge/start', params)
+
 // 疯狂挑战 - 挑战 - 回答一个单词 word/challenge/dict/challengeWord get
-export const challengeWord = params => fly.get('/word/challenge/dict/challengeWord', params)
+export const challengeWord = params => fly.post('/word/challenge/dict/challengeWord', params)
+
+// 疯狂挑战 - 完成挑战 https://wapi-dev.aien.xiaolixb.com/v1/word/challenge/finish post
+export const challengeFinishPost = params => fly.post('/word/challenge/finish', params)
 
 // 查看答题情况
 export const reviewList = params => fly.get('/word/review/queryById', params)
@@ -72,4 +78,25 @@ export const queryById = params => fly.get('/word/lesson/queryById', params)
 export const queryWordWrongDict = params => fly.get('/word/wrong/dict/queryWordWrongDict', params)
 
 // 错词本删除
-export const updateStatus = params => fly.get('/word/wrong/dict/updateStatus', params)
+export const updateStatus = params => fly.post('/word/wrong/dict/updateStatus', params)
+
+// 疯狂挑战 - 获取教材（考纲）书籍列表 http://localhost:8080/wapi/word/book/list get
+export const getBookList = params => fly.get('/word/book/list', params)
+
+// 速记 - 教材选择页/考纲选择页 - 查询书籍列表（新） book/queryMapByBookProperties
+export const queryMapByBookProperties = params => fly.get('/word/book/queryMapByBookProperties', params)
+
+// 速记 - 教材选择页/考纲选择页 - 切换书籍 post http://localhost:8080/wapi/word/config/switchBook
+export const switchBook = params => fly.post('/word/config/switchBook', params)
+
+// 疯狂挑战 - 获取教材（考纲）书籍信息 get https://wapi-dev.aien.xiaolixb.com/v1/word/book/queryById
+export const queryBookById = params => fly.get('/word/book/queryById', params)
+
+// 疯狂挑战 - 排行 - 获取本人本教材（考纲）的挑战历程记录 get https://wapi-dev.aien.xiaolixb.com/v1/word/challenge/queryChallengeByUser
+export const queryChallengeByUser = params => fly.get('/word/challenge/queryChallengeByUser', params)
+
+// word/unit/dict/queryListByBookId get
+export const queryListByBookId = params => fly.get('/word/unit/dict/queryListByBookId', params)
+
+// 疯狂挑战 - 排行 - 获取查询教材的本人挑战指标 get https://wapi-dev.aien.xiaolixb.com/v1/word/challenge/queryBookChallengeInfo
+export const queryBookChallengeInfo = params => fly.get('/word/challenge/queryBookChallengeInfo', params)

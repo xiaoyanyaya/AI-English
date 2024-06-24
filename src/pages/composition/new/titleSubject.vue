@@ -251,7 +251,10 @@ export default {
       isReturnHome: 0,
     };
   },
-  onLoad({title, content, generateContent, returnHome, pageIndex, pageTitle, compositionType, infoWordNums, infoWriteType, id, isShowTitle}) {
+  onLoad({title, content, btnTitle,
+           generateContent, returnHome,
+           pageIndex, pageTitle, compositionType,
+           infoWordNums, infoWriteType, id, isShowTitle}) {
     uni.$on("cropImage", ({path, type}) => {
       this.getPhotoRecognition(path, type)
     })
@@ -336,7 +339,11 @@ export default {
         this.title.isShowPhoto = false;
         this.title.isDisabled = true;
         this.content.isShowContent = true;
-        this.btnTitle = 'AI作文批改';
+        if (btnTitle) {
+          this.btnTitle = btnTitle
+        } else {
+          this.btnTitle = 'AI作文批改';
+        }
         this.isReturnHome = returnHome || 0;
       } else if (pageTitle === 'AI作文批改') {
         var essayDataContent = uni.getStorageSync("essayDataContent")
@@ -398,6 +405,7 @@ export default {
       this.otherContent.isDisabled = true;
       this.pageTitle = pageTitle;
       this.btnTitle = '分享';
+      this.collectionId = id;
       this.isReturnHome = pageIndex == 6 ? 1 : 0;
       this.network().getCompositionCollectInfo(id)
     }
@@ -656,7 +664,7 @@ export default {
           let data = await getCompositionCollectInfo({id});
           console.log("查看详情", data.data.result)
           this.essayData.title = data.data.result.compositionTitleText
-          this.essayData.content = data.data.result.compositionText
+          this.essayData.content = data.data.result.compositionText.replaceAll("\n", "<p></p>")
           this.originGenerateContent = data.data.result.compositionCorrect
           var generateContent = data.data.result.compositionCorrect.replaceAll("\n", "<p></p>")
             .replaceAll("(1)、精美句子","<span style='color: #317cf2;line-height: 28px;'>(1)、精美句子</span>")

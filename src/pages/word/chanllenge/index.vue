@@ -4,75 +4,65 @@
       <view class="t-size-30">抗遗忘复习</view>
     </cy-navbar>
 
-    <view class="review-box px-4 pt-5 flex align-item-center justify-content-between">
-      <view class="flex align-item-center">
-        <view class="plac mr-2"></view>
-        <view class="t-size-30 t-color-3D3D3D font-weight-bold">单词复习列表</view>
-      </view>
-      <view class="flex align-item-center">
-        <view class="t-color-8A8A8A t-size-28 mr-2">艾宾浩斯遗忘曲线</view>
-        <u-icon name="question-circle-fill" class="t-color-8A8A8A" size="32"></u-icon>
-      </view>
-    </view>
-
-    <view class="px-3 mt-4">
-      <view class="time-box flex align-item-center justify-content-between px-5">
-        <view class="t-size-28 t-color-8A8A8A">{{dateTIme}}</view>
-        <u-icon name="arrow-down" class="t-color-8A8A8A" size="32"></u-icon>
-      </view>
-    </view>
-
     <view class="px-3 mt-3">
-      <view class="word-box pt-3 pb-3 pl-5 pr-4">
-        <view class="flex align-item-center justify-content-between">
-          <view class="t-size-24 font-weight-bold t-color-1863E5">单词专题训练</view>
-          <view class="t-size-22 t-color-8A8A8A">2024-03-27 17:08:00</view>
+      <view class="mt-5 flex justify-content-center">
+        <u-tabs bg-color="transparent" inactive-color="#8A8A8A" bar-width="170" active-color="#1863E5"
+                :list="topOptinsList" :current="currentTopOptions" @change="changeOptions"></u-tabs>
+      </view>
+
+      <view class="head">
+        <view class="headL mr-1">
+          <image :src="textBook.bookImage" mode=""></image>
         </view>
-        <view class="flex align-item-center justify-content-between mt-3">
-          <view class="t-size-36 t-color-3D3D3D font-weight-bold">Unit 1</view>
-          <view class="t-size-26 font-weight-bold">
-            <text class="t-color-24A800">正确(16)</text>
-            <text class="t-color-8A8A8A mr-1">/</text>
-            <text class="t-color-DC0C0C">错误(0)</text>
+        <view class="headR">
+          <view class="headR-title mt-1">
+            沪教版
           </view>
-        </view>
-
-        <view class="mt-5 flex justify-content-center">
-          <u-tabs bg-color="transparent" inactive-color="#8A8A8A" active-color="#E79315"
-                  :list="optinsList" :current="currentOptions" @change="changeOptions"></u-tabs>
-        </view>
-
-        <view class="mt-3">
-          <view v-for="(item, index) in tableData" :key="index">
-            <view
-              :class="index === 0 ? 't-size-24 font-weight-bold t-color-3D3D3D' : 't-size-20 t-color-878787'"
-              :style="index%2 === 1 ? 'background: #F9F9F9' : ''"
-              class="flex align-item-center table-item">
-              <view>{{ item.value1 }}</view>
-              <view>{{ item.value2 }}</view>
-              <view>{{ item.value3 }}</view>
-              <view>{{ item.value4 }}</view>
-              <view>{{ item.value5 }}</view>
+          <view class="headR-name">
+            {{ textBook.bookName}}
+          </view>
+          <view class="headR-num">
+            共{{textBook.wordNums}}个单词
+          </view>
+          <view class="flex align-item-center mt-2">
+            <view @click="$navigateTo('/pages/word/chanllenge/wordList?bookId='+textBook.id)"
+              class="t-size-24 join-btn t-color-fff flex align-item-center justify-content-center font-weight-bold">
+              参与挑战
+            </view>
+            <view class="share-friend ml-3 flex align-item-center">
+              <view></view>
+              <view class="t-size-22 t-color-1863E5">邀请好友挑战</view>
             </view>
           </view>
         </view>
       </view>
+
+      <view class="mt-5 flex justify-content-center">
+        <u-tabs bg-color="transparent" inactive-color="#8A8A8A" active-color="#E79315"
+                :list="optinsList" :current="currentOptions" @change="changeOptions"></u-tabs>
+      </view>
     </view>
 
-    <view class="px-3 mt-3" v-for="i in 3">
-      <view class="word-box pt-3 pb-3 pl-5 pr-4">
-        <view class="flex align-item-center justify-content-between">
-          <view class="t-size-24 font-weight-bold t-color-1863E5">单词专题训练</view>
-          <view class="t-size-22 t-color-8A8A8A">2024-03-27 17:08:00</view>
-        </view>
-        <view class="flex align-item-center justify-content-between mt-3">
-          <view class="t-size-36 t-color-3D3D3D font-weight-bold">Unit 1</view>
-          <view class="t-size-26 font-weight-bold">
-            <text class="t-color-24A800">正确(16)</text>
-            <text class="t-color-8A8A8A mr-1">/</text>
-            <text class="t-color-DC0C0C">错误(0)</text>
+    <view class="mt-3 content-box pt-2 px-1">
+      <scroll-view class="scroll-view_H" scroll-x="true" @scroll="scroll" v-if="tableData.length > 1">
+        <view class="scroll-view-item_H uni-bg-red">
+          <view
+            :class="index === 0 ? 't-size-26 font-weight-bold t-color-3D3D3D mb-3' :
+            't-size-24 t-color-878787 pt-3 pb-3 border-bottom'"
+            v-for="(item, index) in tableData"
+            :key="index" class="flex table-item">
+            <view :style="{color: item.value1.tColor}">{{ item.value1.value }}</view>
+            <view :style="{color: item.value2.tColor}">{{ item.value2.value }}</view>
+            <view :style="{color: item.value3.tColor}">{{ item.value3.value }}</view>
+            <view :style="{color: item.value4.tColor}">{{ item.value4.value }}</view>
+            <view :style="{color: item.value5.tColor}">{{ item.value5.value }}</view>
+            <view :style="{color: item.value6.tColor}">{{ item.value6.value }}</view>
+            <view :style="{color: item.value7.tColor}">{{ item.value7.value }}</view>
           </view>
         </view>
+      </scroll-view>
+      <view v-else class="mt-5 flex align-item-center justify-content-center">
+        <image :src="`${imageBaseUrl}/nodata.png`" style="width: 400rpx; height: 400rpx"></image>
       </view>
     </view>
 
@@ -84,55 +74,140 @@
 
 <script>
 import wordTab from "@/pages/word/components/word-tabbar/index.vue";
+import MyMixin from "@/utils/MyMixin";
+import {queryBookById, queryChallengeByUser} from "../../../api/word";
 
 export default {
+  mixins: [MyMixin],
   components: {wordTab},
   data() {
     return {
       dateTIme: "今天",
 
-      currentOptions: 0,
-      optinsList: [{
-        name: "已复习历程",
+      currentTopOptions: 0,
+      topOptinsList: [{
+        name: "教材挑战排名",
         id: 0,
       }, {
-        name: "待复习计划",
+        name: "考纲挑战排名",
+        id: 1,
+      }, {
+        name: "挑战总排名",
+        id: 2,
+      }],
+
+      currentOptions: 0,
+      optinsList: [{
+        name: "我的挑战历程",
+        id: 0,
+      }, {
+        name: "单次最佳排名",
         id: 1,
       }],
 
       tableData: [{
-        value1: "日期",
-        value2: "用时(min)",
-        value3: "正确数",
-        value4: "错误数",
-        value5: "结果",
-      }, {
-        value1: "2024-03-27",
-        value2: "10",
-        value3: "16",
-        value4: "0",
-        value5: "通过",
-      }, {
-        value1: "2024-03-27",
-        value2: "10",
-        value3: "16",
-        value4: "0",
-        value5: "不通过",
-      }, {
-        value1: "2024-03-27",
-        value2: "10",
-        value3: "16",
-        value4: "0",
-        value5: "通过",
+        value1: {
+          value: "日期",
+          type: "text",
+          tColor: "#3D3D3D"
+        },
+        value2: {
+          value: "用时(min)",
+          type: "text",
+          tColor: "#3D3D3D"
+        },
+        value3: {
+          value: "正确数",
+          type: "text",
+          tColor: "#3D3D3D"
+        },
+        value4: {
+          value: "错误数",
+          type: "text",
+          tColor: "#3D3D3D"
+        },
+        value5: {
+          value: "结果",
+          type: "text",
+          tColor: "#3D3D3D"
+        },
+        value6: {
+          value: "结果",
+          type: "text",
+          tColor: "#3D3D3D"
+        },
+        value7: {
+          value: "结果",
+          type: "text",
+          tColor: "#3D3D3D"
+        }
+      },{
+        value1: {
+          value: "2024-03-27",
+          type: "text",
+          tColor: "#6D6D6D"
+        },
+        value2: {
+          value: "10",
+          type: "text",
+          tColor: "#6D6D6D"
+        },
+        value3: {
+          value: "16",
+          type: "text",
+          tColor: "#C40000"
+        },
+        value4: {
+          value: "0",
+          type: "text",
+          tColor: "#6D6D6D"
+        },
+        value5: {
+          value: "通过",
+          type: "text",
+          tColor: "#6D6D6D"
+        },
+        value6: {
+          value: "结果",
+          type: "text",
+          tColor: "#6D6D6D"
+        },
+        value7: {
+          value: "结果",
+          type: "text",
+          tColor: "#6D6D6D"
+        }
       }],
+      textBook: {},
     };
   },
+  onLoad() {
+    this.initData()
+  },
   methods: {
+    initData() {
+      var result = uni.getStorageSync("basicData").currWordConfig.textBook;
+      if (result) {
+        this.network().queryBookById(result.id)
+        this.network().queryChallengeByUser(result.id)
+      }
+    },
     changeOptions(index) {
       this.currentOptions = index;
       this.queryParams.sceneCategoryId = this.optinsList[index].id
-      // this.initData()
     },
+    network() {
+      return {
+        queryBookById: async (id) => {
+          const res = await queryBookById({id})
+          this.textBook = res.data.result
+        },
+        queryChallengeByUser: async (id) => {
+          const res = await queryChallengeByUser({bookId: id})
+          console.log("queryChallengeByUser", res)
+        }
+      }
+    }
   },
 }
 </script>
@@ -142,33 +217,76 @@ export default {
   background: linear-gradient(180deg, #D1EAFF 0%, #F8FDFF 14%) !important;
 }
 
-.review-box {
-  .plac {
-    width: 12rpx;
-    height: 29rpx;
-    border-radius: 2rpx;
-    background: #3A73D9;
+.head {
+  display: flex;
+  margin-bottom: 50rpx;
+  padding: 30rpx;
+  padding-bottom: 0;
+
+
+  .headL image {
+    width: 170rpx;
+    height: 224rpx;
+    margin-right: 30rpx;
+  }
+
+  .headR-title {
+    color: #C40000;
+    margin: 10rpx 0;
+    font-weight: 600;
+  }
+
+  .headR-name {
+    font-size: 30rpx;
+    margin-bottom: 10rpx;
+    font-weight: 600;
+  }
+
+  .headR-num {
+    font-size: 20rpx;
+    color: #8A8A8A;
+  }
+
+  .join-btn {
+    width: 169rpx;
+    height: 70rpx;
+    border-radius: 10rpx;
+    background: linear-gradient(180deg, #5A95FB 0%, #1258D0 100%);
   }
 }
 
-.time-box {
-  height: 80rpx;
-  border-radius: 10rpx;
-  border: 1px #1863E5 solid;
-  background: #FFFFFF;
+.scroll-view_H {
+  white-space: nowrap;
+  width: 100%;
+}
+.scroll-view-item_H {
+  display: inline-block;
+  height: 500rpx;
+  text-align: center;
+
+  .border-bottom {
+    border-bottom: 1px solid #D8D8D8;
+  }
 }
 
-.word-box {
-  border-radius: 10rpx;
-  background: linear-gradient(180deg, #E8F2FF 0%, #FFFFFF 100%);
-}
+.content-box {
+  border-radius: 50rpx 50rpx 0 0;
+  width: 750rpx;
+  height: 500rpx;
+  position: fixed;
+  bottom: 160rpx;
+  box-sizing: border-box;
+  background: #F7FBFF;
+  border-top: 1px solid #B4CFFF;
+  border-bottom: 1px solid #B4CFFF;
 
-.table-item {
-  padding: 20rpx 0;
+  .table-item {
+    width: 1200rpx;
 
-  view {
-    width: 20%;
-    text-align: center;
+    view {
+      width: 20%;
+      text-align: center;
+    }
   }
 }
 </style>

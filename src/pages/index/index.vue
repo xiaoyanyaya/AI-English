@@ -147,6 +147,7 @@ export default {
   onShow() {
     if (store.state.token) {
       this.network().defaultVirtual();
+      this.getBasicData(false)
     }
   },
   methods: {

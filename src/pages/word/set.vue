@@ -75,6 +75,7 @@
 	import {
 		reviewStart
 	} from "@/api/word";
+  import {challengeStart} from "../../api/word";
 	export default {
 		mixins: [MyMixin],
 		data() {
@@ -86,7 +87,8 @@
 				data:{
 					lessonId:0
 				},
-				title:''
+				title:'',
+        pageType: ""
 			}
 		},
 		onLoad(e){
@@ -94,12 +96,22 @@
 			if(e.title){
 				this.title=e.title
 			}
+      if (e.pageType) {
+        this.pageType = e.pageType
+      }
 		},
 		methods: {
 			async toLearning() {
 				uni.setStorageSync('setData', this.setData);
-				let data = await reviewStart(this.data);
-				var urls='/pages/word/dictation?id='+data.data.result.id+'&lessonId='+data.data.result.lessonId+'&title='+(this.title?this.title:'')
+				let data = {};
+        if (this.pageType === "chanllenge") {
+          data = await challengeStart({
+            bookId: this.data.lessonId
+          });
+        } else {
+          data = await reviewStart(this.data);
+        }
+				var urls='/pages/word/dictation?id='+data.data.result.id+'&lessonId='+data.data.result.lessonId+'&title='+(this.title?this.title:'')+ '&pageType=' + this.pageType
 				this.toNav(urls)
 			},
 			toNav(urls) {

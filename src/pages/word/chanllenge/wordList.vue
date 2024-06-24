@@ -1,0 +1,348 @@
+<template>
+  <view class="main">
+    <cy-navbar :showBack="true" :bgColor="backColor" textColor="#3D3D3D">
+      单词挑战赛
+    </cy-navbar>
+    <view class="content">
+
+      <view class="head pl-1">
+        <view class="headL mr-1">
+          <image :src="textBook.bookImage" mode=""></image>
+        </view>
+        <view class="headR">
+          <view class="headR-title mt-1">
+            沪教版
+          </view>
+          <view class="headR-name">
+            {{ textBook.bookName}}
+          </view>
+          <view class="headR-num mt-2 t-color-1863E5">
+            共{{textBook.wordNums}}个单词
+          </view>
+          <view class="mt-2 t-color-8A8A8A t-size-22">
+            已挑战次数：{{textBook.challengeTimes}}
+            <view class="flex align-item-center justify-content-between mt-1">
+              <view>已挑战单词数：{{textBook.totalWordNum}}</view>
+              <view class="ml-5">正确单词数：{{textBook.correctWordNum}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="list">
+        <view class="flex align-item-center justify-content-between px-3 mb-2">
+          <view class="t-size-28 t-color-3D3D3D font-weight-bold">单词列表</view>
+          <view class="t-size-26 t-color-6a6a6a flex align-item-center" @click="network().queryListByBookId()">
+            <view class="iconfont" style="font-size: 26rpx">&#xe62d;</view>
+            <view class="ml-1">换一批单词</view>
+          </view>
+        </view>
+        <view class="listItem" v-for="(item,i) in allData" :key="item.id" v-if="id==0||id==2||id==3"
+              @click="item.audioUsa?play(item.audioUsa,item.id):''">
+          <view class="listItem-l">
+            <view v-if="item.audioUsa">
+              <image v-if="gif&&selectId==item.id" class="listItem-lGif"
+                     :src="imageBaseUrl + '/word/in_play.gif'" mode=""></image>
+              <u-icon v-else name="volume-up" size="36" color="rgba(24, 99, 229, 1)"></u-icon>
+            </view>
+            <view v-else style="width: 38rpx; height: 26rpx"></view>
+          </view>
+          <view class="listItem-c">
+            <view class="listItem-cTitle">
+              <view class="listItem-cTitle-word">
+                {{ item.wordEn }}
+              </view>
+              <view class="listItem-cTitle-definition">
+                {{ "['" + item.symbolUsa + "']" }}
+              </view>
+            </view>
+            <view class="listItem-cContent">
+              <view class="listItem-cContent-item">
+                {{ item.wordCn }}
+              </view>
+            </view>
+          </view>
+          <view class="listItem-r" @click.stop="toDefined(item)">
+            词汇讲解
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import {queryListByBookId, queryBookById, queryChallengeByUser, queryBookChallengeInfo} from "../../../api/word";
+
+const innerAudioContext = uni.createInnerAudioContext();
+innerAudioContext.autoplay = true
+import MyMixin from "@/utils/MyMixin";
+import {
+  wordList,
+  dictList,
+  lessonWordList,
+  queryById
+} from "@/api/word";
+
+export default {
+  mixins: [MyMixin],
+  data() {
+    return {
+      id: 0,
+      backColor: 'transparent',
+      data: {
+        unitId: 0
+      },
+      dataB: {
+        lessonId: 0,
+        pageSize: 99
+      },
+      dataC: {
+        id: 0
+      },
+      allData: {},
+      audioSrc: '',
+      gif: false,
+      selectId: 0,
+      textBook: {},
+      bookId: "",
+    }
+  },
+  onLoad() {
+    this.initData()
+  },
+  onPageScroll(e) {
+    if (e.scrollTop > 20) {
+      this.backColor = '#DEF0FF'
+    } else {
+      this.backColor = 'transparent'
+    }
+  },
+  onShow() {
+  },
+  methods: {
+    async initData() {
+      var result = uni.getStorageSync("basicData").currWordConfig.textBook;
+      if (result) {
+        this.bookId = result.id
+        this.network().queryListByBookId()
+        await this.network().queryBookById()
+        await this.network().queryBookChallengeInfo()
+      }
+    },
+    toDefined(item) {
+      var wordList = uni.getStorageSync("wordList");
+      if (wordList) {
+        wordList.wordLessonDictList = this.allData
+        uni.setStorageSync("wordList", wordList)
+      } else {
+        uni.setStorageSync("wordList", {wordLessonDictList: this.allData})
+      }
+      this.toNav('/pages/word/definition?wordEn='+item.wordEn+'&pageType=chanllenge&id=0&unitId='+this.bookId)
+    },
+    play(src, id) {
+      var that = this
+      this.gif = true
+      this.selectId = id
+      // innerAudioContext.src = src;
+      console.log(uni.getSystemInfoSync().platform)
+      if (uni.getSystemInfoSync().platform === 'ios') {
+        innerAudioContext.src = encodeURI(src);
+        console.log(innerAudioContext.src)
+        innerAudioContext.play()
+        innerAudioContext.onEnded(() => {
+          console.log('音频播放结束');
+          that.gif = false
+        });
+      } else {
+        uni.showLoading({
+          title: '加载中'
+        });
+        uni.downloadFile({
+          url: src,
+          success: (res) => {
+            if (res.statusCode === 200) {
+              uni.hideLoading();
+              innerAudioContext.src = res.tempFilePath;
+              innerAudioContext.play()
+              innerAudioContext.onEnded(() => {
+                console.log('音频播放结束');
+                that.gif = false
+              });
+            }
+          },
+          fail: (error) => {
+            console.log(error, 'error')
+          }
+        })
+      }
+    },
+    toNav(urls) {
+      uni.navigateTo({
+        url: urls
+      })
+    },
+    network() {
+      return {
+        queryListByBookId: async () => {
+          let res = await queryListByBookId({bookId: this.bookId});
+          this.allData = res.data.result
+        },
+        queryBookById: async () => {
+          const res = await queryBookById({id: this.bookId})
+          this.textBook = res.data.result
+        },
+        queryBookChallengeInfo: async () => {
+          const res = await queryBookChallengeInfo({bookId: this.bookId})
+          this.textBook = Object.assign(this.textBook, res.data.result)
+          console.log("textBook", this.textBook)
+        },
+      }
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+.nav-icon,
+.nav-slot,
+.nav-btn {
+  color: black !important;
+}
+
+.main {
+  background: linear-gradient(180deg, #DEF0FF 0%, #F7FCFF 100%);
+  padding-bottom: 200rpx;
+}
+
+.head {
+  display: flex;
+  margin-bottom: 50rpx;
+  padding-bottom: 0;
+
+
+  .headL image {
+    width: 170rpx;
+    height: 224rpx;
+    margin-right: 30rpx;
+  }
+
+  .headR-title {
+    color: #C40000;
+    margin: 10rpx 0;
+    font-weight: 600;
+  }
+
+  .headR-name {
+    font-size: 30rpx;
+    margin-bottom: 10rpx;
+    font-weight: 600;
+  }
+
+  .headR-num {
+    font-size: 22rpx;
+  }
+
+  .join-btn {
+    width: 169rpx;
+    height: 70rpx;
+    border-radius: 10rpx;
+    background: linear-gradient(180deg, #5A95FB 0%, #1258D0 100%);
+  }
+}
+
+.title {
+  /* 	position: fixed; */
+  background: #DEF0FF;
+  width: 100%;
+  padding-bottom: 30rpx;
+  z-index: 1;
+  /* top: 120rpx; */
+  left: 0;
+  /* padding-left: 55rpx; */
+  /* padding-top: 30rpx; */
+}
+
+.content {
+  padding: 30rpx 50rpx;
+  /* padding-top: 90rpx; */
+}
+
+.list {
+  margin-top: 50rpx;
+}
+
+.listItem {
+  background: #fff;
+  display: flex;
+  padding: 20rpx 40rpx;
+  border-radius: 10rpx;
+  margin-bottom: 20rpx;
+}
+
+.listItem-c {
+  margin-left: 25rpx;
+  flex: 1;
+}
+
+.listItem-cTitle {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10rpx;
+}
+
+.listItem-cTitle-word {
+  font-weight: 600;
+}
+
+.listItem-cTitle-definition {
+  margin-left: 20rpx;
+  color: rgba(109, 109, 109, 1);
+  font-size: 22rpx;
+}
+
+.listItem-cContent-item {
+  color: rgba(109, 109, 109, 1);
+  font-size: 22rpx;
+  margin-bottom: 2rpx;
+  white-space: pre-line;
+  line-height: 36rpx;
+}
+
+.listItem-r {
+  background: #F7A751;
+  border-radius: 50rpx;
+  color: #fff;
+  font-size: 20rpx;
+  height: 50rpx;
+  line-height: 50rpx;
+  padding: 0 20rpx;
+}
+
+.listItem-l {
+  position: relative;
+  top: 4rpx;
+}
+
+.button {
+  position: fixed;
+  bottom: 70rpx;
+  width: 206rpx;
+  height: 80rpx;
+  background: linear-gradient(180deg, #5692F9 0%, #1863E5 100%);
+  border-radius: 50rpx;
+  color: #fff;
+  line-height: 80rpx;
+  text-align: center;
+  left: 0;
+  right: 0;
+  margin: auto;
+  font-size: 26rpx
+}
+
+.listItem-lGif {
+  width: 38rpx;
+  height: 26rpx;
+  position: relative;
+}
+</style>

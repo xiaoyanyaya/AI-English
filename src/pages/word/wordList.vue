@@ -35,9 +35,6 @@
 					<view class="listItem-r" @click.stop="toNav('/pages/word/definition?wordEn='+item.wordEn)">
 						词汇讲解
 					</view>
-					<view class="listItem" v-if="id==3">
-
-					</view>
 				</view>
 				<view class="listItem" v-for="(item,i) in allData" :key="item.id" v-if="id==1"
 					@click="item.audioUsa?play(item.audioUsa):''">
@@ -65,7 +62,7 @@
 				</view>
 			</view>
 			<view class="button"
-				@click="toNav('/pages/word/set?id='+(id==1?dataB.lessonId:allData.id)+'&title='+(title?title:''))">
+				@click="chanllenge">
 				立即挑战
 			</view>
 		</view>
@@ -146,6 +143,9 @@
 			this.getWord()
 		},
 		methods: {
+      chanllenge() {
+        this.toNav('/pages/word/set?id='+(this.id==1?this.dataB.lessonId:this.allData.id)+'&title='+(this.title?this.title:''))
+      },
 			async getWord() {
 				if (this.id == 0) {
 					let data = await wordList(this.data);

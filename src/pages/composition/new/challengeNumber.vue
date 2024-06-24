@@ -106,9 +106,10 @@ export default {
           const res = await getChallengeCompositionList(this.queryParams);
           res.data.result.forEach(item => {
             item.compositionCorrect = item.compositionCorrect.replaceAll('<p>', '').replaceAll('</p>', '')
-            item.compositionText = item.compositionText.replaceAll('\n', '<br/>')
+            item.compositionText = item.compositionText.replaceAll("\n", "<p></p>")
             this.challengeData.push(item);
           })
+          console.log("this.c11a", this.challengeData)
           this.isMoreData = res.data.result.length === this.queryParams.pageSize;
         },
         addCompositionCollectOther: async (item, index) => {

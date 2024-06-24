@@ -20,17 +20,21 @@
         </view>
         <view class="listItem-content">
 <!--          @click="toNav('/pages/word/wordList?id=3'+'&unitId='+item.id)"-->
-          <view class="listItem-contentBook" v-for="(item,i) in items.wordLessonList" :key="item.id">
+          <view @click="toNav('/pages/word/wordList?id=3'+'&unitId='+item.id)"
+            class="listItem-contentBook" v-for="(item,i) in items.wordLessonList" :key="item.id">
             <view class="listItem-contentBook-head">
               <view class="flex align-item-center justify-content-between">
                 <view class="t-size-24 font-weight-bold t-color-1863E5">
-                  {{ getNameWithEllipsis(item.lessonFullName, 15) }}
+                  {{ getNameWithEllipsis(item.lessonFullName) }}
                 </view>
+              </view>
+              <view class="flex justify-content-between align-item-center mt-3">
+                <view class="font-weight-bold t-size-22">复习日期</view>
                 <view class="t-size-22 t-color-8A8A8A">{{ item.reviewLastDate }}</view>
               </view>
               <view class="flex align-item-center justify-content-between mt-3">
-                <view class="t-size-36 t-color-3D3D3D font-weight-bold">
-                  {{ item.lessonName }}
+                <view class="t-size-32 t-color-3D3D3D font-weight-bold lessonName-box">
+                  {{ getNameWithEllipsis(item.lessonName, 20) }}
                 </view>
                 <view class="t-size-26 font-weight-bold">
                   <text class="t-color-24A800">正确({{ item.correctWordNum }})</text>
@@ -337,33 +341,10 @@ export default {
   color: #24A800;
 }
 
-.listItem-contentBook-bottomC-no {
-  color: #DC0C0C !important;
-  margin-left: 12rpx;
-}
+.lessonName-box {
 
-.listItem-contentBook-bottomR {
-  width: 50rpx;
-  height: 50rpx;
-  display: inline-block;
-  /* background-color: red; */
-  border-radius: 50%;
-  border: 4rpx solid;
-  border-color: #D8D8D8;
-  position: relative;
-}
 
-.listItem-contentBook-bottomR-icon {
-  position: absolute;
-  width: 50rpx;
-  height: 50rpx;
-  display: inline-block;
-  /* background-color: red; */
-  border-radius: 50%;
-  border: 4rpx solid;
-  border-color: #1964E5;
-  left: -4rpx;
-  top: -4rpx;
+  width: 62%;
 }
 
 .listItem-contentBook-tab {

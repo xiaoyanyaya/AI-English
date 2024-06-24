@@ -137,10 +137,13 @@ export default {
       var newData = {
         id: id
       }
-      let data = await updateStatus(newData);
-      this.allData.splice(index, 1);
-      this.$u.toast(`删除了第${index}个cell`);
-
+      let res = await updateStatus(newData);
+      if (res.data.code === 200) {
+        this.allData.splice(index, 1);
+        this.$u.toast(`删除成功`);
+      } else {
+        this.$u.toast(`删除失败`);
+      }
     },
     // 如果打开一个的时候，不需要关闭其他，则无需实现本方法
     open(index) {

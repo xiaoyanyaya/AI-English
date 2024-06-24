@@ -71,11 +71,12 @@
         <view class="flex justify-content-between mt-4 pb-4 pl-2 t-size-26 living-item"
               v-for="(item, index) in livingData" :key="index"
               @click="clickLivingData(item, index)">
-          <view class="flex align-item-center" style="width: 450rpx">
-            <image :src="`${imageBaseUrl}${item.image}`"
-                   mode="widthFix" class="living-item-image"></image>
+          <view class="flex align-item-center" style="width: 470rpx">
+            <view style="width: 80rpx;">
+              <image :src="`${imageBaseUrl}${item.image}`" class="living-item-image"></image>
+            </view>
             <view class="flex flex-direction-column justify-content-around ml-3">
-              <view class="t-color-3D3D3D font-weight-bold">{{ item.compositionTitleText }}</view>
+              <view class="t-color-3D3D3D font-weight-bold">{{ getNameWithEllipsis(item.compositionTitleText, 10) }}</view>
               <view class="mt-2 t-size-22 t-color-8A8A8A table-nowrap-2">{{ item.compositionText }}</view>
             </view>
           </view>
@@ -121,7 +122,9 @@
 
 <script>
 import MyMixin from '@/utils/MyMixin';
-
+import {
+  getCompositionCollectInfo,
+} from "@/api/composition";
 export default {
   mixins: [MyMixin],
   data() {
@@ -145,8 +148,8 @@ export default {
 
       livingData: [{
         image: '/img_a6.png',
-        compositionTitleText: '2023年广东高考作文',
-        compositionText: 'This is good news for the students who are preparing for the exam. The exam will be postponed for a week',
+        compositionTitleText: '',
+        compositionText: '',
         username: '刘子轩',
         school: '深圳中学',
       }],
@@ -185,9 +188,19 @@ export default {
       }]
     }
   },
+  onLoad() {
+    this.getCollection();
+  },
   methods: {
+    async getCollection() {
+      let res = await getCompositionCollectInfo({id: "1793463207032631297"});
+      var data = res.data.result
+      this.livingData[0].compositionTitleText = data.compositionTitleText;
+      this.livingData[0].compositionText = data.compositionText;
+      console.log("livingData", this.livingData)
+    },
     clickLivingData(item, index) {
-      this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=5&pageTitle=AI作文批改&title=${item.compositionTitleText}&content=${item.compositionText}&generateContent=${item.compositionReview || ''}`);
+      this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=7&id=1793463207032631297&pageTitle=作文详情&isShowTitle=1`);
     },
     toPage(index) {
       switch (index) {
@@ -309,6 +322,7 @@ page {
 
     .living-item-image {
       width: 80rpx;
+      height: 80rpx;
     }
 
     .user-info {

@@ -1,390 +1,677 @@
 <template>
-	<view class="main">
-		<cy-navbar :showBack="true">
-			<view class="t-size-30">AI单词速记</view>
-		</cy-navbar>
-		<view class="px-4">
-			<view class="search-box">
-				<image :src="imageBaseUrl + '/word/icon3.png'" mode=""></image>
-				<input type="text" name="" id="" placeholder="AI查单词" v-model="value">
-				<view class="search-box-icon" @click="value=''">
-					<u-icon v-if="value.length>0" name="close-circle"></u-icon>
-				</view>
-				<view v-if="value.length>0" class="search-boxIcon" @click="toNav('/pages/word/definition?wordEn='+value+'&state=1')">
-					搜索
-				</view>
-			</view>
-			<view class="item-box px-3 py-3">
-				<view class="item-box-title">
-					<view class="item-box-titleLeft">
-						<view class="item-box-titleLeft-icon"></view>
-						词汇速记
-					</view>
-				</view>
-				<view class="item-box-list">
-					<view class="item-box-listItem item-box-l"
-						:style="{ backgroundImage: 'url(' + imageBaseUrl + '/word/back1.png)' }"
-						@click="toNav('/pages/word/class?id=0')">
-						<view class="item-box-listItem-text">
-							教材词汇速记
-						</view>
-						<image class="item-box-listItem-img" :src="imageBaseUrl + '/word/5-21-05.png'" mode="widthFix">
-						</image>
-						<view class="item-box-listItem-icon">
-							<image :src="imageBaseUrl + '/word/icon4.png'" mode=""></image>
-						</view>
-					</view>
-					<view class="item-box-listItem item-box-r"
-						:style="{ backgroundImage: 'url(' + imageBaseUrl + '/word/back2.png)' }"
-						@click="toNav('/pages/word/class?id=1')">
-						<view class="item-box-listItem-text">
-							考纲词汇速记
-						</view>
-						<image class="item-box-listItem-imgs" :src="imageBaseUrl + '/word/5-21-07.png'" mode="widthFix">
-						</image>
-						<view class="item-box-listItem-icon">
-							<image :src="imageBaseUrl + '/word/icon4.png'" mode=""></image>
-						</view>
-					</view>
-				</view>
-				<view class="item-boxBottom" :style="{ backgroundImage: 'url(' + imageBaseUrl + '/word/back.png)' }" v-if="false">
-					<view class="item-boxBottom-content">
-						<view class="item-boxBottom-contentLeft">
-							<view class="item-boxBottom-contentLeft-title">
-								提高记忆力，助您一臂之力
-							</view>
-							<view class="item-boxBottom-contentLeft-bottom">
-								<image :src="imageBaseUrl + '/word/5-21-10.png'" mode=""></image>点击立即拍照取词
-							</view>
-						</view>
-						<view class="item-boxBottom-contentRight">
-							<image :src="imageBaseUrl + '/word/5-21-09.png'" mode=""></image>
-						</view>
-					</view>
-				</view>
-			</view>
-			<view class="item-boxB py-3 mt-4">
-				<view class="item-box-title">
-					<view class="item-box-titleLeft pl-3" >
-						<view class="item-box-titleLeft-icon"></view>
-						专题词汇
-					</view>
-					<!-- <view class="item-box-titleRight">
-						<view class="item-box-titleRight-icon" @click="reduce()" v-if="getData.pageNo != 1">
-							<image :src="imageBaseUrl + '/word/leftIcon.png'" mode=""></image>
-						</view>
-						<view class="item-box-titleRight-icon ml-3" @click="plus()" v-if="getData.pageNo != typePages">
-							<image :src="imageBaseUrl + '/word/rightIcon.png'" mode=""></image>
-						</view>
-					</view> -->
-				</view>
-				<view class="item-box-select">
-					<view class="item-box-selectItem" v-for="(item,i) in typeData" :key="item.id" @click="toNav('/pages/word/wordList?id=2&unitId='+item.id)">
-						<view class="item-box-selectItem-head">
-							<image :src="item.unitImage" mode="heightFix"></image>
-						</view>
-						<view class="item-box-selectItem-name">
-							{{item.unitName}}
-						</view>
-						<view class="item-box-selectItem-text">
-							{{item.wordNums}}个单词
-						</view>
-						<view class="item-box-selectItem-textB">
-							挑战次数：{{item.reviewNum}}次
-						</view>
-					</view>
-				</view>
-			</view>
-		</view>
-		<wordTab :type="0"></wordTab>
-	</view>
+  <view class="main">
+    <cy-navbar
+      showBack
+      bgColor="linear-gradient(180deg, #D9EEFF 0%, #F3F9FF 7%)"
+      textColor="#3D3D3D"
+    >
+      <view class="t-size-30">词汇速记</view>
+    </cy-navbar>
+    <view class="content">
+      <!-- 教材 -->
+      <view class="model_box">
+        <view class="title">
+          <view class="item"></view><text class="text">教材</text>词汇速记
+        </view>
+        <view class="body">
+          <view class="body_top">
+            <image class="img_book" :src="textBook.bookImage" mode="widthFix">
+            </image>
+            <view class="right">
+              <text class="ver">{{ textBook.bookFullName.split("-")[1] }}</text>
+              <text class="grade">{{
+                textBook.bookFullName.split("-")[0]
+              }}</text>
+              <text class="num">共{{ textBook.wordNums }}个单词</text>
+              <view class="change_share">
+                <view
+                  class="change_box"
+                  @click="
+                    toNav('/pages/common/switchTextbooks?pageType=textBook')
+                  "
+                >
+                  <image
+                    class="image"
+                    :src="imageBaseUrl + '/word/6-24-02.png'"
+                  >
+                  </image>
+                  <view class="text">切换教材</view>
+                </view>
+                <button
+                  open-type="share"
+                  data-name="shareBtn"
+                  size="mini"
+                  class="share_box"
+                >
+                  <image
+                    class="image"
+                    :src="imageBaseUrl + '/word/6-26-01.png'"
+                  >
+                  </image>
+                  <view class="text">分享</view>
+                </button>
+              </view>
+            </view>
+          </view>
+          <view class="body_footer">
+            <view class="footer">
+              <view class="f_title">
+                <view class="f_item"></view><text class="text">开始学习</text>
+              </view>
+              <view
+                class="item-box-listItem item-box-l"
+                :style="{
+                  backgroundImage: 'url(' + imageBaseUrl + '/word/back1.png)',
+                }"
+                @click="toNav('/pages/word/class?id=0')"
+              >
+                <image
+                  class="item-box-listItem-img"
+                  :src="imageBaseUrl + '/word/5-21-05.png'"
+                  mode="widthFix"
+                >
+                </image>
+                <view class="item-box-listItem-icon">
+                  <image
+                    :src="imageBaseUrl + '/word/icon4.png'"
+                    mode=""
+                  ></image>
+                </view>
+              </view>
+            </view>
+            <view class="footer">
+              <view class="f_title">
+                <view class="f_item"></view><text class="text">复习</text>
+              </view>
+              <view
+                class="item-box-listItem item-box-r"
+                :style="{
+                  backgroundImage: 'url(' + imageBaseUrl + '/word/back2.png)',
+                }"
+                @click="toNav('/pages/word/class?id=1')"
+              >
+                <image
+                  class="item-box-listItem-imgs"
+                  :src="imageBaseUrl + '/word/6-26-02.png'"
+                  mode="widthFix"
+                >
+                </image>
+                <view class="item-box-listItem-icon">
+                  <image
+                    :src="imageBaseUrl + '/word/icon4.png'"
+                    mode=""
+                  ></image>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <!-- 考纲 -->
+      <view class="model_box">
+        <view class="title">
+          <view class="item"></view><text class="text">考纲</text>词汇速记
+        </view>
+        <view class="body">
+          <view class="body_top">
+            <image class="img_book" :src="dictBook.bookImage" mode="widthFix">
+            </image>
+            <view class="right">
+              <text class="ver">{{ dictBook.bookName }}</text>
+              <text class="grade">{{ dictBook.bookFullName }}</text>
+              <text class="num">共{{ dictBook.wordNums }}个单词</text>
+              <view class="change_share">
+                <view
+                  class="change_box"
+                  @click="
+                    toNav('/pages/common/switchTextbooks?pageType=dictBook')
+                  "
+                >
+                  <image
+                    class="image"
+                    :src="imageBaseUrl + '/word/6-24-02.png'"
+                  >
+                  </image>
+                  <view class="text">切换教材</view>
+                </view>
+                <button
+                  open-type="share"
+                  data-name="shareBtn"
+                  size="mini"
+                  class="share_box"
+                >
+                  <image
+                    class="image"
+                    :src="imageBaseUrl + '/word/6-26-01.png'"
+                  >
+                  </image>
+                  <view class="text">分享</view>
+                </button>
+              </view>
+            </view>
+          </view>
+          <view class="body_footer">
+            <view class="footer">
+              <view class="f_title">
+                <view class="f_item"></view><text class="text">开始学习</text>
+              </view>
+              <view
+                class="item-box-listItem item-box-l"
+                :style="{
+                  backgroundImage: 'url(' + imageBaseUrl + '/word/back1.png)',
+                }"
+                @click="toNav('/pages/word/class?id=0')"
+              >
+                <image
+                  class="item-box-listItem-img"
+                  :src="imageBaseUrl + '/word/5-21-07.png'"
+                  mode="widthFix"
+                >
+                </image>
+                <view class="item-box-listItem-icon">
+                  <image
+                    :src="imageBaseUrl + '/word/icon4.png'"
+                    mode=""
+                  ></image>
+                </view>
+              </view>
+            </view>
+            <view class="footer">
+              <view class="f_title">
+                <view class="f_item"></view><text class="text">复习</text>
+              </view>
+              <view
+                class="item-box-listItem item-box-r"
+                :style="{
+                  backgroundImage: 'url(' + imageBaseUrl + '/word/back2.png)',
+                }"
+                @click="toNav('/pages/word/class?id=1')"
+              >
+                <image
+                  class="item-box-listItem-imgs"
+                  :src="imageBaseUrl + '/word/6-26-03.png'"
+                  mode="widthFix"
+                >
+                </image>
+                <view class="item-box-listItem-icon">
+                  <image
+                    :src="imageBaseUrl + '/word/icon4.png'"
+                    mode=""
+                  ></image>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <!-- 查询 -->
+      <view class="search-box">
+        <image :src="imageBaseUrl + '/word/icon3.png'" mode=""></image>
+        <input
+          type="text"
+          name=""
+          id=""
+          placeholder="AI查单词"
+          v-model="value"
+        />
+        <view class="search-box-icon" @click="value = ''">
+          <u-icon v-if="value.length > 0" name="close-circle"></u-icon>
+        </view>
+        <view
+          v-if="value.length > 0"
+          class="search-boxIcon"
+          @click="toNav('/pages/word/definition?wordEn=' + value + '&state=1')"
+        >
+          搜索
+        </view>
+      </view>
+      <!-- 专题 -->
+      <view class="model_box">
+        <view class="title">
+          <view class="item"></view><text class="text">专题</text>词汇速记
+        </view>
+        <view class="flex_container">
+          <view
+            class="item-box-selectItem"
+            v-for="item in typeData"
+            :key="item.id"
+            @click="toNav('/pages/word/wordList?id=2&unitId=' + item.id)"
+          >
+            <view class="item-box-selectItem-head">
+              <image :src="item.unitImage" mode="heightFix"></image>
+            </view>
+            <view class="item-box-selectItem-name">
+              {{ item.unitName }}
+            </view>
+            <view class="item-box-selectItem-text">
+              {{ item.wordNums }}个单词
+            </view>
+            <view class="item-box-selectItem-textB">
+              挑战次数：{{ item.reviewNum }}次
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <wordTab :type="0"></wordTab>
+  </view>
 </template>
 
 <script>
-	import wordTab from '@/pages/word/components/word-tabbar/index.vue'
-	import MyMixin from "@/utils/MyMixin";
-	import {
-		listByBookType
-	} from "@/api/word";
-	export default {
-		mixins: [MyMixin],
-		components: {
-			wordTab
-		},
-		data() {
-			return {
-				typeData: [],
-				typePages: 0,
-				value:'',
-				getData: {
-					bookType: 101
-				}
-			}
-		},
-		onLoad() {
-			this.getList()
-		},
-		methods: {
-			toNav(urls) {
-				uni.navigateTo({
-					url: urls
-				})
-			},
-			async getList() {
-				let data = await listByBookType(this.getData);
-				this.typeData = data.data.result
-				// this.typePages = data.data.result.pages
-			},
-			plus() {
-				if (this.getData.pageNo != this.typePages) {
-					this.getData.pageNo = this.getData.pageNo++
-					console.log(this.getData.pageNo++)
-					this.getList()
-				}
-			},
-			reduce() {
-				if (this.getData.pageNo != 1) {
-					this.getData.pageNo = this.getData.pageNo--
-					console.log(this.getData.pageNo--)
-					this.getList()
-				}
-			}
-		}
-	}
+import wordTab from "@/pages/word/components/word-tabbar/index.vue";
+import MyMixin from "@/utils/MyMixin";
+import { listByBookType } from "@/api/word";
+import store from "@/store/";
+
+export default {
+  mixins: [MyMixin],
+  components: {
+    wordTab,
+  },
+  data() {
+    return {
+      typeData: [],
+      typePages: 0,
+      value: "",
+      getData: {
+        bookType: 101,
+      },
+      textBook: {},
+      dictBook: {},
+    };
+  },
+  onShow() {
+    this.textBook = uni.getStorageSync("basicData").currWordConfig.textBook;
+    this.dictBook = uni.getStorageSync("basicData").currWordConfig.dictBook;
+    console.log("textBook", this.textBook);
+    console.log("dictBook", this.dictBook);
+  },
+  onLoad() {
+    this.getList();
+  },
+  methods: {
+    toNav(urls) {
+      uni.navigateTo({
+        url: urls,
+      });
+    },
+    async getList() {
+      let data = await listByBookType(this.getData);
+      this.typeData = data.data.result;
+      // this.typePages = data.data.result.pages
+    },
+    plus() {
+      if (this.getData.pageNo != this.typePages) {
+        this.getData.pageNo = this.getData.pageNo++;
+        console.log(this.getData.pageNo++);
+        this.getList();
+      }
+    },
+    reduce() {
+      if (this.getData.pageNo != 1) {
+        this.getData.pageNo = this.getData.pageNo--;
+        console.log(this.getData.pageNo--);
+        this.getList();
+      }
+    },
+  },
+};
 </script>
 
-<style>
-	.main {
-		background: linear-gradient(180deg, #E9F5FF 0%, #F9FCFF 100%);
-		min-height: 100vh;
-		padding-bottom: 200rpx;
-	}
+<style lang="scss" scoped>
+.main {
+  background: #fff;
+  min-height: 100vh;
+  padding-bottom: 200rpx;
+  .content {
+    .model_box {
+      .title {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        height: 93rpx;
+        line-height: 93rpx;
+        padding-left: 43rpx;
+        opacity: 1;
+        font-size: 36rpx;
+        font-weight: 500;
+        color: #3d3d3d;
+        background: #f3faff;
+        .item {
+          display: inline-block;
+          width: 13rpx;
+          height: 30rpx;
+          border-radius: 10rpx;
+          background: #1863e5;
+          margin-right: 10rpx; /* 添加一些间距 */
+        }
+        .text {
+          font-size: 38rpx;
+          color: #1863e5;
+        }
+      }
+      .body {
+        height: 555rpx;
+        padding: 0 65rpx;
+        .body_top {
+          display: flex;
+          height: 277rpx;
+          margin-top: 25rpx;
+          .img_book {
+            width: 197rpx;
+            height: 277rpx;
+            margin-right: 30rpx;
+          }
+          .right {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            justify-content: space-around;
+            padding-right: 58rpx;
+            .ver {
+              color: #c40000;
+              font-size: 28rpx;
+            }
+            .grade {
+              font-size: 30rpx;
+              font-weight: 500;
+            }
+            .num {
+              color: #8a8a8a;
+              font-size: 24rpx;
+            }
+            .change_share {
+              display: flex;
+              justify-content: space-between;
+              .box {
+                display: flex;
+                justify-content: space-evenly;
+                align-items: center;
+                height: 70rpx;
+                border-radius: 10rpx;
+                margin-top: 30rpx;
+                box-sizing: border-box;
+              }
+              .text_e {
+                height: 70rpx;
+                line-height: 70rpx;
+                text-align: center;
+                font-size: 24rpx;
+                font-weight: 500;
+              }
+              .change_box {
+                @extend .box;
+                width: 172rpx;
+                border: 1rpx solid #c40000;
+                .image {
+                  width: 26rpx;
+                  height: 20rpx;
+                }
+                .text {
+                  @extend .text_e;
+                  color: #c40000;
+                }
+              }
+              .share_box {
+                @extend .box;
+                width: 133rpx;
+                border: 1rpx solid #1863e5 !important;
+                background-color: #fff;
+                padding: 0;
+                margin-left: 30rpx;
+                .image {
+                  width: 30rpx;
+                  height: 25rpx;
+                }
+                .text {
+                  @extend .text_e;
+                  color: #1863e5;
+                }
+              }
+            }
+          }
+        }
+        .body_footer {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 20rpx;
+          .footer {
+            width: 294rpx;
+            height: 144rpx;
+            .f_title {
+              display: flex;
+              flex-wrap: nowrap;
+              align-items: center;
+              .f_item {
+                display: inline-block;
+                width: 10rpx;
+                height: 10rpx;
+                border-radius: 10rpx;
+                background: #1863e5;
+                margin-right: 10rpx; /* 添加一些间距 */
+              }
+            }
+          }
+          .footer_right {
+            width: 294rpx;
+            height: 144rpx;
+          }
+        }
+      }
+      .flex_container {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0 8rpx 0 40rpx;
+      }
+    }
+  }
+}
 
-	.headItem-title {
-		display: flex;
-		color: #3A73D9;
-		font-size: 24rpx;
-		align-items: center;
-		margin-top: 40rpx;
-	}
+.search-boxIcon {
+  position: absolute;
+  right: 40rpx;
+  background: #e9f5ff;
+  width: 100rpx;
+  height: 50rpx;
+  line-height: 50rpx;
+  text-align: center;
+  border-radius: 40rpx;
+  color: #1863e5;
+}
+.search-box-icon {
+  position: absolute;
+  right: 160rpx;
+}
+.search-box input {
+  flex: 1;
+  margin-right: 150rpx;
+}
+.search-box {
+  margin: 0rpx 40rpx 40rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+  color: #8a8a8a;
+  width: 670rpx;
+  height: 70rpx;
+  border-radius: 401rpx;
+  box-sizing: border-box;
+  border: 1rpx solid #bfbfbf;
+  padding: 0 50rpx;
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+  position: relative;
+}
+.search-box image {
+  width: 26rpx;
+  height: 26rpx;
+  margin-right: 30rpx;
+}
 
-	.headItem-title image {
-		width: 30rpx;
-		margin-right: 8rpx;
-	}
+.item-box {
+  background: #fff;
+  border-radius: 10rpx;
+}
 
-	.search-box {
-		background: #fff;
-		height: 70rpx;
-		line-height: 70rpx;
-		color: #8A8A8A;
-		border-radius: 60rpx;
-		padding: 0 50rpx;
-		display: flex;
-		align-items: center;
-		margin: 30rpx 0 40rpx 0;
-		font-size: 24rpx;
-		position: relative;
-	}
+.item-box-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
-	.search-box image {
-		width: 26rpx;
-		height: 26rpx;
-		margin-right: 30rpx;
-	}
+.item-box-titleLeft-icon {
+  width: 7rpx;
+  border-radius: 2rpx;
+  background: #3a73d9;
+  height: 28rpx;
+  margin-right: 10rpx;
+}
 
-	.item-box {
-		background: #fff;
-		border-radius: 10rpx;
-	}
+.item-box-titleLeft {
+  font-size: 30rpx;
+  display: flex;
+  align-items: center;
+}
 
-	.item-box-title {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-	}
+.item-box-titleRight {
+  display: flex;
+}
 
-	.item-box-titleLeft-icon {
-		width: 7rpx;
-		border-radius: 2rpx;
-		background: #3A73D9;
-		height: 28rpx;
-		margin-right: 10rpx;
-	}
+.item-box-titleRight-icon {
+  display: flex;
+  align-items: center;
+}
 
-	.item-box-titleLeft {
-		font-size: 30rpx;
-		display: flex;
-		align-items: center;
-	}
+.item-box-titleRight-icon image {
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 50%;
+  size: 0;
+}
 
-	.item-box-titleRight {
-		display: flex;
-	}
-	
-	.item-box-titleRight-icon{
-		display: flex;
-		align-items: center;
-	}
+.item-box-list {
+  display: flex;
+  justify-content: space-between;
+}
 
-	.item-box-titleRight-icon image {
-		width: 50rpx;
-		height: 50rpx;
-		border-radius: 50%;
-		size: 0;
-	}
+.item-box-listItem {
+  width: 294rpx;
+  height: 144rpx;
+  padding: 25rpx;
+  margin: 20rpx 0;
+  background-size: 100% 100%;
+  position: relative;
+}
 
-	.item-box-l .item-box-listItem-text {
-		background: linear-gradient(180deg, #D73C00 0%, #E97C52 100%);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-	}
+.item-box-listItem-icon image {
+  width: 43rpx;
+  height: 43rpx;
+  position: absolute;
+  left: 25rpx;
+  bottom: 32rpx;
+}
 
-	.item-box-list {
-		display: flex;
-		justify-content: space-between;
-	}
+.item-box-listItem-img {
+  width: 120rpx;
+  position: absolute;
+  right: 15rpx;
+  bottom: 20rpx;
+}
 
-	.item-box-listItem {
-		width: 294rpx;
-		height: 204rpx;
-		padding: 25rpx;
-		margin: 20rpx 0;
-		background-size: 100% 100%;
-		position: relative;
-	}
+.item-box-listItem-imgs {
+  width: 120rpx;
+  position: absolute;
+  right: 15rpx;
+  bottom: 20rpx;
+}
 
-	.item-box-listItem-icon image {
-		width: 43rpx;
-		height: 43rpx;
-		position: absolute;
-		left: 25rpx;
-		bottom: 32rpx;
-	}
+.item-boxBottom {
+  position: relative;
+  height: 141rpx;
+  border-radius: 10rpx;
+  width: 100%;
+  background-size: 100% 100%;
+}
 
+.item-boxBottom-content {
+  display: flex;
+  padding: 25rpx;
+}
 
-	.item-box-listItem-img {
-		width: 120rpx;
-		position: absolute;
-		right: 15rpx;
-		bottom: 20rpx;
-	}
+.item-boxBottom-contentLeft-title {
+  font-weight: 600;
+  color: #fff;
+}
 
-	.item-box-listItem-imgs {
-		width: 120rpx;
-		position: absolute;
-		right: 15rpx;
-		bottom: 20rpx;
-	}
+.item-boxBottom-contentLeft-bottom {
+  background: #fff;
+  border-radius: 26rpx;
+  padding: 4rpx 30rpx;
+  display: flex;
+  align-items: center;
+  color: #1863e5;
+  font-size: 20rpx;
+  width: 260rpx;
+  left: 0;
+  right: 0;
+  margin: auto;
+  margin-top: 26rpx;
+}
 
-	.item-boxBottom {
-		position: relative;
-		height: 141rpx;
-		border-radius: 10rpx;
-		width: 100%;
-		background-size: 100% 100%;
-	}
+.item-boxBottom-contentRight image {
+  width: 172rpx;
+  height: 124rpx;
+  position: absolute;
+  right: 30rpx;
+  top: 10rpx;
+}
 
-	.item-boxBottom-content {
-		display: flex;
-		padding: 25rpx;
-	}
+.item-boxBottom-contentLeft-bottom image {
+  width: 20rpx;
+  height: 19rpx;
+  margin-right: 10rpx;
+}
 
-	.item-boxBottom-contentLeft-title {
-		font-weight: 600;
-		color: #fff;
-	}
+.item-box-selectItem-head image {
+  height: 127rpx;
+}
 
-	.item-boxBottom-contentLeft-bottom {
-		background: #fff;
-		border-radius: 26rpx;
-		padding: 4rpx 30rpx;
-		display: flex;
-		align-items: center;
-		color: #1863E5;
-		font-size: 20rpx;
-		width: 260rpx;
-		left: 0;
-		right: 0;
-		margin: auto;
-		margin-top: 26rpx;
-	}
+.item-box-selectItem-head {
+  margin-bottom: 26rpx;
+  display: flex;
+  justify-content: center;
+}
 
-	.item-boxBottom-contentRight image {
-		width: 172rpx;
-		height: 124rpx;
-		position: absolute;
-		right: 30rpx;
-		top: 10rpx;
-	}
+.item-box-selectItem {
+  width: 202rpx;
+  background: #fff;
+  padding: 20rpx;
+  padding-bottom: 25rpx;
+  border-radius: 10rpx;
+  margin-right: 32rpx;
+}
 
-	.item-boxBottom-contentLeft-bottom image {
-		width: 20rpx;
-		height: 19rpx;
-		margin-right: 10rpx;
-	}
+.item-box-select {
+  display: flex;
+  margin-top: 20rpx;
+  overflow-y: auto;
+  white-space: nowrap;
+}
 
-	.item-box-selectItem-head image {
-		height: 127rpx;
-	}
+.item-box-selectItem-text {
+  font-size: 20rpx;
+  color: #3a73d9;
+  margin-bottom: 5rpx;
+  margin-top: 10rpx;
+}
 
-	.item-box-selectItem-head {
-		margin-bottom: 26rpx;
-		display: flex;
-		justify-content: center;
-	}
+.item-box-selectItem-textB {
+  font-size: 20rpx;
+  color: #8a8a8a;
+}
 
-	.item-box-selectItem {
-		width: 202rpx;
-		background: #fff;
-		padding: 20rpx;
-		padding-bottom: 25rpx;
-		border-radius: 10rpx;
-		margin-right: 30rpx;
-	}
-
-	.item-box-select {
-		display: flex;
-		/* justify-content: space-around; */
-		margin-top: 20rpx;
-		overflow-y: auto;
-		white-space: nowrap;
-	}
-
-	.item-box-selectItem-text {
-		font-size: 20rpx;
-		color: #3A73D9;
-		margin-bottom: 5rpx;
-		margin-top: 10rpx;
-	}
-
-	.item-box-selectItem-textB {
-		font-size: 20rpx;
-		color: #8A8A8A;
-	}
-
-	.item-box-selectItem-name {
-		font-size: 26rpx;
-		margin-bottom: 6rpx;
-	}
-	
-	.search-boxIcon{
-		background: #E9F5FF;
-		width: 100rpx;
-		height: 50rpx;
-		line-height: 50rpx;
-		text-align: center;
-		border-radius: 40rpx;
-		color: #1863E5;
-		position: absolute;
-		right: 40rpx;
-	}
-	.search-box-icon{
-		position: absolute;
-		right: 160rpx;
-	}
-	.search-box input{
-		flex: 1;
-		margin-right: 150rpx;
-	}
+.item-box-selectItem-name {
+  font-size: 26rpx;
+  margin-bottom: 6rpx;
+}
 </style>

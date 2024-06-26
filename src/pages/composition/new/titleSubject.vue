@@ -287,7 +287,7 @@ export default {
         this.btnTitle = 'AI作文批改';
       } else if (pageTitle === 'AI作文批改') {
         var essayDataContent = uni.getStorageSync("essayDataContent")
-        this.essayData.content = essayDataContent || ''
+        this.essayData.content = essayDataContent.replaceAll("\n", "<p></p>")
         this.essayData.originContent = essayDataContent || '';
 
         this.title.isShowTitle = title != '';
@@ -384,21 +384,6 @@ export default {
       this.collectionId = id;
       var generateContent = uni.getStorageSync("compositionCorrect");
       this.originGenerateContent = generateContent
-      generateContent = generateContent.replaceAll("\n", "<p></p>")
-        .replaceAll("(1)、精美句子","<span style='color: #317cf2;line-height: 28px;'>(1)、精美句子</span>")
-        .replaceAll("(2)、句型学习","<span style='color: #317cf2;line-height: 28px;'>(2)、句型学习</span>")
-        .replaceAll("(3)、总结和评分","<span style='color: #317cf2;line-height: 28px;'>(3)、总结和评分</span>")
-        .replaceAll("(4)、范文翻译","<span style='color: #317cf2;line-height: 28px;'>(4)、范文翻译</span>")
-        .replaceAll("(1)、单词纠错","<span style='color: #317cf2;line-height: 28px;'>(1)、单词纠错</span>")
-        .replaceAll("(2)、句子纠错","<span style='color: #317cf2;line-height: 28px;'>(2)、句子纠错</span>")
-        .replaceAll("(3)、范文翻译","<span style='color: #317cf2;line-height: 28px;'>(3)、范文翻译</span>")
-        .replaceAll("(4)、作文优点","<span style='color: #317cf2;line-height: 28px;'>(4)、作文优点</span>")
-        .replaceAll("(5)、作文不足","<span style='color: #317cf2;line-height: 28px;'>(5)、作文不足</span>")
-        .replaceAll("(6)、总结和评分","<span style='color: #317cf2;line-height: 28px;'>(6)、总结和评分</span>")
-        .replaceAll("(7)、改进建议","<span style='color: #317cf2;line-height: 28px;'>(7)、改进建议</span>")
-        .replaceAll("(8)、开放性思考","<span style='color: #317cf2;line-height: 28px;'>(8)、开放性思考</span>")
-        .replaceAll("(9)、参考范文","<span style='color: #317cf2;line-height: 28px;'>(9)、参考范文</span>")
-        .replaceAll("(10)、范文翻译","<span style='color: #317cf2;line-height: 28px;'>(10)、范文翻译</span>")
       this.generateContent = generateContent
     } else if (pageIndex == 6 || pageIndex == 7) {
       this.title.isShowTitle = isShowTitle == 1;
@@ -497,10 +482,17 @@ export default {
     },
     inputTextarea(type, e) {
       console.log(e)
+      // 获取输入内容
+      const inputValue = e.detail.value;
+      // 判断是否含有换行符
+      if (inputValue.includes('\n')) {
+        // 执行换行相关的操作
+        console.log('用户输入了换行');
+      }
       if (type == 'title') {
-        this.essayData.title = e.detail.value
+        this.essayData.title = inputValue
       } else if (type == 'content') {
-        this.essayData.content = e.detail.value
+        this.essayData.content = inputValue
       }
       this.pageScrollTo()
     },
@@ -669,11 +661,11 @@ export default {
         getCompositionCollectInfo: async (id) => {
           let data = await getCompositionCollectInfo({id});
           console.log("查看详情", data.data.result)
-          this.essayData.title = data.data.result.compositionTitleText
+          this.essayData.title = data.data.result.compositionTitleText.replaceAll("\n", "<p></p>")
           this.essayData.content = data.data.result.compositionText.replaceAll("\n", "<p></p>")
           this.originGenerateContent = data.data.result.compositionCorrect
           var generateContent = data.data.result.compositionCorrect.replaceAll("\n", "<p></p>")
-            .replaceAll("(1)、精美句子","<span style='color: #317cf2;line-height: 28px;'>(1)、精美句子</span>")
+            /*.replaceAll("(1)、精美句子","<span style='color: #317cf2;line-height: 28px;'>(1)、精美句子</span>")
             .replaceAll("(2)、句型学习","<span style='color: #317cf2;line-height: 28px;'>(2)、句型学习</span>")
             .replaceAll("(3)、总结和评分","<span style='color: #317cf2;line-height: 28px;'>(3)、总结和评分</span>")
             .replaceAll("(4)、范文翻译","<span style='color: #317cf2;line-height: 28px;'>(4)、范文翻译</span>")
@@ -686,7 +678,7 @@ export default {
         .replaceAll("(7)、改进建议","<span style='color: #317cf2;line-height: 28px;'>(7)、改进建议</span>")
         .replaceAll("(8)、开放性思考","<span style='color: #317cf2;line-height: 28px;'>(8)、开放性思考</span>")
         .replaceAll("(9)、参考范文","<span style='color: #317cf2;line-height: 28px;'>(9)、参考范文</span>")
-        .replaceAll("(10)、范文翻译","<span style='color: #317cf2;line-height: 28px;'>(10)、范文翻译</span>")
+        .replaceAll("(10)、范文翻译","<span style='color: #317cf2;line-height: 28px;'>(10)、范文翻译</span>")*/
           this.generateContent = generateContent
 
         },
@@ -809,7 +801,7 @@ export default {
                       }
                       this.network().addCompositionCollect(params)
 
-                      this.generateContent = this.generateContent
+                      /*this.generateContent = this.generateContent
                         .replaceAll("(1)、精美句子","<span style='color: #317cf2;line-height: 28px;'>(1)、精美句子</span>")
                         .replaceAll("(2)、句型学习","<span style='color: #317cf2;line-height: 28px;'>(2)、句型学习</span>")
                         .replaceAll("(3)、总结和评分","<span style='color: #317cf2;line-height: 28px;'>(3)、总结和评分</span>")
@@ -823,7 +815,7 @@ export default {
         .replaceAll("(7)、改进建议","<span style='color: #317cf2;line-height: 28px;'>(7)、改进建议</span>")
         .replaceAll("(8)、开放性思考","<span style='color: #317cf2;line-height: 28px;'>(8)、开放性思考</span>")
         .replaceAll("(9)、参考范文","<span style='color: #317cf2;line-height: 28px;'>(9)、参考范文</span>")
-        .replaceAll("(10)、范文翻译","<span style='color: #317cf2;line-height: 28px;'>(10)、范文翻译</span>")
+        .replaceAll("(10)、范文翻译","<span style='color: #317cf2;line-height: 28px;'>(10)、范文翻译</span>")*/
 
                       this.generateContent = `<span style=''>` + this.generateContent + `</span>`
                       console.log(this.generateContent)

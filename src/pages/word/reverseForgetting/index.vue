@@ -6,7 +6,7 @@
     <view class="head">
       <view class="headLeft">
         <view class="headLeft-icon"></view>
-        单词复习列表
+        抗遗忘复习列表
       </view>
       <view class="headRight" @click="show=true">
         <text>艾宾浩斯遗忘曲线</text>
@@ -25,12 +25,12 @@
             <view class="listItem-contentBook-head">
               <view class="flex align-item-center justify-content-between">
                 <view class="t-size-24 font-weight-bold t-color-1863E5">
-                  {{ getNameWithEllipsis(item.lessonFullName) }}
+                  {{ getNameWithEllipsis(item.bookFullName) }}
                 </view>
               </view>
               <view class="flex justify-content-between align-item-center mt-3">
                 <view class="font-weight-bold t-size-22">复习日期</view>
-                <view class="t-size-22 t-color-8A8A8A">{{ item.reviewLastDate }}</view>
+                <view class="t-size-22 t-color-8A8A8A">{{ item.reviewPlanDate }}</view>
               </view>
               <view class="flex align-item-center justify-content-between mt-3">
                 <view class="t-size-32 t-color-3D3D3D font-weight-bold lessonName-box">
@@ -63,7 +63,7 @@
                   日期
                 </view>
                 <view class="listItem-contentBook-formTitle-item" style="width: 20%;">
-                  用时(min)
+                  用时(秒)
                 </view>
                 <view class="listItem-contentBook-formTitle-item" style="width: 20%;">
                   正确数
@@ -87,10 +87,15 @@
                   {{ tab.correctWordNum ? tab.correctWordNum : '-' }}
                 </view>
                 <view class="listItem-contentBook-formList-item" style="width: 20%;">
-                  {{ tab.errorWordNum ? tab.errorWordNum : '-' }}
+                  {{ tab.errorWordNum || 0 }}
                 </view>
                 <view class="listItem-contentBook-formList-item" style="width: 20%;">
-                  {{ tab.reviewResult == 1 ? '通过' : '失败' }}
+                  <view v-if="tabNum==0">
+                    <text v-if="tab.reviewResult == 0">不通过</text>
+                    <text v-else-if="tab.reviewResult == 1">通过</text>
+                    <text v-else>未完成答题</text>
+                  </view>
+                  <view v-else>{{ tab.reviewResult == 1 ? '通过' : '-' }}</view>
                 </view>
               </view>
             </view>
@@ -129,6 +134,8 @@
         </view>
       </view>
     </u-popup>
+
+    <view style="height: 160rpx"></view>
     <wordTab :type="1"></wordTab>
   </view>
 </template>
@@ -392,8 +399,9 @@ export default {
 .listItem-contentBook-icon {
   display: flex;
   justify-content: center;
-  margin-top: 20rpx;
+  align-items: center;
   transform: rotateX(180deg);
+  height: 80rpx;
 }
 
 .imgs {

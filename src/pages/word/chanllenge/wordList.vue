@@ -68,6 +68,10 @@
         </view>
       </view>
     </view>
+    <view class="button"
+          @click="chanllenge">
+      立即挑战
+    </view>
   </view>
 </template>
 
@@ -121,6 +125,23 @@ export default {
   onShow() {
   },
   methods: {
+    chanllenge() {
+      this.setWordLessonDictList()
+      this.toNav('/pages/word/set?id='+this.bookId+'&pageType=chanllenge')
+    },
+    toDefined(item) {
+      this.setWordLessonDictList()
+      this.toNav('/pages/word/definition?wordEn='+item.wordEn+'&pageType=chanllenge&id=0&unitId='+this.bookId)
+    },
+    setWordLessonDictList () {
+      var wordList = uni.getStorageSync("wordList");
+      if (wordList) {
+        wordList.wordLessonDictList = this.allData
+        uni.setStorageSync("wordList", wordList)
+      } else {
+        uni.setStorageSync("wordList", {wordLessonDictList: this.allData})
+      }
+    },
     async initData() {
       var result = uni.getStorageSync("basicData").currWordConfig.textBook;
       if (result) {
@@ -129,16 +150,6 @@ export default {
         await this.network().queryBookById()
         await this.network().queryBookChallengeInfo()
       }
-    },
-    toDefined(item) {
-      var wordList = uni.getStorageSync("wordList");
-      if (wordList) {
-        wordList.wordLessonDictList = this.allData
-        uni.setStorageSync("wordList", wordList)
-      } else {
-        uni.setStorageSync("wordList", {wordLessonDictList: this.allData})
-      }
-      this.toNav('/pages/word/definition?wordEn='+item.wordEn+'&pageType=chanllenge&id=0&unitId='+this.bookId)
     },
     play(src, id) {
       var that = this

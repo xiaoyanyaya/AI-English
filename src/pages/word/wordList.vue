@@ -63,7 +63,7 @@
 			</view>
 			<view class="button"
 				@click="chanllenge">
-				立即挑战
+				{{ chanllengeBtnText }}
 			</view>
 		</view>
 		<!-- <audio :src="audioSrc" autoplay auto></audio> -->
@@ -107,7 +107,7 @@
 				gif: false,
 				selectId: 0,
 				title: '',
-
+        chanllengeBtnText:'立即挑战'
 			}
 		},
 		onLoad(e) {
@@ -130,7 +130,11 @@
 			} else if (e.id == 3) {
 				this.dataC.id = e.unitId
 			}
+      if (e.btnTitle) {
+        this.chanllengeBtnText = e.btnTitle
+      }
 			this.bookData = uni.getStorageSync('bookData')
+
 		},
 		onPageScroll(e) {
 			if (e.scrollTop > 20) {

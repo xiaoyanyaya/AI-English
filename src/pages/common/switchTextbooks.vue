@@ -24,11 +24,20 @@ export default {
       typeValue: 1,
       typeList: [],
       shopList: [],
-      bookData: []
+      bookData: [],
+
+      /* 当前页面类型 */
+      pageType: ""
     };
   },
-  onLoad() {
-    this.network().getBookList(101)
+  onLoad({ pageType }) {
+    this.pageType = pageType
+
+    if (this.pageType === "textBook") {
+      this.network().getBookList(101)
+    } else if (this.pageType === "dictBook") {
+      this.network().getBookList(102)
+    }
   },
   onPageScroll(e) {
     if (e.scrollTop > 20) {
@@ -48,8 +57,18 @@ export default {
       console.log(this.shopList)
     },
     handleDetail(item) {
-      console.log(item)
-      this.network().switchBook(item.id)
+      const basicData = uni.getStorageSync("basicData");
+      const currWordConfig = { ...basicData.currWordConfig };
+
+      if (this.pageType === "textBook") {
+        currWordConfig.textBook = item;
+        this.network().switchBook({ textBookId: item.id });
+      } else if (this.pageType === "dictBook") {
+        currWordConfig.dictBook = item;
+        this.network().switchBook({ dictBookId: item.id });
+      }
+
+      uni.setStorageSync("basicData", { ...basicData, currWordConfig });
     },
     handleSort(sortType) {
       console.log(sortType)
@@ -78,14 +97,16 @@ export default {
             }
           }
         },
-        switchBook: async (textBookId) => {
-          const res = await switchBook({textBookId})
+        switchBook: async (params) => {
+          const res = await switchBook(params)
           if (res.data.code === 200) {
             uni.showToast({
               title: '切换成功',
               icon: 'success',
               duration: 2000
             })
+            uni.$emit('switchTextbook', params)
+            uni.navigateBack()
           } else {
             uni.showToast({
               title: '切换失败',

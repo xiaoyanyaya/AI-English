@@ -221,7 +221,7 @@
 	.item-box-titleRight {
 		display: flex;
 	}
-	
+
 	.item-box-titleRight-icon{
 		display: flex;
 		align-items: center;
@@ -367,7 +367,7 @@
 		font-size: 26rpx;
 		margin-bottom: 6rpx;
 	}
-	
+
 	.search-boxIcon{
 		background: #E9F5FF;
 		width: 100rpx;

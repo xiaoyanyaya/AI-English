@@ -101,8 +101,8 @@ page {
 
         .img {
           flex-shrink: 0;
-          width: 160rpx;
-          height: 160rpx;
+          width: 170rpx;
+          height: 220rpx;
         }
       }
     }

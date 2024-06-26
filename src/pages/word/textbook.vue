@@ -1,6 +1,6 @@
 <template>
 	<view class="main">
-		<cy-navbar :showBack="true" :bgColor="backColor">
+		<cy-navbar :showBack="true" :bgColor="backColor" textColor="#3D3D3D">
 			<view class="t-size-30" v-if="id==0">教材单元列表</view>
 			<view class="t-size-30" v-if="id==1">考纲词汇速记</view>
 		</cy-navbar>

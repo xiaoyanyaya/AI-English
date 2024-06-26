@@ -95,6 +95,9 @@ export const queryBookById = params => fly.get('/word/book/queryById', params)
 // 疯狂挑战 - 排行 - 获取本人本教材（考纲）的挑战历程记录 get https://wapi-dev.aien.xiaolixb.com/v1/word/challenge/queryChallengeByUser
 export const queryChallengeByUser = params => fly.get('/word/challenge/queryChallengeByUser', params)
 
+// 疯狂挑战 - 排行 - 获取教材（考纲）的挑战排行 get https://wapi-dev.aien.xiaolixb.com/v1/word/challenge/queryChallengeByBook
+export const queryChallengeByBook = params => fly.get('/word/challenge/queryChallengeByBook', params)
+
 // word/unit/dict/queryListByBookId get
 export const queryListByBookId = params => fly.get('/word/unit/dict/queryListByBookId', params)
 

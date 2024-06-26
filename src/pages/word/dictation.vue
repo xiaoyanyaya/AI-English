@@ -89,6 +89,7 @@ export default {
       // id
       id: "",
       lessonId: 0,
+      bookId: 0,
       // 基本信息，上页面传递过来
       baseInfo: {},
 
@@ -120,12 +121,13 @@ export default {
       playing: false,
     }
   },
-  onLoad({id, lessonId, pageType}) {
+  onLoad({id, lessonId, pageType, bookId}) {
     this.pageType = pageType
     console.log("pageType", pageType)
 
     this.id = id
     this.lessonId = lessonId
+    this.bookId = bookId
     this.setData = uni.getStorageSync('setData')
 
     this.baseInfo = uni.getStorageSync("wordList");
@@ -209,12 +211,12 @@ export default {
 
         // 判断是挑战还是复习
         let data = {}
-        if (this.pageType == "challenge") {
+        if (this.pageType == "chanllenge") {
           data = await challengeFinishPost({id: this.id});
         } else {
           data = await reviewFinish({id: this.id});
         }
-        this.$navigateTo('/pages/word/answer?id=' + this.id)
+        this.$navigateTo('/pages/word/answer?id=' + this.id + '&pageType=' + this.pageType + '&bookId=' + this.bookId)
 
       }
     },
@@ -362,7 +364,7 @@ export default {
 
           // 判断是挑战还是复习
           let res;
-          if (this.pageType = "challenge") {
+          if (this.pageType == "chanllenge") {
             getData = {
               ...getData,
               challengeId: this.id
@@ -391,13 +393,13 @@ export default {
               // 完成
               let data = {}
               // 判断是挑战还是复习
-              if (this.pageType == "challenge") {
+              if (this.pageType == "chanllenge") {
                 data = await challengeFinishPost({id: this.id});
               } else {
                 data = await reviewFinish({id: this.id});
               }
               console.log("答题完成", data)
-              this.$navigateTo('/pages/word/answer?id=' + this.id)
+              this.$navigateTo('/pages/word/answer?id=' + this.id + '&pageType=' + this.pageType + '&bookId=' + this.bookId)
             }
           } else {
             // 错误

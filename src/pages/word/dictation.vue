@@ -184,14 +184,26 @@ export default {
   methods: {
     // 上一题
     lastTopic() {
+      // 增加防抖
+      if (!this.debounceShow) return
+      this.debounceShow = false
+
       if (this.currentTopic > 1) {
         // 从缓存中取出上一题数据
         this.currentTopicData = this.topicDataCache.pop()
         this.currentTopic--
       }
+
+      setTimeout(() => {
+        this.debounceShow = true
+      }, 500)
     },
     // 下一题
     async nextTopic() {
+      // 增加防抖
+      if (!this.debounceShow) return
+      this.debounceShow = false
+
       if (this.currentTopic > 0) {
         // 记录当前题目的答题数据
         this.topicDataCache.push(this.currentTopicData)
@@ -219,6 +231,10 @@ export default {
         this.$navigateTo('/pages/word/answer?id=' + this.id + '&pageType=' + this.pageType + '&bookId=' + this.bookId)
 
       }
+
+      setTimeout(() => {
+        this.debounceShow = true
+      }, 500)
     },
     // 点击播放按钮
     clickPlay() {

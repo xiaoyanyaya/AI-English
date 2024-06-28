@@ -9,8 +9,8 @@
       </view>
     </cy-navbar>
     <view class="head">
-      <image v-if="data.reviewResult==0" :src="imageBaseUrl+'/word/5-22-02.png'" mode="widthFix"></image>
-      <image v-if="data.reviewResult==1" :src="imageBaseUrl+'/word/5-22-03.png'" mode="widthFix"></image>
+      <image v-if="data.reviewResult==0 || data.challengeResult==0" :src="imageBaseUrl+'/word/5-22-02.png'" mode="widthFix"></image>
+      <image v-if="data.reviewResult==1 || data.challengeResult==1" :src="imageBaseUrl+'/word/5-22-03.png'" mode="widthFix"></image>
     </view>
     <view class="statistics">
       <view class="statisticsItem">

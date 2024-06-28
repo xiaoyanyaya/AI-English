@@ -1,13 +1,13 @@
 <template>
   <view class="main">
     <cy-navbar :showBack="false" bgColor="transparent" textColor="#3D3D3D">
-      <view class="t-size-30">抗遗忘复习</view>
+      <view class="t-size-30">疯狂挑战</view>
     </cy-navbar>
 
     <view class="px-3 mt-3">
       <view class="mt-5 flex justify-content-center">
         <u-tabs bg-color="transparent" inactive-color="#8A8A8A" bar-width="170" active-color="#1863E5"
-                :list="topOptinsList" :current="currentTopOptions" @change="changeOptions"></u-tabs>
+                :list="topOptinsList" :current="currentTopOptions" @change="changeTopOptions"></u-tabs>
       </view>
 
       <view class="head">
@@ -15,23 +15,24 @@
           <image :src="textBook.bookImage" mode=""></image>
         </view>
         <view class="headR">
-          <view class="headR-title mt-1">
-            沪教版
+          <view class="headR-title mt-1 flex align-item-center" @click="toSwtichTextBook">
+            <view class="mr-1">{{ textBook.bookSecondTypeText }}</view>
+            <image :src="`${imageBaseUrl}/word/6-24-02.png`" style="width: 24rpx; height: 20rpx"></image>
           </view>
           <view class="headR-name">
-            {{ textBook.bookName}}
+            {{ textBook.bookName }}
           </view>
           <view class="headR-num">
-            共{{textBook.wordNums}}个单词
+            共{{ textBook.wordNums }}个单词
           </view>
           <view class="flex align-item-center mt-2">
             <view @click="$navigateTo('/pages/word/chanllenge/wordList?bookId='+textBook.id)"
-              class="t-size-24 join-btn t-color-fff flex align-item-center justify-content-center font-weight-bold">
+                  class="t-size-24 join-btn t-color-fff flex align-item-center justify-content-center font-weight-bold">
               参与挑战
             </view>
             <view class="share-friend ml-3 flex align-item-center">
-              <view></view>
-              <view class="t-size-22 t-color-1863E5">邀请好友挑战</view>
+              <image :src="`${imageBaseUrl}/word/6-24-01.png`" style="width: 20rpx; height: 20rpx"></image>
+              <view class="t-size-22 t-color-1863E5 ml-1">邀请好友挑战</view>
             </view>
           </view>
         </view>
@@ -75,7 +76,7 @@
 <script>
 import wordTab from "@/pages/word/components/word-tabbar/index.vue";
 import MyMixin from "@/utils/MyMixin";
-import {queryBookById, queryChallengeByUser} from "../../../api/word";
+import {queryBookById, queryChallengeByBook, queryChallengeByUser} from "../../../api/word";
 
 export default {
   mixins: [MyMixin],
@@ -101,7 +102,7 @@ export default {
         name: "我的挑战历程",
         id: 0,
       }, {
-        name: "单次最佳排名",
+        name: "教材挑战排名",
         id: 1,
       }],
 
@@ -141,7 +142,7 @@ export default {
           type: "text",
           tColor: "#3D3D3D"
         }
-      },{
+      }, {
         value1: {
           value: "2024-03-27",
           type: "text",
@@ -183,6 +184,12 @@ export default {
   },
   onLoad() {
     this.initData()
+
+    // 切换教材监听
+    uni.$on("switchTextbook", ({textBookId}) => {
+      console.log("switchTextbooks", textBookId)
+      this.network().queryBookById(textBookId)
+    })
   },
   methods: {
     initData() {
@@ -192,9 +199,31 @@ export default {
         this.network().queryChallengeByUser(result.id)
       }
     },
+    toSwtichTextBook() {
+      this.$navigateTo(`/pages/common/switchTextbooks?pageType=textBook`)
+    },
+    changeTopOptions(index) {
+      this.currentTopOptions = index;
+      switch (index) {
+        case 0:
+          break;
+        case 1:
+          break;
+        case 2:
+
+          break;
+      }
+    },
     changeOptions(index) {
       this.currentOptions = index;
-      this.queryParams.sceneCategoryId = this.optinsList[index].id
+      switch (index) {
+        case 0:
+          this.network().queryChallengeByUser(this.textBook.id)
+          break;
+        case 1:
+          this.network().queryChallengeByBook(this.textBook.id)
+          break;
+      }
     },
     network() {
       return {
@@ -205,6 +234,10 @@ export default {
         queryChallengeByUser: async (id) => {
           const res = await queryChallengeByUser({bookId: id})
           console.log("queryChallengeByUser", res)
+        },
+        queryChallengeByBook: async (id) => {
+          const res = await queryChallengeByBook({bookId: id})
+          console.log("queryChallengeByBook", res)
         }
       }
     }
@@ -259,6 +292,7 @@ export default {
   white-space: nowrap;
   width: 100%;
 }
+
 .scroll-view-item_H {
   display: inline-block;
   height: 500rpx;

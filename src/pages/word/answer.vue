@@ -1,7 +1,12 @@
 <template>
   <view class="main">
-    <cy-navbar :showBack="true" :bgColor="backColor">
-      <view class="t-size-30">{{ wordList.lessonFullName ? wordList.lessonFullName : bookData.bookFullName }}</view>
+    <cy-navbar :showBack="true" :bgColor="backColor" textColor="#3D3D3D">
+      <view class="t-size-30" v-if="pageType === 'chanllenge'">
+        <view>{{ data.bookFullName }}</view>
+      </view>
+      <view class="t-size-30" v-else>
+        {{ wordList.lessonFullName ? wordList.lessonFullName : bookData.bookFullName }}
+      </view>
     </cy-navbar>
     <view class="head">
       <image v-if="data.reviewResult==0" :src="imageBaseUrl+'/word/5-22-02.png'" mode="widthFix"></image>
@@ -10,7 +15,8 @@
     <view class="statistics">
       <view class="statisticsItem">
         <view class="statisticsItem-top">
-          {{ data.reviewScore }}
+          <text v-if="pageType === 'chanllenge'">{{ data.challengeScore }}</text>
+          <text v-else>{{ data.reviewScore }}</text>
         </view>
         <view class="statisticsItem-bottom">
           分数
@@ -65,7 +71,7 @@
               :class="item.answerResult==0?'redFont':''||item.answerResult==1?'greeyFont':''">
           <text v-if="item.answerResult==0">× 错误</text>
           <text v-else-if="item.answerResult==1">√ 正确</text>
-          <text v-else>× 跳过</text>
+<!--          <text v-else>× 跳过</text>-->
         </view>
       </view>
     </view>
@@ -83,12 +89,12 @@
             正确
           </view>
         </view>
-        <view class="resultTitle-item">
+<!--        <view class="resultTitle-item">
           <view class="resultTitle-itemGrey"></view>
           <view class="resultTitle-itemText">
             跳过
           </view>
-        </view>
+        </view>-->
       </view>
       <view class="resultList">
         <view class="resultList-item" v-for="(item,i) in data.wordReviewDictList"
@@ -102,15 +108,16 @@
     </view>
     <view class="button">
       <view class="buttonLeft"
-            @click="toNav('/pages/word/wordList?id='+wordType+'&unitId='+(wordList.unitId?wordList.unitId:data.lessonId))">
+            @click="clickBtn(0)">
         <image :src="imageBaseUrl + '/word/5-21-26.png'" mode=""></image>
-        重新挑战
+        {{ pageType === "chanllenge" ? '继续挑战' : '重新答题' }}
       </view>
-      <view class="buttonLeft" @click="toNav('/pages/word/index')">
+      <view class="buttonLeft" @click="clickBtn(1)">
         <u-icon name="home" size="32"></u-icon>
-        <text style="margin-left: 10rpx;">回到首页</text>
+        <text style="margin-left: 10rpx;">{{ pageType === "chanllenge" ? '挑战列表' : '复习列表' }}</text>
       </view>
-      <view class="buttonRight" @click="toNav('/pages/word/textbook?id='+wordType+'&bookId='+bookData.id)">
+      <view v-if="pageType !== 'chanllenge'"
+            class="buttonRight" @click="toNav('/pages/word/textbook?id='+wordType+'&bookId='+bookData.id)">
         <image :src="imageBaseUrl + '/word/5-21-29.png'" mode=""></image>
         挑战下一关
       </view>
@@ -125,6 +132,7 @@ import {
   reviewList,
   queryReviewList
 } from "@/api/word.js"
+import {challengeFinishPost} from "../../api/word";
 
 export default {
   mixins: [MyMixin],
@@ -266,7 +274,9 @@ export default {
       data: {},
       bookData: {},
       wordType: '',
-      wordList: []
+      wordList: [],
+      pageType: '',
+      bookId: ''
     }
   },
   onReady() {
@@ -279,21 +289,57 @@ export default {
       this.backColor = 'transparent'
     }
   },
-  onLoad(e) {
-    this.id = e.id
+  onLoad({id, pageType, bookId}) {
+    console.log("id", id, "pageType", pageType, "bookId", bookId)
+    this.id = id
+    this.pageType = pageType
+    this.bookId = bookId
+
     this.getData()
     this.bookData = uni.getStorageSync('bookData')
     this.wordList = uni.getStorageSync('wordList')
     this.wordType = uni.getStorageSync('wordType')
   },
   methods: {
+    clickBtn(type) {
+      switch (type) {
+        case 0:
+          if (this.pageType !== "chanllenge") {
+            // 重新答题
+            console.log("添加")
+            this.toNav('/pages/word/wordList?id=' + this.wordType + '&unitId=' + (this.wordList.unitId ? this.wordList.unitId : this.data.lessonId) + '&btnTitle=重新答题')
+          } else {
+            this.toNav('/pages/word/chanllenge/wordList?bookId=' + this.bookId)
+          }
+          break;
+        case 1:
+          if (this.pageType !== "chanllenge") {
+            // this.toNav('/pages/word/textbook?id=' + this.wordType + '&bookId=' + this.bookData.id)
+            uni.redirectTo({
+              url: '/pages/word/reverseForgetting/index'
+            })
+          } else {
+            uni.redirectTo({
+              url: '/pages/word/chanllenge/index'
+            })
+          }
+          break;
+      }
+    },
     async getData() {
       var dataPass = {
         id: this.id
       }
-      let data = await reviewList(dataPass)
+      let data = {}
+      if (this.pageType == "chanllenge") {
+        data = await challengeFinishPost({id: this.id});
+        data.data.result.wordReviewDictList = data.data.result.wordChallengeDictList
+        data.data.result.challengeScore = data.data.result.challengeScore.toFixed(2)
+      } else {
+        data = await reviewList(dataPass);
+        data.data.result.reviewScore = data.data.result.reviewScore.toFixed(2)
+      }
       this.data = data.data.result
-      this.data.reviewScore = this.data.reviewScore.toFixed(2)
     },
     getServerData() {
       //模拟从服务器获取数据时的延时
@@ -310,10 +356,10 @@ export default {
           }, {
             name: "错误",
             data: [this.data.errorWordNum]
-          }, {
+          }/*, {
             name: "跳过",
             data: [this.data.totalWordNum - this.data.correctWordNum - this.data.errorWordNum]
-          }]
+          }*/]
         };
         this.chartData = JSON.parse(JSON.stringify(res));
       }, 500);

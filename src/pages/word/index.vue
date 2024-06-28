@@ -27,7 +27,7 @@
                 <view
                   class="change_box"
                   @click="
-                    toNav('/pages/common/switchTextbooks?pageType=textBook')
+                    toNav(`/pages/common/switchTextbooks?pageType=textBook`)
                   "
                 >
                   <image
@@ -63,7 +63,9 @@
                 :style="{
                   backgroundImage: 'url(' + imageBaseUrl + '/word/back1.png)',
                 }"
-                @click="toNav('/pages/word/class?id=0')"
+                @click="
+                  toNav(`/pages/word/textbook?id=0&bookId=${textBook.id}`)
+                "
               >
                 <image
                   class="item-box-listItem-img"
@@ -88,7 +90,7 @@
                 :style="{
                   backgroundImage: 'url(' + imageBaseUrl + '/word/back2.png)',
                 }"
-                @click="toNav('/pages/word/class?id=1')"
+                @click="toNav('/pages/word/reverseForgetting/index')"
               >
                 <image
                   class="item-box-listItem-imgs"
@@ -160,7 +162,9 @@
                 :style="{
                   backgroundImage: 'url(' + imageBaseUrl + '/word/back1.png)',
                 }"
-                @click="toNav('/pages/word/class?id=0')"
+                @click="
+                  toNav(`/pages/word/textbook?id=1&bookId=${dictBook.id}`)
+                "
               >
                 <image
                   class="item-box-listItem-img"
@@ -185,7 +189,7 @@
                 :style="{
                   backgroundImage: 'url(' + imageBaseUrl + '/word/back2.png)',
                 }"
-                @click="toNav('/pages/word/class?id=1')"
+                @click="toNav('/pages/word/reverseForgetting/index')"
               >
                 <image
                   class="item-box-listItem-imgs"

@@ -95,14 +95,20 @@
 
       <view v-if="otherContent.show">
         <view class="mt-5 flex align-item-center justify-content-between top-content">
-          <view class="flex align-item-end">
-            <view class="font-weight-bold t-size-28 ml-3 font-weight-bold">
-              {{ otherContent.title }}
+          <view class="flex align-item-end justify-content-between">
+            <view class="flex align-item-end">
+              <view class="font-weight-bold t-size-28 ml-3 font-weight-bold">
+                {{ otherContent.title }}
+              </view>
+              <view v-if="otherContent.isDisabled" @click="copyContent(originGenerateContent)" class="flex ml-3 align-item-center" style="margin-top: 2rpx">
+                <view class="iconfont t-color-1863E5 essay-title-icon">&#xe8b0;</view>
+                <view class="t-size-22 t-color-1863E5" style="margin-left: 6rpx">复制</view>
+              </view>
             </view>
-            <view v-if="otherContent.isDisabled" @click="copyContent(originGenerateContent)" class="flex ml-3 align-item-center" style="margin-top: 2rpx">
-              <view class="iconfont t-color-1863E5 essay-title-icon">&#xe8b0;</view>
-              <view class="t-size-22 t-color-1863E5" style="margin-left: 6rpx">复制</view>
-            </view>
+          </view>
+          <view class="t-size-24 t-color-8A8A8A flex align-item-center pr-2">
+            <u-icon name="info-circle-fill" color="#8A8A8A" size="28"></u-icon>
+            <view class="ml-1">AI批改仅供借鉴</view>
           </view>
         </view>
         <view class="ai-content-box mt-2">
@@ -755,6 +761,7 @@ export default {
 
                 if (item.includes('data:') && !item.includes('[DONE]')) {
                   let text = item.replace('data:', '')
+                  console.log(text)
                   text = text.replaceAll("「`」", " ").replaceAll("「·」", "<p></p>").replaceAll("「~」", "<p></p>")
 
                   if (type == 'content') {

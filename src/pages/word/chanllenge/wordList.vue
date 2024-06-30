@@ -4,26 +4,26 @@
       单词挑战赛
     </cy-navbar>
     <view class="content">
-
       <view class="head pl-1">
         <view class="headL mr-1">
           <image :src="textBook.bookImage" mode=""></image>
         </view>
         <view class="headR">
-          <view class="headR-title mt-1">
-            沪教版
-          </view>
+          <view class="headR-title mt-1"> 沪教版</view>
           <view class="headR-name">
-            {{ textBook.bookName}}
+            {{ textBook.bookName }}
           </view>
           <view class="headR-num mt-2 t-color-1863E5">
-            共{{textBook.wordNums}}个单词
+            共{{ textBook.wordNums }}个单词
           </view>
           <view class="mt-2 t-color-8A8A8A t-size-22">
-            已挑战次数：{{textBook.challengeTimes}}
+            已挑战次数：{{ textBook.challengeTimes }}
             <view class="flex align-item-center justify-content-between mt-1">
-              <view>已挑战单词数：{{textBook.totalWordNum}}</view>
-              <view class="ml-5">正确单词数：{{textBook.correctWordNum}}</view>
+              <view>已挑战单词数：{{ textBook.totalWordNum }}</view>
+              <view class="ml-5"
+              >正确单词数：{{ textBook.correctWordNum }}
+              </view
+              >
             </view>
           </view>
         </view>
@@ -31,27 +31,45 @@
 
       <view class="list">
         <view class="flex align-item-center justify-content-between px-3 mb-2">
-          <view class="t-size-28 t-color-3D3D3D font-weight-bold">单词列表</view>
-          <view class="t-size-26 t-color-6a6a6a flex align-item-center" @click="network().queryListByBookId()">
+          <view class="t-size-28 t-color-3D3D3D font-weight-bold"
+          >单词列表
+          </view
+          >
+          <view
+            class="t-size-26 t-color-6a6a6a flex align-item-center"
+            @click="network().queryListByBookId()"
+          >
             <view class="iconfont" style="font-size: 26rpx">&#xe62d;</view>
             <view class="ml-1">换一批单词</view>
           </view>
         </view>
-        <view class="listItem" v-for="(item,i) in allData" :key="item.id" v-if="id==0||id==2||id==3"
-              @click="item.audioUsa?play(item.audioUsa,item.id):''">
+        <view
+          class="listItem"
+          v-for="(item, i) in allData"
+          :key="item.id"
+          v-if="id == 0 || id == 2 || id == 3"
+          @click="item.audioUsa ? play(item.audioUsa, item.id) : ''"
+        >
           <view class="listItem-l">
             <view v-if="item.audioUsa">
-              <image v-if="gif&&selectId==item.id" class="listItem-lGif"
-                     :src="imageBaseUrl + '/word/in_play.gif'" mode=""></image>
-              <u-icon v-else name="volume-up" size="36" color="rgba(24, 99, 229, 1)"></u-icon>
+              <image
+                v-if="gif && selectId == item.id"
+                class="listItem-lGif"
+                :src="imageBaseUrl + '/word/in_play.gif'"
+                mode=""
+              ></image>
+              <u-icon
+                v-else
+                name="volume-up"
+                size="36"
+                color="rgba(24, 99, 229, 1)"
+              ></u-icon>
             </view>
             <view v-else style="width: 38rpx; height: 26rpx"></view>
           </view>
           <view class="listItem-c">
             <view class="listItem-cTitle">
-              <view class="listItem-cTitle-word">
-                {{ item.wordEn }}
-              </view>
+              <view class="listItem-cTitle-word"> {{ item.wordEn }}？？</view>
               <view class="listItem-cTitle-definition">
                 {{ "['" + item.symbolUsa + "']" }}
               </view>
@@ -68,58 +86,55 @@
         </view>
       </view>
     </view>
-    <view class="button"
-          @click="chanllenge">
-      立即挑战
-    </view>
+    <view class="button" @click="chanllenge"> 立即挑战</view>
   </view>
 </template>
 
 <script>
-import {queryListByBookId, queryBookById, queryChallengeByUser, queryBookChallengeInfo} from "../../../api/word";
+import {
+  queryListByBookId,
+  queryBookById,
+  queryChallengeByUser,
+  queryBookChallengeInfo,
+} from "../../../api/word";
 
 const innerAudioContext = uni.createInnerAudioContext();
-innerAudioContext.autoplay = true
+innerAudioContext.autoplay = true;
 import MyMixin from "@/utils/MyMixin";
-import {
-  wordList,
-  dictList,
-  lessonWordList,
-  queryById
-} from "@/api/word";
+import {wordList, dictList, lessonWordList, queryById} from "@/api/word";
 
 export default {
   mixins: [MyMixin],
   data() {
     return {
       id: 0,
-      backColor: 'transparent',
+      backColor: "transparent",
       data: {
-        unitId: 0
+        unitId: 0,
       },
       dataB: {
         lessonId: 0,
-        pageSize: 99
+        pageSize: 99,
       },
       dataC: {
-        id: 0
+        id: 0,
       },
       allData: {},
-      audioSrc: '',
+      audioSrc: "",
       gif: false,
       selectId: 0,
       textBook: {},
       bookId: "",
-    }
+    };
   },
   onLoad() {
-    this.initData()
+    this.initData();
   },
   onPageScroll(e) {
     if (e.scrollTop > 20) {
-      this.backColor = '#DEF0FF'
+      this.backColor = "#DEF0FF";
     } else {
-      this.backColor = 'transparent'
+      this.backColor = "transparent";
     }
   },
   onShow() {
@@ -127,47 +142,49 @@ export default {
   methods: {
     chanllenge() {
       this.setWordLessonDictList()
-      this.toNav('/pages/word/set?id='+this.bookId+'&pageType=chanllenge')
+      this.toNav('/pages/word/set?id=' + this.bookId + '&pageType=chanllenge')
     },
     toDefined(item) {
       this.setWordLessonDictList()
-      this.toNav('/pages/word/definition?wordEn='+item.wordEn+'&pageType=chanllenge&id=0&unitId='+this.bookId)
+      this.toNav('/pages/word/definition?wordEn=' + item.wordEn + '&pageType=chanllenge&id=0&unitId=' + this.bookId)
     },
-    setWordLessonDictList () {
+    setWordLessonDictList() {
       var wordList = uni.getStorageSync("wordList");
       if (wordList) {
         wordList.wordLessonDictList = this.allData
         uni.setStorageSync("wordList", wordList)
       } else {
         uni.setStorageSync("wordList", {wordLessonDictList: this.allData})
+        this.setWordLessonDictList();
+        this.toNav("/pages/word/set?id=" + this.bookId + "&pageType=chanllenge");
       }
     },
     async initData() {
       var result = uni.getStorageSync("basicData").currWordConfig.textBook;
       if (result) {
-        this.bookId = result.id
-        this.network().queryListByBookId()
-        await this.network().queryBookById()
-        await this.network().queryBookChallengeInfo()
+        this.bookId = result.id;
+        this.network().queryListByBookId();
+        await this.network().queryBookById();
+        await this.network().queryBookChallengeInfo();
       }
     },
     play(src, id) {
-      var that = this
-      this.gif = true
-      this.selectId = id
+      var that = this;
+      this.gif = true;
+      this.selectId = id;
       // innerAudioContext.src = src;
-      console.log(uni.getSystemInfoSync().platform)
-      if (uni.getSystemInfoSync().platform === 'ios') {
+      console.log(uni.getSystemInfoSync().platform);
+      if (uni.getSystemInfoSync().platform === "ios") {
         innerAudioContext.src = encodeURI(src);
-        console.log(innerAudioContext.src)
-        innerAudioContext.play()
+        console.log(innerAudioContext.src);
+        innerAudioContext.play();
         innerAudioContext.onEnded(() => {
-          console.log('音频播放结束');
-          that.gif = false
+          console.log("音频播放结束");
+          that.gif = false;
         });
       } else {
         uni.showLoading({
-          title: '加载中'
+          title: "加载中",
         });
         uni.downloadFile({
           url: src,
@@ -175,43 +192,43 @@ export default {
             if (res.statusCode === 200) {
               uni.hideLoading();
               innerAudioContext.src = res.tempFilePath;
-              innerAudioContext.play()
+              innerAudioContext.play();
               innerAudioContext.onEnded(() => {
-                console.log('音频播放结束');
-                that.gif = false
+                console.log("音频播放结束");
+                that.gif = false;
               });
             }
           },
           fail: (error) => {
-            console.log(error, 'error')
-          }
-        })
+            console.log(error, "error");
+          },
+        });
       }
     },
     toNav(urls) {
       uni.navigateTo({
-        url: urls
-      })
+        url: urls,
+      });
     },
     network() {
       return {
         queryListByBookId: async () => {
           let res = await queryListByBookId({bookId: this.bookId});
-          this.allData = res.data.result
+          this.allData = res.data.result;
         },
         queryBookById: async () => {
-          const res = await queryBookById({id: this.bookId})
-          this.textBook = res.data.result
+          const res = await queryBookById({id: this.bookId});
+          this.textBook = res.data.result;
         },
         queryBookChallengeInfo: async () => {
-          const res = await queryBookChallengeInfo({bookId: this.bookId})
-          this.textBook = Object.assign(this.textBook, res.data.result)
-          console.log("textBook", this.textBook)
+          const res = await queryBookChallengeInfo({bookId: this.bookId});
+          this.textBook = Object.assign(this.textBook, res.data.result);
+          console.log("textBook", this.textBook);
         },
-      }
-    }
-  }
-}
+      };
+    },
+  },
+};
 </script>
 
 <style lang="scss">
@@ -222,7 +239,7 @@ export default {
 }
 
 .main {
-  background: linear-gradient(180deg, #DEF0FF 0%, #F7FCFF 100%);
+  background: linear-gradient(180deg, #def0ff 0%, #f7fcff 100%);
   padding-bottom: 200rpx;
 }
 
@@ -231,7 +248,6 @@ export default {
   margin-bottom: 50rpx;
   padding-bottom: 0;
 
-
   .headL image {
     width: 170rpx;
     height: 224rpx;
@@ -239,7 +255,7 @@ export default {
   }
 
   .headR-title {
-    color: #C40000;
+    color: #c40000;
     margin: 10rpx 0;
     font-weight: 600;
   }
@@ -258,13 +274,13 @@ export default {
     width: 169rpx;
     height: 70rpx;
     border-radius: 10rpx;
-    background: linear-gradient(180deg, #5A95FB 0%, #1258D0 100%);
+    background: linear-gradient(180deg, #5a95fb 0%, #1258d0 100%);
   }
 }
 
 .title {
   /* 	position: fixed; */
-  background: #DEF0FF;
+  background: #def0ff;
   width: 100%;
   padding-bottom: 30rpx;
   z-index: 1;
@@ -321,7 +337,7 @@ export default {
 }
 
 .listItem-r {
-  background: #F7A751;
+  background: #f7a751;
   border-radius: 50rpx;
   color: #fff;
   font-size: 20rpx;
@@ -340,7 +356,7 @@ export default {
   bottom: 70rpx;
   width: 206rpx;
   height: 80rpx;
-  background: linear-gradient(180deg, #5692F9 0%, #1863E5 100%);
+  background: linear-gradient(180deg, #5692f9 0%, #1863e5 100%);
   border-radius: 50rpx;
   color: #fff;
   line-height: 80rpx;
@@ -348,7 +364,7 @@ export default {
   left: 0;
   right: 0;
   margin: auto;
-  font-size: 26rpx
+  font-size: 26rpx;
 }
 
 .listItem-lGif {

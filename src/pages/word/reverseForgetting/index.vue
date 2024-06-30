@@ -1,6 +1,6 @@
 <template>
   <view class="main">
-    <cy-navbar :showBack="false" bgColor="transparent" textColor="#3D3D3D">
+    <cy-navbar showBack bgColor="transparent" textColor="#3D3D3D">
       <view class="t-size-30">抗遗忘复习</view>
     </cy-navbar>
     <view class="head">

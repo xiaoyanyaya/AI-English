@@ -123,7 +123,6 @@ export default {
   },
   onLoad({id, lessonId, pageType, bookId}) {
     this.pageType = pageType
-    console.log("pageType", pageType)
 
     this.id = id
     this.lessonId = lessonId
@@ -243,7 +242,7 @@ export default {
     // 单词填写格式化
     wordFormat() {
       var index = 0
-      this.currentTopicData.questioinText.split('').forEach(item => {
+      this.currentTopicData.questionText.split('').forEach(item => {
         this.currentTopicData.wordFilling.push({
           value: item === '_' ? '' : item,
           isShow: item === '_',
@@ -255,20 +254,19 @@ export default {
       })
       // 保留转换后的数据
       this.currentTopicData.wordFillingFormat = JSON.parse(JSON.stringify(this.currentTopicData.wordFilling))
-      console.log(this.currentTopicData.wordFilling)
     },
     // 选择单词
     selectWord(item, i) {
       if (!this.currentTopicData.selectWordIndex.find(item => item === i)) {
-        if (this.currentTopicData.selectWordIndex.length < this.currentTopicData.questioinAnswer.length) {
+        if (this.currentTopicData.selectWordIndex.length < this.currentTopicData.questionAnswer.length) {
           var wordFillindIndex = this.currentTopicData.selectWordIndex.length
           this.currentTopicData.wordFilling.find(item => item.index === wordFillindIndex).value = item
           this.currentTopicData.selectWordIndex.push(i)
         }
-        if (this.currentTopicData.questioinText.indexOf('_') != -1) {
-          this.currentTopicData.questioinText = this.replaceCharAt(this.currentTopicData.questioinText, this
+        if (this.currentTopicData.questionText.indexOf('_') != -1) {
+          this.currentTopicData.questionText = this.replaceCharAt(this.currentTopicData.questionText, this
             .currentTopicData
-            .questioinText.indexOf('_'), item)
+            .questionText.indexOf('_'), item)
         }
       }
     },
@@ -307,6 +305,8 @@ export default {
       });
     },
     playAudio() {
+      if (this.playing) return
+
       var data = this.currentTopicData
       let voicePath = "";
       if (this.deviceBrand === 'android') {
@@ -337,9 +337,10 @@ export default {
       // 播放结束
       data.auditManager.manager.onEnded(() => {
         setTimeout(() => {
+          console.log("data.auditManager.manager.duration", data.auditManager.manager.duration)
           data.auditManager.playCount++
           this.playing = false
-        }, 1000 * data.auditManager.manager.duration)
+        }, 3000)
       })
     },
     // 接口请求模块
@@ -351,7 +352,7 @@ export default {
           let data = res.data.result;
 
           // 可选单词乱序
-          data.shuffledStr = this.shuffleString(data.questioinAnswer + data.questioinAnswerNoise)
+          data.shuffledStr = this.shuffleString(data.questionAnswer || '' + data.questionAnswerNoise || '')
           // 选中的单词索引
           data.selectWordIndex = []
           // 当前单词填写状态 正常，正确，错误
@@ -365,10 +366,12 @@ export default {
             playCount: 0, // 播放次数
             manager: uni.createInnerAudioContext()
           }
-          // data.questioinText = "___'('___.)___"
+          // data.questionText = "___'('___.)___"
           this.currentTopicData = data
           this.wordFormat();
           this.isInit = true
+
+          console.log("this.currentTopicData", this.currentTopicData)
         },
         reviewNext: async (isSkip = false, isNext = false) => {
           var getData = {
@@ -414,7 +417,6 @@ export default {
               } else {
                 data = await reviewFinish({id: this.id});
               }
-              console.log("答题完成", data)
               this.$navigateTo('/pages/word/answer?id=' + this.id + '&pageType=' + this.pageType + '&bookId=' + this.bookId)
             }
           } else {

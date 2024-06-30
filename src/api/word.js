@@ -141,3 +141,12 @@ export const queryListByBookId = (params) =>
 // 疯狂挑战 - 排行 - 获取查询教材的本人挑战指标 get https://wapi-dev.aien.xiaolixb.com/v1/word/challenge/queryBookChallengeInfo
 export const queryBookChallengeInfo = (params) =>
   fly.get("/word/challenge/queryBookChallengeInfo", params);
+
+// https://wapi-dev.aien.xiaolixb.com/v1/word/challenge/queryChallengeByTotal get
+export const queryChallengeByTotal = (params) =>
+	fly.get("/word/challenge/queryChallengeByTotal", params);
+
+// word/challenge/queryChallengeByMyself get
+export const queryChallengeByMyself = (params) =>
+	fly.get("/word/challenge/queryChallengeByMyself", params);
+

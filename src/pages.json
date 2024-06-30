@@ -9,6 +9,9 @@
       "path": "pages/index/index"
     },
     {
+      "path": "pages/index/product"
+    },
+    {
       "path": "pages/index/question"
     },
     {

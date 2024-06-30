@@ -30,10 +30,10 @@ export default {
 		},
 		// 字母乱序
 		shuffleString(str) {
+			console.log("str", str)
 			// 转换为字符数组
 			let chars = str.split('');
 			// 打乱数组顺序
-			chars.sort(() => 0.5 - Math.random());
 			return chars;
 		},
 		// 时间格式化

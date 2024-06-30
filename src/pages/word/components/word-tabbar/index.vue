@@ -35,7 +35,7 @@
 		},
 		methods: {
 			toNav(urls) {
-				uni.navigateTo({
+				uni.redirectTo({
 					url: urls
 				})
 			},

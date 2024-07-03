@@ -5,52 +5,73 @@
         <view>{{ data.bookFullName }}</view>
       </view>
       <view class="t-size-30" v-else>
-        {{ wordList.lessonFullName ? wordList.lessonFullName : bookData.bookFullName }}
+        {{
+          wordList.lessonFullName
+            ? wordList.lessonFullName
+            : bookData.bookFullName
+        }}
       </view>
     </cy-navbar>
     <view class="head">
-      <image v-if="data.reviewResult==0 || data.challengeResult==0" :src="imageBaseUrl+'/word/5-22-02.png'" mode="widthFix"></image>
-      <image v-if="data.reviewResult==1 || data.challengeResult==1" :src="imageBaseUrl+'/word/5-22-03.png'" mode="widthFix"></image>
+      <image
+        v-if="data.reviewResult == 0 || data.challengeResult == 0"
+        :src="imageBaseUrl + '/word/5-22-02.png'"
+        mode="widthFix"
+      ></image>
+      <image
+        v-if="data.reviewResult == 1 || data.challengeResult == 1"
+        :src="imageBaseUrl + '/word/5-22-03.png'"
+        mode="widthFix"
+      ></image>
     </view>
     <view class="statistics">
       <view class="statisticsItem">
         <view class="statisticsItem-top">
-          <text v-if="pageType === 'chanllenge'">{{ data.challengeScore }}</text>
+          <text v-if="pageType === 'chanllenge'">{{
+            data.challengeScore
+          }}</text>
           <text v-else>{{ data.reviewScore }}</text>
         </view>
-        <view class="statisticsItem-bottom">
-          分数
-        </view>
+        <view class="statisticsItem-bottom"> 分数 </view>
       </view>
       <view class="statisticsItem" v-if="false">
-        <view class="statisticsItem-top">
-          70%
-        </view>
-        <view class="statisticsItem-bottom">
-          击败人数
-        </view>
+        <view class="statisticsItem-top"> 70% </view>
+        <view class="statisticsItem-bottom"> 击败人数 </view>
       </view>
       <view class="statisticsItem">
-        <view class="statisticsItem-top">
-          {{ data.costTimes }}s
-        </view>
-        <view class="statisticsItem-bottom">
-          用时
-        </view>
+        <view class="statisticsItem-top"> {{ data.costTimes }}s </view>
+        <view class="statisticsItem-bottom"> 用时 </view>
       </view>
     </view>
     <view class="tab">
-      <view class="tabLeft" @click="tab=0" :class="tab!=0?'tabLeft-select':''">
+      <view
+        class="tabLeft"
+        @click="tab = 0"
+        :class="tab != 0 ? 'tabLeft-select' : ''"
+      >
         答题卡
       </view>
-      <view class="tabRight" @click="tab=1" :class="tab==1?'tabRight-select':''">
+      <view
+        class="tabRight"
+        @click="tab = 1"
+        :class="tab == 1 ? 'tabRight-select' : ''"
+      >
         词汇表
       </view>
     </view>
-    <view class="list" v-if="tab==1">
-      <view class="listItem" v-for="(item,i) in data.wordReviewDictList">
+    <view class="list" v-if="tab == 1">
+      <view class="listItem" v-for="(item, i) in data.wordReviewDictList">
         <view class="listItem-l">
-          <view class="listItem-lL" :class="item.answerResult==0?'red':''||item.answerResult==1?'greey':''">
+          <view
+            class="listItem-lL"
+            :class="
+              item.answerResult == 0
+                ? 'red'
+                : '' || item.answerResult == 1
+                ? 'greey'
+                : ''
+            "
+          >
             {{ i + 1 }}
           </view>
           <view class="listItem-lR">
@@ -67,29 +88,33 @@
             </view>
           </view>
         </view>
-        <view class="listItem-r"
-              :class="item.answerResult==0?'redFont':''||item.answerResult==1?'greeyFont':''">
-          <text v-if="item.answerResult==0">× 错误</text>
-          <text v-else-if="item.answerResult==1">√ 正确</text>
-<!--          <text v-else>× 跳过</text>-->
+        <view
+          class="listItem-r"
+          :class="
+            item.answerResult == 0
+              ? 'redFont'
+              : '' || item.answerResult == 1
+              ? 'greeyFont'
+              : ''
+          "
+        >
+          <text v-if="item.answerResult == 0">× 错误</text>
+          <text v-else-if="item.answerResult == 1">√ 正确</text>
+          <!--          <text v-else>× 跳过</text>-->
         </view>
       </view>
     </view>
-    <view class="result" v-if="tab==0">
+    <view class="result" v-if="tab == 0">
       <view class="resultTitle">
         <view class="resultTitle-item">
           <view class="resultTitle-itemRed"></view>
-          <view class="resultTitle-itemText">
-            错误
-          </view>
+          <view class="resultTitle-itemText"> 错误 </view>
         </view>
         <view class="resultTitle-item">
           <view class="resultTitle-itemGreen"></view>
-          <view class="resultTitle-itemText">
-            正确
-          </view>
+          <view class="resultTitle-itemText"> 正确 </view>
         </view>
-<!--        <view class="resultTitle-item">
+        <!--        <view class="resultTitle-item">
           <view class="resultTitle-itemGrey"></view>
           <view class="resultTitle-itemText">
             跳过
@@ -97,30 +122,40 @@
         </view>-->
       </view>
       <view class="resultList">
-        <view class="resultList-item" v-for="(item,i) in data.wordReviewDictList"
-              :class="item.answerResult==0?'red':''||item.answerResult==1?'greey':''">
+        <view
+          class="resultList-item"
+          v-for="(item, i) in data.wordReviewDictList"
+          :class="
+            item.answerResult == 0
+              ? 'red'
+              : '' || item.answerResult == 1
+              ? 'greey'
+              : ''
+          "
+        >
           {{ i + 1 }}
         </view>
       </view>
     </view>
-    <view class="charts-box" v-if="tab==0">
-      <qiun type="column" :opts="opts" :chartData="chartData"/>
+    <view class="charts-box" v-if="tab == 0">
+      <qiun type="column" :opts="opts" :chartData="chartData" />
     </view>
     <view class="button">
-      <view class="buttonLeft"
-            @click="clickBtn(0)">
+      <view class="buttonLeft" @click="clickBtn(0)">
         <image :src="imageBaseUrl + '/word/5-21-26.png'" mode=""></image>
-        {{ pageType === "chanllenge" ? '继续挑战' : '重新答题' }}
+        {{ pageType === "chanllenge" ? "继续挑战" : "重新答题" }}
       </view>
       <view class="buttonLeft" @click="clickBtn(1)">
         <u-icon name="home" size="32"></u-icon>
-        <text style="margin-left: 10rpx;">{{ pageType === "chanllenge" ? '挑战列表' : '复习列表' }}</text>
+        <text style="margin-left: 10rpx">{{
+          pageType === "chanllenge" ? "挑战列表" : "复习列表"
+        }}</text>
       </view>
-      <view v-if="pageType !== 'chanllenge'"
+      <!-- <view v-if="pageType !== 'chanllenge'"
             class="buttonRight" @click="toNav('/pages/word/textbook?id='+wordType+'&bookId='+bookData.id)">
         <image :src="imageBaseUrl + '/word/5-21-29.png'" mode=""></image>
         挑战下一关
-      </view>
+      </view> -->
     </view>
   </view>
 </template>
@@ -128,20 +163,17 @@
 <script>
 import MyMixin from "@/utils/MyMixin";
 import qiun from "@/pages/word/components/qiun-data-charts/components/qiun-data-charts/qiun-data-charts.vue";
-import {
-  reviewList,
-  queryReviewList
-} from "@/api/word.js"
-import {challengeFinishPost} from "../../api/word";
+import { reviewList, queryReviewList } from "@/api/word.js";
+import { challengeFinishPost } from "../../api/word";
 
 export default {
   mixins: [MyMixin],
   components: {
-    qiun
+    qiun,
   },
   data() {
     return {
-      backColor: 'transparent',
+      backColor: "transparent",
       tab: 0,
       chartData: {},
       id: 0,
@@ -150,8 +182,16 @@ export default {
         duration: 1000,
         rotate: false,
         rotateLock: false,
-        color: ["#A1C3FF", "#4FC455", "#F06B6B", "#BFBFBF", "#73C0DE", "#3CA272", "#FC8452", "#9A60B4",
-          "#ea7ccc"
+        color: [
+          "#A1C3FF",
+          "#4FC455",
+          "#F06B6B",
+          "#BFBFBF",
+          "#73C0DE",
+          "#3CA272",
+          "#FC8452",
+          "#9A60B4",
+          "#ea7ccc",
         ],
         pixelRatio: 2,
         padding: [15, 15, 0, 5],
@@ -176,7 +216,7 @@ export default {
           fontColor: "#666666",
           lineHeight: 11,
           hiddenColor: "#CECECE",
-          itemGap: 10
+          itemGap: 10,
         },
         xAxis: {
           disableGrid: true,
@@ -206,12 +246,14 @@ export default {
           titleOffsetY: 0,
           titleOffsetX: 0,
           titleFontColor: "#666666",
-          format: ""
+          format: "",
         },
         yAxis: {
-          data: [{
-            min: 0
-          }],
+          data: [
+            {
+              min: 0,
+            },
+          ],
           disabled: false,
           disableGrid: false,
           splitNumber: 5,
@@ -219,7 +261,7 @@ export default {
           dashLength: 8,
           gridColor: "#CCCCCC",
           padding: 10,
-          showTitle: false
+          showTitle: false,
         },
         extra: {
           column: {
@@ -235,7 +277,7 @@ export default {
             colorStop: 0,
             meterBorder: 1,
             meterFillColor: "#FFFFFF",
-            labelPosition: "outside"
+            labelPosition: "outside",
           },
           tooltip: {
             showBox: true,
@@ -262,43 +304,43 @@ export default {
             yAxisLabel: false,
             labelBgColor: "#FFFFFF",
             labelBgOpacity: 0.7,
-            labelFontColor: "#666666"
+            labelFontColor: "#666666",
           },
           markLine: {
             type: "solid",
             dashLength: 4,
-            data: []
-          }
-        }
+            data: [],
+          },
+        },
       },
       data: {},
       bookData: {},
-      wordType: '',
+      wordType: "",
       wordList: [],
-      pageType: '',
-      bookId: ''
-    }
+      pageType: "",
+      bookId: "",
+    };
   },
   onReady() {
     this.getServerData();
   },
   onPageScroll(e) {
     if (e.scrollTop > 20) {
-      this.backColor = '#fff'
+      this.backColor = "#fff";
     } else {
-      this.backColor = 'transparent'
+      this.backColor = "transparent";
     }
   },
-  onLoad({id, pageType, bookId}) {
-    console.log("id", id, "pageType", pageType, "bookId", bookId)
-    this.id = id
-    this.pageType = pageType
-    this.bookId = bookId
+  onLoad({ id, pageType, bookId }) {
+    console.log("id", id, "pageType", pageType, "bookId", bookId);
+    this.id = id;
+    this.pageType = pageType;
+    this.bookId = bookId;
 
-    this.getData()
-    this.bookData = uni.getStorageSync('bookData')
-    this.wordList = uni.getStorageSync('wordList')
-    this.wordType = uni.getStorageSync('wordType')
+    this.getData();
+    this.bookData = uni.getStorageSync("bookData");
+    this.wordList = uni.getStorageSync("wordList");
+    this.wordType = uni.getStorageSync("wordType");
   },
   methods: {
     clickBtn(type) {
@@ -306,40 +348,50 @@ export default {
         case 0:
           if (this.pageType !== "chanllenge") {
             // 重新答题
-            console.log("添加")
-            this.toNav('/pages/word/wordList?id=' + this.wordType + '&unitId=' + (this.wordList.unitId ? this.wordList.unitId : this.data.lessonId) + '&btnTitle=重新答题')
+            console.log("添加");
+            this.toNav(
+              "/pages/word/wordList?id=" +
+                this.wordType +
+                "&unitId=" +
+                (this.wordList.unitId
+                  ? this.wordList.unitId
+                  : this.data.lessonId) +
+                "&btnTitle=重新答题"
+            );
           } else {
-            this.toNav('/pages/word/chanllenge/wordList?bookId=' + this.bookId)
+            this.toNav("/pages/word/chanllenge/wordList?bookId=" + this.bookId);
           }
           break;
         case 1:
           if (this.pageType !== "chanllenge") {
             // this.toNav('/pages/word/textbook?id=' + this.wordType + '&bookId=' + this.bookData.id)
             uni.redirectTo({
-              url: '/pages/word/reverseForgetting/index'
-            })
+              url: "/pages/word/reverseForgetting/index",
+            });
           } else {
             uni.redirectTo({
-              url: '/pages/word/chanllenge/index'
-            })
+              url: "/pages/word/chanllenge/index",
+            });
           }
           break;
       }
     },
     async getData() {
       var dataPass = {
-        id: this.id
-      }
-      let data = {}
+        id: this.id,
+      };
+      let data = {};
       if (this.pageType == "chanllenge") {
-        data = await challengeFinishPost({id: this.id});
-        data.data.result.wordReviewDictList = data.data.result.wordChallengeDictList
-        data.data.result.challengeScore = data.data.result.challengeScore.toFixed(2)
+        data = await challengeFinishPost({ id: this.id });
+        data.data.result.wordReviewDictList =
+          data.data.result.wordChallengeDictList;
+        data.data.result.challengeScore =
+          data.data.result.challengeScore.toFixed(2);
       } else {
         data = await reviewList(dataPass);
-        data.data.result.reviewScore = data.data.result.reviewScore.toFixed(2)
+        data.data.result.reviewScore = data.data.result.reviewScore.toFixed(2);
       }
-      this.data = data.data.result
+      this.data = data.data.result;
     },
     getServerData() {
       //模拟从服务器获取数据时的延时
@@ -347,30 +399,34 @@ export default {
         //模拟服务器返回数据，如果数据格式和标准格式不同，需自行按下面的格式拼接
         let res = {
           categories: [""],
-          series: [{
-            name: "总数",
-            data: [this.data.totalWordNum]
-          }, {
-            name: "正确",
-            data: [this.data.correctWordNum]
-          }, {
-            name: "错误",
-            data: [this.data.errorWordNum]
-          }/*, {
+          series: [
+            {
+              name: "总数",
+              data: [this.data.totalWordNum],
+            },
+            {
+              name: "正确",
+              data: [this.data.correctWordNum],
+            },
+            {
+              name: "错误",
+              data: [this.data.errorWordNum],
+            } /*, {
             name: "跳过",
             data: [this.data.totalWordNum - this.data.correctWordNum - this.data.errorWordNum]
-          }*/]
+          }*/,
+          ],
         };
         this.chartData = JSON.parse(JSON.stringify(res));
       }, 500);
     },
     toNav(urls) {
       uni.navigateTo({
-        url: urls
-      })
-    }
-  }
-}
+        url: urls,
+      });
+    },
+  },
+};
 </script>
 
 <style>
@@ -381,7 +437,7 @@ export default {
 }
 
 .main {
-  background: linear-gradient(180deg, #DFECFF 0%, #FFFFFF 33%);
+  background: linear-gradient(180deg, #dfecff 0%, #ffffff 33%);
   padding-bottom: 80rpx;
 }
 
@@ -433,7 +489,7 @@ export default {
   width: 276rpx;
   height: 70rpx;
   line-height: 70rpx;
-  background: linear-gradient(180deg, #7FAEFF 0%, #1B68EC 100%);
+  background: linear-gradient(180deg, #7faeff 0%, #1b68ec 100%);
   color: #fff;
   font-size: 32rpx;
   border-radius: 50rpx 0 0 50rpx;
@@ -441,8 +497,8 @@ export default {
 }
 
 .tabLeft-select {
-  border: 2rpx solid #1863E5;
-  color: #1863E5;
+  border: 2rpx solid #1863e5;
+  color: #1863e5;
   background: #fff;
 }
 
@@ -453,14 +509,14 @@ export default {
   font-size: 32rpx;
   border-radius: 0rpx 50rpx 50rpx 0rpx;
   text-align: center;
-  border: 2rpx solid #1863E5;
-  color: #1863E5;
+  border: 2rpx solid #1863e5;
+  color: #1863e5;
 }
 
 .tabRight-select {
   border: 0;
   color: #fff;
-  background: linear-gradient(180deg, #7FAEFF 0%, #1B68EC 100%);
+  background: linear-gradient(180deg, #7faeff 0%, #1b68ec 100%);
 }
 
 .resultTitle {
@@ -473,21 +529,21 @@ export default {
 .resultTitle-itemRed {
   width: 26rpx;
   height: 26rpx;
-  background: #F06B6B;
+  background: #f06b6b;
   border-radius: 50%;
 }
 
 .resultTitle-itemGreen {
   width: 26rpx;
   height: 26rpx;
-  background: #4FC455;
+  background: #4fc455;
   border-radius: 50%;
 }
 
 .resultTitle-itemGrey {
   width: 26rpx;
   height: 26rpx;
-  background: #BFBFBF;
+  background: #bfbfbf;
   border-radius: 50%;
 }
 
@@ -516,26 +572,26 @@ export default {
   line-height: 58rpx;
   text-align: center;
   color: #fff;
-  background: #BFBFBF;
+  background: #bfbfbf;
   font-size: 30rpx;
   margin: 0 23rpx;
   margin-bottom: 30rpx;
 }
 
 .red {
-  background: #F06B6B !important;
+  background: #f06b6b !important;
 }
 
 .greey {
-  background: #4FC455 !important;
+  background: #4fc455 !important;
 }
 
 .redFont {
-  color: #F06B6B !important;
+  color: #f06b6b !important;
 }
 
 .greeyFont {
-  color: #4FC455 !important;
+  color: #4fc455 !important;
 }
 
 .button {
@@ -547,9 +603,9 @@ export default {
 .buttonLeft {
   display: flex;
   align-items: center;
-  color: #8A8A8A;
+  color: #8a8a8a;
   font-size: 24rpx;
-  border: 2rpx solid #8A8A8A;
+  border: 2rpx solid #8a8a8a;
   width: 200rpx;
   height: 77rpx;
   justify-content: center;
@@ -571,7 +627,7 @@ export default {
   height: 77rpx;
   justify-content: center;
   border-radius: 80rpx;
-  background: linear-gradient(180deg, #F99F56 0%, #E57B18 100%);
+  background: linear-gradient(180deg, #f99f56 0%, #e57b18 100%);
 }
 
 .buttonRight image {
@@ -585,7 +641,7 @@ export default {
 }
 
 .listItem {
-  background: #F6FBFF;
+  background: #f6fbff;
   border-radius: 10rpx;
   padding: 18rpx 50rpx;
   display: flex;
@@ -602,7 +658,7 @@ export default {
 
 .listItem-lL {
   margin-right: 20rpx;
-  background: #BFBFBF;
+  background: #bfbfbf;
   border-radius: 50%;
   color: #fff;
   font-size: 30rpx;
@@ -619,13 +675,13 @@ export default {
 }
 
 .listItem-lR-tName {
-  color: #3D3D3D;
+  color: #3d3d3d;
   font-size: 26rpx;
 }
 
 .listItem-lR-tHit {
   font-size: 22rpx;
-  color: #6D6D6D;
+  color: #6d6d6d;
   margin-left: 10rpx;
 }
 

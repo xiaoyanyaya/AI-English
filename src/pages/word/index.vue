@@ -2,7 +2,8 @@
   <view class="main">
     <cy-navbar
       showBack
-      bgColor="linear-gradient(180deg, #D9EEFF 0%, #F3F9FF 7%)"
+      :allTrans="true"
+      bgColor="linear-gradient(180deg, #D9EEFF 0%, #fff 100%)"
       textColor="#3D3D3D"
     >
       <view class="t-size-30">词汇速记</view>
@@ -10,9 +11,8 @@
     <view class="content">
       <!-- 教材 -->
       <view class="model_box">
-        <view class="title">
-          <view class="item"></view><text class="text">教材</text>词汇速记
-        </view>
+        <view class="title"> <text class="text">教材</text>词汇速记 </view>
+        <image class="bg_img" :src="imageBaseUrl + '/word/7-1-06.png'"> </image>
         <view class="body">
           <view class="body_top">
             <image class="img_book" :src="textBook.bookImage" mode="widthFix">
@@ -20,8 +20,8 @@
             <view class="right">
               <text class="ver">{{ textBook.bookFullName.split("-")[1] }}</text>
               <text class="grade">{{
-                  textBook.bookFullName.split("-")[0]
-                }}</text>
+                textBook.bookFullName.split("-")[0]
+              }}</text>
               <text class="num">共{{ textBook.wordNums }}个单词</text>
               <view class="change_share">
                 <view
@@ -30,10 +30,7 @@
                     toNav(`/pages/common/switchTextbooks?pageType=textBook`)
                   "
                 >
-                  <image
-                    class="image"
-                    :src="imageBaseUrl + '/word/6-24-02.png'"
-                  >
+                  <image class="image" :src="imageBaseUrl + '/6-3-01.png'">
                   </image>
                   <view class="text">切换教材</view>
                 </view>
@@ -55,52 +52,48 @@
           </view>
           <view class="body_footer">
             <view class="footer">
-              <view class="f_title">
-                <view class="f_item"></view><text class="text">开始学习</text>
-              </view>
               <view
                 class="item-box-listItem item-box-l"
                 :style="{
-                  backgroundImage: 'url(' + imageBaseUrl + '/word/back1.png)',
+                  backgroundImage: 'url(' + imageBaseUrl + '/word/7-1-07.png)',
                 }"
                 @click="
                   toNav(`/pages/word/textbook?id=0&bookId=${textBook.id}`)
                 "
               >
+                <text> 开始学习 </text>
                 <image
                   class="item-box-listItem-img"
-                  :src="imageBaseUrl + '/word/5-21-05.png'"
+                  :src="imageBaseUrl + '/word/7-1-01.png'"
                   mode="widthFix"
                 >
                 </image>
                 <view class="item-box-listItem-icon">
                   <image
-                    :src="imageBaseUrl + '/word/icon4.png'"
+                    :src="imageBaseUrl + '/word/7-1-02.png'"
                     mode=""
                   ></image>
                 </view>
               </view>
             </view>
             <view class="footer">
-              <view class="f_title">
-                <view class="f_item"></view><text class="text">复习</text>
-              </view>
               <view
                 class="item-box-listItem item-box-r"
                 :style="{
-                  backgroundImage: 'url(' + imageBaseUrl + '/word/back2.png)',
+                  backgroundImage: 'url(' + imageBaseUrl + '/word/7-1-08.png)',
                 }"
                 @click="toNav('/pages/word/reverseForgetting/index')"
               >
+                <text> 复习 </text>
                 <image
                   class="item-box-listItem-imgs"
-                  :src="imageBaseUrl + '/word/6-26-02.png'"
+                  :src="imageBaseUrl + '/word/7-1-03.png'"
                   mode="widthFix"
                 >
                 </image>
                 <view class="item-box-listItem-icon">
                   <image
-                    :src="imageBaseUrl + '/word/icon4.png'"
+                    :src="imageBaseUrl + '/word/7-1-04.png'"
                     mode=""
                   ></image>
                 </view>
@@ -111,9 +104,8 @@
       </view>
       <!-- 考纲 -->
       <view class="model_box">
-        <view class="title">
-          <view class="item"></view><text class="text">考纲</text>词汇速记
-        </view>
+        <view class="title"> <text class="text">考纲</text>词汇速记 </view>
+        <image class="bg_img" :src="imageBaseUrl + '/word/7-1-06.png'"> </image>
         <view class="body">
           <view class="body_top">
             <image class="img_book" :src="dictBook.bookImage" mode="widthFix">
@@ -129,10 +121,7 @@
                     toNav('/pages/common/switchTextbooks?pageType=dictBook')
                   "
                 >
-                  <image
-                    class="image"
-                    :src="imageBaseUrl + '/word/6-24-02.png'"
-                  >
+                  <image class="image" :src="imageBaseUrl + '/6-3-01.png'">
                   </image>
                   <view class="text">切换教材</view>
                 </view>
@@ -154,52 +143,48 @@
           </view>
           <view class="body_footer">
             <view class="footer">
-              <view class="f_title">
-                <view class="f_item"></view><text class="text">开始学习</text>
-              </view>
               <view
                 class="item-box-listItem item-box-l"
                 :style="{
-                  backgroundImage: 'url(' + imageBaseUrl + '/word/back1.png)',
+                  backgroundImage: 'url(' + imageBaseUrl + '/word/7-1-07.png)',
                 }"
                 @click="
                   toNav(`/pages/word/textbook?id=1&bookId=${dictBook.id}`)
                 "
               >
+                <text> 开始学习 </text>
                 <image
                   class="item-box-listItem-img"
-                  :src="imageBaseUrl + '/word/5-21-07.png'"
+                  :src="imageBaseUrl + '/word/7-1-01.png'"
                   mode="widthFix"
                 >
                 </image>
                 <view class="item-box-listItem-icon">
                   <image
-                    :src="imageBaseUrl + '/word/icon4.png'"
+                    :src="imageBaseUrl + '/word/7-1-02.png'"
                     mode=""
                   ></image>
                 </view>
               </view>
             </view>
             <view class="footer">
-              <view class="f_title">
-                <view class="f_item"></view><text class="text">复习</text>
-              </view>
               <view
                 class="item-box-listItem item-box-r"
                 :style="{
-                  backgroundImage: 'url(' + imageBaseUrl + '/word/back2.png)',
+                  backgroundImage: 'url(' + imageBaseUrl + '/word/7-1-08.png)',
                 }"
                 @click="toNav('/pages/word/reverseForgetting/index')"
               >
+                <text> 复习 </text>
                 <image
                   class="item-box-listItem-imgs"
-                  :src="imageBaseUrl + '/word/6-26-03.png'"
+                  :src="imageBaseUrl + '/word/7-1-03.png'"
                   mode="widthFix"
                 >
                 </image>
                 <view class="item-box-listItem-icon">
                   <image
-                    :src="imageBaseUrl + '/word/icon4.png'"
+                    :src="imageBaseUrl + '/word/7-1-04.png'"
                     mode=""
                   ></image>
                 </view>
@@ -230,11 +215,9 @@
         </view>
       </view>
       <!-- 专题 -->
-      <view class="model_box">
-        <view class="title">
-          <view class="item"></view><text class="text">专题</text>词汇速记
-        </view>
-        <view class="flex_container">
+      <view class="special_box">
+        <view class="title"> <text class="text">专题</text>词汇速记 </view>
+        <view class="item-box-select">
           <view
             class="item-box-selectItem"
             v-for="item in typeData"
@@ -329,6 +312,19 @@ export default {
   padding-bottom: 200rpx;
   .content {
     .model_box {
+      background: linear-gradient(
+        180deg,
+        #eef5ff 0%,
+        rgba(238, 245, 255, 0) 100%
+      );
+      position: relative;
+      .bg_img {
+        position: absolute;
+        width: 130rpx;
+        height: 130rpx;
+        top: 84rpx;
+        right: 45rpx;
+      }
       .title {
         display: flex;
         flex-wrap: nowrap;
@@ -337,21 +333,13 @@ export default {
         line-height: 93rpx;
         padding-left: 43rpx;
         opacity: 1;
-        font-size: 36rpx;
-        font-weight: 500;
+        font-size: 34rpx;
+        font-weight: 400;
         color: #3d3d3d;
-        background: #f3faff;
-        .item {
-          display: inline-block;
-          width: 13rpx;
-          height: 30rpx;
-          border-radius: 10rpx;
-          background: #1863e5;
-          margin-right: 10rpx; /* 添加一些间距 */
-        }
         .text {
-          font-size: 38rpx;
-          color: #1863e5;
+          font-size: 34rpx;
+          font-weight: 500;
+          color: #3d3d3d;
         }
       }
       .body {
@@ -373,7 +361,7 @@ export default {
             justify-content: space-around;
             padding-right: 58rpx;
             .ver {
-              color: #c40000;
+              color: #1863e5;
               font-size: 28rpx;
             }
             .grade {
@@ -406,14 +394,14 @@ export default {
               .change_box {
                 @extend .box;
                 width: 172rpx;
-                border: 1rpx solid #c40000;
+                border: 1rpx solid #1863e5;
                 .image {
                   width: 26rpx;
                   height: 20rpx;
                 }
                 .text {
                   @extend .text_e;
-                  color: #c40000;
+                  color: #1863e5;
                 }
               }
               .share_box {
@@ -442,30 +430,70 @@ export default {
           .footer {
             width: 294rpx;
             height: 144rpx;
-            .f_title {
-              display: flex;
-              flex-wrap: nowrap;
-              align-items: center;
-              .f_item {
-                display: inline-block;
-                width: 10rpx;
-                height: 10rpx;
-                border-radius: 10rpx;
-                background: #1863e5;
-                margin-right: 10rpx; /* 添加一些间距 */
-              }
+            text {
+              font-size: 26rpx;
             }
-          }
-          .footer_right {
-            width: 294rpx;
-            height: 144rpx;
           }
         }
       }
-      .flex_container {
+    }
+
+    .special_box {
+      padding-left: 43rpx;
+      .title {
         display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        height: 93rpx;
+        line-height: 93rpx;
+        opacity: 1;
+        font-size: 34rpx;
+        font-weight: 400;
+        color: #3d3d3d;
+        .text {
+          font-size: 34rpx;
+          font-weight: 500;
+          color: #3d3d3d;
+        }
+      }
+      .item-box-select {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
         flex-wrap: wrap;
-        padding: 0 8rpx 0 40rpx;
+        overflow-x: auto; /* 水平滚动 */
+        height: 620rpx;
+      }
+      .item-box-selectItem-head image {
+        height: 127rpx;
+      }
+      .item-box-selectItem-head {
+        margin-bottom: 26rpx;
+        display: flex;
+        justify-content: center;
+      }
+      .item-box-selectItem {
+        width: 202rpx;
+        height: 294rpx;
+        background: #fff;
+        padding: 20rpx;
+        padding-bottom: 25rpx;
+        border-radius: 10rpx;
+        margin-right: 32rpx;
+      }
+      .item-box-selectItem-text {
+        font-size: 20rpx;
+        color: #3a73d9;
+        margin-bottom: 5rpx;
+        margin-top: 10rpx;
+      }
+      .item-box-selectItem-textB {
+        font-size: 20rpx;
+        color: #8a8a8a;
+      }
+      .item-box-selectItem-name {
+        font-size: 26rpx;
+        margin-bottom: 6rpx;
       }
     }
   }
@@ -634,48 +662,5 @@ export default {
   width: 20rpx;
   height: 19rpx;
   margin-right: 10rpx;
-}
-
-.item-box-selectItem-head image {
-  height: 127rpx;
-}
-
-.item-box-selectItem-head {
-  margin-bottom: 26rpx;
-  display: flex;
-  justify-content: center;
-}
-
-.item-box-selectItem {
-  width: 202rpx;
-  background: #fff;
-  padding: 20rpx;
-  padding-bottom: 25rpx;
-  border-radius: 10rpx;
-  margin-right: 32rpx;
-}
-
-.item-box-select {
-  display: flex;
-  margin-top: 20rpx;
-  overflow-y: auto;
-  white-space: nowrap;
-}
-
-.item-box-selectItem-text {
-  font-size: 20rpx;
-  color: #3a73d9;
-  margin-bottom: 5rpx;
-  margin-top: 10rpx;
-}
-
-.item-box-selectItem-textB {
-  font-size: 20rpx;
-  color: #8a8a8a;
-}
-
-.item-box-selectItem-name {
-  font-size: 26rpx;
-  margin-bottom: 6rpx;
 }
 </style>

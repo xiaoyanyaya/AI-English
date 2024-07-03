@@ -4,12 +4,16 @@
       <view :style="statusBarHeight"></view>
       <view class="nav-content" :style="navContentStyle">
         <view class="nav-icon ml-2 flex align-item-center">
-          <span v-show="showBack" @click="returnPageNum(1)"
-                :style="{color: textColor}"
-                class="iconfont nav-icon-css">&#xe837;</span>
-<!--          <image v-show="showBack" src="/static/logo.png" class="avatar-css"></image>-->
+          <span
+            v-show="showBack"
+            @click="returnPageNum(1)"
+            :style="{ color: textColor }"
+            class="iconfont nav-icon-css"
+            >&#xe837;</span
+          >
+          <!--          <image v-show="showBack" src="/static/logo.png" class="avatar-css"></image>-->
         </view>
-        <view class="nav-slot mr-1" :style="{color: textColor}">
+        <view class="nav-slot mr-1" :style="{ color: textColor }">
           <slot></slot>
         </view>
         <view class="nav-btn"></view>
@@ -25,94 +29,101 @@ export default {
     // 是否显示返回键
     showBack: {
       type: Boolean,
-      default: false
+      default: false,
     },
     showBgColor: {
       type: Boolean,
-      default: true
+      default: true,
     },
     bgColor: {
       type: String,
-      default: '#3A73D9'
+      default: "#3A73D9",
     },
     textColor: {
       type: String,
-      default: '#fff'
+      default: "#fff",
     },
     isReturnHome: {
       type: Number,
-      default: 0
+      default: 0,
     },
     // 是否需要消除绝对定位的高度
     isAbsolute: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
+    // 是否整块过渡效果
+    allTrans: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     statusBarHeight() {
-      var style = `padding-top: ${this.systemInfo.statusBarHeight}px;`
-      if (this.showBgColor) {
-        style += `background: ${this.bgColor};`
+      var style = `padding-top: ${this.systemInfo.statusBarHeight}px;`;
+      if (this.showBgColor && !this.allTrans) {
+        style += `background: ${this.bgColor};`;
       }
-      return style
+      return style;
     },
     contentStyle() {
       var style = `position: fixed;
       z-index: 9999;
-      top: 0;`
+      top: 0;`;
       if (this.showBgColor) {
-        style += `background: ${this.bgColor};`
+        style += `background: ${this.bgColor};`;
       }
-      return style
+      return style;
     },
     navContentStyle() {
       return `
       height: ${this.navContentHeiht}rpx;;
-      `
+      `;
     },
     placeholderStyle() {
-      var navContentHeiht = uni.upx2px(this.navContentHeiht)
-      console.log("navContentHeiht + this.systemInfo.statusBarHeight", navContentHeiht + this.systemInfo.statusBarHeight)
+      var navContentHeiht = uni.upx2px(this.navContentHeiht);
+      console.log(
+        "navContentHeiht + this.systemInfo.statusBarHeight",
+        navContentHeiht + this.systemInfo.statusBarHeight
+      );
       return `
       height: ${navContentHeiht + this.systemInfo.statusBarHeight}px;
-      `
-    }
+      `;
+    },
   },
   data() {
     return {
       // 系统信息
       systemInfo: {},
-      navContentHeiht: 80
+      navContentHeiht: 80,
     };
   },
   mounted() {
-    this.getSystemInfo()
+    this.getSystemInfo();
   },
   methods: {
     getSystemInfo() {
       uni.getSystemInfo({
         success: (res) => {
           this.systemInfo = res;
-          console.log('状态栏高度:', res.statusBarHeight);
-        }
+          console.log("状态栏高度:", res.statusBarHeight);
+        },
       });
     },
     returnPageNum(num) {
-      this.$emit('returnPageNum', num)
+      this.$emit("returnPageNum", num);
       if (this.isReturnHome == 1) {
         uni.reLaunch({
-          url: '/pages/index/index'
+          url: "/pages/index/index",
         });
       } else {
         uni.navigateBack({
-          delta: num
+          delta: num,
         });
       }
-
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style>
@@ -121,7 +132,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
- /* background: #3A73D9; */
+  /* background: #3A73D9; */
 }
 
 .nav-icon {
@@ -145,12 +156,15 @@ export default {
   width: 20%;
 }
 
-.nav-icon, .nav-slot, .nav-btn {
+.nav-icon,
+.nav-slot,
+.nav-btn {
   color: #fff;
 }
 
 .avatar-css {
-  width: 50rpx; height: 50rpx;
+  width: 50rpx;
+  height: 50rpx;
   border-radius: 50%;
   margin-left: 30rpx;
 }

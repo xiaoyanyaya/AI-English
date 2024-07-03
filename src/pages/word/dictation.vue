@@ -4,14 +4,23 @@
       <view class="t-size-30">词汇听写</view>
     </cy-navbar>
 
-    <view class="t-color-3D3D3D t-size-30 font-weight-bold text-center table-nowrap px-5 mt-5">
-      {{ baseInfo.lessonFullName }}
+    <view
+      class="t-color-3D3D3D t-size-30 font-weight-bold text-center table-nowrap px-5 mt-5"
+    >
+      {{ baseInfo.bookFullName }}
+      <view>
+        {{ baseInfo.lessonName }}
+      </view>
     </view>
 
     <view class="frequency">
       <view class="frequencyLeft">
-        <u-line-progress inactive-color="#FDF5EC" active-color="#FFAB2D" height="40"
-                         :percent="(currentTopic/totalTopic)*100">
+        <u-line-progress
+          inactive-color="#FDF5EC"
+          active-color="#FFAB2D"
+          height="40"
+          :percent="(currentTopic / totalTopic) * 100"
+        >
           <view class="frequencyLeft-text">
             {{ currentTopic }}/{{ totalTopic }}
           </view>
@@ -23,7 +32,12 @@
     </view>
 
     <view class="playImg" @click="clickPlay">
-      <image :src="imageBaseUrl + (playing?'/word/5-31-01.gif':'/word/speaker.png')" mode=""></image>
+      <image
+        :src="
+          imageBaseUrl + (playing ? '/word/5-31-01.gif' : '/word/speaker.png')
+        "
+        mode=""
+      ></image>
     </view>
 
     <view class="definition" v-if="setData.show">
@@ -34,9 +48,15 @@
     </view>
 
     <view class="mt-8 flex align-item-center justify-content-center">
-      <view class="mr-1 ml-1" v-for="(item, index) in currentTopicData.wordFilling" :key="index">
-        <view :class="wordFillingClass"
-              class="inputBox flex justify-content-center t-size-40 font-weight-bold">
+      <view
+        class="mr-1 ml-1"
+        v-for="(item, index) in currentTopicData.wordFilling"
+        :key="index"
+      >
+        <view
+          :class="wordFillingClass"
+          class="inputBox flex justify-content-center t-size-40 font-weight-bold"
+        >
           {{ item.value }}
         </view>
         <view class="inputHr" v-show="item.isShow"></view>
@@ -45,32 +65,72 @@
         <u-icon name="close"></u-icon>
       </view>
     </view>
-    <view v-if="isInit" class="statusMessageBox flex justify-content-center align-item-center t-size-22 mt-2">
-      <div v-show="currentTopicData.currentTopicStatus !== 'normal'"
-           :class="currentTopicData.currentTopicStatus === 'success'?'t-color-43A71C':'t-color-DC0C0C'"
+    <view
+      v-if="isInit"
+      class="statusMessageBox flex justify-content-center align-item-center t-size-22 mt-2"
+    >
+      <div
+        v-show="currentTopicData.currentTopicStatus !== 'normal'"
+        :class="
+          currentTopicData.currentTopicStatus === 'success'
+            ? 't-color-43A71C'
+            : 't-color-DC0C0C'
+        "
       >
-        {{ currentTopicData.currentTopicStatus === 'success' ? '单词正确！' : '单词错误，请再次输入!' }}
+        {{
+          currentTopicData.currentTopicStatus === "success"
+            ? "单词正确！"
+            : "单词错误，请再次输入!"
+        }}
       </div>
     </view>
 
     <view class="keys">
-      <view class="keysItem" v-for="(item,i) in currentTopicData.shuffledStr" @click="selectWord(item,i)"
-            :class="currentTopicData.selectWordIndex.find(obj=>obj===i)>=0?'keysItem-select':''">
+      <view
+        class="keysItem"
+        v-for="(item, i) in currentTopicData.shuffledStr"
+        @click="selectWord(item, i)"
+        :class="
+          currentTopicData.selectWordIndex.find((obj) => obj === i) >= 0
+            ? 'keysItem-select'
+            : ''
+        "
+      >
         {{ item }}
       </view>
     </view>
 
-    <view style="height: 170rpx;width: 100%;"></view>
+    <view style="height: 170rpx; width: 100%"></view>
     <view class="selectTopicBox flex justify-content-center align-item-center">
-      <view v-if="currentTopic > 1"
-            class="btnBox flex flex-direction-column align-item-center" @click="lastTopic">
-        <image :src="`${imageBaseUrl}${debounceShow?'/word/6-1-01.png':'/word/pre_s.png'}`" mode=""></image>
-        <view :class="{'t-color-1863E5': debounceShow}" class="mt-2 t-size-24">上一个</view>
+      <view
+        v-if="currentTopic > 1"
+        class="btnBox flex flex-direction-column align-item-center"
+        @click="lastTopic"
+      >
+        <image
+          :src="`${imageBaseUrl}${
+            debounceShow ? '/word/6-1-01.png' : '/word/pre_s.png'
+          }`"
+          mode=""
+        ></image>
+        <view :class="{ 't-color-1863E5': debounceShow }" class="mt-2 t-size-24"
+          >上一个</view
+        >
       </view>
-      <view v-if="currentTopic < totalTopic"
-            class="btnBox flex flex-direction-column align-item-center" @click="nextTopic">
-        <image :src="`${imageBaseUrl}${debounceShow?'/word/6-1-02.png':'/word/next_s.png'}`" mode=""></image>
-        <view :class="{'t-color-1863E5': debounceShow}" class="mt-2 t-size-24">下一个</view>
+      <view
+        v-if="currentTopic < totalTopic"
+        class="btnBox flex flex-direction-column align-item-center"
+        @click="nextTopic"
+      >
+        <image
+          :src="`${imageBaseUrl}${
+            debounceShow ? '/word/6-1-02.png' : '/word/next_s.png'
+          }`"
+          mode=""
+        ></image>
+        <view :class="{ 't-color-1863E5': debounceShow }" class="mt-2 t-size-24"
+          >下一个</view
+        >
       </view>
     </view>
   </view>
@@ -78,14 +138,20 @@
 
 <script>
 import MyMixin from "@/utils/MyMixin";
-import {challengeFinish, challengeWord, getWordEn, reviewFinish, reviewNext} from "@/api/word";
-import {challengeFinishPost} from "../../api/word";
+import {
+  challengeFinish,
+  challengeWord,
+  getWordEn,
+  reviewFinish,
+  reviewNext,
+} from "@/api/word";
+import { challengeFinishPost } from "../../api/word";
 
 export default {
   mixins: [MyMixin],
   data() {
     return {
-      backColor: 'transparent',
+      backColor: "transparent",
       // id
       id: "",
       lessonId: 0,
@@ -112,61 +178,63 @@ export default {
       // 记录开始时间
       startTime: 0,
       // 页面停留时间
-      stayTime: '00:00:00',
+      stayTime: "00:00:00",
       // 页面是否初始化完毕
       isInit: false,
 
       // 当前页面类型
-      pageType: '',
+      pageType: "",
       playing: false,
-    }
+    };
   },
-  onLoad({id, lessonId, pageType, bookId}) {
-    this.pageType = pageType
-
-    this.id = id
-    this.lessonId = lessonId
-    this.bookId = bookId
-    this.setData = uni.getStorageSync('setData')
-
+  onLoad({ id, lessonId, pageType, bookId }) {
+    this.pageType = pageType;
+    this.id = id;
+    this.lessonId = lessonId;
+    this.bookId = bookId;
+    this.setData = uni.getStorageSync("setData");
     this.baseInfo = uni.getStorageSync("wordList");
+    console.log("baseInfo", this.baseInfo);
     this.topicList = this.baseInfo.wordLessonDictList;
     this.totalTopic = this.topicList.length;
     // 初始化获取第一题
-    this.nextTopic()
+    this.nextTopic();
   },
   onPageScroll(e) {
     if (e.scrollTop > 20) {
-      this.backColor = '#fff'
+      this.backColor = "#fff";
     } else {
-      this.backColor = 'transparent'
+      this.backColor = "transparent";
     }
   },
   // 计算属性
   computed: {
     wordFillingClass() {
-      if (this.currentTopicData.currentTopicStatus === 'success') {
-        return 't-color-43A71C'
-      } else if (this.currentTopicData.currentTopicStatus === 'error') {
-        return 't-color-DC0C0C'
+      if (this.currentTopicData.currentTopicStatus === "success") {
+        return "t-color-43A71C";
+      } else if (this.currentTopicData.currentTopicStatus === "error") {
+        return "t-color-DC0C0C";
       } else {
-        return 't-color-3D3D3D'
+        return "t-color-3D3D3D";
       }
-    }
+    },
   },
   // 监听单词填写（深度监听）
   watch: {
-    'currentTopicData.wordFilling': {
+    "currentTopicData.wordFilling": {
       handler: function (val, oldVal) {
         // 防止undefined
-        if (!val) return
+        if (!val) return;
 
         // val 全部填写完毕
-        if (val.every(item => item.value) && this.currentTopicData.currentTopicStatus === 'normal') {
-          this.network().reviewNext(false, true)
+        if (
+          val.every((item) => item.value) &&
+          this.currentTopicData.currentTopicStatus === "normal"
+        ) {
+          this.network().reviewNext(false, true);
         }
       },
-      deep: true
+      deep: true,
     },
     /**
      * 监听播放次数变化
@@ -174,114 +242,133 @@ export default {
      * 改变次数即可播放音频
      * 如果只播放一次，将playCount设置为2即可
      */
-    'currentTopicData.auditManager.playCount': function (val, oldVal) {
+    "currentTopicData.auditManager.playCount": function (val, oldVal) {
       if (val < this.setData.num) {
-        this.playAudio()
+        this.playAudio();
       }
-    }
+    },
   },
   methods: {
     // 上一题
     lastTopic() {
       // 增加防抖
-      if (!this.debounceShow) return
-      this.debounceShow = false
+      if (!this.debounceShow) return;
+      this.debounceShow = false;
 
       if (this.currentTopic > 1) {
         // 从缓存中取出上一题数据
-        this.currentTopicData = this.topicDataCache.pop()
-        this.currentTopic--
+        this.currentTopicData = this.topicDataCache.pop();
+        this.currentTopic--;
       }
 
       setTimeout(() => {
-        this.debounceShow = true
-      }, 500)
+        this.debounceShow = true;
+      }, 500);
     },
     // 下一题
     async nextTopic() {
       // 增加防抖
-      if (!this.debounceShow) return
-      this.debounceShow = false
+      if (!this.debounceShow) return;
+      this.debounceShow = false;
 
       if (this.currentTopic > 0) {
         // 记录当前题目的答题数据
-        this.topicDataCache.push(this.currentTopicData)
+        this.topicDataCache.push(this.currentTopicData);
       }
 
       if (this.currentTopic < this.totalTopic) {
-        if (this.currentTopicData.currentTopicStatus === 'normal') {
-          this.network().reviewNext(true)
+        if (this.currentTopicData.currentTopicStatus === "normal") {
+          this.network().reviewNext(true);
         }
 
-        this.isInit = false
-        this.currentTopic++
-        this.currentTopicData = this.topicList[this.currentTopic - 1]
-        this.network().getWordEn()
-        this.currentTopicData.selectWordIndex = []
+        this.isInit = false;
+        this.currentTopic++;
+        this.currentTopicData = this.topicList[this.currentTopic - 1];
+        this.network().getWordEn();
+        this.currentTopicData.selectWordIndex = [];
       } else if (this.currentTopic === this.totalTopic) {
-
         // 判断是挑战还是复习
-        let data = {}
+        let data = {};
         if (this.pageType == "chanllenge") {
-          data = await challengeFinishPost({id: this.id});
+          data = await challengeFinishPost({ id: this.id });
         } else {
-          data = await reviewFinish({id: this.id});
+          data = await reviewFinish({ id: this.id });
         }
-        this.$navigateTo('/pages/word/answer?id=' + this.id + '&pageType=' + this.pageType + '&bookId=' + this.bookId)
-
+        this.$navigateTo(
+          "/pages/word/answer?id=" +
+            this.id +
+            "&pageType=" +
+            this.pageType +
+            "&bookId=" +
+            this.bookId
+        );
       }
 
       setTimeout(() => {
-        this.debounceShow = true
-      }, 500)
+        this.debounceShow = true;
+      }, 500);
     },
     // 点击播放按钮
     clickPlay() {
-      this.currentTopicData.auditManager.playCount = this.setData.num - 1
+      this.currentTopicData.auditManager.playCount = this.setData.num - 1;
     },
     // 单词填写格式化
     wordFormat() {
-      var index = 0
-      this.currentTopicData.questionText.split('').forEach(item => {
+      var index = 0;
+      this.currentTopicData.questionText.split("").forEach((item) => {
         this.currentTopicData.wordFilling.push({
-          value: item === '_' ? '' : item,
-          isShow: item === '_',
-          index: item === '_' ? index : ""
-        })
-        if (item === '_') {
-          index += 1
+          value: item === "_" ? "" : item,
+          isShow: item === "_",
+          index: item === "_" ? index : "",
+        });
+        if (item === "_") {
+          index += 1;
         }
-      })
+      });
       // 保留转换后的数据
-      this.currentTopicData.wordFillingFormat = JSON.parse(JSON.stringify(this.currentTopicData.wordFilling))
+      this.currentTopicData.wordFillingFormat = JSON.parse(
+        JSON.stringify(this.currentTopicData.wordFilling)
+      );
     },
     // 选择单词
     selectWord(item, i) {
-      if (!this.currentTopicData.selectWordIndex.find(item => item === i)) {
-        if (this.currentTopicData.selectWordIndex.length < this.currentTopicData.questionAnswer.length) {
-          var wordFillindIndex = this.currentTopicData.selectWordIndex.length
-          this.currentTopicData.wordFilling.find(item => item.index === wordFillindIndex).value = item
-          this.currentTopicData.selectWordIndex.push(i)
+      if (!this.currentTopicData.selectWordIndex.find((item) => item === i)) {
+        if (
+          this.currentTopicData.selectWordIndex.length <
+          this.currentTopicData.questionAnswer.length
+        ) {
+          var wordFillindIndex = this.currentTopicData.selectWordIndex.length;
+          this.currentTopicData.wordFilling.find(
+            (item) => item.index === wordFillindIndex
+          ).value = item;
+          this.currentTopicData.selectWordIndex.push(i);
         }
-        if (this.currentTopicData.questionText.indexOf('_') != -1) {
-          this.currentTopicData.questionText = this.replaceCharAt(this.currentTopicData.questionText, this
-            .currentTopicData
-            .questionText.indexOf('_'), item)
+        if (this.currentTopicData.questionText.indexOf("_") != -1) {
+          this.currentTopicData.questionText = this.replaceCharAt(
+            this.currentTopicData.questionText,
+            this.currentTopicData.questionText.indexOf("_"),
+            item
+          );
         }
       }
     },
     // 删除单词
     deleteWord() {
       if (this.currentTopicData.selectWordIndex.length > 0) {
-        this.currentTopicData.wordFilling.find(item => item.index === this.currentTopicData.selectWordIndex.length - 1).value = ''
-        this.currentTopicData.selectWordIndex.pop()
-        this.currentTopicData.currentTopicStatus = 'normal'
+        this.currentTopicData.wordFilling.find(
+          (item) =>
+            item.index === this.currentTopicData.selectWordIndex.length - 1
+        ).value = "";
+        this.currentTopicData.selectWordIndex.pop();
+        this.currentTopicData.currentTopicStatus = "normal";
       }
     },
     longpressDeleteWord() {
-      this.currentTopicData.wordFilling = JSON.parse(JSON.stringify(this.currentTopicData.wordFillingFormat))
-      this.currentTopicData.selectWordIndex = []
-      this.currentTopicData.currentTopicStatus = 'normal'
+      this.currentTopicData.wordFilling = JSON.parse(
+        JSON.stringify(this.currentTopicData.wordFillingFormat)
+      );
+      this.currentTopicData.selectWordIndex = [];
+      this.currentTopicData.currentTopicStatus = "normal";
     },
     // 替换字符串指定位置字符
     replaceCharAt(str, index, newChar) {
@@ -290,149 +377,168 @@ export default {
         return str; // 或者可以抛出错误
       }
       // 转换为字符数组
-      let chars = str.split('');
+      let chars = str.split("");
       // 替换指定下标的字符
       chars[index] = newChar;
       // 转换回字符串
-      let newStr = chars.join('');
+      let newStr = chars.join("");
       return newStr;
     },
     getSystemInfo() {
       uni.getSystemInfo({
         success: (res) => {
           this.deviceBrand = res.platform;
-        }
+        },
       });
     },
     playAudio() {
-      if (this.playing) return
+      if (this.playing) return;
 
-      var data = this.currentTopicData
+      var data = this.currentTopicData;
       let voicePath = "";
-      if (this.deviceBrand === 'android') {
+      if (this.deviceBrand === "android") {
         if (data.auditManager.templateFile) {
-          voicePath = data.auditManager.templateFile
+          voicePath = data.auditManager.templateFile;
         } else {
           uni.downloadFile({
             url: data.auditManager.file,
             success: (res) => {
               if (res.statusCode === 200) {
-                voicePath = res.tempFilePath
-                data.auditManager.templateFile = voicePath
+                voicePath = res.tempFilePath;
+                data.auditManager.templateFile = voicePath;
               }
-            }
-          })
+            },
+          });
         }
       } else {
-        voicePath = data.auditManager.file
+        voicePath = data.auditManager.file;
         data.auditManager.manager.obeyMuteSwitch = false;
       }
 
-      data.auditManager.manager.src = voicePath
-      data.auditManager.manager.play()
+      data.auditManager.manager.src = voicePath;
+      data.auditManager.manager.play();
       // 播放中
       data.auditManager.manager.onPlay(() => {
-        this.playing = true
-      })
+        this.playing = true;
+      });
       // 播放结束
       data.auditManager.manager.onEnded(() => {
         setTimeout(() => {
-          console.log("data.auditManager.manager.duration", data.auditManager.manager.duration)
-          data.auditManager.playCount++
-          this.playing = false
-        }, 3000)
-      })
+          console.log(
+            "data.auditManager.manager.duration",
+            data.auditManager.manager.duration
+          );
+          data.auditManager.playCount++;
+          this.playing = false;
+        }, 3000);
+      });
     },
     // 接口请求模块
     network() {
       return {
         getWordEn: async () => {
           var wordEn = this.currentTopicData.wordEn;
-          let res = await getWordEn({wordEn});
+          let res = await getWordEn({ wordEn });
           let data = res.data.result;
 
           // 可选单词乱序
-          data.shuffledStr = this.shuffleString(data.questionAnswer || '' + data.questionAnswerNoise || '')
+          data.shuffledStr = this.shuffleString(
+            (data.questionAnswer || "") + (data.questionAnswerNoise || "")
+          );
           // 选中的单词索引
-          data.selectWordIndex = []
+          data.selectWordIndex = [];
           // 当前单词填写状态 正常，正确，错误
-          data.currentTopicStatus = 'normal'
+          data.currentTopicStatus = "normal";
           // 单词填写初始化
-          data.wordFilling = []
+          data.wordFilling = [];
           // 初始化音频播放器
           data.auditManager = {
             file: data.audioUsa,
             templateFile: "", // 保存下载后的音频文件
             playCount: 0, // 播放次数
-            manager: uni.createInnerAudioContext()
-          }
+            manager: uni.createInnerAudioContext(),
+          };
           // data.questionText = "___'('___.)___"
-          this.currentTopicData = data
+          this.currentTopicData = data;
           this.wordFormat();
-          this.isInit = true
+          this.isInit = true;
 
-          console.log("this.currentTopicData", this.currentTopicData)
+          console.log("this.currentTopicData", this.currentTopicData);
         },
         reviewNext: async (isSkip = false, isNext = false) => {
           var getData = {
             wordIndex: this.currentTopic,
             questionAnswer: this.currentTopicData.wordEn,
             wordEn: this.currentTopicData.wordEn,
-            userAnswer: this.currentTopicData.wordFilling.map(item => item.value).join(''),
-          }
+            userAnswer: this.currentTopicData.wordFilling
+              .map((item) => item.value)
+              .join(""),
+          };
 
           // 判断是挑战还是复习
           let res;
           if (this.pageType == "chanllenge") {
             getData = {
               ...getData,
-              challengeId: this.id
-            }
+              challengeId: this.id,
+            };
             res = await challengeWord(getData);
           } else {
             getData = {
               ...getData,
               reviewId: this.id,
               lessonId: this.lessonId,
-            }
+            };
             res = await reviewNext(getData);
           }
-          if (isSkip) return
+          if (isSkip) return;
 
           if (res.data.code == 200 && res.data.result.answerResult == 1) {
             // 正确
-            this.currentTopicData.currentTopicStatus = 'success'
+            this.currentTopicData.currentTopicStatus = "success";
 
             if (this.currentTopic < this.totalTopic && isNext) {
               // 下一题
               setTimeout(() => {
-                this.nextTopic()
-              }, 500)
+                this.nextTopic();
+              }, 500);
             } else {
               // 完成
-              let data = {}
+              let data = {};
               // 判断是挑战还是复习
               if (this.pageType == "chanllenge") {
-                data = await challengeFinishPost({id: this.id});
+                data = await challengeFinishPost({ id: this.id });
               } else {
-                data = await reviewFinish({id: this.id});
+                data = await reviewFinish({ id: this.id });
               }
-              this.$navigateTo('/pages/word/answer?id=' + this.id + '&pageType=' + this.pageType + '&bookId=' + this.bookId)
+              this.$navigateTo(
+                "/pages/word/answer?id=" +
+                  this.id +
+                  "&pageType=" +
+                  this.pageType +
+                  "&bookId=" +
+                  this.bookId
+              );
             }
           } else {
             // 错误
-            this.currentTopicData.currentTopicStatus = 'error'
+            this.currentTopicData.currentTopicStatus = "error";
           }
-        }
-      }
-    }
+        },
+      };
+    },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
 .main {
-  background: linear-gradient(180deg, #DFF0FF 0%, #F0F7FD 6%, #FFFFFF 21%) !important;
+  background: linear-gradient(
+    180deg,
+    #dff0ff 0%,
+    #f0f7fd 6%,
+    #ffffff 21%
+  ) !important;
 }
 
 .frequency {
@@ -474,6 +580,7 @@ export default {
 .word {
   font-size: 30rpx;
   text-align: center;
+  padding: 0 50rpx;
   margin-top: 20rpx;
   margin-bottom: 40rpx;
 }
@@ -485,13 +592,12 @@ export default {
 .inputHr {
   width: 36rpx;
   height: 6rpx;
-  background: #3D3D3D;
+  background: #3d3d3d;
 }
 
 .statusMessageBox {
   height: 50rpx;
 }
-
 
 .keys {
   display: flex;
@@ -502,8 +608,8 @@ export default {
 
   .keysItem {
     border-radius: 10rpx;
-    border: 2rpx solid #517EF1;
-    background: #F1F6FF;
+    border: 2rpx solid #517ef1;
+    background: #f1f6ff;
     width: 90rpx;
     height: 90rpx;
     display: flex;
@@ -515,8 +621,8 @@ export default {
   }
 
   .keysItem-select {
-    border: 2rpx solid #E06D25;
-    background: #FAB472;
+    border: 2rpx solid #e06d25;
+    background: #fab472;
     color: #fff;
   }
 }
@@ -530,8 +636,8 @@ export default {
   width: 100%;
   position: fixed;
   bottom: 0;
-  border-top: 1rpx solid #E6E6E6;
-  background: #FFFFFF;
+  border-top: 1rpx solid #e6e6e6;
+  background: #ffffff;
 
   .btnBox {
     margin: 0 95rpx;

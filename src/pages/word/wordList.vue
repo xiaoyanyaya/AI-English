@@ -1,23 +1,38 @@
 <template>
   <view class="main">
     <cy-navbar :showBack="true" :bgColor="backColor" textColor="#3D3D3D">
+      <view class="t-size-30">单词列表</view>
     </cy-navbar>
     <view class="content">
-      <u-sticky offset-top="210">
+      <u-sticky offset-top="100">
         <view class="title">
-          {{
+          <!-- {{
             id == 0 || id == 2 || id == 3
               ? allData.unitFullName
               : bookData.bookType_dictText +
-              bookData.bookSecondType_dictText +
-              title
-          }}
+                bookData.bookSecondType_dictText +
+                title
+          }} -->
+          <view>
+            {{
+              id == 0 || id == 2 || id == 3
+                ? allData.bookFullName
+                : bookData.bookFullName
+            }}
+          </view>
+          <view>
+            {{
+              id == 0 || id == 2 || id == 3
+                ? allData.lessonName
+                : bookData.lessonName
+            }}
+          </view>
         </view>
       </u-sticky>
       <view class="list">
         <view
           class="listItem"
-          v-for="(item, i) in allData.wordLessonDictList"
+          v-for="item in allData.wordLessonDictList"
           :key="item.id"
           v-if="id == 0 || id == 2 || id == 3"
           @click="item.audioUsa ? play(item.audioUsa, item.id) : ''"
@@ -60,7 +75,7 @@
         </view>
         <view
           class="listItem"
-          v-for="(item, i) in allData"
+          v-for="item in allData"
           :key="item.id"
           v-if="id == 1"
           @click="item.audioUsa ? play(item.audioUsa) : ''"
@@ -115,6 +130,8 @@ innerAudioContext.autoplay = true;
 // bgAudioManager.singer = '演唱者';
 import MyMixin from "@/utils/MyMixin";
 import { wordList, dictList, lessonWordList, queryById } from "@/api/word";
+import { reviewStart } from "@/api/word";
+
 export default {
   mixins: [MyMixin],
   data() {
@@ -138,9 +155,14 @@ export default {
       selectId: 0,
       title: "",
       chanllengeBtnText: "立即挑战",
+      setData: {
+        show: true,
+        num: 3,
+      },
     };
   },
   onLoad(e) {
+    console.log("eeeeeeeeee", e);
     if (e.title) {
       this.title = e.title;
     }
@@ -152,11 +174,14 @@ export default {
     }
     if (e.id == 0) {
       this.data.unitId = e.unitId;
+      this.chanllengeBtnText = "开始答题";
     } else if (e.id == 1) {
       this.dataB.lessonId = e.unitId;
+      this.chanllengeBtnText = "开始答题";
       console.log(e.unitId);
     } else if (e.id == 2) {
       this.data.unitId = e.unitId;
+      this.chanllengeBtnText = "开始答题";
     } else if (e.id == 3) {
       this.dataC.id = e.unitId;
     }
@@ -164,6 +189,7 @@ export default {
       this.chanllengeBtnText = e.btnTitle;
     }
     this.bookData = uni.getStorageSync("bookData");
+    console.log("bookData,", this.bookData);
   },
   onPageScroll(e) {
     if (e.scrollTop > 20) {
@@ -176,30 +202,50 @@ export default {
     this.getWord();
   },
   methods: {
-    chanllenge() {
-      this.toNav(
-        "/pages/word/set?id=" +
-        (this.id == 1 ? this.dataB.lessonId : this.allData.id) +
+    async chanllenge() {
+      // 直接跳到答题页面dictation
+      // this.toNav(
+      //   "/pages/word/set?id=" +
+      //     (this.id == 1 ? this.dataB.lessonId : this.allData.id) +
+      //     "&title=" +
+      //     (this.title ? this.title : "")
+      // );
+      uni.setStorageSync("setData", this.setData);
+      let data = {};
+      data = await reviewStart(this.data);
+      var urls =
+        "/pages/word/dictation?id=" +
+        data.data.result.id +
+        "&lessonId=" +
+        data.data.result.lessonId +
         "&title=" +
-        (this.title ? this.title : "")
-      );
+        (this.title ? this.title : "") +
+        "&pageType=" +
+        (this.pageType ? this.pageType : "") +
+        "&bookId=" +
+        (this.id == 1 ? this.dataB.lessonId : this.allData.id);
+      this.toNav(urls);
     },
     async getWord() {
       if (this.id == 0) {
         let data = await wordList(this.data);
         this.allData = data.data.result;
+        console.log("allData", this.allData);
         uni.setStorageSync("wordList", data.data.result);
       } else if (this.id == 1) {
         let data = await dictList(this.dataB);
         this.allData = data.data.result.records;
+        console.log("allData", this.allData);
         uni.setStorageSync("wordList", data.data.result.records);
       } else if (this.id == 2) {
         let data = await lessonWordList(this.data);
         this.allData = data.data.result;
+        console.log("allData", this.allData);
         uni.setStorageSync("wordList", data.data.result);
       } else if (this.id == 3) {
         let data = await queryById(this.dataC);
         this.allData = data.data.result;
+        console.log("allData", this.allData);
         uni.setStorageSync("wordList", data.data.result);
       }
     },
@@ -268,24 +314,24 @@ export default {
 }
 
 .title {
-  /* 	position: fixed; */
+  position: fixed;
   background: #def0ff;
   width: 100%;
-  padding-bottom: 30rpx;
-  z-index: 1;
-  /* top: 120rpx; */
+  padding: 35rpx 0;
+  z-index: 999;
+  top: 160rpx;
   left: 0;
-  /* padding-left: 55rpx; */
-  /* padding-top: 30rpx; */
+  text-align: center;
+  font-size: 26rpx;
 }
 
 .content {
   padding: 30rpx 55rpx;
-  /* padding-top: 90rpx; */
 }
 
 .list {
   margin-top: 40rpx;
+  padding-top: 60rpx;
 }
 
 .listItem {

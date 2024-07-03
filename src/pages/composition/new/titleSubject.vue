@@ -6,10 +6,19 @@
 
     <view class="px-4">
 
-<!--      <view v-if="pageIndex==4 && pageTitle=='作文挑战进行时'">
-123
-      </view>-->
-      <view v-if="title.isShowTitle">
+      <view class="mt-5" v-if="(pageIndex==4 && pageTitle=='作文挑战进行时') || pageIndex == 7  || pageIndex == 6">
+        <view class="challenge-title px-3 pt-3 pb-5">
+          <view class="flex justify-content-center align-item-center">
+            <image :src="`${imageBaseUrl}/4-14-02.png`" mode="widthFix"/>
+            <view class="t-color-E0672F t-size-32 font-weight-bold ml-1">挑战题目</view>
+          </view>
+
+          <view class="t-size-26 mt-3">
+            <rich-text :nodes="essayData.title"></rich-text>
+          </view>
+        </view>
+      </view>
+      <view v-else-if="title.isShowTitle">
         <view class="mt-5 flex align-item-center justify-content-between top-content" v-if="title.isShowTitle">
           <view class="flex align-item-center">
             <view class="font-weight-bold t-size-28 ml-3 font-weight-bold">
@@ -106,7 +115,7 @@
                   <text>作文</text>
                   <text class="t-color-FF0000">点评</text>
                 </view>
-                <view v-else>{{ otherContent.title }}11</view>
+                <view v-else>{{ otherContent.title }}</view>
               </view>
               <view v-if="otherContent.isDisabled" @click="copyContent(originGenerateContent)" class="flex ml-3 align-item-center" style="margin-top: 2rpx">
                 <view class="iconfont t-color-1863E5 essay-title-icon">&#xe8b0;</view>
@@ -194,8 +203,10 @@ import {
 import {apiDomain} from "@/configs/env";
 import store from '@/store/';
 import {tr} from "@dcloudio/vue-cli-plugin-uni/packages/postcss/tags";
+import MyMixin from "../../../utils/MyMixin";
 
 export default {
+  mixins: [MyMixin],
   data() {
     return {
       mainId: '',
@@ -250,7 +261,7 @@ export default {
         val: [],
         activeIndex: 0,
       }, {
-        title: '作文类型',
+        title: '',
         content: [],
         val: [],
         activeIndex: 0,
@@ -411,7 +422,7 @@ export default {
 
     this.network().getCompositionDictList('student_type')
     this.network().getCompositionDictList('composition_text_wordnum')
-    this.network().getCompositionDictList('composition_context_type')
+    // this.network().getCompositionDictList('composition_context_type')
   },
   // 页面销毁
   onUnload() {
@@ -560,7 +571,8 @@ export default {
           }
           let compositionType = this.popupContnet[0].val[this.popupContnet[0].activeIndex]
           let infoWordNums = this.popupContnet[1].val[this.popupContnet[1].activeIndex]
-          let infoWriteType = this.popupContnet[2].val[this.popupContnet[2].activeIndex]
+          // let infoWriteType = this.popupContnet[2].val[this.popupContnet[2].activeIndex]
+          let infoWriteType = "";
           uni.setStorageSync("essayDataTitle", this.essayData.title)
           this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=2&pageTitle=AI作文帮写&compositionType=${compositionType}&infoWordNums=${infoWordNums}&infoWriteType=${infoWriteType}`)
           break;
@@ -702,19 +714,19 @@ export default {
 
           switch (type) {
             case 'student_type':
-              result.book_type.forEach(d => {
+              result.student_type.forEach(d => {
                 this.popupContnet[0].content.push(d.text)
                 this.popupContnet[0].val.push(d.value)
               })
               break;
             case 'composition_text_wordnum':
-              result.word_lesson_word_num.forEach(d => {
+              result.composition_text_wordnum.forEach(d => {
                 this.popupContnet[1].content.push(d.text)
                 this.popupContnet[1].val.push(d.value)
               })
               break;
             case 'composition_context_type':
-              result.composition_type.forEach(d => {
+              result.composition_context_type.forEach(d => {
                 this.popupContnet[2].content.push(d.text)
                 this.popupContnet[2].val.push(d.value)
               })
@@ -860,8 +872,8 @@ export default {
             var params = {
               "compositionTitleText": this.essayData.title,
               "compositionType": this.compositionType,
-              "infoWordNum": this.infoWordNums,
-              "infoWriteType": this.infoWriteType
+              "infoWordNum": this.infoWordNums/*,
+              "infoWriteType": this.infoWriteType*/
             }
             this.network().sseRequestTask({
               url: '/composition/aigc/text',
@@ -898,6 +910,16 @@ export default {
 .body {
   min-height: 100vh;
   background: linear-gradient(180deg, #C8E2F8 0%, rgba(230, 242, 251, 0.5) 100%);
+}
+
+.challenge-title {
+  width: 670rpx;
+  border-radius: 20rpx;
+  background: #FAF1EC;
+
+  image {
+    width: 70rpx;
+  }
 }
 
 .ai-title-box, .ai-content-box, .ai-review-box {
@@ -956,7 +978,7 @@ export default {
 }
 
 .more-requirements-box {
-  height: 1000rpx;
+  height: 700rpx;
   border-radius: 20rpx;
 }
 

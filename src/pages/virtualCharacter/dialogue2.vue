@@ -368,11 +368,11 @@ export default {
     },
     network() {
       return {
-        getChatInit: async (sceneld) => {
+        getChatInit: async (sceneId) => {
           let res;
-          if (sceneld) {
+          if (sceneId) {
             res = await getChatInit({
-              sceneld: sceneld
+              sceneId: sceneId
             });
           } else {
             res = await getChatInit();

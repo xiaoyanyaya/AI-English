@@ -20,11 +20,13 @@
           <view class="flex">
             <view class="blue-triangle mr-2" style="margin-top: 8rpx"></view>
             <view class="t-color-3D3D3D t-size-28"
-            style="line-height: 38rpx">{{data.targetCn}}</view>
+            style="line-height: 38rpx">
+              <rich-text :nodes="data.targetCn"></rich-text>
+            </view>
           </view>
 
           <view class="t-size-24 mt-2 ml-4" style="color: #868686">
-            {{data.targetEn}}
+            <rich-text :nodes="data.targetEn"></rich-text>
           </view>
         </view>
       </view>
@@ -46,6 +48,12 @@ export default {
   },
   onLoad() {
     this.data = uni.getStorageSync("sceneData")
+    if (this.data.targetCn) {
+      this.data.targetCn = this.data.targetCn.replaceAll("\n", "<p></p>")
+    }
+    if (this.data.targetEn) {
+      this.data.targetEn = this.data.targetEn.replaceAll("\n", "<p></p>")
+    }
     console.log(this.data)
   },
   methods: {

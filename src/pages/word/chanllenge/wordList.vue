@@ -95,7 +95,7 @@ import {
   queryListByBookId,
   queryBookById,
   queryChallengeByUser,
-  queryBookChallengeInfo,
+  queryBookChallengeInfo, challengeStart,
 } from "../../../api/word";
 
 const innerAudioContext = uni.createInnerAudioContext();
@@ -140,9 +140,15 @@ export default {
   onShow() {
   },
   methods: {
-    chanllenge() {
+    async chanllenge() {
       this.setWordLessonDictList()
-      this.toNav('/pages/word/set?id=' + this.bookId + '&pageType=chanllenge')
+      let data = await challengeStart({
+        bookId: this.bookId
+      });
+      var urls = '/pages/word/dictation?id=' + data.data.result.id + '&lessonId=' + data.data.result.lessonId +
+        '&pageType=chanllenge&bookId=' + this.bookId;
+      this.toNav(urls)
+      //
     },
     toDefined(item) {
       this.setWordLessonDictList()

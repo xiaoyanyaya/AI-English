@@ -60,6 +60,11 @@
 
       </view>
     </view>
+
+    <view v-if="isInit" class="t-size-40 t-color-1a9bff init-box">
+      <view>虚拟人连接中...</view>
+    </view>
+
     <view v-if="isShowPopup">
       <view class="popup-mask" @click="isShowPopup = false"></view>
       <view class="popup-content flex flex-direction-column justify-content-around align-item-center">
@@ -130,6 +135,9 @@ export default {
       deviceBrand: 'android',
       palyIndex: 0,
       innerAudioContext: {},
+
+      // 是否正在初始化
+      isInit: true,
     }
   },
   // 页面销毁
@@ -360,15 +368,16 @@ export default {
     },
     network() {
       return {
-        getChatInit: async (sceneld) => {
+        getChatInit: async (sceneId) => {
           let res;
-          if (sceneld) {
+          if (sceneId) {
             res = await getChatInit({
-              sceneld: sceneld
+              sceneId: sceneId
             });
           } else {
             res = await getChatInit();
           }
+          if (res.data.code === 200) this.isInit = false
           this.chatInit = res.data.result
           this.playVoice(this.chatInit.welcome_speech_voice_file)
           this.pushAiDialog(this.chatInit.welcome_speech_en, this.chatInit.welcome_speech_cn, this.chatInit.welcome_speech_voice_file)
@@ -645,5 +654,13 @@ export default {
     width: 40rpx;
     height: 30rpx;
   }
+}
+
+.init-box {
+  position: absolute;
+  z-index: 9999;
+  text-align: center;
+  width: 750rpx;
+  bottom: 500rpx;
 }
 </style>

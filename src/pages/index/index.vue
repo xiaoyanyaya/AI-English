@@ -13,7 +13,7 @@
           <!--          <view class="iconfont ml-2">&#xe652;</view>-->
         </view>
         <view class="scene-content">
-          <view class="content-text mt-3 mr-2">
+          <view class="content-text mt-3 mr-2" @click="$navigateTo(`/pages/virtualCharacter/index`)">
             <text class="table-nowrap-2">{{ personInfo.intro }}</text>
             <view class="say-hello mr-2 mt-2 flex align-item-center justify-content-center">
               <image :src="`${imageBaseUrl}/6-30-05.png`" mode="widthFix" class="say-hello-btn"></image>
@@ -150,9 +150,9 @@ export default {
   methods: {
     toProduct(index) {
       if (index === 0) {
-        this.$navigateTo(`/pages/index/product?imageUrl=${this.imageBaseUrl}/6-30-07.png&title=产品理念`)
+        this.$navigateTo(`/pages/index/product?title=产品理念`)
       } else {
-        this.$navigateTo(`/pages/index/product?imageUrl=${this.imageBaseUrl}/6-30-06.png&title=用户故事`)
+        this.$navigateTo(`/pages/index/product?title=用户故事`)
       }
     },
     network() {

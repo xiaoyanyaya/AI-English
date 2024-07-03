@@ -161,7 +161,7 @@ export default {
       var data = this.clickData
       uni.setStorageSync('compositionTitleText', data.compositionTitleText)
       const SRC = `/pages/composition/new/titleSubject?`;
-      const path = `returnHome=1&pageIndex=4&pageTitle=作文内容输入页&id=${data.id}&compositionType=${data.compositionType}`;
+      const path = `returnHome=1&pageIndex=4&pageTitle=作文挑战进行时&id=${data.id}&compositionType=${data.compositionType}`;
       // 来自页面内分享按钮
       return {
         title: this.pageTitle,
@@ -178,7 +178,7 @@ export default {
       }
       if (title == '立即挑战') {
         uni.setStorageSync('compositionTitleText', data.compositionTitleText)
-        this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=4&pageTitle=作文内容输入页&id=${data.id}&compositionType=${data.compositionType}`)
+        this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=4&pageTitle=作文挑战进行时&id=${data.id}&compositionType=${data.compositionType}`)
       }
     },
     clickSChoolType(item, index) {

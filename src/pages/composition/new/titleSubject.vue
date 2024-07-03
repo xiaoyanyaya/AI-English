@@ -5,6 +5,10 @@
     </cy-navbar>
 
     <view class="px-4">
+
+<!--      <view v-if="pageIndex==4 && pageTitle=='作文挑战进行时'">
+123
+      </view>-->
       <view v-if="title.isShowTitle">
         <view class="mt-5 flex align-item-center justify-content-between top-content" v-if="title.isShowTitle">
           <view class="flex align-item-center">
@@ -98,7 +102,11 @@
           <view class="flex align-item-end justify-content-between">
             <view class="flex align-item-end">
               <view class="font-weight-bold t-size-28 ml-3 font-weight-bold">
-                {{ otherContent.title }}
+                <view v-if="otherContent.title == '作文点评'">
+                  <text>作文</text>
+                  <text class="t-color-FF0000">点评</text>
+                </view>
+                <view v-else>{{ otherContent.title }}11</view>
               </view>
               <view v-if="otherContent.isDisabled" @click="copyContent(originGenerateContent)" class="flex ml-3 align-item-center" style="margin-top: 2rpx">
                 <view class="iconfont t-color-1863E5 essay-title-icon">&#xe8b0;</view>
@@ -340,7 +348,7 @@ export default {
       }
     } else if (pageIndex == 4) {
       this.$set(this.essayData, 'title', uni.getStorageSync("compositionTitleText"))
-      if (pageTitle === '作文内容输入页') {
+      if (pageTitle === '作文挑战进行时') {
         this.title.isShowTitle = true;
         this.title.isShowPhoto = false;
         this.title.isDisabled = true;
@@ -348,7 +356,7 @@ export default {
         if (btnTitle) {
           this.btnTitle = btnTitle
         } else {
-          this.btnTitle = 'AI作文批改';
+          this.btnTitle = '智能批改';
         }
         this.isReturnHome = returnHome || 0;
       } else if (pageTitle === 'AI作文批改') {
@@ -557,7 +565,7 @@ export default {
           this.$navigateTo(`/pages/composition/new/titleSubject?pageIndex=2&pageTitle=AI作文帮写&compositionType=${compositionType}&infoWordNums=${infoWordNums}&infoWriteType=${infoWriteType}`)
           break;
         case "4":
-          if (this.pageTitle == '作文内容输入页') {
+          if (this.pageTitle == '作文挑战进行时') {
             if (this.essayData.content == '') {
               uni.showToast({
                 title: '请输入作文内容',

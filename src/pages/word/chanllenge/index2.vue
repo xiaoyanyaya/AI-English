@@ -75,10 +75,10 @@
       </view>
     </view>
 
-    <view class="mt-3 content-box pt-1 px-1">
-      <scroll-view class="scroll-view_H" scroll-x="true">
-        <scroll-view scroll-y="true" style="height: 480rpx;">
-          <view class="scroll-view-item_H uni-bg-red">
+    <view class="mt-3 content-box pt-2 px-1" style="height: 500rpx;">
+      <scroll-view class="scroll-view_V" scroll-y="true" scroll-with-animation>
+        <view class="scroll-view-item_H uni-bg-red">
+          <scroll-view class="scroll-view_H" scroll-x="true" scroll-with-animation @scroll="scroll">
             <view :class="index === 0 ? 't-size-26 font-weight-bold t-color-3D3D3D mb-3' :
               't-size-24 t-color-878787 pt-3 pb-3 border-bottom'"
                   class="flex table-item justify-content-center"
@@ -115,12 +115,9 @@
               <view v-if="item.value9.value" :style="{color: item.value9.tColor}">{{ item.value9.value }}</view>
               <view v-if="item.value10.value" :style="{color: item.value10.tColor}">{{ item.value10.value }}</view>
             </view>
-          </view>
-        </scroll-view>
+          </scroll-view>
+        </view>
       </scroll-view>
-      <!--      <view v-if="tableData.length < 2" class="mt-5 flex align-item-center justify-content-center">
-              <image :src="`${imageBaseUrl}/nodata.png`" style="width: 400rpx; height: 400rpx"></image>
-            </view>-->
     </view>
 
 
@@ -292,9 +289,6 @@ export default {
     // 切换教材监听
     uni.$on("switchTextbook", ({textBookId}) => {
       console.log("switchTextbooks", textBookId)
-      // this.tableData 去掉除了标题的数据
-      var tableData = this.tableData.slice(0, 1)
-      this.tableData = tableData
       this.initBasicData()
     })
   },

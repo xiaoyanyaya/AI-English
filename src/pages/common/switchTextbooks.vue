@@ -39,18 +39,17 @@ export default {
       bookData: [],
 
       /* 当前页面类型 */
-      pageType: ""
+      pageType: "",
     };
   },
-  onLoad({pageType}) {
-    this.pageType = pageType
+  onLoad({ pageType }) {
+    this.pageType = pageType;
 
     if (this.pageType === "textBook") {
-      this.network().getBookList(101)
+      this.network().getBookList(101);
     } else if (this.pageType === "dictBook") {
-      this.network().getBookList(102)
+      this.network().getBookList(102);
     }
-    ;
   },
   onPageScroll(e) {
     if (e.scrollTop > 20) {
@@ -71,17 +70,17 @@ export default {
     },
     handleDetail(item) {
       const basicData = uni.getStorageSync("basicData");
-      const currWordConfig = {...basicData.currWordConfig};
+      const currWordConfig = { ...basicData.currWordConfig };
 
       if (this.pageType === "textBook") {
         currWordConfig.textBook = item;
-        this.network().switchBook({textBookId: item.id});
+        this.network().switchBook({ textBookId: item.id });
       } else if (this.pageType === "dictBook") {
         currWordConfig.dictBook = item;
-        this.network().switchBook({dictBookId: item.id});
+        this.network().switchBook({ dictBookId: item.id });
       }
 
-      uni.setStorageSync("basicData", {...basicData, currWordConfig});
+      uni.setStorageSync("basicData", { ...basicData, currWordConfig });
     },
     handleSort(sortType) {
       console.log(sortType);
@@ -90,7 +89,8 @@ export default {
     network() {
       return {
         getBookList: async (bookProperties) => {
-          const res = await queryMapByBookProperties({bookProperties});
+          const res = await queryMapByBookProperties({ bookProperties });
+          console.log("res", res);
           this.bookData = res.data.result;
           // 获取有多少个key
           const keyLength = Object.keys(res.data.result).length;

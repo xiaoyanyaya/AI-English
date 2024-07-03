@@ -5,79 +5,81 @@
       bgColor="linear-gradient(180deg, #D9EEFF 0%, #F3F9FF 7%)"
       textColor="#3D3D3D"
     >
-      <view class="t-size-30" v-if="id == 0">教材词汇速记</view>
-      <view class="t-size-30" v-if="id == 1">考纲词汇速记</view>
+      <view class="t-size-30" v-if="id == 0">教材单元列表</view>
+      <view class="t-size-30" v-if="id == 1">考纲单元列表</view>
     </cy-navbar>
     <view class="py-2 px-55">
-      <view class="head">
-        <view class="headL">
-          <image :src="bookData.bookImage" mode=""></image>
-        </view>
-        <view class="headR">
-          <view v-if="id == 1" class="headR-title">
-            {{ bookData.bookFullName }}
+      <view class="top">
+        <view class="head">
+          <view class="headL">
+            <image :src="bookData.bookImage" mode=""></image>
           </view>
-          <view v-else class="headR-title">
-            {{ bookData.bookFullName.split("-")[1] }}
-          </view>
-          <view v-if="id == 1" class="headR-name">
-            {{ bookData.bookName }}
-          </view>
-          <view v-else class="headR-name">
-            {{ bookData.bookFullName.split("-")[0] }}
-          </view>
-          <view class="headR-num"> 共{{ bookData.wordNums }}个单词 </view>
-          <view class="change_share">
-            <view
-              class="change_box"
-              @click="
-                toNav(`/pages/common/switchTextbooks?pageType=${bookType}`)
-              "
-            >
-              <image class="image" :src="imageBaseUrl + '/word/6-24-02.png'">
-              </image>
-              <view class="text">切换教材</view>
+          <view class="headR">
+            <view v-if="id == 1" class="headR-title">
+              {{ bookData.bookFullName }}
             </view>
-            <button
-              open-type="share"
-              data-name="shareBtn"
-              size="mini"
-              class="share_box"
-            >
-              <image class="image" :src="imageBaseUrl + '/word/6-26-01.png'">
-              </image>
-              <view class="text">分享</view>
-            </button>
-          </view>
-          <view class="headR-line" v-if="false">
-            <view class="headR-lineText"> 学习进度35% </view>
-            <u-line-progress
-              active-color="#2979ff"
-              :percent="70"
-              height="16"
-              :show-percent="false"
-            ></u-line-progress>
+            <view v-else class="headR-title">
+              {{ bookData.bookFullName.split("-")[1] }}
+            </view>
+            <view v-if="id == 1" class="headR-name">
+              {{ bookData.bookName }}
+            </view>
+            <view v-else class="headR-name">
+              {{ bookData.bookFullName.split("-")[0] }}
+            </view>
+            <view class="headR-num"> 共{{ bookData.wordNums }}个单词 </view>
+            <view class="change_share">
+              <view
+                class="change_box"
+                @click="
+                  toNav(`/pages/common/switchTextbooks?pageType=${bookType}`)
+                "
+              >
+                <image class="image" :src="imageBaseUrl + '/word/6-24-02.png'">
+                </image>
+                <view class="text">切换教材</view>
+              </view>
+              <button
+                open-type="share"
+                data-name="shareBtn"
+                size="mini"
+                class="share_box"
+              >
+                <image class="image" :src="imageBaseUrl + '/word/6-26-01.png'">
+                </image>
+                <view class="text">分享</view>
+              </button>
+            </view>
+            <view class="headR-line" v-if="false">
+              <view class="headR-lineText"> 学习进度35% </view>
+              <u-line-progress
+                active-color="#2979ff"
+                :percent="70"
+                height="16"
+                :show-percent="false"
+              ></u-line-progress>
+            </view>
           </view>
         </view>
+        <view class="addtask" v-if="id == 1" @click="show = true">
+          <u-icon name="plus" size="30"></u-icon><text>新建任务</text>
+        </view>
+        <view class="mt-5 mb-3 flex justify-content-center">
+          <u-tabs
+            bg-color="transparent"
+            inactive-color="#8A8A8A"
+            active-color="#E79315"
+            :list="optinsList"
+            :current="currentOptions"
+            @change="changeOptions"
+          ></u-tabs>
+        </view>
       </view>
-      <view class="addtask" v-if="id == 1" @click="show = true">
-        <u-icon name="plus" size="30"></u-icon><text>新建任务</text>
-      </view>
-      <view class="mt-5 mb-3 flex justify-content-center">
-        <u-tabs
-          bg-color="transparent"
-          inactive-color="#8A8A8A"
-          active-color="#E79315"
-          :list="optinsList"
-          :current="currentOptions"
-          @change="changeOptions"
-        ></u-tabs>
-      </view>
-      <!-- 单元-词汇列表 -->
-      <view class="list">
+      <!-- 单元词汇列表 -->
+      <view :class="{ list: true, 'pt-33': id == 0, 'pt-46': id == 1 }">
         <view class="listItem" v-for="(item, index) in list" :key="item.id">
           <!-- 单元列表 -->
-          <view class="unit">
+          <view class="unit" @click="openWord(index)">
             <image
               class="listItem-img"
               :src="imageBaseUrl + '/word/6-27-02.png'"
@@ -94,8 +96,7 @@
               </view>
               <view class="flex align-item-center">
                 <view
-                  v-if="item.isOpen"
-                  @click="
+                  @click.stop="
                     toNav(
                       '/pages/word/wordList?unitId=' +
                         item.id +
@@ -109,37 +110,34 @@
                 >
                   进入学习
                 </view>
-                <view v-else class="listItem-rightBottom">
-                  单词数：{{ item.wordNums }}
-                </view>
-                <view @click.stop="openWord(index)">
-                  <image
-                    v-if="item.isOpen"
-                    class="img"
-                    :src="imageBaseUrl + '/word/6-27-03.png'"
-                  ></image>
-                  <image
-                    v-else
-                    class="img"
-                    :src="imageBaseUrl + '/word/6-27-01.png'"
-                  ></image>
-                </view>
               </view>
             </view>
           </view>
           <!-- 词汇列表 -->
           <view v-if="item.isOpen" class="w_list">
-            <!-- <view v-if="openData.length == 0" class="no_word">
-              暂时没有单词，快去学习吧~
-            </view> -->
+            <view v-if="openData.length == 0" class="no_word">
+              <image
+                v-if="currentOptions == 2"
+                :src="imageBaseUrl + '/word/7-2-02.png'"
+              >
+              </image>
+              <image v-else :src="imageBaseUrl + '/word/7-2-01.png'"> </image>
+            </view>
             <view
-              v-for="item in openData"
-              :key="item.id"
-              @click.stop="item.audioUsa ? play(item.audioUsa) : ''"
+              v-for="item2 in openData"
+              :key="item2.id"
+              @click="item2.audioUsa ? play(item2.audioUsa, item2.id) : ''"
               class="listItem_word"
             >
               <view class="listItem-l">
+                <image
+                  v-if="gif && selectId == item2.id"
+                  class="listItem-lGif"
+                  :src="imageBaseUrl + '/word/in_play.gif'"
+                  mode=""
+                ></image>
                 <u-icon
+                  v-else
                   name="volume-up"
                   size="36"
                   color="rgba(24, 99, 229, 1)"
@@ -148,15 +146,15 @@
               <view class="listItem-c">
                 <view class="listItem-cTitle">
                   <view class="listItem-cTitle-word">
-                    {{ item.wordEn }}
+                    {{ item2.wordEn }}
                   </view>
                   <view class="listItem-cTitle-definition">
-                    {{ "['" + item.symbolUsa + "']" }}
+                    {{ "['" + item2.symbolUsa + "']" }}
                   </view>
                 </view>
                 <view class="listItem-cContent">
                   <view class="listItem-cContent-item">
-                    {{ item.wordCn }}
+                    {{ item2.wordCn }}
                   </view>
                 </view>
               </view>
@@ -164,7 +162,7 @@
                 class="listItem-r"
                 @click.stop="
                   toNav(
-                    '/pages/word/definition?wordEn=' + item.wordEn + '&id=1'
+                    '/pages/word/definition?wordEn=' + item2.wordEn + '&id=1'
                   )
                 "
               >
@@ -259,9 +257,12 @@ export default {
       ],
       currentOptions: 0,
       openData: [],
+      gif: false,
+      selectId: 0,
     };
   },
   onLoad(e) {
+    console.log("eeeeee", e);
     this.id = e.id;
     this.query = e;
     this.data.bookId = e.bookId;
@@ -296,11 +297,10 @@ export default {
         });
         console.log("change_data", data);
         this.openData = data.data.result;
-        console.log("this.openData", this.openData);
       } else if (index == 1) {
         let data = await errOrOkListByUnitId({
           unitId: this.list[0].id,
-          answerResult: -1,
+          answerResult: 1,
         });
         console.log("change_data", data);
         this.openData = data.data.result;
@@ -313,7 +313,7 @@ export default {
       } else {
         let data = await errOrOkListByUnitId({
           unitId: this.list[0].id,
-          answerResult: -2,
+          answerResult: 2,
         });
         console.log("change_data", data);
         this.openData = data.data.result;
@@ -366,6 +366,8 @@ export default {
       var that = this;
       this.gif = true;
       this.selectId = id;
+      console.log("点击播放", this.gif, this.selectId);
+      // innerAudioContext.src = src;
       console.log(uni.getSystemInfoSync().platform);
       if (uni.getSystemInfoSync().platform === "ios") {
         innerAudioContext.src = encodeURI(src);
@@ -375,6 +377,12 @@ export default {
           console.log("音频播放结束");
           that.gif = false;
         });
+        // console.log('ios')
+        // bgAudioManager.src = src
+        // bgAudioManager.play()
+        // bgAudioManager.onEnded(()=>{
+        // 	bgAudioManager.stop()
+        // })
       } else {
         uni.showLoading({
           title: "加载中",
@@ -515,13 +523,21 @@ export default {
 .list {
   width: 640rpx;
   margin-top: 40rpx;
+  overflow: hidden;
 }
 
-.head {
-  display: flex;
-  margin-bottom: 50rpx;
-  padding: 30rpx;
-  padding-bottom: 0;
+.top {
+  position: fixed;
+  z-index: 999;
+  top: 10%;
+  width: 640rpx;
+  background-color: #fff;
+  .head {
+    display: flex;
+    margin-bottom: 50rpx;
+    padding: 30rpx;
+    padding-bottom: 0;
+  }
 }
 
 .headL image {
@@ -557,7 +573,7 @@ export default {
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 20rpx 0;
+  padding-top: 20rpx;
   align-items: center;
   box-sizing: border-box;
 }
@@ -583,11 +599,11 @@ export default {
 .listItem-rightBottom-goStu {
   font-size: 22rpx;
   color: #1863e5;
-  margin-right: 7rpx;
+  padding-left: 20rpx;
 }
 
 .listItem-name {
-  font-size: 32rpx;
+  font-size: 26rpx;
   flex: 1;
   font-weight: 600;
 }
@@ -598,7 +614,22 @@ export default {
 }
 
 .w_list {
+  position: relative;
   width: 640rpx;
+  min-height: 130rpx;
+  .no_word {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    margin-top: 8rpx;
+    width: 200rpx;
+    height: 130rpx;
+    image {
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
 
 .unit {

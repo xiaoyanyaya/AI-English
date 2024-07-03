@@ -522,7 +522,7 @@ export default {
 
 .list {
   width: 640rpx;
-  margin-top: 40rpx;
+  margin-top: 48rpx;
   overflow: hidden;
 }
 

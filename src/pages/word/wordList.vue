@@ -130,6 +130,8 @@ innerAudioContext.autoplay = true;
 // bgAudioManager.singer = '演唱者';
 import MyMixin from "@/utils/MyMixin";
 import { wordList, dictList, lessonWordList, queryById } from "@/api/word";
+import { reviewStart } from "@/api/word";
+
 export default {
   mixins: [MyMixin],
   data() {
@@ -153,6 +155,10 @@ export default {
       selectId: 0,
       title: "",
       chanllengeBtnText: "立即挑战",
+      setData: {
+        show: true,
+        num: 3,
+      },
     };
   },
   onLoad(e) {
@@ -196,13 +202,29 @@ export default {
     this.getWord();
   },
   methods: {
-    chanllenge() {
-      this.toNav(
-        "/pages/word/set?id=" +
-          (this.id == 1 ? this.dataB.lessonId : this.allData.id) +
-          "&title=" +
-          (this.title ? this.title : "")
-      );
+    async chanllenge() {
+      // 直接跳到答题页面dictation
+      // this.toNav(
+      //   "/pages/word/set?id=" +
+      //     (this.id == 1 ? this.dataB.lessonId : this.allData.id) +
+      //     "&title=" +
+      //     (this.title ? this.title : "")
+      // );
+      uni.setStorageSync("setData", this.setData);
+      let data = {};
+      data = await reviewStart(this.data);
+      var urls =
+        "/pages/word/dictation?id=" +
+        data.data.result.id +
+        "&lessonId=" +
+        data.data.result.lessonId +
+        "&title=" +
+        (this.title ? this.title : "") +
+        "&pageType=" +
+        (this.pageType ? this.pageType : "") +
+        "&bookId=" +
+        (this.id == 1 ? this.dataB.lessonId : this.allData.id);
+      this.toNav(urls);
     },
     async getWord() {
       if (this.id == 0) {
@@ -309,7 +331,7 @@ export default {
 
 .list {
   margin-top: 40rpx;
-  padding-top: 50rpx;
+  padding-top: 60rpx;
 }
 
 .listItem {

@@ -81,14 +81,15 @@ page {
 
   .list-left {
     position: fixed;
-    width: 260rpx;
+    width: 250rpx;
+    letter-spacing: 6rpx;
     background: rgb(248, 248, 248);
     height: 100%;
     overflow-y: auto;
     padding-bottom: 36rpx;
 
     &-item {
-      padding: 30rpx;
+      padding: 28rpx 15rpx;
       text-align: center;
 
       &.active {

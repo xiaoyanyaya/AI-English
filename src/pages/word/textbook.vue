@@ -8,7 +8,7 @@
       <view class="t-size-30" v-if="id == 0">教材单元列表</view>
       <view class="t-size-30" v-if="id == 1">考纲单元列表</view>
     </cy-navbar>
-    <view class="py-2 px-55">
+    <view class="pb-2 px-55">
       <view class="top">
         <view class="head">
           <view class="headL">
@@ -76,7 +76,7 @@
         </view>
       </view>
       <!-- 单元词汇列表 -->
-      <view :class="{ list: true, 'pt-33': id == 0, 'pt-46': id == 1 }">
+      <view :class="{ list: true, 'pt-455': id == 0, 'pt-560': id == 1 }">
         <view class="listItem" v-for="(item, index) in list" :key="item.id">
           <!-- 单元列表 -->
           <view class="unit" @click="openWord(index)">
@@ -110,6 +110,16 @@
                 >
                   进入学习
                 </view>
+                <image
+                  v-if="item.isOpen"
+                  class="img"
+                  :src="imageBaseUrl + '/word/6-27-01.png'"
+                ></image>
+                <image
+                  v-else
+                  class="img"
+                  :src="imageBaseUrl + '/word/6-27-03.png'"
+                ></image>
               </view>
             </view>
           </view>
@@ -179,6 +189,7 @@
         </view>
       </view>
     </view>
+    <!-- 新建任务设置弹框 -->
     <u-popup v-model="show" mode="bottom" border-radius="14">
       <view class="popupTitle"> 新建学习任务设置 </view>
       <view class="popupSelect">
@@ -262,7 +273,6 @@ export default {
     };
   },
   onLoad(e) {
-    console.log("eeeeee", e);
     this.id = e.id;
     this.query = e;
     this.data.bookId = e.bookId;
@@ -293,26 +303,26 @@ export default {
       this.currentOptions = index;
       if (index == 0) {
         let data = await listByUnitId({
-          unitId: this.list[0].id,
+          unitId: this.list[0]?.id,
         });
         console.log("change_data", data);
         this.openData = data.data.result;
       } else if (index == 1) {
         let data = await errOrOkListByUnitId({
-          unitId: this.list[0].id,
+          unitId: this.list[0]?.id,
           answerResult: 1,
         });
         console.log("change_data", data);
         this.openData = data.data.result;
       } else if (index == 2) {
         let data = await unLearnListByUnitId({
-          unitId: this.list[0].id,
+          unitId: this.list[0]?.id,
         });
         console.log("change_data", data);
         this.openData = data.data.result;
       } else {
         let data = await errOrOkListByUnitId({
-          unitId: this.list[0].id,
+          unitId: this.list[0]?.id,
           answerResult: 2,
         });
         console.log("change_data", data);
@@ -359,6 +369,7 @@ export default {
     },
     // 重置列表isopen
     resetOpen() {
+      if (this.list.length == 0) return;
       this.list.forEach((item) => (item.isOpen = false));
       this.list[0].isOpen = true;
     },
@@ -367,7 +378,6 @@ export default {
       this.gif = true;
       this.selectId = id;
       console.log("点击播放", this.gif, this.selectId);
-      // innerAudioContext.src = src;
       console.log(uni.getSystemInfoSync().platform);
       if (uni.getSystemInfoSync().platform === "ios") {
         innerAudioContext.src = encodeURI(src);
@@ -377,12 +387,6 @@ export default {
           console.log("音频播放结束");
           that.gif = false;
         });
-        // console.log('ios')
-        // bgAudioManager.src = src
-        // bgAudioManager.play()
-        // bgAudioManager.onEnded(()=>{
-        // 	bgAudioManager.stop()
-        // })
       } else {
         uni.showLoading({
           title: "加载中",
@@ -411,7 +415,7 @@ export default {
         let data = await unitList(this.data);
         this.list = data.data.result;
         let data1 = await listByUnitId({
-          unitId: this.list[0].id,
+          unitId: this.list[0]?.id,
         });
         this.openData = data1.data.result;
         console.log("this.openData", this.openData);
@@ -419,7 +423,7 @@ export default {
         let data = await lessonList(this.data);
         this.list = data.data.result;
         let data1 = await listByUnitId({
-          unitId: this.list[0].id,
+          unitId: this.list[0]?.id,
         });
         this.openData = data1.data.result;
         let res = await wordNum();
@@ -447,10 +451,8 @@ export default {
           success: function (res) {
             if (res.confirm) {
               console.log("用户点击确定");
-              // 执行操作
             } else if (res.cancel) {
               console.log("用户点击取消");
-              // 操作取消
             }
           },
         });
@@ -522,39 +524,37 @@ export default {
 
 .list {
   width: 640rpx;
-  margin-top: 48rpx;
-  overflow: hidden;
 }
 
 .top {
   position: fixed;
   z-index: 999;
-  top: 10%;
+  top: 9%;
   width: 640rpx;
   background-color: #fff;
   .head {
     display: flex;
-    margin-bottom: 50rpx;
     padding: 30rpx;
+    padding-top: 40rpx;
     padding-bottom: 0;
   }
 }
 
 .headL image {
-  width: 170rpx;
-  height: 224rpx;
-  margin-right: 30rpx;
+  width: 197rpx;
+  height: 277rpx;
+  margin-right: 50rpx;
 }
 
 .headR-title {
   color: #f75a6c;
-  margin: 10rpx 0;
+  margin: 20rpx 0 16rpx;
   font-weight: 600;
 }
 
 .headR-name {
   font-size: 30rpx;
-  margin-bottom: 6rpx;
+  margin-bottom: 15rpx;
   font-weight: 600;
 }
 
@@ -581,6 +581,7 @@ export default {
 .listItem-right {
   padding-right: 20rpx;
   .img {
+    margin-left: 12rpx;
     width: 26rpx;
     height: 26rpx;
   }
@@ -597,7 +598,7 @@ export default {
 }
 
 .listItem-rightBottom-goStu {
-  font-size: 22rpx;
+  font-size: 23rpx;
   color: #1863e5;
   padding-left: 20rpx;
 }
@@ -622,12 +623,12 @@ export default {
     left: 50%;
     top: 50%;
     transform: translateX(-50%) translateY(-50%);
-    margin-top: 8rpx;
-    width: 200rpx;
-    height: 130rpx;
+    margin-top: 30rpx;
+    width: 250rpx;
+    height: 170rpx;
     image {
       width: 100%;
-      height: 100%;
+      height: 90%;
     }
   }
 }
@@ -724,14 +725,15 @@ export default {
   justify-content: center;
   align-items: center;
   color: #ffffff;
-  background: linear-gradient(180deg, #5a95fb 0%, #1258d0 100%);
+  width: 640rpx;
+  height: 80rpx;
   border-radius: 10rpx;
-  height: 70rpx;
+  background: linear-gradient(180deg, #5a95fb 0%, #1258d0 100%);
   margin-bottom: 40rpx;
-}
-
-.addtask text {
-  margin-left: 10rpx;
+  margin-top: 30rpx;
+  text {
+    margin-left: 10rpx;
+  }
 }
 
 .nav-icon,

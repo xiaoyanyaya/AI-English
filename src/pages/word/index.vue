@@ -228,7 +228,7 @@
               <image :src="item.unitImage" mode="heightFix"></image>
             </view>
             <view class="item-box-selectItem-name">
-              {{ item.unitName }}
+              {{ item.unitName.split("(")[1].slice(0, -1) }}
             </view>
             <view class="item-box-selectItem-text">
               {{ item.wordNums }}个单词
@@ -248,7 +248,6 @@
 import wordTab from "@/pages/word/components/word-tabbar/index.vue";
 import MyMixin from "@/utils/MyMixin";
 import { listByBookType } from "@/api/word";
-import store from "@/store/";
 
 export default {
   mixins: [MyMixin],
@@ -320,7 +319,7 @@ export default {
       position: relative;
       .bg_img {
         position: absolute;
-        width: 130rpx;
+        width: 160rpx;
         height: 130rpx;
         top: 84rpx;
         right: 45rpx;

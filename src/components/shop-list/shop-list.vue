@@ -84,12 +84,13 @@ page {
     width: 250rpx;
     letter-spacing: 6rpx;
     background: rgb(248, 248, 248);
-    height: 100%;
+    height: 88%;
     overflow-y: auto;
     padding-bottom: 36rpx;
 
     &-item {
-      padding: 28rpx 15rpx;
+      padding: 25rpx 15rpx;
+      border-bottom: 2rpx solid #dbdbdb;
       text-align: center;
 
       &.active {
@@ -97,8 +98,12 @@ page {
         color: #ffffff;
       }
       .text1 {
+        font-weight: 400;
         font-size: 26rpx;
         margin-bottom: 2rpx;
+      }
+      .text1 {
+        font-size: 24rpx;
       }
     }
   }

@@ -125,9 +125,6 @@
 // const bgAudioManager = uni.getBackgroundAudioManager();
 const innerAudioContext = uni.createInnerAudioContext();
 innerAudioContext.autoplay = true;
-// bgAudioManager.title = '音乐标题';
-// bgAudioManager.epname = '专辑名称';
-// bgAudioManager.singer = '演唱者';
 import MyMixin from "@/utils/MyMixin";
 import { wordList, dictList, lessonWordList, queryById } from "@/api/word";
 import { reviewStart } from "@/api/word";
@@ -162,7 +159,6 @@ export default {
     };
   },
   onLoad(e) {
-    console.log("eeeeeeeeee", e);
     if (e.title) {
       this.title = e.title;
     }
@@ -330,8 +326,7 @@ export default {
 }
 
 .list {
-  margin-top: 40rpx;
-  padding-top: 60rpx;
+  padding-top: 120rpx;
 }
 
 .listItem {

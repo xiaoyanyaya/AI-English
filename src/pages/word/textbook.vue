@@ -76,7 +76,59 @@
         </view>
       </view>
       <!-- 单元词汇列表 -->
-      <view :class="{ list: true, 'pt-455': id == 0, 'pt-560': id == 1 }">
+      <view v-if="id == 1 && currentOptions === 0" class="w_list pt-585">
+        <view v-if="openData.length == 0" class="no_word">
+          <image :src="imageBaseUrl + '/word/7-2-01.png'"> </image>
+        </view>
+        <view
+          v-for="item2 in openData"
+          :key="item2.id"
+          @click="item2.audioUsa ? play(item2.audioUsa, item2.id) : ''"
+          class="listItem_word"
+        >
+          <view class="listItem-l">
+            <image
+              v-if="gif && selectId == item2.id"
+              class="listItem-lGif"
+              :src="imageBaseUrl + '/word/in_play.gif'"
+              mode=""
+            ></image>
+            <u-icon
+              v-else
+              name="volume-up"
+              size="36"
+              color="rgba(24, 99, 229, 1)"
+            ></u-icon>
+          </view>
+          <view class="listItem-c">
+            <view class="listItem-cTitle">
+              <view class="listItem-cTitle-word">
+                {{ item2.wordEn }}
+              </view>
+              <view class="listItem-cTitle-definition">
+                {{ "['" + item2.symbolUsa + "']" }}
+              </view>
+            </view>
+            <view class="listItem-cContent">
+              <view class="listItem-cContent-item">
+                {{ item2.wordCn }}
+              </view>
+            </view>
+          </view>
+          <view
+            class="listItem-r"
+            @click.stop="
+              toNav('/pages/word/definition?wordEn=' + item2.wordEn + '&id=1')
+            "
+          >
+            词汇讲解
+          </view>
+        </view>
+      </view>
+      <view
+        v-else
+        :class="{ list: true, 'pt-455': id == 0, 'pt-560': id == 1 }"
+      >
         <view class="listItem" v-for="(item, index) in list" :key="item.id">
           <!-- 单元列表 -->
           <view class="unit" @click="openWord(index)">
@@ -226,6 +278,10 @@ import {
   listByUnitId,
   unLearnListByUnitId,
   errOrOkListByUnitId,
+  addLesson,
+  dictBookList,
+  unLearnDictBookList,
+  learnDictBookList,
 } from "@/api/word";
 const innerAudioContext = uni.createInnerAudioContext();
 
@@ -275,10 +331,8 @@ export default {
   onLoad(e) {
     this.id = e.id;
     this.query = e;
-    this.data.bookId = e.bookId;
   },
   async onShow() {
-    this.getUnit();
     if (this.query.id == 0) {
       this.bookData = uni.getStorageSync("basicData").currWordConfig.textBook;
       this.bookType = "textBook";
@@ -286,7 +340,9 @@ export default {
       this.bookData = uni.getStorageSync("basicData").currWordConfig.dictBook;
       this.bookType = "dictBook";
     }
-    console.log("bookData", this.bookData);
+    this.data.bookId = this.bookData.id;
+    this.currentOptions = 0;
+    this.getUnit();
   },
   onPageScroll(e) {
     if (e.scrollTop > 20) {
@@ -301,32 +357,67 @@ export default {
       console.log("index_change!", index);
       this.resetOpen();
       this.currentOptions = index;
-      if (index == 0) {
-        let data = await listByUnitId({
-          unitId: this.list[0]?.id,
-        });
-        console.log("change_data", data);
-        this.openData = data.data.result;
-      } else if (index == 1) {
-        let data = await errOrOkListByUnitId({
-          unitId: this.list[0]?.id,
-          answerResult: 1,
-        });
-        console.log("change_data", data);
-        this.openData = data.data.result;
-      } else if (index == 2) {
-        let data = await unLearnListByUnitId({
-          unitId: this.list[0]?.id,
-        });
-        console.log("change_data", data);
-        this.openData = data.data.result;
-      } else {
-        let data = await errOrOkListByUnitId({
-          unitId: this.list[0]?.id,
-          answerResult: 2,
-        });
-        console.log("change_data", data);
-        this.openData = data.data.result;
+      switch (this.id) {
+        case "0": //教材
+          console.log("教材列表");
+          if (index == 0) {
+            let data = await listByUnitId({
+              unitId: this.list[0]?.id,
+            });
+            console.log("change_data", data);
+            this.openData = data.data.result;
+          } else if (index == 1) {
+            let data = await errOrOkListByUnitId({
+              unitId: this.list[0]?.id,
+              answerResult: 1,
+            });
+            console.log("change_data", data);
+            this.openData = data.data.result;
+          } else if (index == 2) {
+            let data = await unLearnListByUnitId({
+              unitId: this.list[0]?.id,
+            });
+            console.log("change_data", data);
+            this.openData = data.data.result;
+          } else {
+            let data = await errOrOkListByUnitId({
+              unitId: this.list[0]?.id,
+              answerResult: 2,
+            });
+            console.log("change_data", data);
+            this.openData = data.data.result;
+          }
+          break;
+        case "1": //考纲
+          console.log("考纲列表");
+          if (index == 0) {
+            let data = await dictBookList({
+              bookId: this.data.bookId,
+            });
+            console.log("change_data", data);
+            this.openData = data.data.result.records;
+          } else if (index == 1) {
+            let data = await learnDictBookList({
+              lessonId: this.list[0]?.id,
+              answerResult: 1,
+            });
+            console.log("change_data", data);
+            this.openData = data.data.result;
+          } else if (index == 2) {
+            let data = await unLearnDictBookList({
+              lessonId: this.list[0]?.id,
+            });
+            console.log("change_data", data);
+            this.openData = data.data.result;
+          } else {
+            let data = await learnDictBookList({
+              lessonId: this.list[0]?.id,
+              answerResult: 2,
+            });
+            console.log("change_data", data);
+            this.openData = data.data.result;
+          }
+          break;
       }
     },
     // 下拉单词列表
@@ -337,34 +428,67 @@ export default {
         if (index == index2) return;
         item.isOpen = false;
       });
-      //   切换当前高亮项的单元
-      if (this.currentOptions == 0) {
-        let data = await listByUnitId({
-          unitId: this.list[index].id,
-        });
-        console.log("change_data", data);
-        this.openData = data.data.result;
-        console.log("this.openData", this.openData);
-      } else if (this.currentOptions == 1) {
-        let data = await errOrOkListByUnitId({
-          unitId: this.list[index].id,
-          answerResult: -1,
-        });
-        console.log("change_data", data);
-        this.openData = data.data.result;
-      } else if (this.currentOptions == 2) {
-        let data = await unLearnListByUnitId({
-          unitId: this.list[index].id,
-        });
-        console.log("change_data", data);
-        this.openData = data.data.result;
-      } else {
-        let data = await errOrOkListByUnitId({
-          unitId: this.list[index].id,
-          answerResult: -2,
-        });
-        console.log("change_data", data);
-        this.openData = data.data.result;
+      switch (this.id) {
+        case "0": //教材
+          console.log("教材列表");
+          if (this.currentOptions == 0) {
+            let data = await listByUnitId({
+              unitId: this.list[index]?.id,
+            });
+            console.log("change_data", data);
+            this.openData = data.data.result;
+          } else if (this.currentOptions == 1) {
+            let data = await errOrOkListByUnitId({
+              unitId: this.list[index]?.id,
+              answerResult: 1,
+            });
+            console.log("change_data", data);
+            this.openData = data.data.result;
+          } else if (this.currentOptions == 2) {
+            let data = await unLearnListByUnitId({
+              unitId: this.list[index]?.id,
+            });
+            console.log("change_data", data);
+            this.openData = data.data.result;
+          } else {
+            let data = await errOrOkListByUnitId({
+              unitId: this.list[index]?.id,
+              answerResult: 2,
+            });
+            console.log("change_data", data);
+            this.openData = data.data.result;
+          }
+          break;
+        case "1": //考纲
+          console.log("考纲列表");
+          if (this.currentOptions == 0) {
+            let data = await dictBookList({
+              bookId: this.data.bookId,
+            });
+            console.log("change_data", data);
+            this.openData = data.data.result.records;
+          } else if (this.currentOptions == 1) {
+            let data = await learnDictBookList({
+              lessonId: this.list[index]?.id,
+              answerResult: 1,
+            });
+            console.log("change_data", data);
+            this.openData = data.data.result;
+          } else if (this.currentOptions == 2) {
+            let data = await unLearnDictBookList({
+              lessonId: this.list[index]?.id,
+            });
+            console.log("change_data", data);
+            this.openData = data.data.result;
+          } else {
+            let data = await learnDictBookList({
+              lessonId: this.list[index]?.id,
+              answerResult: 2,
+            });
+            console.log("change_data", data);
+            this.openData = data.data.result;
+          }
+          break;
       }
     },
     // 重置列表isopen
@@ -420,12 +544,13 @@ export default {
         this.openData = data1.data.result;
         console.log("this.openData", this.openData);
       } else if (this.id == 1) {
-        let data = await lessonList(this.data);
-        this.list = data.data.result;
-        let data1 = await listByUnitId({
-          unitId: this.list[0]?.id,
+        let lesson = await lessonList(this.data);
+        this.list = lesson.data.result;
+        let data = await dictBookList({
+          bookId: this.data.bookId,
         });
-        this.openData = data1.data.result;
+        console.log("change_data", data);
+        this.openData = data.data.result.records;
         let res = await wordNum();
         this.wordNumData = res.data.result;
         this.selectNum = res.data.result[0].value;
@@ -436,11 +561,12 @@ export default {
       this.selectNum = num;
     },
     async addBook() {
-      var data = {
+      let data = {
         bookId: this.data.bookId,
         wordNum: this.selectNum,
       };
-      let res = await addLessonOutline(data);
+      let res = await addLesson(data);
+      console.log("添加任务res", res);
       if (res.data.code == 200) {
         this.toNav(
           "/pages/word/wordList?unitId=" + res.data.result.id + "&id=1"
@@ -815,10 +941,12 @@ export default {
 }
 
 .study {
+  padding-top: 20rpx;
   text-align: center;
 }
 
 .study image {
   width: 380rpx;
+  height: 100%;
 }
 </style>

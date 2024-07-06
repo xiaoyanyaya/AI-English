@@ -20,17 +20,18 @@
       <button v-else class="btn-login bt" @click="loginInfo">授权登录</button>
       <button class="btn-nologin bt" @click="notLogin">暂不登录</button>
     </div>
-    <div class="footer" @click="isAuthorize = !isAuthorize">
+    <div class="footer">
       <div class="select">
-        <view class="circle flex align-item-center justify-content-center"
+        <view  @click="isAuthorize = !isAuthorize"
+          class="circle flex align-item-center justify-content-center"
         :class="isAuthorize ? 'c-active' : ''">
           <u-icon v-if="isAuthorize" name="checkbox-mark" size="20" color="#FFFFFF"></u-icon>
         </view>
       </div>
       <p>登录代表同意</p>
-      <span class="text">《用户注册协议》</span>
+      <span class="text" @click="toUserPage(0, '用户协议')">《用户注册协议》</span>
       <p>&</p>
-      <span class="text">《隐私政策》</span>
+      <span class="text" @click="toUserPage(1, '隐私政策')">《隐私政策》</span>
     </div>
 
   </div>
@@ -43,7 +44,7 @@ export default {
   mixins: [MyMixin],
   data() {
     return {
-      isAuthorize: true,
+      isAuthorize: false,
       pagePath: ''
     };
   },
@@ -51,6 +52,11 @@ export default {
     this.pagePath = pagePath;
   },
   methods: {
+    toUserPage(type, title) {
+      uni.navigateTo({
+        url: `/pages/me/content?type=${type}&title=${title}`
+      })
+    },
     toPage() {
       setTimeout(() => {
         if (this.pagePath) {

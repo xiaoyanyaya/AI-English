@@ -61,10 +61,6 @@
       </view>
     </view>
 
-    <view v-if="isInit" class="t-size-40 t-color-1a9bff init-box">
-      <view>虚拟人连接中...</view>
-    </view>
-
     <view v-if="isShowPopup">
       <view class="popup-mask" @click="isShowPopup = false"></view>
       <view class="popup-content flex flex-direction-column justify-content-around align-item-center">
@@ -135,14 +131,11 @@ export default {
       deviceBrand: 'android',
       palyIndex: 0,
       innerAudioContext: {},
-
-      // 是否正在初始化
-      isInit: true,
     }
   },
   // 页面销毁
   onUnload() {
-    thi.innerAudioContext.stop()
+    this.innerAudioContext.stop()
   },
   onLoad(res) {
     this.innerAudioContext = uni.createInnerAudioContext();
@@ -306,20 +299,20 @@ export default {
         this.isShowPopup = true;
       }
     },
-    playVoice(voicePath, index, item) {
+    playVoice(voicePath, index = 0, item) {
       if (item && item.isPlay) {
         return
       }
+      this.innerAudioContext.stop()
 
       this.innerAudioContext = uni.createInnerAudioContext();
       this.innerAudioContext.autoplay = true;
 
       // 判断当前设备
       this.dialogueContent.forEach(d => d.isPlay = false)
-      if (index !== undefined) {
-        this.$set(this.dialogueContent[index], 'isPlay', true)
-        this.palyIndex = index
-      }
+      console.log("this.dialogueContent", this.dialogueContent)
+      this.$set(this.dialogueContent[index], 'isPlay', true)
+      this.palyIndex = index
 
       if (this.deviceBrand === 'android') {
         uni.downloadFile({
@@ -345,6 +338,11 @@ export default {
         this.innerAudioContext.play();
       }
 
+      // 播放结束
+      this.innerAudioContext.onEnded(() => {
+        console.log("播放结束")
+        this.dialogueContent[this.palyIndex].isPlay = false
+      })
     },
     getSystemInfo() {
       uni.getSystemInfo({
@@ -369,6 +367,13 @@ export default {
     network() {
       return {
         getChatInit: async (sceneId) => {
+          setTimeout(() => {
+            console.log("显示连接")
+            uni.showLoading({
+              title: '正在连接...'
+            })
+          }, 1000)
+
           let res;
           if (sceneId) {
             res = await getChatInit({
@@ -377,10 +382,14 @@ export default {
           } else {
             res = await getChatInit();
           }
-          if (res.data.code === 200) this.isInit = false
+          if (res.data.code === 200) {
+            uni.hideLoading()
+          }
           this.chatInit = res.data.result
-          this.playVoice(this.chatInit.welcome_speech_voice_file)
           this.pushAiDialog(this.chatInit.welcome_speech_en, this.chatInit.welcome_speech_cn, this.chatInit.welcome_speech_voice_file)
+          this.$nextTick(() => {
+            this.playVoice(this.chatInit.welcome_speech_voice_file)
+          })
         },
         getAiVoiceResult: async () => {
           const res = await getAiVoiceResult({
@@ -394,7 +403,7 @@ export default {
           }, 300)
 
           setTimeout(() => {
-            this.playVoice(res.data.result.voiceFile)
+            this.playVoice(res.data.result.voiceFile, this.dialogueContent.length - 1, this.dialogueContent[this.dialogueContent.length - 1])
           }, 2000)
         },
         sseRequestTask: async ({url, data, method = 'POST', type}) => {

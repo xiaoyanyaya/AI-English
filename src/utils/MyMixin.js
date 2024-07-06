@@ -9,7 +9,8 @@ export default {
     return {
       // 系统信息
       systemInfo: {},
-      imageBaseUrl: "https://aien.xiaolixb.com/assets",
+      imageBaseUrl: "https://cdn.xiaolixb.com/assets",
+	    // imageBaseUrl: "https://aien.xiaolixb.com/assets",
       isAuthPhone: false,
     };
   },

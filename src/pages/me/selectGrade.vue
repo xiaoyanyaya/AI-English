@@ -60,12 +60,19 @@ export default {
       this.gradeList.forEach((item, i) => {
         item.isSelect = i === index;
       });
-      modifyEnglishLevel({grade: item.value}).then(res => {
+      modifyGrade({grade: item.value}).then(res => {
         this.getBasicData()
         uni.showToast({
           title: '设置成功',
           icon: 'none'
         })
+        if (this.pageForm === 'login') {
+          setTimeout(() => {
+            uni.switchTab({
+              url: '/pages/index/index'
+            });
+          }, 1000)
+        }
       });
     }
   },

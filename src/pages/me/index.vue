@@ -25,7 +25,8 @@
         </view>
       </view>
 
-      <view :style="userCenterBoxStyle"
+      <view v-if="isShowPayCenter"
+            :style="userCenterBoxStyle"
             class="user-center-box flex align-item-center justify-content-between border-box">
         <view class="">
           <view class="flex align-item-center">
@@ -41,7 +42,7 @@
         </view>
       </view>
 
-      <view class="person-info-box px-4 pb-4 mt-4">
+      <view v-if="isShowOther" class="person-info-box px-4 pb-4 mt-4">
         <view class="flex align-item-center justify-content-between pt-4 mt-1"
               v-for="(item, index) in menuList" :key="index"
               @click="toPage(index)">
@@ -56,7 +57,11 @@
           </view>
         </view>
       </view>
+    </view>
 
+    <view style="width: 750rpx; height: 100rpx"></view>
+    <view class="version-box flex align-item-center justify-content-center">
+      版本号：{{version}}
     </view>
 
     <cy-tabbar :currentActive="1"></cy-tabbar>
@@ -80,13 +85,20 @@ export default {
         { title: '邀请好友', image: 'icon_10.png' }
       ],
 
-      userInfo: {}
+      userInfo: {},
+      deviceBrand: 'android',
+      isShowPayCenter: false,
+      isShowOther: false,
+      version: ''
     };
   },
   computed: {
     userCenterBoxStyle() {
       return `background: url(${this.imageBaseUrl}/img_17.png) no-repeat center center; background-size: cover;`
     }
+  },
+  onLoad() {
+    this.getSystemInfo()
   },
   onShow() {
     // 如果token存在，就获取用户信息
@@ -99,6 +111,13 @@ export default {
     this.initData()
   },
   methods: {
+    getSystemInfo() {
+      uni.getSystemInfo({
+        success: (res) => {
+          this.deviceBrand = res.platform;
+        }
+      });
+    },
     loginInfo() {
       uni.navigateTo({
         url: '/pages/login/index'
@@ -109,6 +128,21 @@ export default {
     },
     initData() {
       this.userInfo = store.state.userInfo
+
+      var basicData = uni.getStorageSync("basicData");
+      if (basicData) {
+        this.version = basicData.version
+
+        var iosPay = basicData.iosPay
+        var wxappCheck = basicData.wxappCheck
+
+        this.isShowOther = !wxappCheck
+        if (this.deviceBrand === 'android') {
+          this.isShowPayCenter = !wxappCheck
+        } else {
+          if (!wxappCheck) this.isShowPayCenter = iosPay
+        }
+      }
     },
     toPage(index) {
       if (index == 0) this.$navigateTo('/pages/me/distribution')
@@ -206,5 +240,11 @@ page {
     width: 40rpx;
     height: 40rpx;
   }
+}
+
+.version-box {
+  width: 750rpx;
+  position: fixed;
+  bottom: 100rpx;
 }
 </style>

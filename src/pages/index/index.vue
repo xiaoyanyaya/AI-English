@@ -101,7 +101,7 @@ export default {
     return {
       personInfo: {},
       backColor: 'transparent',
-
+      isAuthPhone: false,
       // 菜单1
       menu1: [{
         image: 'img_5.png',
@@ -142,6 +142,7 @@ export default {
     }
   },
   onShow() {
+    this.isAuthPhone = uni.getStorageSync("isAuthPhone");
     if (store.state.token) {
       this.network().defaultVirtual();
       this.getBasicData(false)

@@ -64,7 +64,7 @@ export default {
           icon: 'none'
         })
         if (this.pageForm === 'login') {
-          this.$navigateTo('/pages/me/selectGrade')
+          this.$navigateTo('/pages/me/selectGrade?pageForm=login')
         }
       });
     },

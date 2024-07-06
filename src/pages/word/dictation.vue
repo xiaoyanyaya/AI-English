@@ -200,6 +200,10 @@ export default {
     // 初始化获取第一题
     this.nextTopic();
   },
+  onUnload() {
+    // 页面卸载时，停止音频播放
+    this.currentTopicData.auditManager.manager.stop();
+  },
   onPageScroll(e) {
     if (e.scrollTop > 20) {
       this.backColor = "#fff";

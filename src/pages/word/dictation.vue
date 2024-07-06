@@ -185,6 +185,8 @@ export default {
       // 当前页面类型
       pageType: "",
       playing: false,
+      // 当前用户点击的是上一个还是下一个
+      isNext: false,
     };
   },
   onLoad({ id, lessonId, pageType, bookId }) {
@@ -194,7 +196,6 @@ export default {
     this.bookId = bookId;
     this.setData = uni.getStorageSync("setData");
     this.baseInfo = uni.getStorageSync("wordList");
-    console.log("baseInfo", this.baseInfo);
     this.topicList = this.baseInfo.wordLessonDictList;
     this.totalTopic = this.topicList.length;
     // 初始化获取第一题
@@ -202,7 +203,7 @@ export default {
   },
   onUnload() {
     // 页面卸载时，停止音频播放
-    this.currentTopicData.auditManager.manager.stop();
+    this.stopPlay();
   },
   onPageScroll(e) {
     if (e.scrollTop > 20) {
@@ -246,19 +247,34 @@ export default {
      * 改变次数即可播放音频
      * 如果只播放一次，将playCount设置为2即可
      */
-    "currentTopicData.auditManager.playCount": function (val, oldVal) {
-      if (val < this.setData.num) {
-        this.playAudio();
-      }
+    currentTopicData: {
+      handler: function (val, oldVal) {
+        if (val.auditManager.playCount < this.setData.num && this.isNext) {
+          this.$nextTick(() => {
+            this.playAudio();
+          })
+        }
+      },
+      deep: true,
     },
   },
   methods: {
+    // 停止当前播放
+    stopPlay() {
+      this.playing = false;
+      // 页面卸载时，停止音频播放
+      if (this.currentTopicData.auditManager) {
+        this.currentTopicData.auditManager.manager.stop();
+      }
+    },
     // 上一题
     lastTopic() {
       // 增加防抖
       if (!this.debounceShow) return;
       this.debounceShow = false;
 
+      this.isNext = false;
+      this.stopPlay();
       if (this.currentTopic > 1) {
         // 从缓存中取出上一题数据
         this.currentTopicData = this.topicDataCache.pop();
@@ -275,6 +291,7 @@ export default {
       if (!this.debounceShow) return;
       this.debounceShow = false;
 
+      this.isNext = true;
       if (this.currentTopic > 0) {
         // 记录当前题目的答题数据
         this.topicDataCache.push(this.currentTopicData);
@@ -287,9 +304,8 @@ export default {
 
         this.isInit = false;
         this.currentTopic++;
-        this.currentTopicData = this.topicList[this.currentTopic - 1];
-        this.network().getWordEn();
-        this.currentTopicData.selectWordIndex = [];
+        var currentTopicData = this.topicList[this.currentTopic - 1];
+        this.network().getWordEn(currentTopicData.wordEn);
       } else if (this.currentTopic === this.totalTopic) {
         // 判断是挑战还是复习
         let data = {};
@@ -396,8 +412,6 @@ export default {
       });
     },
     playAudio() {
-      if (this.playing) return;
-
       var data = this.currentTopicData;
       let voicePath = "";
       if (this.deviceBrand === "android") {
@@ -428,10 +442,6 @@ export default {
       // 播放结束
       data.auditManager.manager.onEnded(() => {
         setTimeout(() => {
-          console.log(
-            "data.auditManager.manager.duration",
-            data.auditManager.manager.duration
-          );
           data.auditManager.playCount++;
           this.playing = false;
         }, 3000);
@@ -440,8 +450,7 @@ export default {
     // 接口请求模块
     network() {
       return {
-        getWordEn: async () => {
-          var wordEn = this.currentTopicData.wordEn;
+        getWordEn: async (wordEn) => {
           let res = await getWordEn({ wordEn });
           let data = res.data.result;
 
@@ -466,8 +475,6 @@ export default {
           this.currentTopicData = data;
           this.wordFormat();
           this.isInit = true;
-
-          console.log("this.currentTopicData", this.currentTopicData);
         },
         reviewNext: async (isSkip = false, isNext = false) => {
           var getData = {

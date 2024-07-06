@@ -207,6 +207,7 @@ export default {
       //     (this.title ? this.title : "")
       // );
       uni.setStorageSync("setData", this.setData);
+      uni.setStorageSync("wordList", this.allData);
       let data = {};
       data = await reviewStart(this.data);
       var urls =

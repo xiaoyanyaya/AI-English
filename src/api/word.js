@@ -30,9 +30,29 @@ export const listByUnitId = (params) =>
 export const unLearnListByUnitId = (params) =>
   fly.get("/word/unit/dict/queryUnLearnListByUnitId", params);
 
-// 单元下拉-查询单词列表-错词/掌握
+// 单元下拉-查询单词列表-掌握/错词
 export const errOrOkListByUnitId = (params) =>
   fly.get("/word/user/dict/queryListByUnitId", params);
+
+// 考纲-添加课时
+export const addLesson = (params) =>
+  fly.get("/word/lesson/addLessonForDictBook", params);
+
+// 课时下拉-查询单词列表-考纲
+export const dictBookList = (params) =>
+  fly.get("/word/unit/dict/queryListByDictBookId", params);
+
+// 课时下拉-查询单词列表-未学习
+export const unLearnDictBookList = (params) =>
+  fly.get("/word/lesson/dict/queryUnLearnListByLessonId", params);
+
+// 课时下拉-查询单词列表-掌握/错词
+export const learnDictBookList = (params) =>
+  fly.get("/word/user/dict/queryListByLessonId", params);
+
+// 查询课时单词列表
+export const lessonWordListByL = (params) =>
+  fly.get("/word/lesson/dict/queryByLessonId", params);
 
 // 查询课时-单词列表
 export const dictList = (params) => fly.get("/word/lesson/dict/list", params);
@@ -45,10 +65,6 @@ export const lessonWordList = (params) =>
 export const getWordEn = (params) =>
   fly.get("/word/dict/queryByWordEn", params);
 
-// 添加课时
-export const addLesson = (params) =>
-  fly.get("/word/lesson/addLessonForExamOutline", params);
-
 // 查询配置
 export const wordNum = (params) =>
   fly.get("/app/common/query/word_lesson_word_num", params);
@@ -58,7 +74,7 @@ export const addLessonOutline = (params) =>
   fly.get("/word/lesson/addLessonForExamOutline", params);
 
 // 开始学习
-export const reviewStart = (params) => fly.post("/word/review/start", params);
+export const reviewStart = (body) => fly.post("/word/review/start", body);
 
 // 下一个单词
 export const reviewNext = (params) =>
@@ -144,9 +160,8 @@ export const queryBookChallengeInfo = (params) =>
 
 // https://wapi-dev.aien.xiaolixb.com/v1/word/challenge/queryChallengeByTotal get
 export const queryChallengeByTotal = (params) =>
-	fly.get("/word/challenge/queryChallengeByTotal", params);
+  fly.get("/word/challenge/queryChallengeByTotal", params);
 
 // word/challenge/queryChallengeByMyself get
 export const queryChallengeByMyself = (params) =>
-	fly.get("/word/challenge/queryChallengeByMyself", params);
-
+  fly.get("/word/challenge/queryChallengeByMyself", params);

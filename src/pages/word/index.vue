@@ -516,6 +516,7 @@ export default {
 .search-box input {
   flex: 1;
   margin-right: 150rpx;
+  z-index: 0;
 }
 .search-box {
   margin: 0rpx 40rpx 40rpx;

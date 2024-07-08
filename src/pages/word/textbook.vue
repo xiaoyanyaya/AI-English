@@ -127,7 +127,7 @@
       </view>
       <view
         v-else
-        :class="{ list: true, 'pt-455': id == 0, 'pt-560': id == 1 }"
+        :class="{ list: true, 'pt-460': id == 0, 'pt-560': id == 1 }"
       >
         <view class="listItem" v-for="(item, index) in list" :key="item.id">
           <!-- 单元列表 -->
@@ -537,6 +537,7 @@ export default {
     async getUnit() {
       if (this.id == 0) {
         let data = await unitList(this.data);
+        console.log("DATA", data);
         this.list = data.data.result;
         let data1 = await listByUnitId({
           unitId: this.list[0]?.id,
@@ -655,7 +656,8 @@ export default {
 .top {
   position: fixed;
   z-index: 999;
-  top: 9%;
+  top: 8%;
+  padding-top: 35rpx;
   width: 640rpx;
   background-color: #fff;
   .head {
@@ -724,9 +726,9 @@ export default {
 }
 
 .listItem-rightBottom-goStu {
-  font-size: 23rpx;
+  font-size: 24rpx;
   color: #1863e5;
-  padding-left: 20rpx;
+  padding: 15rpx;
 }
 
 .listItem-name {

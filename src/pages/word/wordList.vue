@@ -4,31 +4,31 @@
       <view class="t-size-30">单词列表</view>
     </cy-navbar>
     <view class="content">
-      <u-sticky offset-top="100">
-        <view class="title">
-          <!-- {{
+      <!-- <u-sticky offset-top="100"> -->
+      <view class="title">
+        <!-- {{
             id == 0 || id == 2 || id == 3
               ? allData.unitFullName
               : bookData.bookType_dictText +
                 bookData.bookSecondType_dictText +
                 title
           }} -->
-          <view>
-            {{
-              id == 0 || id == 2 || id == 3
-                ? allData.bookFullName
-                : bookData.bookFullName
-            }}
-          </view>
-          <view>
-            {{
-              id == 0 || id == 2 || id == 3
-                ? allData.lessonName
-                : bookData.lessonName
-            }}
-          </view>
+        <view>
+          {{
+            id == 0 || id == 2 || id == 3
+              ? allData.bookFullName
+              : bookData.bookFullName
+          }}
         </view>
-      </u-sticky>
+        <view>
+          {{
+            id == 0 || id == 2 || id == 3
+              ? allData.lessonName
+              : bookData.lessonName
+          }}
+        </view>
+      </view>
+      <!-- </u-sticky> -->
       <view class="list">
         <view
           class="listItem"
@@ -312,18 +312,18 @@ export default {
 
 .title {
   position: fixed;
-  background: #def0ff;
-  width: 100%;
-  padding: 35rpx 0;
-  z-index: 999;
-  top: 160rpx;
+  top: 8%;
   left: 0;
+  z-index: 999;
+  width: 100%;
+  padding: 40rpx 0 30rpx;
   text-align: center;
   font-size: 26rpx;
+  background: #def0ff;
 }
 
 .content {
-  padding: 30rpx 55rpx;
+  padding: 0 55rpx 30rpx;
 }
 
 .list {

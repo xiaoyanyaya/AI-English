@@ -35,6 +35,13 @@
           >
             {{ item.bookName }}
           </view>
+          <uni-icons
+            v-if="item.id == bookId"
+            type="checkbox"
+            color="#1863e5"
+            size="25"
+            class="r_img"
+          ></uni-icons>
         </view>
       </view>
     </view>
@@ -54,6 +61,9 @@ export default {
     shopList: {
       type: Array,
       default: [],
+    },
+    bookId: {
+      type: String,
     },
   },
   data() {
@@ -124,12 +134,19 @@ page {
       gap: 20rpx;
 
       .shop-item {
+        position: relative;
         padding: 10rpx;
 
         .img {
           flex-shrink: 0;
           width: 170rpx;
           height: 220rpx;
+        }
+        .r_img {
+          position: absolute;
+          z-index: 999;
+          bottom: 50rpx;
+          right: 10rpx;
         }
       }
     }

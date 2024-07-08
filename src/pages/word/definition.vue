@@ -147,6 +147,7 @@ export default {
       data: {
         wordEn: "",
       },
+      lessonId: "",
       allData: {},
       wordList: {},
       height: 0,
@@ -163,6 +164,8 @@ export default {
     };
   },
   onLoad(e) {
+    console.log("eeeeeeeeeee", e);
+    this.lessonId = e.lessonId;
     var that = this;
     this.data.wordEn = e.wordEn;
     if (e.state) {
@@ -247,7 +250,8 @@ export default {
     async chanllenge() {
       uni.setStorageSync("setData", this.setData);
       let data = {};
-      data = await reviewStart(this.data);
+      data = await reviewStart({ lessonId: this.lessonId });
+      console.log("data000000000", data);
       var urls =
         "/pages/word/dictation?id=" +
         data.data.result.id +

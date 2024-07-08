@@ -9,8 +9,7 @@ export default {
     return {
       // 系统信息
       systemInfo: {},
-      imageBaseUrl: "https://cdn.xiaolixb.com/assets",
-	    // imageBaseUrl: "https://aien.xiaolixb.com/assets",
+      imageBaseUrl: "",
       isAuthPhone: false,
     };
   },
@@ -19,6 +18,15 @@ export default {
     // 是否授权获取了手机号
     this.isAuthPhone = uni.getStorageSync("isAuthPhone");
     // this.login();
+	  // 判断开发环境
+	  const accountInfo = wx.getAccountInfoSync();
+		// env类型 develop:开发版、trial:体验版、release:正式版
+	  const envWx = accountInfo.miniProgram.envVersion;
+	  if(envWx === 'release'){
+			this.imageBaseUrl = "https://cdn.xiaolixb.com/assets"
+	  }else{
+			this.imageBaseUrl = "https://aien.xiaolixb.com/assets"
+	  }
   },
   methods: {
     // 根据需求截取字符串

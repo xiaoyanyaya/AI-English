@@ -222,7 +222,14 @@
             class="item-box-selectItem"
             v-for="item in typeData"
             :key="item.id"
-            @click="toNav('/pages/word/wordList?id=2&unitId=' + item.id)"
+            @click="
+              toNav(
+                '/pages/word/wordList?id=2&unitId=' +
+                  item.id +
+                  '&lessonId=' +
+                  item.id
+              )
+            "
           >
             <view class="item-box-selectItem-head">
               <image :src="item.unitImage" mode="heightFix"></image>

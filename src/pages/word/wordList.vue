@@ -21,11 +21,7 @@
           }}
         </view>
         <view>
-          {{
-            id == 0 || id == 2 || id == 3
-              ? allData.lessonName
-              : bookData.lessonName
-          }}
+          {{ id == 0 || id == 2 || id == 3 ? allData.lessonName : "" }}
         </view>
       </view>
       <!-- </u-sticky> -->
@@ -68,7 +64,14 @@
           </view>
           <view
             class="listItem-r"
-            @click.stop="toNav('/pages/word/definition?wordEn=' + item.wordEn)"
+            @click.stop="
+              toNav(
+                '/pages/word/definition?wordEn=' +
+                  item.wordEn +
+                  '&lessonId=' +
+                  lessonId
+              )
+            "
           >
             词汇讲解
           </view>
@@ -105,7 +108,13 @@
           <view
             class="listItem-r"
             @click="
-              toNav('/pages/word/definition?wordEn=' + item.wordEn + '&id=1')
+              toNav(
+                '/pages/word/definition?wordEn=' +
+                  item.wordEn +
+                  '&id=1' +
+                  '&lessonId=' +
+                  lessonId
+              )
             "
           >
             词汇讲解
@@ -145,6 +154,7 @@ export default {
       dataC: {
         id: 0,
       },
+      lessonId: "",
       allData: {},
       bookData: {},
       audioSrc: "",
@@ -171,15 +181,19 @@ export default {
     if (e.id == 0) {
       this.data.unitId = e.unitId;
       this.chanllengeBtnText = "开始答题";
+      this.lessonId = e.lessonId;
     } else if (e.id == 1) {
       this.dataB.lessonId = e.unitId;
       this.chanllengeBtnText = "开始答题";
+      this.lessonId = e.lessonId;
       console.log(e.unitId);
     } else if (e.id == 2) {
       this.data.unitId = e.unitId;
       this.chanllengeBtnText = "开始答题";
+      this.lessonId = e.lessonId;
     } else if (e.id == 3) {
       this.dataC.id = e.unitId;
+      this.lessonId = e.lessonId;
     }
     if (e.btnTitle) {
       this.chanllengeBtnText = e.btnTitle;
@@ -209,7 +223,8 @@ export default {
       uni.setStorageSync("setData", this.setData);
       uni.setStorageSync("wordList", this.allData);
       let data = {};
-      data = await reviewStart(this.data);
+      data = await reviewStart({ lessonId: this.lessonId });
+      console.log("dataaaaaaaaaaaaa", data);
       var urls =
         "/pages/word/dictation?id=" +
         data.data.result.id +

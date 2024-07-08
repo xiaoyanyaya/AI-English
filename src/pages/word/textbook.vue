@@ -76,7 +76,7 @@
         </view>
       </view>
       <!-- 单元词汇列表 -->
-      <view v-if="id == 1 && currentOptions === 0" class="w_list pt-585">
+      <view v-if="id == 1 && currentOptions === 0" class="w_list pt-590">
         <view v-if="openData.length == 0" class="no_word">
           <image :src="imageBaseUrl + '/word/7-2-01.png'"> </image>
         </view>
@@ -118,7 +118,13 @@
           <view
             class="listItem-r"
             @click.stop="
-              toNav('/pages/word/definition?wordEn=' + item2.wordEn + '&id=1')
+              toNav(
+                '/pages/word/definition?wordEn=' +
+                  item2.wordEn +
+                  '&id=1' +
+                  '&lessonId=' +
+                  bookData.id
+              )
             "
           >
             词汇讲解
@@ -127,7 +133,7 @@
       </view>
       <view
         v-else
-        :class="{ list: true, 'pt-460': id == 0, 'pt-560': id == 1 }"
+        :class="{ list: true, 'pt-460': id == 0, 'pt-568': id == 1 }"
       >
         <view class="listItem" v-for="(item, index) in list" :key="item.id">
           <!-- 单元列表 -->
@@ -155,7 +161,9 @@
                         '&id=' +
                         id +
                         '&title=' +
-                        item.lessonName
+                        item.lessonName +
+                        '&lessonId=' +
+                        item.id
                     )
                   "
                   class="listItem-rightBottom-goStu"
@@ -224,7 +232,11 @@
                 class="listItem-r"
                 @click.stop="
                   toNav(
-                    '/pages/word/definition?wordEn=' + item2.wordEn + '&id=1'
+                    '/pages/word/definition?wordEn=' +
+                      item2.wordEn +
+                      '&id=1' +
+                      '&lessonId=' +
+                      item.id
                   )
                 "
               >

@@ -125,7 +125,8 @@
                   item2.wordEn +
                   '&id=1' +
                   '&lessonId=' +
-                  bookData.id
+                  bookData.id +
+                  '&state=1'
               )
             "
           >
@@ -238,7 +239,8 @@
                       item2.wordEn +
                       '&id=1' +
                       '&lessonId=' +
-                      item.id
+                      item.id +
+                      '&state=1'
                   )
                 "
               >
@@ -288,7 +290,6 @@ import {
   unitList,
   lessonList,
   wordNum,
-  addLessonOutline,
   listByUnitId,
   unLearnListByUnitId,
   errOrOkListByUnitId,
@@ -363,6 +364,16 @@ export default {
       this.backColor = "#fff";
     } else {
       this.backColor = "transparent";
+    }
+  },
+  onShareAppMessage(res) {
+    if (res.from === "button") {
+      // 来自页面内分享按钮
+      console.log(res.target);
+      return {
+        title: "词汇速记",
+        path: `pages/word/textbook?id=${this.query.id}&bookId=${this.bookData.id}`,
+      };
     }
   },
   methods: {

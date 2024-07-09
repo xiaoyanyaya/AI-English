@@ -4,27 +4,18 @@
       <view class="t-size-30">单词列表</view>
     </cy-navbar>
     <view class="content">
-      <!-- <u-sticky offset-top="100"> -->
       <view class="title">
-        <!-- {{
-            id == 0 || id == 2 || id == 3
-              ? allData.unitFullName
-              : bookData.bookType_dictText +
-                bookData.bookSecondType_dictText +
-                title
-          }} -->
-        <view>
+        <view class="book_name">
           {{
             id == 0 || id == 2 || id == 3
               ? allData.bookFullName
               : bookData.bookFullName
           }}
         </view>
-        <view>
+        <view class="unit">
           {{ id == 0 || id == 2 || id == 3 ? allData.lessonName : "" }}
         </view>
       </view>
-      <!-- </u-sticky> -->
       <view class="list">
         <view
           class="listItem"
@@ -155,7 +146,10 @@ export default {
         id: 0,
       },
       lessonId: "",
-      allData: {},
+      allData: {
+        bookFullName: "",
+        lessonName: "",
+      },
       bookData: {},
       audioSrc: "",
       gif: false,
@@ -181,19 +175,16 @@ export default {
     if (e.id == 0) {
       this.data.unitId = e.unitId;
       this.chanllengeBtnText = "开始答题";
-      this.lessonId = e.lessonId;
     } else if (e.id == 1) {
       this.dataB.lessonId = e.unitId;
       this.chanllengeBtnText = "开始答题";
-      this.lessonId = e.lessonId;
+      this.lessonId = e.lessonId; //考纲传直接传上个页面的课时id(dict的id)
       console.log(e.unitId);
     } else if (e.id == 2) {
       this.data.unitId = e.unitId;
       this.chanllengeBtnText = "开始答题";
-      this.lessonId = e.lessonId;
     } else if (e.id == 3) {
       this.dataC.id = e.unitId;
-      this.lessonId = e.lessonId;
     }
     if (e.btnTitle) {
       this.chanllengeBtnText = e.btnTitle;
@@ -211,6 +202,15 @@ export default {
   onShow() {
     this.getWord();
   },
+  // computed: {
+  //   topHeight() {
+  //     //cy-navbar组件默认高度80+系统状态栏高度
+  //     // padding-top: ${80 + this.systemInfo.statusBarHeight}px;
+  //     return `
+  //           padding-top: ${80 + this.systemInfo.statusBarHeight}px;
+  //     `;
+  //   },
+  // },
   methods: {
     async chanllenge() {
       // 直接跳到答题页面dictation
@@ -241,23 +241,26 @@ export default {
     async getWord() {
       if (this.id == 0) {
         let data = await wordList(this.data);
+        console.log("id=0单词列表res的data", data);
         this.allData = data.data.result;
-        console.log("allData", this.allData);
+        this.lessonId = this.allData.id; //教材页面的课时id:返回单词列表同时返回课时id
         uni.setStorageSync("wordList", data.data.result);
       } else if (this.id == 1) {
         let data = await dictList(this.dataB);
+        console.log("id=1单词列表res的data", data);
         this.allData = data.data.result.records;
-        console.log("allData", this.allData);
         uni.setStorageSync("wordList", data.data.result.records);
       } else if (this.id == 2) {
         let data = await lessonWordList(this.data);
+        console.log("id=2单词列表res的data", data);
         this.allData = data.data.result;
-        console.log("allData", this.allData);
+        this.lessonId = this.allData.id; //专题页面的课时id:返回单词列表同时返回课时id
         uni.setStorageSync("wordList", data.data.result);
       } else if (this.id == 3) {
         let data = await queryById(this.dataC);
+        console.log("id=3单词列表res的data", data);
         this.allData = data.data.result;
-        console.log("allData", this.allData);
+        this.lessonId = this.allData.id; ////抗遗忘复习
         uni.setStorageSync("wordList", data.data.result);
       }
     },
@@ -313,7 +316,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .nav-icon,
 .nav-slot,
 .nav-btn {
@@ -322,30 +325,39 @@ export default {
 
 .main {
   background: linear-gradient(180deg, #def0ff 0%, #f7fcff 100%);
-  padding-bottom: 200rpx;
-}
-
-.title {
-  position: fixed;
-  top: 8%;
-  left: 0;
-  z-index: 999;
-  width: 100%;
-  padding: 40rpx 0 30rpx;
-  text-align: center;
-  font-size: 26rpx;
-  background: #def0ff;
 }
 
 .content {
   padding: 0 55rpx 30rpx;
-}
-
-.list {
-  padding-top: 120rpx;
+  .title {
+    position: fixed;
+    top: 8%;
+    left: 0;
+    z-index: 999;
+    width: 100%;
+    height: 140rpx;
+    align-items: 140rpx;
+    padding: 40rpx 0 30rpx;
+    box-sizing: border-box;
+    text-align: center;
+    background: #def0ff;
+    .book_name {
+      font-size: 27rpx;
+      font-weight: 400;
+      padding-bottom: 10rpx;
+    }
+    .unit {
+      font-size: 25rpx;
+      color: #2e2e2e;
+    }
+  }
+  .list {
+    padding-top: 150rpx;
+  }
 }
 
 .listItem {
+  position: relative;
   background: #fff;
   display: flex;
   padding: 20rpx 40rpx;
@@ -383,6 +395,10 @@ export default {
 }
 
 .listItem-r {
+  position: absolute;
+  top: 50%;
+  right: 5%;
+  transform: translateY(-50%);
   background: #f7a751;
   border-radius: 50rpx;
   color: #fff;

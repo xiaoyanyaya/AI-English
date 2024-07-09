@@ -141,10 +141,16 @@ export default {
   },
   methods: {
     async chanllenge() {
-      this.setWordLessonDictList()
       let data = await challengeStart({
         bookId: this.bookId
       });
+      let result = {
+        wordLessonDictList: this.allData,
+        bookFullName: data.data.result.bookFullName
+      }
+      uni.setStorageSync("wordList", result)
+      console.log("uni.getStorageSync('wordList')", uni.getStorageSync("wordList"))
+
       var urls = '/pages/word/dictation?id=' + data.data.result.id + '&lessonId=' + data.data.result.lessonId +
         '&pageType=chanllenge&bookId=' + this.bookId;
       this.toNav(urls)
@@ -156,6 +162,8 @@ export default {
     },
     setWordLessonDictList() {
       var wordList = uni.getStorageSync("wordList");
+      console.log("wordList", wordList)
+      console.log("this.allData", this.allData)
       if (wordList) {
         wordList.wordLessonDictList = this.allData
         uni.setStorageSync("wordList", wordList)

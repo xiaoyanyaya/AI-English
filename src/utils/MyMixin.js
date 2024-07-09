@@ -13,20 +13,32 @@ export default {
       isAuthPhone: false,
     };
   },
+	onShareAppMessage() {
+		return {
+			title: "小礼AI极简英语",
+			path: "pages/index/index"
+		}
+	},
+	beforeMount() {
+		// #ifdef MP-WEIXIN
+		// 判断开发环境
+		const accountInfo = wx.getAccountInfoSync();
+		// env类型 develop:开发版、trial:体验版、release:正式版
+		const envWx = accountInfo.miniProgram.envVersion;
+		console.log("MyMixin111 envWx", envWx)
+		if(envWx === 'release'){
+			this.imageBaseUrl = "https://cdn.xiaolixb.com/assets"
+		}else{
+			this.imageBaseUrl = "https://aien.xiaolixb.com/assets"
+		}
+		// #endif
+	},
   onLoad() {
     this.getSystemInfo();
     // 是否授权获取了手机号
     this.isAuthPhone = uni.getStorageSync("isAuthPhone");
     // this.login();
-	  // 判断开发环境
-	  const accountInfo = wx.getAccountInfoSync();
-		// env类型 develop:开发版、trial:体验版、release:正式版
-	  const envWx = accountInfo.miniProgram.envVersion;
-	  if(envWx === 'release'){
-			this.imageBaseUrl = "https://cdn.xiaolixb.com/assets"
-	  }else{
-			this.imageBaseUrl = "https://aien.xiaolixb.com/assets"
-	  }
+
   },
   methods: {
     // 根据需求截取字符串

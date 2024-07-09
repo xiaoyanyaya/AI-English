@@ -118,7 +118,7 @@
         >
       </view>
       <view
-        v-if="currentTopic < totalTopic"
+        v-if=""
         class="btnBox flex flex-direction-column align-item-center"
         @click="nextTopic"
       >
@@ -129,7 +129,7 @@
           mode=""
         ></image>
         <view :class="{ 't-color-1863E5': debounceShow }" class="mt-2 t-size-24"
-          >下一个</view
+          >{{ currentTopic < totalTopic ? '下一个' : '结束' }}</view
         >
       </view>
     </view>
@@ -249,7 +249,7 @@ export default {
      */
     currentTopicData: {
       handler: function (val, oldVal) {
-        if (val.auditManager.playCount < this.setData.num && this.isNext) {
+        if (val.auditManager.playCount < this.setData.num) {
           this.$nextTick(() => {
             this.playAudio();
           })
@@ -274,10 +274,10 @@ export default {
       this.debounceShow = false;
 
       this.isNext = false;
-      this.stopPlay();
       if (this.currentTopic > 1) {
         // 从缓存中取出上一题数据
         this.currentTopicData = this.topicDataCache.pop();
+        this.currentTopicData.auditManager.playCount = 0
         this.currentTopic--;
       }
 

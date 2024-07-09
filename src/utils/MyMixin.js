@@ -9,7 +9,7 @@ export default {
     return {
       // 系统信息
       systemInfo: {},
-      imageBaseUrl: "",
+      imageBaseUrl: "https://aien.xiaolixb.com/assets",
       isAuthPhone: false,
     };
   },
@@ -19,7 +19,7 @@ export default {
 			path: "pages/index/index"
 		}
 	},
-	beforeMount() {
+	created() {
 		// #ifdef MP-WEIXIN
 		// 判断开发环境
 		const accountInfo = wx.getAccountInfoSync();

@@ -5,7 +5,7 @@ const ENV = "dev"; // dev -测试 pro -生产
 
 // #ifdef MP-WEIXIN
 let path = "";
-// ---------------- 根据微信开发环境配置请求地址 --------------------
+// ---------------- 根据微信开发环境配置请求地址  --------------------
 // 获取当前帐号信息
 const accountInfo = wx.getAccountInfoSync();
 console.log("accountInfo", accountInfo);

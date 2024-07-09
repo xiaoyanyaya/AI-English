@@ -27,7 +27,9 @@
                 <view
                   class="change_box"
                   @click="
-                    toNav(`/pages/common/switchTextbooks?pageType=textBook`)
+                    toNav(
+                      `/pages/common/switchTextbooks?pageType=textBook&bookId=${textBook.id}`
+                    )
                   "
                 >
                   <image class="image" :src="imageBaseUrl + '/6-3-01.png'">
@@ -118,7 +120,9 @@
                 <view
                   class="change_box"
                   @click="
-                    toNav('/pages/common/switchTextbooks?pageType=dictBook')
+                    toNav(
+                      `/pages/common/switchTextbooks?pageType=dictBook&bookId=${dictBook.id}`
+                    )
                   "
                 >
                   <image class="image" :src="imageBaseUrl + '/6-3-01.png'">

@@ -9,6 +9,7 @@
         :sortType="sortType"
         :typeList="typeList"
         :shopList="shopList"
+        :bookId="bookId"
         @changeType="handleChangeType"
         @detail="handleDetail"
         @sort="handleSort"
@@ -37,13 +38,15 @@ export default {
       typeList: [],
       shopList: [],
       bookData: [],
-
+      bookId: null,
       /* 当前页面类型 */
       pageType: "",
     };
   },
-  onLoad({ pageType }) {
+  onLoad({ pageType, bookId }) {
+    console.log("eeeeeeee", pageType, bookId);
     this.pageType = pageType;
+    this.bookId = bookId;
 
     if (this.pageType === "textBook") {
       this.network().getBookList(101);

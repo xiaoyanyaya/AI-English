@@ -32,7 +32,9 @@
               <view
                 class="change_box"
                 @click="
-                  toNav(`/pages/common/switchTextbooks?pageType=${bookType}`)
+                  toNav(
+                    `/pages/common/switchTextbooks?pageType=${bookType}&bookId=${bookData.id}`
+                  )
                 "
               >
                 <image class="image" :src="imageBaseUrl + '/word/6-24-02.png'">
@@ -76,7 +78,7 @@
         </view>
       </view>
       <!-- 单元词汇列表 -->
-      <view v-if="id == 1 && currentOptions === 0" class="w_list pt-590">
+      <view v-if="id == 1 && currentOptions === 0" class="w_list pt-592">
         <view v-if="openData.length == 0" class="no_word">
           <image :src="imageBaseUrl + '/word/7-2-01.png'"> </image>
         </view>

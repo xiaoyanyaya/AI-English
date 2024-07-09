@@ -37,6 +37,7 @@
                   <view class="text">切换教材</view>
                 </view>
                 <button
+                  @click="shareTextBook"
                   open-type="share"
                   data-name="shareBtn"
                   size="mini"
@@ -130,6 +131,7 @@
                   <view class="text">切换教材</view>
                 </view>
                 <button
+                  @click="shareDictBook"
                   open-type="share"
                   data-name="shareBtn"
                   size="mini"
@@ -275,6 +277,10 @@ export default {
       },
       textBook: {},
       dictBook: {},
+      shareContent: {
+        id: "", //书籍类型
+        bookId: "",
+      },
     };
   },
   onShow() {
@@ -286,7 +292,25 @@ export default {
   onLoad() {
     this.getList();
   },
+  onShareAppMessage(res) {
+    if (res.from === "button") {
+      // 来自页面内分享按钮
+      console.log(res.target);
+      return {
+        title: "词汇速记",
+        path: `pages/word/textbook?id=${this.shareContent.id}&bookId=${this.shareContent.bookId}`,
+      };
+    }
+  },
   methods: {
+    shareTextBook() {
+      this.shareContent.id = 0;
+      this.shareContent.bookId = textBook.id;
+    },
+    shareDictBook() {
+      this.shareContent.id = 1;
+      this.shareContent.bookId = dictBook.id;
+    },
     toNav(urls) {
       uni.navigateTo({
         url: urls,

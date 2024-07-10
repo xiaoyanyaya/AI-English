@@ -132,7 +132,7 @@ import {
   lessonWordList,
   queryById,
 } from "@/api/word";
-import { reviewStart } from "@/api/word";
+import {reviewStart} from "@/api/word";
 
 export default {
   mixins: [MyMixin],
@@ -207,28 +207,11 @@ export default {
   onShow() {
     this.getWord();
   },
-  // computed: {
-  //   topHeight() {
-  //     //cy-navbar组件默认高度80+系统状态栏高度
-  //     // padding-top: ${80 + this.systemInfo.statusBarHeight}px;
-  //     return `
-  //           padding-top: ${80 + this.systemInfo.statusBarHeight}px;
-  //     `;
-  //   },
-  // },
   methods: {
     async chanllenge() {
-      // 直接跳到答题页面dictation
-      // this.toNav(
-      //   "/pages/word/set?id=" +
-      //     (this.id == 1 ? this.dataB.lessonId : this.allData.id) +
-      //     "&title=" +
-      //     (this.title ? this.title : "")
-      // );
       uni.setStorageSync("setData", this.setData);
-      uni.setStorageSync("wordList", this.allData);
       let data = {};
-      data = await reviewStart({ lessonId: this.lessonId });
+      data = await reviewStart({lessonId: this.lessonId});
       console.log("dataaaaaaaaaaaaa", data);
       var urls =
         "/pages/word/dictation?id=" +
@@ -339,6 +322,7 @@ export default {
 
 .content {
   padding: 0 55rpx 30rpx;
+
   .title {
     position: fixed;
     top: 8%;
@@ -351,16 +335,19 @@ export default {
     box-sizing: border-box;
     text-align: center;
     background: #def0ff;
+
     .book_name {
       font-size: 27rpx;
       font-weight: 400;
       padding-bottom: 10rpx;
     }
+
     .unit {
       font-size: 25rpx;
       color: #2e2e2e;
     }
   }
+
   .list {
     padding-top: 150rpx;
   }

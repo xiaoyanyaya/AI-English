@@ -154,7 +154,6 @@ export default {
       var urls = '/pages/word/dictation?id=' + data.data.result.id + '&lessonId=' + data.data.result.lessonId +
         '&pageType=chanllenge&bookId=' + this.bookId;
       this.toNav(urls)
-      //
     },
     toDefined(item) {
       this.setWordLessonDictList()

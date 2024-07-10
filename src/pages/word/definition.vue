@@ -113,7 +113,7 @@
         </view>
       </view>
     </view>
-    <view class="controller" v-if="state == 0 && showBtn == 1">
+    <view class="controller" v-if="showBtn == 1">
       <view class="controllerItem" @click="previous">
         <image :src="imageBaseUrl + '/word/6-1-01.png'" mode=""></image>
         <view class="t-color-1863E5"> 上一个 </view>
@@ -121,6 +121,7 @@
       <view
         class="button t-color-fff flex align-item-center justify-content-center"
         @click="chanllenge"
+        v-if="state == 0"
       >
         开始答题
       </view>
@@ -186,6 +187,7 @@ export default {
     } else {
       this.wordList = uni.getStorageSync("wordList").wordLessonDictList;
     }
+    console.log("wordList", this.wordList);
     this.$nextTick(() => {
       const query = uni.createSelectorQuery().in(this);
       query

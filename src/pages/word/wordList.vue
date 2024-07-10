@@ -126,7 +126,12 @@
 const innerAudioContext = uni.createInnerAudioContext();
 innerAudioContext.autoplay = true;
 import MyMixin from "@/utils/MyMixin";
-import { wordList, dictList, lessonWordList, queryById } from "@/api/word";
+import {
+  wordList,
+  lessonWordListByL,
+  lessonWordList,
+  queryById,
+} from "@/api/word";
 import { reviewStart } from "@/api/word";
 
 export default {
@@ -140,7 +145,7 @@ export default {
       },
       dataB: {
         lessonId: 0,
-        pageSize: 99,
+        // pageSize: 99,
       },
       dataC: {
         id: 0,
@@ -246,10 +251,15 @@ export default {
         this.lessonId = this.allData.id; //教材页面的课时id:返回单词列表同时返回课时id
         uni.setStorageSync("wordList", data.data.result);
       } else if (this.id == 1) {
-        let data = await dictList(this.dataB);
+        let data = await lessonWordListByL(this.dataB);
         console.log("id=1单词列表res的data", data);
-        this.allData = data.data.result.records;
-        uni.setStorageSync("wordList", data.data.result.records);
+        this.allData = data.data.result;
+        let result = {
+          wordLessonDictList: data.data.result,
+          bookFullName: this.bookData.bookFullName,
+          lessonName: "",
+        };
+        uni.setStorageSync("wordList", result);
       } else if (this.id == 2) {
         let data = await lessonWordList(this.data);
         console.log("id=2单词列表res的data", data);

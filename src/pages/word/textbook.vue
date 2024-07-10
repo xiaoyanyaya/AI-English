@@ -2,6 +2,7 @@
   <view class="main">
     <cy-navbar
       :showBack="true"
+      :isReturnHome="isReturnHome"
       bgColor="linear-gradient(180deg, #D9EEFF 0%, #F3F9FF 7%)"
       textColor="#3D3D3D"
     >
@@ -37,7 +38,7 @@
                   )
                 "
               >
-                <image class="image" :src="imageBaseUrl + '/word/6-24-02.png'">
+                <image class="image" :src="imageBaseUrl + '/6-3-01.png'">
                 </image>
                 <view class="text">切换教材</view>
               </view>
@@ -66,7 +67,7 @@
         <view class="addtask" v-if="id == 1" @click="show = true">
           <u-icon name="plus" size="30"></u-icon><text>新建任务</text>
         </view>
-        <view class="mt-5 mb-3 flex justify-content-center">
+        <view class="mt-4 mb-1 flex justify-content-center">
           <u-tabs
             bg-color="transparent"
             inactive-color="#8A8A8A"
@@ -78,7 +79,11 @@
         </view>
       </view>
       <!-- 单元词汇列表 -->
-      <view v-if="id == 1 && currentOptions === 0" class="w_list pt-592">
+      <view
+        v-if="id == 1 && currentOptions === 0"
+        :style="{ 'padding-top': topBoxHeight + 10 + 'px' }"
+        class="w_list"
+      >
         <view v-if="openData.length == 0" class="no_word">
           <image :src="imageBaseUrl + '/word/7-2-01.png'"> </image>
         </view>
@@ -134,10 +139,7 @@
           </view>
         </view>
       </view>
-      <view
-        v-else
-        :class="{ list: true, 'pt-460': id == 0, 'pt-568': id == 1 }"
-      >
+      <view v-else :style="{ 'padding-top': topBoxHeight + 'px' }">
         <view class="listItem" v-for="(item, index) in list" :key="item.id">
           <!-- 单元列表 -->
           <view class="unit" @click="openWord(index)">
@@ -317,7 +319,11 @@ export default {
         unitId: 0,
       },
       list: [],
-      bookData: {},
+      bookData: {
+        bookName: "",
+        bookFullName: "",
+        wordNums: "",
+      },
       wordNumData: [],
       optinsList: [
         {
@@ -341,11 +347,31 @@ export default {
       openData: [],
       gif: false,
       selectId: 0,
+      isReturnHome: 0,
+      topBoxHeight: "500",
     };
   },
   onLoad(e) {
     this.id = e.id;
     this.query = e;
+    if (e.isReturnHome) {
+      //分享页面进来
+      this.isReturnHome = 1;
+    }
+  },
+  mounted() {
+    // 获取到盒子的高度
+    uni
+      .createSelectorQuery()
+      .in(this)
+      .select(".top")
+      .boundingClientRect((rect) => {
+        if (rect) {
+          this.topBoxHeight = rect.height;
+          console.log("mounted~~~this.topBoxHeight", this.topBoxHeight);
+        }
+      })
+      .exec();
   },
   async onShow() {
     if (this.query.id == 0) {
@@ -372,7 +398,7 @@ export default {
       console.log(res.target);
       return {
         title: "词汇速记",
-        path: `pages/word/textbook?id=${this.query.id}&bookId=${this.bookData.id}`,
+        path: `pages/word/textbook?id=${this.query.id}&bookId=${this.bookData.id}&isReturnHome=1`,
       };
     }
   },
@@ -407,7 +433,7 @@ export default {
           } else {
             let data = await errOrOkListByUnitId({
               unitId: this.list[0]?.id,
-              answerResult: 2,
+              answerResult: 0,
             });
             console.log("change_data", data);
             this.openData = data.data.result;
@@ -437,7 +463,7 @@ export default {
           } else {
             let data = await learnDictBookList({
               lessonId: this.list[0]?.id,
-              answerResult: 2,
+              answerResult: 0,
             });
             console.log("change_data", data);
             this.openData = data.data.result;
@@ -478,7 +504,7 @@ export default {
           } else {
             let data = await errOrOkListByUnitId({
               unitId: this.list[index]?.id,
-              answerResult: 2,
+              answerResult: 0,
             });
             console.log("change_data", data);
             this.openData = data.data.result;
@@ -508,7 +534,7 @@ export default {
           } else {
             let data = await learnDictBookList({
               lessonId: this.list[index]?.id,
-              answerResult: 2,
+              answerResult: 0,
             });
             console.log("change_data", data);
             this.openData = data.data.result;
@@ -595,7 +621,11 @@ export default {
       console.log("添加任务res", res);
       if (res.data.code == 200) {
         this.toNav(
-          "/pages/word/wordList?unitId=" + res.data.result.id + "&id=1"
+          "/pages/word/wordList?unitId=" +
+            res.data.result.id +
+            "&id=1" +
+            "&lessonId=" +
+            res.data.result.id
         );
       } else {
         uni.showModal({
@@ -646,14 +676,14 @@ export default {
   .change_box {
     @extend .box;
     width: 172rpx;
-    border: 1rpx solid #c40000;
+    border: 1rpx solid #1863e5;
     .image {
       width: 26rpx;
       height: 20rpx;
     }
     .text {
       @extend .text_e;
-      color: #c40000;
+      color: #1863e5;
     }
   }
   .share_box {
@@ -681,15 +711,15 @@ export default {
 .top {
   position: fixed;
   z-index: 999;
-  top: 8%;
-  padding-top: 35rpx;
+  padding: 30rpx 0;
+  padding-bottom: 0;
+  box-sizing: border-box;
   width: 640rpx;
   background-color: #fff;
+
   .head {
     display: flex;
-    padding: 30rpx;
-    padding-top: 40rpx;
-    padding-bottom: 0;
+    padding: 0 30rpx;
   }
 }
 
@@ -700,7 +730,7 @@ export default {
 }
 
 .headR-title {
-  color: #f75a6c;
+  color: #1863e5;
   margin: 20rpx 0 16rpx;
   font-weight: 600;
 }
@@ -799,6 +829,7 @@ export default {
 }
 
 .listItem_word {
+  position: relative;
   background: #fff;
   display: flex;
   padding: 20rpx 40rpx;
@@ -837,6 +868,10 @@ export default {
 }
 
 .listItem-r {
+  position: absolute;
+  top: 50%;
+  right: 3%;
+  transform: translateY(-50%);
   background: #f7a751;
   border-radius: 50rpx;
   color: #fff;

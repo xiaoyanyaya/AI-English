@@ -114,7 +114,11 @@
       </view>
     </view>
     <view class="controller" v-if="showBtn == 1">
-      <view class="controllerItem" @click="previous">
+      <view v-if="activeIndex == 0" class="controllerItem">
+        <image :src="imageBaseUrl + '/word/pre_s.png'" mode=""></image>
+        <view style="color: #8a8a8a"> 上一个 </view>
+      </view>
+      <view v-else class="controllerItem" @click="previous">
         <image :src="imageBaseUrl + '/word/6-1-01.png'" mode=""></image>
         <view class="t-color-1863E5"> 上一个 </view>
       </view>
@@ -125,7 +129,11 @@
       >
         开始答题
       </view>
-      <view class="controllerItem" @click="next">
+      <view v-if="activeIndex == wordList.length - 1" class="controllerItem">
+        <image :src="imageBaseUrl + '/word/next_s.png'" mode=""></image>
+        <view style="color: #8a8a8a"> 下一个 </view>
+      </view>
+      <view v-else class="controllerItem" @click="next">
         <image :src="imageBaseUrl + '/word/6-1-02.png'" mode=""></image>
         <view class="t-color-1863E5"> 下一个 </view>
       </view>
@@ -162,10 +170,10 @@ export default {
         show: true,
         num: 3,
       },
+      activeIndex: 0, //当前项索引
     };
   },
   onLoad(e) {
-    console.log("eeeeeeeeeee", e);
     this.lessonId = e.lessonId;
     var that = this;
     this.data.wordEn = e.wordEn;
@@ -188,6 +196,26 @@ export default {
     this.wordList = uni.getStorageSync("wordList").wordLessonDictList;
     // }
     console.log("vuex中的wordList", this.wordList);
+    let index = this.wordList.findIndex(
+      (obj) => obj.wordEn === this.data.wordEn
+    );
+    if (index !== -1) {
+      this.activeIndex = index;
+      console.log("this.activeIndex", this.activeIndex);
+    } else {
+      uni.showModal({
+        title: "未找到单词~",
+        success: function (res) {
+          if (res.confirm) {
+            console.log("用户点击确定");
+            // 执行操作
+          } else if (res.cancel) {
+            console.log("用户点击取消");
+            // 操作取消
+          }
+        },
+      });
+    }
     this.$nextTick(() => {
       const query = uni.createSelectorQuery().in(this);
       query
@@ -321,23 +349,26 @@ export default {
           let previousObj = this.wordList[index + 1];
           let previousId = previousObj.wordEn;
           this.data.wordEn = previousId;
+          let index2 = this.wordList.findIndex(
+            (obj) => obj.wordEn === this.data.wordEn
+          );
+          this.activeIndex = index2;
           this.getWordEn();
-          console.log("下一个对象的id是:", previousId);
         } else {
           // 如果目标对象是数组的最后一个元素，那么没有下一个对象
-          uni.showModal({
-            title: "这是最后一个单词~",
-            success: function (res) {
-              if (res.confirm) {
-                console.log("用户点击确定");
-                // 执行操作
-              } else if (res.cancel) {
-                console.log("用户点击取消");
-                // 操作取消
-              }
-            },
-          });
-          console.log("这是数组的最后一个对象，没有下一个对象");
+          // uni.showModal({
+          //   title: "这是最后一个单词~",
+          //   success: function (res) {
+          //     if (res.confirm) {
+          //       console.log("用户点击确定");
+          //       // 执行操作
+          //     } else if (res.cancel) {
+          //       console.log("用户点击取消");
+          //       // 操作取消
+          //     }
+          //   },
+          // });
+          // console.log("这是数组的最后一个对象，没有下一个对象");
         }
       } else {
         // 如果没有找到目标对象
@@ -368,23 +399,26 @@ export default {
           let previousObj = this.wordList[index - 1];
           let previousId = previousObj.wordEn;
           this.data.wordEn = previousId;
+          let index2 = this.wordList.findIndex(
+            (obj) => obj.wordEn === this.data.wordEn
+          );
+          this.activeIndex = index2;
           this.getWordEn();
-          console.log("上一个对象的id是:", previousId);
         } else {
           // 如果目标对象是数组的第一个元素，那么没有上一个对象
-          uni.showModal({
-            title: "这是第一个单词~",
-            success: function (res) {
-              if (res.confirm) {
-                console.log("用户点击确定");
-                // 执行操作
-              } else if (res.cancel) {
-                console.log("用户点击取消");
-                // 操作取消
-              }
-            },
-          });
-          console.log("这是数组的第一个对象，没有上一个对象");
+          // uni.showModal({
+          //   title: "这是第一个单词~",
+          //   success: function (res) {
+          //     if (res.confirm) {
+          //       console.log("用户点击确定");
+          //       // 执行操作
+          //     } else if (res.cancel) {
+          //       console.log("用户点击取消");
+          //       // 操作取消
+          //     }
+          //   },
+          // });
+          // console.log("这是数组的第一个对象，没有上一个对象");
         }
       } else {
         // 如果没有找到目标对象

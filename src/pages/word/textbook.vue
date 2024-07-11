@@ -349,13 +349,14 @@ export default {
       selectId: 0,
       isReturnHome: 0,
       topBoxHeight: "500",
+      unitIndex: 0, //第几单元/第几课时
     };
   },
   onLoad(e) {
     this.id = e.id;
     this.query = e;
     if (e.isReturnHome) {
-      //分享页面进来
+      console.log("分享页面进来~~~~~~~~~");
       this.isReturnHome = 1;
     }
   },
@@ -413,31 +414,37 @@ export default {
           console.log("教材列表");
           if (index == 0) {
             let data = await listByUnitId({
-              unitId: this.list[0]?.id,
+              unitId: this.list[this.unitIndex]?.id,
             });
             console.log("change_data", data);
             this.openData = data.data.result;
           } else if (index == 1) {
             let data = await errOrOkListByUnitId({
-              unitId: this.list[0]?.id,
+              unitId: this.list[this.unitIndex]?.id,
               answerResult: 1,
             });
             console.log("change_data", data);
             this.openData = data.data.result;
           } else if (index == 2) {
             let data = await unLearnListByUnitId({
-              unitId: this.list[0]?.id,
+              unitId: this.list[this.unitIndex]?.id,
             });
             console.log("change_data", data);
             this.openData = data.data.result;
           } else {
             let data = await errOrOkListByUnitId({
-              unitId: this.list[0]?.id,
+              unitId: this.list[this.unitIndex]?.id,
               answerResult: 0,
             });
             console.log("change_data", data);
             this.openData = data.data.result;
           }
+          let result1 = {
+            wordLessonDictList: this.openData,
+            bookFullName: this.bookData.bookFullName,
+            lessonName: "",
+          };
+          uni.setStorageSync("wordList", result1);
           break;
         case "1": //考纲
           console.log("考纲列表");
@@ -449,31 +456,38 @@ export default {
             this.openData = data.data.result.records;
           } else if (index == 1) {
             let data = await learnDictBookList({
-              lessonId: this.list[0]?.id,
+              lessonId: this.list[this.unitIndex]?.id,
               answerResult: 1,
             });
             console.log("change_data", data);
             this.openData = data.data.result;
           } else if (index == 2) {
             let data = await unLearnDictBookList({
-              lessonId: this.list[0]?.id,
+              lessonId: this.list[this.unitIndex]?.id,
             });
             console.log("change_data", data);
             this.openData = data.data.result;
           } else {
             let data = await learnDictBookList({
-              lessonId: this.list[0]?.id,
+              lessonId: this.list[this.unitIndex]?.id,
               answerResult: 0,
             });
             console.log("change_data", data);
             this.openData = data.data.result;
           }
+          let result2 = {
+            wordLessonDictList: this.openData,
+            bookFullName: this.bookData.bookFullName,
+            lessonName: "",
+          };
+          uni.setStorageSync("wordList", result2);
           break;
       }
     },
     // 下拉单词列表
     async openWord(index) {
       console.log("下拉index", index);
+      this.unitIndex = index;
       this.list[index].isOpen = !this.list[index].isOpen;
       this.list.forEach((item, index2) => {
         if (index == index2) return;
@@ -509,6 +523,12 @@ export default {
             console.log("change_data", data);
             this.openData = data.data.result;
           }
+          let result1 = {
+            wordLessonDictList: this.openData,
+            bookFullName: this.bookData.bookFullName,
+            lessonName: "",
+          };
+          uni.setStorageSync("wordList", result1);
           break;
         case "1": //考纲
           console.log("考纲列表");
@@ -539,6 +559,12 @@ export default {
             console.log("change_data", data);
             this.openData = data.data.result;
           }
+          let result2 = {
+            wordLessonDictList: this.openData,
+            bookFullName: this.bookData.bookFullName,
+            lessonName: "",
+          };
+          uni.setStorageSync("wordList", result2);
           break;
       }
     },
@@ -546,7 +572,7 @@ export default {
     resetOpen() {
       if (this.list.length == 0) return;
       this.list.forEach((item) => (item.isOpen = false));
-      this.list[0].isOpen = true;
+      this.list[this.unitIndex].isOpen = true;
     },
     play(src, id) {
       var that = this;
@@ -594,12 +620,6 @@ export default {
         });
         this.openData = res1.data.result;
         console.log("this.openData", this.openData);
-        let result = {
-          wordLessonDictList: this.openData,
-          bookFullName: this.bookData.bookFullName,
-          lessonName: this.list[0].unitName,
-        };
-        uni.setStorageSync("wordList", result);
       } else if (this.id == 1) {
         let lesson = await lessonList(this.data);
         this.list = lesson.data.result;
@@ -608,16 +628,16 @@ export default {
         });
         this.openData = res1.data.result.records;
         console.log("this.openData", this.openData);
-        let result = {
-          wordLessonDictList: this.openData,
-          bookFullName: this.bookData.bookFullName,
-          lessonName: this.list[0].unitName,
-        };
-        uni.setStorageSync("wordList", result);
         let res = await wordNum();
         this.wordNumData = res.data.result;
         this.selectNum = res.data.result[0].value;
       }
+      let result = {
+        wordLessonDictList: this.openData,
+        bookFullName: this.bookData.bookFullName,
+        lessonName: "",
+      };
+      uni.setStorageSync("wordList", result);
       this.resetOpen();
     },
     selectClick(num) {

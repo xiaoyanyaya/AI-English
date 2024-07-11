@@ -2,6 +2,7 @@
   <view class="main">
     <cy-navbar
       showBack
+      :isReturnHome="isReturnHome"
       :allTrans="true"
       bgColor="linear-gradient(180deg, #D9EEFF 0%, #fff 100%)"
       textColor="#3D3D3D"
@@ -281,6 +282,7 @@ export default {
         id: "", //书籍类型
         bookId: "",
       },
+      isReturnHome: 0,
     };
   },
   onShow() {
@@ -289,8 +291,12 @@ export default {
     console.log("textBook", this.textBook);
     console.log("dictBook", this.dictBook);
   },
-  onLoad() {
+  onLoad(e) {
     this.getList();
+    if (e.isReturnHome) {
+      console.log("分享页面进来~~~~~~~~~");
+      this.isReturnHome = 1;
+    }
   },
   onShareAppMessage(res) {
     if (res.from === "button") {
@@ -298,7 +304,7 @@ export default {
       console.log(res.target);
       return {
         title: "词汇速记",
-        path: `pages/word/textbook?id=${this.shareContent.id}&bookId=${this.shareContent.bookId}`,
+        path: `pages/word/textbook?id=${this.shareContent.id}&bookId=${this.shareContent.bookId}&isReturnHome=1`,
       };
     }
   },

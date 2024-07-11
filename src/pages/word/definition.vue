@@ -182,12 +182,12 @@ export default {
     if (e.showBtn) {
       this.showBtn = e.showBtn;
     }
-    if (e.id == 1) {
-      this.wordList = uni.getStorageSync("wordList");
-    } else {
-      this.wordList = uni.getStorageSync("wordList").wordLessonDictList;
-    }
-    console.log("wordList", this.wordList);
+    // if (e.id == 1) {
+    // this.wordList = uni.getStorageSync("wordList");
+    // } else {
+    this.wordList = uni.getStorageSync("wordList").wordLessonDictList;
+    // }
+    console.log("vuex中的wordList", this.wordList);
     this.$nextTick(() => {
       const query = uni.createSelectorQuery().in(this);
       query

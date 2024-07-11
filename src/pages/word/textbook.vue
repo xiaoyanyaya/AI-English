@@ -587,22 +587,33 @@ export default {
     },
     async getUnit() {
       if (this.id == 0) {
-        let data = await unitList(this.data);
-        console.log("DATA", data);
-        this.list = data.data.result;
-        let data1 = await listByUnitId({
+        let unit = await unitList(this.data);
+        this.list = unit.data.result;
+        let res1 = await listByUnitId({
           unitId: this.list[0]?.id,
         });
-        this.openData = data1.data.result;
+        this.openData = res1.data.result;
         console.log("this.openData", this.openData);
+        let result = {
+          wordLessonDictList: this.openData,
+          bookFullName: this.bookData.bookFullName,
+          lessonName: this.list[0].unitName,
+        };
+        uni.setStorageSync("wordList", result);
       } else if (this.id == 1) {
         let lesson = await lessonList(this.data);
         this.list = lesson.data.result;
-        let data = await dictBookList({
+        let res1 = await dictBookList({
           bookId: this.data.bookId,
         });
-        console.log("change_data", data);
-        this.openData = data.data.result.records;
+        this.openData = res1.data.result.records;
+        console.log("this.openData", this.openData);
+        let result = {
+          wordLessonDictList: this.openData,
+          bookFullName: this.bookData.bookFullName,
+          lessonName: this.list[0].unitName,
+        };
+        uni.setStorageSync("wordList", result);
         let res = await wordNum();
         this.wordNumData = res.data.result;
         this.selectNum = res.data.result[0].value;

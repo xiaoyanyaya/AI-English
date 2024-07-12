@@ -28,7 +28,7 @@
             <view v-else class="headR-name">
               {{ bookData.bookFullName.split("-")[0] }}
             </view>
-            <view class="headR-num"> 共{{ bookData.wordNums }}个单词 </view>
+            <view class="headR-num"> 共{{ bookData.wordNums }}个单词</view>
             <view class="change_share">
               <view
                 class="change_box"
@@ -54,7 +54,7 @@
               </button>
             </view>
             <view class="headR-line" v-if="false">
-              <view class="headR-lineText"> 学习进度35% </view>
+              <view class="headR-lineText"> 学习进度35%</view>
               <u-line-progress
                 active-color="#2979ff"
                 :percent="70"
@@ -65,7 +65,8 @@
           </view>
         </view>
         <view class="addtask" v-if="id == 1" @click="show = true">
-          <u-icon name="plus" size="30"></u-icon><text>新建任务</text>
+          <u-icon name="plus" size="30"></u-icon>
+          <text>新建任务</text>
         </view>
         <view class="mt-4 mb-1 flex justify-content-center">
           <u-tabs
@@ -85,7 +86,7 @@
         class="w_list"
       >
         <view v-if="openData.length == 0" class="no_word">
-          <image :src="imageBaseUrl + '/word/7-2-01.png'"> </image>
+          <image :src="imageBaseUrl + '/word/7-2-01.png'"></image>
         </view>
         <view
           v-for="item2 in openData"
@@ -153,9 +154,11 @@
             </view>
             <view class="listItem-right">
               <view class="listItem-rightTop" v-if="item.challengeNums">
-                挑战人数：<text style="font-weight: 600">{{
-                  item.challengeNums
-                }}</text>
+                挑战人数：
+                <text style="font-weight: 600">{{
+                    item.challengeNums
+                  }}
+                </text>
               </view>
               <view class="flex align-item-center">
                 <view
@@ -196,7 +199,7 @@
                 :src="imageBaseUrl + '/word/7-2-02.png'"
               >
               </image>
-              <image v-else :src="imageBaseUrl + '/word/7-2-01.png'"> </image>
+              <image v-else :src="imageBaseUrl + '/word/7-2-01.png'"></image>
             </view>
             <view
               v-for="item2 in openData"
@@ -261,9 +264,9 @@
     </view>
     <!-- 新建任务设置弹框 -->
     <u-popup v-model="show" mode="bottom" border-radius="14">
-      <view class="popupTitle"> 新建学习任务设置 </view>
+      <view class="popupTitle"> 新建学习任务设置</view>
       <view class="popupSelect">
-        <view class="popupSelect-title"> 单词数量 </view>
+        <view class="popupSelect-title"> 单词数量</view>
         <view class="popupSelect-list">
           <view
             class="popupSelect-listItem"
@@ -279,8 +282,8 @@
         </view>
       </view>
       <view class="popupButton">
-        <view class="popupButton-l" @click="show = false"> 取消 </view>
-        <view class="popupButton-r" @click="addBook"> 确认 </view>
+        <view class="popupButton-l" @click="show = false"> 取消</view>
+        <view class="popupButton-r" @click="addBook"> 确认</view>
       </view>
     </u-popup>
   </view>
@@ -300,6 +303,7 @@ import {
   unLearnDictBookList,
   learnDictBookList,
 } from "@/api/word";
+
 const innerAudioContext = uni.createInnerAudioContext();
 
 export default {
@@ -358,6 +362,17 @@ export default {
       //分享页面进来
       this.isReturnHome = 1;
     }
+
+    if (this.query.id == 0) {
+      this.bookData = uni.getStorageSync("basicData").currWordConfig.textBook;
+      this.bookType = "textBook";
+    } else {
+      this.bookData = uni.getStorageSync("basicData").currWordConfig.dictBook;
+      this.bookType = "dictBook";
+    }
+    this.data.bookId = this.bookData.id;
+    this.currentOptions = 0;
+    this.getUnit();
   },
   mounted() {
     // 获取到盒子的高度
@@ -374,16 +389,7 @@ export default {
       .exec();
   },
   async onShow() {
-    if (this.query.id == 0) {
-      this.bookData = uni.getStorageSync("basicData").currWordConfig.textBook;
-      this.bookType = "textBook";
-    } else {
-      this.bookData = uni.getStorageSync("basicData").currWordConfig.dictBook;
-      this.bookType = "dictBook";
-    }
-    this.data.bookId = this.bookData.id;
-    this.currentOptions = 0;
-    this.getUnit();
+
   },
   onPageScroll(e) {
     if (e.scrollTop > 20) {
@@ -622,10 +628,10 @@ export default {
       if (res.data.code == 200) {
         this.toNav(
           "/pages/word/wordList?unitId=" +
-            res.data.result.id +
-            "&id=1" +
-            "&lessonId=" +
-            res.data.result.id
+          res.data.result.id +
+          "&id=1" +
+          "&lessonId=" +
+          res.data.result.id
         );
       } else {
         uni.showModal({
@@ -657,6 +663,7 @@ export default {
 .change_share {
   display: flex;
   justify-content: space-between;
+
   .box {
     display: flex;
     justify-content: space-evenly;
@@ -666,6 +673,7 @@ export default {
     margin-top: 30rpx;
     box-sizing: border-box;
   }
+
   .text_e {
     height: 70rpx;
     line-height: 70rpx;
@@ -673,19 +681,23 @@ export default {
     font-size: 24rpx;
     font-weight: 500;
   }
+
   .change_box {
     @extend .box;
     width: 172rpx;
     border: 1rpx solid #1863e5;
+
     .image {
       width: 26rpx;
       height: 20rpx;
     }
+
     .text {
       @extend .text_e;
       color: #1863e5;
     }
   }
+
   .share_box {
     @extend .box;
     width: 133rpx;
@@ -693,10 +705,12 @@ export default {
     background-color: #fff;
     padding: 0;
     margin-left: 30rpx;
+
     .image {
       width: 30rpx;
       height: 25rpx;
     }
+
     .text {
       @extend .text_e;
       color: #1863e5;
@@ -763,6 +777,7 @@ export default {
 
 .listItem-right {
   padding-right: 20rpx;
+
   .img {
     margin-left: 12rpx;
     width: 26rpx;
@@ -801,6 +816,7 @@ export default {
   position: relative;
   width: 640rpx;
   min-height: 130rpx;
+
   .no_word {
     position: absolute;
     left: 50%;
@@ -809,6 +825,7 @@ export default {
     margin-top: 30rpx;
     width: 250rpx;
     height: 170rpx;
+
     image {
       width: 100%;
       height: 90%;
@@ -919,6 +936,7 @@ export default {
   background: linear-gradient(180deg, #5a95fb 0%, #1258d0 100%);
   margin-bottom: 40rpx;
   margin-top: 30rpx;
+
   text {
     margin-left: 10rpx;
   }

@@ -1,6 +1,6 @@
 <template>
   <view class="main">
-    <cy-navbar :showBack="true" :bgColor="backColor" textColor="#3D3D3D">
+    <cy-navbar :showBack="true" bgColor="#def0ff" textColor="#3D3D3D">
       <view class="t-size-30">单词列表</view>
     </cy-navbar>
     <view class="content">
@@ -151,7 +151,6 @@ export default {
   data() {
     return {
       id: 0,
-      backColor: "transparent",
       data: {
         unitId: 0,
       },
@@ -208,13 +207,6 @@ export default {
     }
     this.bookData = uni.getStorageSync("bookData");
     console.log("bookData,", this.bookData);
-  },
-  onPageScroll(e) {
-    if (e.scrollTop > 20) {
-      this.backColor = "#DEF0FF";
-    } else {
-      this.backColor = "transparent";
-    }
   },
   onShow() {
     this.getWord();

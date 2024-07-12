@@ -28,7 +28,7 @@
             <view v-else class="headR-name">
               {{ bookData.bookFullName.split("-")[0] }}
             </view>
-            <view class="headR-num"> 共{{ bookData.wordNums }}个单词 </view>
+            <view class="headR-num"> 共{{ bookData.wordNums }}个单词</view>
             <view class="change_share">
               <view
                 class="change_box"
@@ -54,7 +54,7 @@
               </button>
             </view>
             <view class="headR-line" v-if="false">
-              <view class="headR-lineText"> 学习进度35% </view>
+              <view class="headR-lineText"> 学习进度35%</view>
               <u-line-progress
                 active-color="#2979ff"
                 :percent="70"
@@ -65,7 +65,8 @@
           </view>
         </view>
         <view class="addtask" v-if="id == 1" @click="show = true">
-          <u-icon name="plus" size="30"></u-icon><text>新建任务</text>
+          <u-icon name="plus" size="30"></u-icon>
+          <text>新建任务</text>
         </view>
         <view class="mt-4 mb-1">
           <u-tabs
@@ -80,70 +81,75 @@
         </view>
       </view>
       <!-- 单元词汇列表 -->
-      <view
+      <scroll-view
         v-if="id == 1 && currentOptions === 0"
-        :style="{ 'padding-top': topBoxHeight + 10 + 'px' }"
-        class="w_list"
+        @scrolltolower="onScrolltolower"
+        scroll-y
       >
-        <view v-if="openData.length == 0" class="no_word">
-          <image :src="imageBaseUrl + '/word/7-2-01.png'"> </image>
-        </view>
         <view
-          v-for="item2 in openData"
-          :key="item2.id"
-          @click="item2.audioUsa ? play(item2.audioUsa, item2.id) : ''"
-          class="listItem_word"
+          :style="{ 'padding-top': topBoxHeight + 10 + 'px' }"
+          class="p_list"
         >
-          <view class="listItem-l">
-            <image
-              v-if="gif && selectId == item2.id"
-              class="listItem-lGif"
-              :src="imageBaseUrl + '/word/in_play.gif'"
-              mode=""
-            ></image>
-            <u-icon
-              v-else
-              name="volume-up"
-              size="36"
-              color="rgba(24, 99, 229, 1)"
-            ></u-icon>
-          </view>
-          <view class="listItem-c">
-            <view class="listItem-cTitle">
-              <view class="listItem-cTitle-word">
-                {{ item2.wordEn }}
-              </view>
-              <view class="listItem-cTitle-definition">
-                {{ "['" + item2.symbolUsa + "']" }}
-              </view>
-            </view>
-            <view class="listItem-cContent-item">
-              <view
-                v-for="wordCn in item2.wordCnList"
-                :key="wordCn"
-                class="ellipsis"
-              >
-                {{ wordCn }}
-              </view>
-            </view>
+          <view v-if="openData.length == 0" class="no_word">
+            <image :src="imageBaseUrl + '/word/7-2-01.png'"></image>
           </view>
           <view
-            class="listItem-r"
-            @click.stop="
-              toNav(
-                '/pages/word/definition?wordEn=' +
-                  item2.wordEn +
-                  '&id=1' +
-                  '&lessonId=' +
-                  bookData.id +
-                  '&state=1'
-              )
-            "
+            v-for="item2 in openData"
+            :key="item2.id"
+            @click="item2.audioUsa ? play(item2.audioUsa, item2.id) : ''"
+            class="listItem_word"
           >
-            词汇讲解
+            <view class="listItem-l">
+              <image
+                v-if="gif && selectId == item2.id"
+                class="listItem-lGif"
+                :src="imageBaseUrl + '/word/in_play.gif'"
+                mode=""
+              ></image>
+              <u-icon
+                v-else
+                name="volume-up"
+                size="36"
+                color="rgba(24, 99, 229, 1)"
+              ></u-icon>
+            </view>
+            <view class="listItem-c">
+              <view class="listItem-cTitle">
+                <view class="listItem-cTitle-word">
+                  {{ item2.wordEn }}
+                </view>
+                <view class="listItem-cTitle-definition">
+                  {{ "['" + item2.symbolUsa + "']" }}
+                </view>
+              </view>
+              <view class="listItem-cContent-item">
+                <view
+                  v-for="wordCn in item2.wordCnList"
+                  :key="wordCn"
+                  class="ellipsis"
+                >
+                  {{ wordCn }}
+                </view>
+              </view>
+            </view>
+            <view
+              class="listItem-r"
+              @click.stop="
+                toNav(
+                  '/pages/word/definition?wordEn=' +
+                    item2.wordEn +
+                    '&id=1' +
+                    '&lessonId=' +
+                    bookData.id +
+                    '&state=1'
+                )
+              "
+            >
+              词汇讲解
+            </view>
           </view>
         </view>
-      </view>
+      </scroll-view>
       <view v-else :style="{ 'padding-top': topBoxHeight + 'px' }">
         <view class="listItem" v-for="(item, index) in list" :key="item.id">
           <!-- 单元列表 -->
@@ -158,9 +164,8 @@
             </view>
             <view class="listItem-right">
               <view class="listItem-rightTop" v-if="item.challengeNums">
-                挑战人数：<text style="font-weight: 600">{{
-                  item.challengeNums
-                }}</text>
+                挑战人数：
+                <text style="font-weight: 600">{{ item.challengeNums }} </text>
               </view>
               <view class="flex align-item-center">
                 <view
@@ -201,7 +206,7 @@
                 :src="imageBaseUrl + '/word/7-2-02.png'"
               >
               </image>
-              <image v-else :src="imageBaseUrl + '/word/7-2-01.png'"> </image>
+              <image v-else :src="imageBaseUrl + '/word/7-2-01.png'"></image>
             </view>
             <view
               v-for="item2 in openData"
@@ -270,9 +275,9 @@
     </view>
     <!-- 新建任务设置弹框 -->
     <u-popup v-model="show" mode="bottom" border-radius="14">
-      <view class="popupTitle"> 新建学习任务设置 </view>
+      <view class="popupTitle"> 新建学习任务设置</view>
       <view class="popupSelect">
-        <view class="popupSelect-title"> 单词数量 </view>
+        <view class="popupSelect-title"> 单词数量</view>
         <view class="popupSelect-list">
           <view
             class="popupSelect-listItem"
@@ -288,8 +293,8 @@
         </view>
       </view>
       <view class="popupButton">
-        <view class="popupButton-l" @click="show = false"> 取消 </view>
-        <view class="popupButton-r" @click="addBook"> 确认 </view>
+        <view class="popupButton-l" @click="show = false"> 取消</view>
+        <view class="popupButton-r" @click="addBook"> 确认</view>
       </view>
     </u-popup>
   </view>
@@ -310,6 +315,7 @@ import {
   learnDictBookList,
   labelWordCount,
 } from "@/api/word";
+
 const innerAudioContext = uni.createInnerAudioContext();
 
 export default {
@@ -366,6 +372,12 @@ export default {
         unLearnCnt: "",
         errorCnt: "",
       },
+      pagingParams: {
+        bookId: null,
+        pageNo: 1,
+        pageSize: 20,
+        totalPage: null,
+      },
     };
   },
   onLoad(e) {
@@ -375,6 +387,21 @@ export default {
       console.log("分享页面进来~~~~~~~~~");
       this.isReturnHome = 1;
     }
+    this.currentOptions = 0;
+    this.getUnit();
+  },
+  async onShow() {
+    if (this.query.id == 0) {
+      this.bookData = uni.getStorageSync("basicData").currWordConfig.textBook;
+      this.bookType = "textBook";
+    } else {
+      this.bookData = uni.getStorageSync("basicData").currWordConfig.dictBook;
+      this.bookType = "dictBook";
+    }
+    this.data.bookId = this.bookData.id;
+    this.getLabelWordCount();
+    let lesson = await lessonList(this.data); //重新获取课时新建任务之后需要刷新课时
+    this.list = lesson.data.result;
   },
   mounted() {
     // 获取到盒子的高度
@@ -389,19 +416,6 @@ export default {
         }
       })
       .exec();
-  },
-  async onShow() {
-    if (this.query.id == 0) {
-      this.bookData = uni.getStorageSync("basicData").currWordConfig.textBook;
-      this.bookType = "textBook";
-    } else {
-      this.bookData = uni.getStorageSync("basicData").currWordConfig.dictBook;
-      this.bookType = "dictBook";
-    }
-    this.data.bookId = this.bookData.id;
-    this.currentOptions = 0;
-    this.getUnit();
-    this.getLabelWordCount();
   },
   onPageScroll(e) {
     if (e.scrollTop > 20) {
@@ -421,6 +435,17 @@ export default {
     }
   },
   methods: {
+    // 获取分页数据
+    async getPagingList() {
+      this.pagingParams.bookId = this.data.bookId;
+      let res = await dictBookList(this.pagingParams);
+      this.openData.push(...(res.data.result.records || []));
+      this.openData.forEach(
+        (item) => (item.wordCnList = item.wordCn.split("\n"))
+      );
+      this.pagingParams.totalPage = res.data.result.pages;
+      console.log("获取分页数据1111111111111", this.openData);
+    },
     // 切换标签
     async changeOptions(index) {
       console.log("index_change!", index);
@@ -476,16 +501,8 @@ export default {
           uni.setStorageSync("wordList", result1);
           break;
         case "1": //考纲
-          console.log("考纲列表");
           if (index == 0) {
-            let data = await dictBookList({
-              bookId: this.data.bookId,
-            });
-            console.log("change_data", data);
-            this.openData = data.data.result.records;
-            this.openData.forEach(
-              (item) => (item.wordCnList = item.wordCn.split("\n"))
-            );
+            this.getPagingList();
           } else if (index == 1) {
             let data = await learnDictBookList({
               lessonId: this.list[this.unitIndex]?.id,
@@ -586,14 +603,7 @@ export default {
         case "1": //考纲
           console.log("考纲列表");
           if (this.currentOptions == 0) {
-            let data = await dictBookList({
-              bookId: this.data.bookId,
-            });
-            console.log("change_data", data);
-            this.openData = data.data.result.records;
-            this.openData.forEach(
-              (item) => (item.wordCnList = item.wordCn.split("\n"))
-            );
+            this.getPagingList();
           } else if (this.currentOptions == 1) {
             let data = await learnDictBookList({
               lessonId: this.list[index]?.id,
@@ -644,24 +654,10 @@ export default {
         this.openData.forEach(
           (item) => (item.wordCnList = item.wordCn.split("\n"))
         );
-        this.openData.forEach(
-          (item) => (item.wordCnList = item.wordCn.split("\n"))
-        );
-        console.log("this.openData", this.openData);
       } else if (this.id == 1) {
         let lesson = await lessonList(this.data);
         this.list = lesson.data.result;
-        let res1 = await dictBookList({
-          bookId: this.data.bookId,
-        });
-        this.openData = res1.data.result.records;
-        this.openData.forEach(
-          (item) => (item.wordCnList = item.wordCn.split("\n"))
-        );
-        this.openData.forEach(
-          (item) => (item.wordCnList = item.wordCn.split("\n"))
-        );
-        console.log("this.openData", this.openData);
+        this.getPagingList();
         let res = await wordNum();
         this.wordNumData = res.data.result;
         this.selectNum = res.data.result[0].value;
@@ -691,6 +687,13 @@ export default {
         "未学习" + "(" + res.data.result[0].unLearnCnt + ")";
       this.optinsList[3].name =
         "错词本" + "(" + res.data.result[0].errorCnt + ")";
+    },
+    // 上划加载更多
+    onScrolltolower() {
+      if (this.pagingParams.pageNo >= this.pagingParams.totalPage)
+        return uni.showToast({ title: "没有更多了哦~", icon: "none" });
+      this.pagingParams.pageNo++;
+      this.getPagingList();
     },
     play(src, id) {
       var that = this;
@@ -777,6 +780,7 @@ export default {
 .change_share {
   display: flex;
   justify-content: space-between;
+
   .box {
     display: flex;
     justify-content: space-evenly;
@@ -786,6 +790,7 @@ export default {
     margin-top: 30rpx;
     box-sizing: border-box;
   }
+
   .text_e {
     height: 70rpx;
     line-height: 70rpx;
@@ -793,19 +798,23 @@ export default {
     font-size: 24rpx;
     font-weight: 500;
   }
+
   .change_box {
     @extend .box;
     width: 172rpx;
     border: 1rpx solid #1863e5;
+
     .image {
       width: 26rpx;
       height: 20rpx;
     }
+
     .text {
       @extend .text_e;
       color: #1863e5;
     }
   }
+
   .share_box {
     @extend .box;
     width: 133rpx;
@@ -813,10 +822,12 @@ export default {
     background-color: #fff;
     padding: 0;
     margin-left: 30rpx;
+
     .image {
       width: 30rpx;
       height: 25rpx;
     }
+
     .text {
       @extend .text_e;
       color: #1863e5;
@@ -883,6 +894,7 @@ export default {
 
 .listItem-right {
   padding-right: 20rpx;
+
   .img {
     margin-left: 12rpx;
     width: 26rpx;
@@ -920,11 +932,17 @@ export default {
   width: 42rpx;
   margin-right: 30rpx;
 }
+.p_list {
+  position: relative;
+  width: 640rpx;
+  height: 95vh;
+}
 
 .w_list {
   position: relative;
   width: 640rpx;
   min-height: 130rpx;
+
   .no_word {
     position: absolute;
     left: 50%;
@@ -933,6 +951,7 @@ export default {
     margin-top: 30rpx;
     width: 250rpx;
     height: 170rpx;
+
     image {
       width: 100%;
       height: 90%;
@@ -1051,6 +1070,7 @@ export default {
   background: linear-gradient(180deg, #5a95fb 0%, #1258d0 100%);
   margin-bottom: 40rpx;
   margin-top: 30rpx;
+
   text {
     margin-left: 10rpx;
   }

@@ -22,6 +22,10 @@ export const lessonList = (params) =>
 export const wordList = (params) =>
   fly.get("/word/lesson/queryByUnitId", params);
 
+// 单元下拉-标签单词量统计
+export const labelWordCount = (params) =>
+  fly.get("/word/user/dict/queryUserDictCntStat", params);
+
 // 单元下拉-查询单词列表-教材
 export const listByUnitId = (params) =>
   fly.get("/word/unit/dict/queryListByUnitId", params);

@@ -49,7 +49,13 @@
             </view>
             <view class="listItem-cContent">
               <view class="listItem-cContent-item">
-                {{ item.wordCn }}
+                <view
+                  v-for="wordCn in item.wordCnList"
+                  :key="wordCn"
+                  class="ellipsis"
+                >
+                  {{ wordCn }}
+                </view>
               </view>
             </view>
           </view>
@@ -92,7 +98,13 @@
             </view>
             <view class="listItem-cContent">
               <view class="listItem-cContent-item">
-                {{ item.wordCn }}
+                <view
+                  v-for="wordCn in item2.wordCnList"
+                  :key="wordCn"
+                  class="ellipsis"
+                >
+                  {{ wordCn }}
+                </view>
               </view>
             </view>
           </view>
@@ -132,7 +144,7 @@ import {
   lessonWordList,
   queryById,
 } from "@/api/word";
-import {reviewStart} from "@/api/word";
+import { reviewStart } from "@/api/word";
 
 export default {
   mixins: [MyMixin],
@@ -179,15 +191,15 @@ export default {
     }
     if (e.id == 0) {
       this.data.unitId = e.unitId;
-      this.chanllengeBtnText = "开始答题";
+      this.chanllengeBtnText = "立即听写";
     } else if (e.id == 1) {
       this.dataB.lessonId = e.unitId;
-      this.chanllengeBtnText = "开始答题";
+      this.chanllengeBtnText = "立即听写";
       this.lessonId = e.lessonId; //考纲传直接传上个页面的课时id(dict的id)
       console.log(e.unitId);
     } else if (e.id == 2) {
       this.data.unitId = e.unitId;
-      this.chanllengeBtnText = "开始答题";
+      this.chanllengeBtnText = "立即听写";
     } else if (e.id == 3) {
       this.dataC.id = e.unitId;
     }
@@ -211,7 +223,7 @@ export default {
     async chanllenge() {
       uni.setStorageSync("setData", this.setData);
       let data = {};
-      data = await reviewStart({lessonId: this.lessonId});
+      data = await reviewStart({ lessonId: this.lessonId });
       console.log("dataaaaaaaaaaaaa", data);
       var urls =
         "/pages/word/dictation?id=" +
@@ -231,12 +243,22 @@ export default {
         let data = await wordList(this.data);
         console.log("id=0单词列表res的data", data);
         this.allData = data.data.result;
+        this.allData.wordLessonDictList.forEach(
+          (item) => (item.wordCnList = item.wordCn.split("\n"))
+        );
+        console.log(
+          "allDatawordLessonDictList",
+          this.allData.wordLessonDictList
+        );
         this.lessonId = this.allData.id; //教材页面的课时id:返回单词列表同时返回课时id
         uni.setStorageSync("wordList", data.data.result);
       } else if (this.id == 1) {
         let data = await lessonWordListByL(this.dataB);
         console.log("id=1单词列表res的data", data);
         this.allData = data.data.result;
+        this.allData.forEach(
+          (item) => (item.wordCnList = item.wordCn.split("\n"))
+        );
         let result = {
           wordLessonDictList: data.data.result,
           bookFullName: this.bookData.bookFullName,
@@ -247,12 +269,18 @@ export default {
         let data = await lessonWordList(this.data);
         console.log("id=2单词列表res的data", data);
         this.allData = data.data.result;
+        this.allData.wordLessonDictList.forEach(
+          (item) => (item.wordCnList = item.wordCn.split("\n"))
+        );
         this.lessonId = this.allData.id; //专题页面的课时id:返回单词列表同时返回课时id
         uni.setStorageSync("wordList", data.data.result);
       } else if (this.id == 3) {
         let data = await queryById(this.dataC);
         console.log("id=3单词列表res的data", data);
         this.allData = data.data.result;
+        this.allData.wordLessonDictList.forEach(
+          (item) => (item.wordCnList = item.wordCn.split("\n"))
+        );
         this.lessonId = this.allData.id; ////抗遗忘复习
         uni.setStorageSync("wordList", data.data.result);
       }
@@ -384,11 +412,19 @@ export default {
 }
 
 .listItem-cContent-item {
+  width: 380rpx;
+  white-space: pre-line; /* 保留换行符，允许自动换行 */
+  overflow: hidden;
   color: rgba(109, 109, 109, 1);
   font-size: 22rpx;
   margin-bottom: 2rpx;
-  white-space: pre-line;
   line-height: 36rpx;
+  .ellipsis {
+    width: 380rpx;
+    overflow: hidden; /* 溢出部分隐藏 */
+    text-overflow: ellipsis; /* 超出部分用省略号代替 */
+    white-space: nowrap; /* 禁止换行 */
+  }
 }
 
 .listItem-r {

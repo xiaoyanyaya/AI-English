@@ -127,7 +127,7 @@
         @click="chanllenge"
         v-if="state == 0"
       >
-        开始答题
+        立即听写
       </view>
       <view v-if="activeIndex == wordList.length - 1" class="controllerItem">
         <image :src="imageBaseUrl + '/word/next_s.png'" mode=""></image>
@@ -237,6 +237,7 @@ export default {
     async getWordEn() {
       let data = await getWordEn(this.data);
       this.allData = data.data.result;
+      this.play(this.allData.audioUsa);
       if (this.allData.wordFormat) {
         var res = {
           name: "词形词态",
@@ -337,8 +338,6 @@ export default {
       });
     },
     next() {
-      console.log("this.wordList", this.wordList);
-      console.log("this.data.wordEn", this.data.wordEn);
       let index = this.wordList.findIndex(
         (obj) => obj.wordEn === this.data.wordEn
       );

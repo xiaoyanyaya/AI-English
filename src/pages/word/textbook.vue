@@ -343,19 +343,19 @@ export default {
       wordNumData: [],
       optinsList: [
         {
-          name: "单词列表",
+          name: "词汇",
           id: 0,
         },
         {
-          name: "已掌握",
+          name: "已学",
           id: 1,
         },
         {
-          name: "未学习",
+          name: "未学",
           id: 1,
         },
         {
-          name: "错词本",
+          name: "错词",
           id: 1,
         },
       ],
@@ -455,6 +455,12 @@ export default {
         (item) => (item.wordCnList = item.wordCn.split("\n"))
       );
       this.pagingParams.totalPage = res.data.result.pages;
+      let result2 = {
+        wordLessonDictList: this.openData,
+        bookFullName: this.bookData.bookFullName,
+        lessonName: "",
+      };
+      uni.setStorageSync("wordList", result2);
     },
     // 切换标签
     async changeOptions(index) {
@@ -689,13 +695,12 @@ export default {
     async getLabelWordCount() {
       const res = await labelWordCount({ bookId: this.bookData.id });
       this.optinsList[0].name =
-        "单词列表" + "(" + res.data.result[0].totalCnt + ")";
-      this.optinsList[1].name =
-        "已掌握" + "(" + res.data.result[0].passCnt + ")";
+        "词汇" + "(" + res.data.result[0].totalCnt + ")";
+      this.optinsList[1].name = "已学" + "(" + res.data.result[0].passCnt + ")";
       this.optinsList[2].name =
-        "未学习" + "(" + res.data.result[0].unLearnCnt + ")";
+        "未学" + "(" + res.data.result[0].unLearnCnt + ")";
       this.optinsList[3].name =
-        "错词本" + "(" + res.data.result[0].errorCnt + ")";
+        "错词" + "(" + res.data.result[0].errorCnt + ")";
     },
     // 上划加载更多
     onScrolltolower() {

@@ -1,7 +1,12 @@
 <template>
   <view class="main">
-    <cy-navbar @customBack="returnCustom" customBack
-               :showBack="true" :bgColor="backColor" textColor="#3D3D3D">
+    <cy-navbar
+      @customBack="returnCustom"
+      customBack
+      :showBack="true"
+      :bgColor="backColor"
+      textColor="#3D3D3D"
+    >
       <view class="t-size-30">答题结果</view>
     </cy-navbar>
     <view class="px-3 mt-2 text-center">
@@ -452,13 +457,14 @@ export default {
 
 .head image {
   width: 100%;
+  height: 38% !important;
   position: absolute;
   top: 0;
   left: 0;
 }
 
 .head {
-  height: 420rpx;
+  height: 350rpx;
 }
 
 .statistics {

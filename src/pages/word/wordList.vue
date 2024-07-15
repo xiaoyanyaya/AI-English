@@ -9,7 +9,7 @@
           {{
             id == 0 || id == 2 || id == 3
               ? allData.bookFullName
-              : bookData.bookFullName
+              : dictBook.bookFullName
           }}
         </view>
         <view class="unit">
@@ -110,7 +110,7 @@
           </view>
           <view
             class="listItem-r"
-            @click="
+            @click.stop="
               toNav(
                 '/pages/word/definition?wordEn=' +
                   item.wordEn +
@@ -166,7 +166,7 @@ export default {
         bookFullName: "",
         lessonName: "",
       },
-      bookData: {},
+      dictBook: {},
       audioSrc: "",
       gif: false,
       selectId: 0,
@@ -205,8 +205,7 @@ export default {
     if (e.btnTitle) {
       this.chanllengeBtnText = e.btnTitle;
     }
-    this.bookData = uni.getStorageSync("bookData");
-    console.log("bookData,", this.bookData);
+    this.dictBook = uni.getStorageSync("basicData").currWordConfig.dictBook;
   },
   onShow() {
     this.getWord();
@@ -238,10 +237,6 @@ export default {
         this.allData.wordLessonDictList.forEach(
           (item) => (item.wordCnList = item.wordCn.split("\n"))
         );
-        console.log(
-          "allDatawordLessonDictList",
-          this.allData.wordLessonDictList
-        );
         this.lessonId = this.allData.id; //教材页面的课时id:返回单词列表同时返回课时id
         uni.setStorageSync("wordList", data.data.result);
       } else if (this.id == 1) {
@@ -253,7 +248,7 @@ export default {
         );
         let result = {
           wordLessonDictList: data.data.result,
-          bookFullName: this.bookData.bookFullName,
+          bookFullName: this.dictBook.bookFullName,
           lessonName: "",
         };
         uni.setStorageSync("wordList", result);

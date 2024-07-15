@@ -114,8 +114,9 @@
           mode=""
         ></image>
         <view :class="{ 't-color-1863E5': debounceShow }" class="mt-2 t-size-24"
-          >上一个
-        </view>
+        >上一个
+        </view
+        >
       </view>
       <view
         v-if=""
@@ -129,8 +130,9 @@
           mode=""
         ></image>
         <view :class="{ 't-color-1863E5': debounceShow }" class="mt-2 t-size-24"
-          >{{ currentTopic < totalTopic ? "下一个" : "结束" }}
-        </view>
+        >{{ currentTopic < totalTopic ? '下一个' : '结束' }}
+        </view
+        >
       </view>
     </view>
   </view>
@@ -145,7 +147,7 @@ import {
   reviewFinish,
   reviewNext,
 } from "@/api/word";
-import { challengeFinishPost } from "../../api/word";
+import {challengeFinishPost} from "../../api/word";
 
 export default {
   mixins: [MyMixin],
@@ -189,7 +191,7 @@ export default {
       isNext: false,
     };
   },
-  onLoad({ id, lessonId, pageType, bookId }) {
+  onLoad({id, lessonId, pageType, bookId}) {
     this.pageType = pageType;
     this.id = id;
     this.lessonId = lessonId;
@@ -241,25 +243,6 @@ export default {
       },
       deep: true,
     },
-<<<<<<< HEAD
-    /**
-     * 监听播放次数变化
-     * currentTopicData.auditManager.playCount 播放次数
-     * 改变次数即可播放音频
-     * 如果只播放一次，将playCount设置为2即可
-     */
-    currentTopicData: {
-      handler: function (val, oldVal) {
-        if (val.auditManager.playCount < this.setData.num) {
-          this.$nextTick(() => {
-            this.playAudio();
-          });
-        }
-      },
-      deep: true,
-    },
-=======
->>>>>>> e5f2cda42572312476a28ed5c3ed6ea0d8ae8ec1
   },
   methods: {
     // 停止当前播放
@@ -284,7 +267,7 @@ export default {
       if (this.currentTopic > 1) {
         // 从缓存中取出上一题数据
         this.currentTopicData = this.topicDataCache.pop();
-        this.currentTopicData.auditManager.playCount = 0;
+        this.currentTopicData.auditManager.playCount = 0
         this.currentTopic--;
         this.playAudio()
       }
@@ -322,17 +305,17 @@ export default {
         // 判断是挑战还是复习
         let data = {};
         if (this.pageType == "chanllenge") {
-          data = await challengeFinishPost({ id: this.id });
+          data = await challengeFinishPost({id: this.id});
         } else {
-          data = await reviewFinish({ id: this.id });
+          data = await reviewFinish({id: this.id});
         }
         this.$navigateTo(
           "/pages/word/answer?id=" +
-            this.id +
-            "&pageType=" +
-            this.pageType +
-            "&bookId=" +
-            this.bookId
+          this.id +
+          "&pageType=" +
+          this.pageType +
+          "&bookId=" +
+          this.bookId
         );
       }
 
@@ -466,7 +449,7 @@ export default {
     network() {
       return {
         getWordEn: async (wordEn) => {
-          let res = await getWordEn({ wordEn });
+          let res = await getWordEn({wordEn});
           let data = res.data.result;
 
           // 可选单词乱序
@@ -534,17 +517,17 @@ export default {
               let data = {};
               // 判断是挑战还是复习
               if (this.pageType == "chanllenge") {
-                data = await challengeFinishPost({ id: this.id });
+                data = await challengeFinishPost({id: this.id});
               } else {
-                data = await reviewFinish({ id: this.id });
+                data = await reviewFinish({id: this.id});
               }
               this.$navigateTo(
                 "/pages/word/answer?id=" +
-                  this.id +
-                  "&pageType=" +
-                  this.pageType +
-                  "&bookId=" +
-                  this.bookId
+                this.id +
+                "&pageType=" +
+                this.pageType +
+                "&bookId=" +
+                this.bookId
               );
             }
           } else {
@@ -561,10 +544,10 @@ export default {
 <style lang="scss" scoped>
 .main {
   background: linear-gradient(
-    180deg,
-    #dff0ff 0%,
-    #f0f7fd 6%,
-    #ffffff 21%
+      180deg,
+      #dff0ff 0%,
+      #f0f7fd 6%,
+      #ffffff 21%
   ) !important;
 }
 
@@ -605,7 +588,6 @@ export default {
 }
 
 .word {
-  white-space: pre-line;
   font-size: 30rpx;
   text-align: center;
   padding: 0 50rpx;

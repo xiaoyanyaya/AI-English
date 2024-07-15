@@ -383,7 +383,7 @@ export default {
         }
       }
       .body {
-        height: 555rpx;
+        height: 500rpx;
         padding: 0 65rpx;
         .body_top {
           display: flex;

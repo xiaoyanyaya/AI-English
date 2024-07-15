@@ -21,9 +21,8 @@
             <view class="flex align-item-center justify-content-between mt-1">
               <view>已挑战单词数：{{ textBook.totalWordNum }}</view>
               <view class="ml-5"
-              >正确单词数：{{ textBook.correctWordNum }}
-              </view
-              >
+                >正确单词数：{{ textBook.correctWordNum }}
+              </view>
             </view>
           </view>
         </view>
@@ -32,9 +31,8 @@
       <view class="list">
         <view class="flex align-item-center justify-content-between px-3 mb-2">
           <view class="t-size-28 t-color-3D3D3D font-weight-bold"
-          >单词列表
-          </view
-          >
+            >单词列表
+          </view>
           <view
             class="t-size-26 t-color-6a6a6a flex align-item-center"
             @click="network().queryListByBookId()"
@@ -69,7 +67,7 @@
           </view>
           <view class="listItem-c">
             <view class="listItem-cTitle">
-              <view class="listItem-cTitle-word"> {{ item.wordEn }}？？</view>
+              <view class="listItem-cTitle-word"> {{ item.wordEn }}</view>
               <view class="listItem-cTitle-definition">
                 {{ "['" + item.symbolUsa + "']" }}
               </view>
@@ -95,13 +93,14 @@ import {
   queryListByBookId,
   queryBookById,
   queryChallengeByUser,
-  queryBookChallengeInfo, challengeStart,
+  queryBookChallengeInfo,
+  challengeStart,
 } from "../../../api/word";
 
 const innerAudioContext = uni.createInnerAudioContext();
 innerAudioContext.autoplay = true;
 import MyMixin from "@/utils/MyMixin";
-import {wordList, dictList, lessonWordList, queryById} from "@/api/word";
+import { wordList, dictList, lessonWordList, queryById } from "@/api/word";
 
 export default {
   mixins: [MyMixin],
@@ -137,39 +136,54 @@ export default {
       this.backColor = "transparent";
     }
   },
-  onShow() {
-  },
+  onShow() {},
   methods: {
     async chanllenge() {
       let data = await challengeStart({
-        bookId: this.bookId
+        bookId: this.bookId,
       });
       let result = {
         wordLessonDictList: this.allData,
-        bookFullName: data.data.result.bookFullName
-      }
-      uni.setStorageSync("wordList", result)
-      console.log("uni.getStorageSync('wordList')", uni.getStorageSync("wordList"))
+        bookFullName: data.data.result.bookFullName,
+      };
+      uni.setStorageSync("wordList", result);
+      console.log(
+        "uni.getStorageSync('wordList')",
+        uni.getStorageSync("wordList")
+      );
 
-      var urls = '/pages/word/dictation?id=' + data.data.result.id + '&lessonId=' + data.data.result.lessonId +
-        '&pageType=chanllenge&bookId=' + this.bookId;
-      this.toNav(urls)
+      var urls =
+        "/pages/word/dictation?id=" +
+        data.data.result.id +
+        "&lessonId=" +
+        data.data.result.lessonId +
+        "&pageType=chanllenge&bookId=" +
+        this.bookId;
+      this.toNav(urls);
     },
     toDefined(item) {
-      this.setWordLessonDictList()
-      this.toNav('/pages/word/definition?wordEn=' + item.wordEn + '&pageType=chanllenge&id=0&unitId=' + this.bookId)
+      this.setWordLessonDictList();
+      this.toNav(
+        "/pages/word/definition?wordEn=" +
+          item.wordEn +
+          "&pageType=chanllenge&id=0&unitId=" +
+          this.bookId +
+          "&state=1"
+      );
     },
     setWordLessonDictList() {
       var wordList = uni.getStorageSync("wordList");
-      console.log("wordList", wordList)
-      console.log("this.allData", this.allData)
+      console.log("wordList", wordList);
+      console.log("this.allData", this.allData);
       if (wordList) {
-        wordList.wordLessonDictList = this.allData
-        uni.setStorageSync("wordList", wordList)
+        wordList.wordLessonDictList = this.allData;
+        uni.setStorageSync("wordList", wordList);
       } else {
-        uni.setStorageSync("wordList", {wordLessonDictList: this.allData})
+        uni.setStorageSync("wordList", { wordLessonDictList: this.allData });
         this.setWordLessonDictList();
-        this.toNav("/pages/word/set?id=" + this.bookId + "&pageType=chanllenge");
+        this.toNav(
+          "/pages/word/set?id=" + this.bookId + "&pageType=chanllenge"
+        );
       }
     },
     async initData() {
@@ -226,15 +240,15 @@ export default {
     network() {
       return {
         queryListByBookId: async () => {
-          let res = await queryListByBookId({bookId: this.bookId});
+          let res = await queryListByBookId({ bookId: this.bookId });
           this.allData = res.data.result;
         },
         queryBookById: async () => {
-          const res = await queryBookById({id: this.bookId});
+          const res = await queryBookById({ id: this.bookId });
           this.textBook = res.data.result;
         },
         queryBookChallengeInfo: async () => {
-          const res = await queryBookChallengeInfo({bookId: this.bookId});
+          const res = await queryBookChallengeInfo({ bookId: this.bookId });
           this.textBook = Object.assign(this.textBook, res.data.result);
           console.log("textBook", this.textBook);
         },

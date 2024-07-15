@@ -1,6 +1,10 @@
 <template>
   <view class="main">
-    <cy-navbar :showBack="true" :bgColor="backColor" textColor="#3D3D3D">
+    <cy-navbar @customBack="returnCustom" customBack
+               :showBack="true" :bgColor="backColor" textColor="#3D3D3D">
+      <view class="t-size-30">答题结果</view>
+    </cy-navbar>
+    <view class="px-3 mt-2 text-center">
       <view class="t-size-30" v-if="pageType === 'chanllenge'">
         <view>{{ data.bookFullName }}</view>
       </view>
@@ -11,8 +15,8 @@
             : bookData.bookFullName
         }}
       </view>
-    </cy-navbar>
-    <view class="head">
+    </view>
+    <view class="head mt-1">
       <image
         v-if="data.reviewResult == 0 || data.challengeResult == 0"
         :src="imageBaseUrl + '/word/5-22-02.png'"
@@ -343,6 +347,11 @@ export default {
     this.wordType = uni.getStorageSync("wordType");
   },
   methods: {
+    returnCustom() {
+      uni.navigateBack({
+        delta: 2,
+      });
+    },
     clickBtn(type) {
       switch (type) {
         case 0:

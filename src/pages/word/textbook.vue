@@ -151,8 +151,8 @@
         </view>
       </scroll-view>
       <view v-else :style="{ 'padding-top': topBoxHeight + 'px' }">
+        <!-- 单元列表 -->
         <view class="listItem" v-for="(item, index) in list" :key="item.id">
-          <!-- 单元列表 -->
           <view class="unit" @click="openWord(index)">
             <image
               class="listItem-img"
@@ -380,28 +380,21 @@ export default {
       },
     };
   },
-  onLoad(e) {
+  async onLoad(e) {
     this.id = e.id;
     this.query = e;
+    this.initData(e); //首次进入页面初始化数据
+
     if (e.isReturnHome) {
       console.log("分享页面进来~~~~~~~~~");
       this.isReturnHome = 1;
     }
-    this.currentOptions = 0;
-    this.getUnit();
   },
-  async onShow() {
-    if (this.query.id == 0) {
-      this.bookData = uni.getStorageSync("basicData").currWordConfig.textBook;
-      this.bookType = "textBook";
-    } else {
-      this.bookData = uni.getStorageSync("basicData").currWordConfig.dictBook;
-      this.bookType = "dictBook";
-    }
-    this.data.bookId = this.bookData.id;
-    this.getLabelWordCount();
-    let lesson = await lessonList(this.data); //重新获取课时新建任务之后需要刷新课时
-    this.list = lesson.data.result;
+  onShow() {
+    // 监听切换教材
+    uni.$on("switchTextbook", ({ textBookId }) => {
+      this.initData(this.query);
+    });
   },
   mounted() {
     // 获取到盒子的高度
@@ -435,6 +428,24 @@ export default {
     }
   },
   methods: {
+    // 初始化页面数据
+    async initData(e) {
+      if (e.id == 0) {
+        this.bookData = uni.getStorageSync("basicData").currWordConfig.textBook;
+        this.bookType = "textBook";
+        this.data.bookId = this.bookData.id;
+      } else {
+        this.bookData = uni.getStorageSync("basicData").currWordConfig.dictBook;
+        this.bookType = "dictBook";
+        this.data.bookId = this.bookData.id; //获取bookid后再去获取分页数据
+        this.getPagingList();
+      }
+      this.currentOptions = 0;
+      this.getUnit();
+      this.getLabelWordCount();
+      uni.$off("switchTextbook");
+      console.log("结束监听"); ////
+    },
     // 获取分页数据
     async getPagingList() {
       this.pagingParams.bookId = this.data.bookId;
@@ -444,7 +455,6 @@ export default {
         (item) => (item.wordCnList = item.wordCn.split("\n"))
       );
       this.pagingParams.totalPage = res.data.result.pages;
-      console.log("获取分页数据1111111111111", this.openData);
     },
     // 切换标签
     async changeOptions(index) {
@@ -657,7 +667,6 @@ export default {
       } else if (this.id == 1) {
         let lesson = await lessonList(this.data);
         this.list = lesson.data.result;
-        this.getPagingList();
         let res = await wordNum();
         this.wordNumData = res.data.result;
         this.selectNum = res.data.result[0].value;
@@ -742,6 +751,8 @@ export default {
       };
       let res = await addLesson(data);
       console.log("添加任务res", res);
+      let lesson = await lessonList(this.data); //刷新任务列表
+      this.list = lesson.data.result;
       if (res.data.code == 200) {
         this.toNav(
           "/pages/word/wordList?unitId=" +

@@ -57,6 +57,11 @@ export default {
       type: Boolean,
       default: false,
     },
+    // 是否自定义返回
+    customBack: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     statusBarHeight() {
@@ -111,7 +116,12 @@ export default {
       });
     },
     returnPageNum(num) {
-      this.$emit("returnPageNum", num);
+      if (this.customBack) {
+        this.$emit("customBack");
+        return;
+      }
+
+      this.$emit("returnCustom", num);
       if (this.isReturnHome == 1) {
         uni.reLaunch({
           url: "/pages/index/index",

@@ -243,6 +243,22 @@ export default {
       },
       deep: true,
     },
+    /**
+     * 监听播放次数变化
+     * currentTopicData.auditManager.playCount 播放次数
+     * 改变次数即可播放音频
+     * 如果只播放一次，将playCount设置为2即可
+     */
+    currentTopicData: {
+      handler: function (val, oldVal) {
+        if (val.auditManager.playCount < this.setData.num) {
+          this.$nextTick(() => {
+            this.playAudio();
+          })
+        }
+      },
+      deep: true,
+    },
   },
   methods: {
     // 停止当前播放
@@ -260,16 +276,11 @@ export default {
       this.debounceShow = false;
 
       this.isNext = false;
-      // 清除当前题目的定时器
-      if (this.currentTopicData.timeout) {
-        clearTimeout(this.currentTopicData.timeout);
-      }
       if (this.currentTopic > 1) {
         // 从缓存中取出上一题数据
         this.currentTopicData = this.topicDataCache.pop();
         this.currentTopicData.auditManager.playCount = 0
         this.currentTopic--;
-        this.playAudio()
       }
 
       setTimeout(() => {
@@ -283,10 +294,6 @@ export default {
       this.debounceShow = false;
 
       this.isNext = true;
-      // 清除当前题目的定时器
-      if (this.currentTopicData.timeout) {
-        clearTimeout(this.currentTopicData.timeout);
-      }
       if (this.currentTopic > 0) {
         // 记录当前题目的答题数据
         this.topicDataCache.push(this.currentTopicData);
@@ -434,16 +441,13 @@ export default {
       data.auditManager.manager.onPlay(() => {
         this.playing = true;
       });
-
-      // 保存定时器
-      data.timeout = setTimeout(() => {
-        if (data.auditManager.playCount < this.setData.num - 1) {
-          this.playAudio();
+      // 播放结束
+      data.auditManager.manager.onEnded(() => {
+        setTimeout(() => {
           data.auditManager.playCount++;
-        } else {
           this.playing = false;
-        }
-      }, 3000);
+        }, 3000);
+      });
     },
     // 接口请求模块
     network() {
@@ -473,7 +477,6 @@ export default {
           this.currentTopicData = data;
           this.wordFormat();
           this.isInit = true;
-          this.playAudio()
         },
         reviewNext: async (isSkip = false, isNext = false) => {
           var getData = {

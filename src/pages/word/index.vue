@@ -216,7 +216,14 @@
         <view
           v-if="value.length > 0"
           class="search-boxIcon"
-          @click="toNav('/pages/word/definition?wordEn=' + value + '&state=1')"
+          @click="
+            toNav(
+              '/pages/word/definition?wordEn=' +
+                value +
+                '&state=1' +
+                '&fromSearch=1'
+            )
+          "
         >
           搜索
         </view>
@@ -502,7 +509,7 @@ export default {
         justify-content: space-between;
         flex-wrap: wrap;
         overflow-x: auto; /* 水平滚动 */
-        height: 620rpx;
+        height: 600rpx;
       }
       .item-box-selectItem-head image {
         height: 127rpx;

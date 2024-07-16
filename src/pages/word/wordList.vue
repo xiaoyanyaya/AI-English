@@ -332,6 +332,7 @@ export default {
 }
 
 .main {
+  min-height: 100vh;
   background: linear-gradient(180deg, #def0ff 0%, #f7fcff 100%);
 }
 
@@ -352,19 +353,20 @@ export default {
     background: #def0ff;
 
     .book_name {
-      font-size: 27rpx;
-      font-weight: 400;
-      padding-bottom: 10rpx;
+      font-size: 28rpx;
+      font-weight: 500;
+      padding: 10rpx;
     }
 
     .unit {
-      font-size: 25rpx;
+      font-size: 26rpx;
+      font-weight: 500;
       color: #2e2e2e;
     }
   }
 
   .list {
-    padding-top: 150rpx;
+    padding-top: 115rpx;
   }
 }
 

@@ -114,7 +114,7 @@
       </view>
     </view>
     <view class="controller" v-if="showBtn == 1">
-      <view v-if="activeIndex == 0" class="controllerItem">
+      <view v-if="activeIndex == 0 || fromSearch == 1" class="controllerItem">
         <image :src="imageBaseUrl + '/word/pre_s.png'" mode=""></image>
         <view style="color: #8a8a8a"> 上一个 </view>
       </view>
@@ -129,7 +129,10 @@
       >
         立即听写
       </view>
-      <view v-if="activeIndex == wordList.length - 1" class="controllerItem">
+      <view
+        v-if="activeIndex == wordList.length - 1 || fromSearch == 1"
+        class="controllerItem"
+      >
         <image :src="imageBaseUrl + '/word/next_s.png'" mode=""></image>
         <view style="color: #8a8a8a"> 下一个 </view>
       </view>
@@ -162,6 +165,7 @@ export default {
       height: 0,
       lista: [],
       state: 0,
+      fromSearch: 0, //1：搜索进来的
       // 是否显示上一个下一个按钮
       showBtn: 1,
       pageType: "",
@@ -190,32 +194,39 @@ export default {
     if (e.showBtn) {
       this.showBtn = e.showBtn;
     }
-    // if (e.id == 1) {
-    // this.wordList = uni.getStorageSync("wordList");
-    // } else {
-    this.wordList = uni.getStorageSync("wordList").wordLessonDictList;
-    // }
-    console.log("vuex中的wordList", this.wordList);
-    let index = this.wordList.findIndex(
-      (obj) => obj.wordEn === this.data.wordEn
-    );
-    if (index !== -1) {
-      this.activeIndex = index;
-      console.log("this.activeIndex", this.activeIndex);
+    if (e.fromSearch) {
+      //搜索单词
+      this.fromSearch = e.fromSearch;
+      this.wordList = [];
     } else {
-      uni.showModal({
-        title: "未找到单词~",
-        success: function (res) {
-          if (res.confirm) {
-            console.log("用户点击确定");
-            // 执行操作
-          } else if (res.cancel) {
-            console.log("用户点击取消");
-            // 操作取消
-          }
-        },
-      });
+      // if (e.id == 1) {
+      // this.wordList = uni.getStorageSync("wordList");
+      // } else {
+      this.wordList = uni.getStorageSync("wordList").wordLessonDictList;
+      // }
+      console.log("vuex中的wordList", this.wordList);
+      let index = this.wordList.findIndex(
+        (obj) => obj.wordEn === this.data.wordEn
+      );
+      if (index !== -1) {
+        this.activeIndex = index;
+        console.log("this.activeIndex", this.activeIndex);
+      } else {
+        uni.showModal({
+          title: "未找到单词~",
+          success: function (res) {
+            if (res.confirm) {
+              console.log("用户点击确定");
+              // 执行操作
+            } else if (res.cancel) {
+              console.log("用户点击取消");
+              // 操作取消
+            }
+          },
+        });
+      }
     }
+
     this.$nextTick(() => {
       const query = uni.createSelectorQuery().in(this);
       query

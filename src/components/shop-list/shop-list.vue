@@ -29,19 +29,21 @@
           :key="item.id"
           @click="handleDetail(item)"
         >
-          <image class="img" :src="item.bookImage"></image>
+          <image
+            :class="{ img: true, checked: item.id == bookId }"
+            :src="item.bookImage"
+          ></image>
           <view
             class="t-size-22 font-weight-bold flex align-item-center justify-content-center mt-1"
           >
             {{ item.bookName }}
+            <uni-icons
+              v-if="item.id == bookId"
+              type="checkbox"
+              color="#2196f3"
+              size="22"
+            ></uni-icons>
           </view>
-          <uni-icons
-            v-if="item.id == bookId"
-            type="checkbox"
-            color="#1863e5"
-            size="25"
-            class="r_img"
-          ></uni-icons>
         </view>
       </view>
     </view>
@@ -104,7 +106,7 @@ page {
       text-align: center;
 
       &.active {
-        background: #1863e5;
+        background: #2196f3;
         color: #ffffff;
       }
       .text1 {
@@ -125,7 +127,7 @@ page {
       width: 10rpx;
       height: 24rpx;
       border-radius: 10rpx;
-      background: #1863e5;
+      background: #2196f3;
     }
 
     .list-content {
@@ -142,12 +144,16 @@ page {
           width: 170rpx;
           height: 220rpx;
         }
-        .r_img {
-          position: absolute;
-          z-index: 999;
-          bottom: 50rpx;
-          right: 10rpx;
+        .checked {
+          border: 2px solid #2196f3;
+          border-radius: 10rpx;
         }
+        // .r_img {
+        //   position: absolute;
+        //   z-index: 999;
+        //   bottom: 50rpx;
+        //   right: 10rpx;
+        // }
       }
     }
   }

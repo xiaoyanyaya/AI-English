@@ -9,7 +9,7 @@
       <view class="t-size-30" v-if="id == 0">教材单元列表</view>
       <view class="t-size-30" v-if="id == 1">考纲单元列表</view>
     </cy-navbar>
-    <view class="pb-2 px-55">
+    <view class="pb-2">
       <view class="top">
         <view class="head">
           <view class="headL">
@@ -393,6 +393,7 @@ export default {
   onShow() {
     // 监听切换教材
     uni.$on("switchTextbook", ({ textBookId }) => {
+      this.unitIndex = 0;
       this.initData(this.query);
     });
   },
@@ -561,12 +562,13 @@ export default {
     // 下拉单词列表
     async openWord(index) {
       console.log("下拉index", index);
-      this.unitIndex = index;
-      this.list[index].isOpen = !this.list[index].isOpen;
       this.list.forEach((item, index2) => {
         if (index == index2) return;
         item.isOpen = false;
       });
+      this.unitIndex = index;
+      this.list[index].isOpen = !this.list[index].isOpen;
+      console.log("list????????", this.list);
       switch (this.id) {
         case "0": //教材
           console.log("教材列表");
@@ -858,11 +860,11 @@ export default {
 .top {
   position: fixed;
   z-index: 999;
-  padding: 30rpx 0;
+  padding: 30rpx 55rpx;
   padding-bottom: 0;
   box-sizing: border-box;
-  width: 640rpx;
-  background-color: #fff;
+  width: 100%;
+  background: linear-gradient(180deg, #f3f9ff 0%, #feffff 100%);
 
   .head {
     display: flex;
@@ -950,6 +952,7 @@ export default {
 }
 .p_list {
   position: relative;
+  padding: 0 55rpx;
   width: 640rpx;
   height: 95vh;
 }

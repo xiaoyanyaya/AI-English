@@ -55,8 +55,7 @@
           v-for="(item, index) in currentTopicData.wordFilling"
           :key="index"
         >
-          <view @click="clickSelectWord(item, index)"
-            :class="wordFillingClass"
+          <view :class="wordFillingClass"
             class="inputBox flex justify-content-center t-size-40 font-weight-bold"
           >
             {{ item.value }}
@@ -248,10 +247,10 @@ export default {
     },
   },
   methods: {
-    clickSelectWord(item, i) {
+    clickSelectWord(value) {
       var letterList = uni.getStorageSync("letterList")
       letterList.forEach((obj, index) => {
-        if (obj.letter === item.value) {
+        if (obj.letter === value) {
           this.publicPlayAudio(obj.audioFemale)
           return
         }
@@ -359,6 +358,7 @@ export default {
     },
     // 选择单词
     selectWord(item, i) {
+      this.clickSelectWord(item)
       if (!this.currentTopicData.selectWordIndex.find((item) => item === i)) {
         if (
           this.currentTopicData.selectWordIndex.length <

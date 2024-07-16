@@ -74,6 +74,32 @@ export default {
       displayTime += `${seconds % 60}秒`;
       return displayTime;
     },
+	  publicPlayAudio(url) {
+		  const innerAudioContext = uni.createInnerAudioContext();
+
+		  if (this.systemInfo.platform === "android") {
+			  uni.downloadFile({
+				  url: url,
+				  success: (res) => {
+					  if (res.statusCode === 200) {
+						  url = res.tempFilePath;
+					  }
+				  },
+			  });
+		  } else {
+			  innerAudioContext.obeyMuteSwitch = false;
+		  }
+
+		  innerAudioContext.src = url;
+		  innerAudioContext.play();
+		  innerAudioContext.onPlay(() => {
+			  console.log('开始播放')
+		  })
+		  innerAudioContext.onError((res) => {
+			  console.log(res.errMsg)
+			  console.log(res.errCode)
+		  })
+	  },
     getSystemInfo() {
       uni.getSystemInfo({
         success: (res) => {

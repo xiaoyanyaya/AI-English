@@ -94,6 +94,7 @@ import MyMixin from "@/utils/MyMixin";
 import {defaultVirtual} from "@/api/aiFriend";
 import store from "@/store";
 import {getPhone} from "@/api/user";
+import {queryLetterList} from "../../api/word";
 
 export default {
   mixins: [MyMixin],
@@ -140,6 +141,7 @@ export default {
     if (!store.state.token) {
       this.network().loginAndGetVirtual();
     }
+    this.network().queryLetterList();
   },
   onShow() {
     this.isAuthPhone = uni.getStorageSync("isAuthPhone");
@@ -167,6 +169,11 @@ export default {
         defaultVirtual: async () => {
           const res = await defaultVirtual();
           this.personInfo = res.data.result;
+        },
+        queryLetterList: async () => {
+          const res = await queryLetterList();
+          // 存储英文单词
+          uni.setStorageSync('letterList', res.data.result)
         }
       }
     }

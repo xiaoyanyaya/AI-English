@@ -47,27 +47,30 @@
       {{ currentTopicData.wordCn }}
     </view>
 
-    <view class="mt-8 flex align-item-center justify-content-center">
-      <view
-        class="mr-1 ml-1"
-        v-for="(item, index) in currentTopicData.wordFilling"
-        :key="index"
-      >
+    <view class="flex align-item-center justify-content-center">
+      <view class="mt-4 wordFilling-content"
+            :class="currentTopicData.wordFilling.length > 10 ? 'grid' : 'flex'">
         <view
-          :class="wordFillingClass"
-          class="inputBox flex justify-content-center t-size-40 font-weight-bold"
+          class="mr-1 ml-1"
+          v-for="(item, index) in currentTopicData.wordFilling"
+          :key="index"
         >
-          {{ item.value }}
+          <view @click="clickSelectWord(item, index)"
+            :class="wordFillingClass"
+            class="inputBox flex justify-content-center t-size-40 font-weight-bold"
+          >
+            {{ item.value }}
+          </view>
+          <view class="inputHr" v-show="item.isShow"></view>
         </view>
-        <view class="inputHr" v-show="item.isShow"></view>
-      </view>
-      <view class="ml-2" @click="deleteWord" @longpress="longpressDeleteWord">
-        <u-icon name="close"></u-icon>
+        <view class="ml-2 mt-4" @click="deleteWord" @longpress="longpressDeleteWord">
+          <u-icon name="close"></u-icon>
+        </view>
       </view>
     </view>
     <view
       v-if="isInit"
-      class="statusMessageBox flex justify-content-center align-item-center t-size-22 mt-2"
+      class="statusMessageBox flex justify-content-center align-item-center t-size-22"
     >
       <div
         v-show="currentTopicData.currentTopicStatus !== 'normal'"
@@ -245,6 +248,15 @@ export default {
     },
   },
   methods: {
+    clickSelectWord(item, i) {
+      var letterList = uni.getStorageSync("letterList")
+      letterList.forEach((obj, index) => {
+        if (obj.letter === item.value) {
+          this.publicPlayAudio(obj.audioFemale)
+          return
+        }
+      })
+    },
     // 停止当前播放
     stopPlay() {
       this.playing = false;
@@ -469,7 +481,7 @@ export default {
             playCount: 0, // 播放次数
             manager: uni.createInnerAudioContext(),
           };
-          // data.questionText = "___'('___.)___"
+          // data.questionText = "___________"
           this.currentTopicData = data;
           this.wordFormat();
           this.isInit = true;
@@ -611,7 +623,7 @@ export default {
 
 .keys {
   display: flex;
-  margin-top: 90rpx;
+  margin-top: 50rpx;
   padding: 0 40rpx;
   flex-wrap: wrap;
   padding-bottom: 160rpx;
@@ -657,5 +669,14 @@ export default {
     width: 28rpx;
     height: 34rpx;
   }
+}
+
+.wordFilling-content {
+  width: 680rpx;
+  // grip布局
+  grid-template-columns: repeat(auto-fill, 70rpx);
+  grid-gap: 10rpx;
+  justify-content: center;
+  align-items: center;
 }
 </style>

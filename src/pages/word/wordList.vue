@@ -4,16 +4,16 @@
       <view class="t-size-30">单词列表</view>
     </cy-navbar>
     <view class="content">
-      <view class="title">
-        <view class="book_name">
+      <view class="t-color-3D3D3D t-size-30 font-weight-bold text-center title">
+        <view>
           {{
             id == 0 || id == 2 || id == 3
               ? allData.bookFullName
               : dictBook.bookFullName
           }}
         </view>
-        <view class="unit">
-          {{ id == 0 || id == 2 || id == 3 ? allData.lessonName : "" }}
+        <view>
+          {{ unitOrLesson }}
         </view>
       </view>
       <view class="list">
@@ -176,9 +176,28 @@ export default {
         show: true,
         num: 3,
       },
+      unitOrLesson: "",
     };
   },
   onLoad(e) {
+    console.log("eeee", e);
+    if (e.id == 0) {
+      this.data.unitId = e.unitId;
+      this.chanllengeBtnText = "立即听写";
+    }
+    if (e.id == 2) {
+      this.data.unitId = e.unitId;
+      this.chanllengeBtnText = "立即听写";
+    }
+    if (e.id == 3) {
+      this.dataC.id = e.unitId;
+    }
+    if (e.btnTitle) {
+      this.chanllengeBtnText = e.btnTitle;
+      if (e.btnTitle == "重新答题") {
+        this.lessonId = uni.getStorageSync("lessonId");
+      }
+    }
     if (e.title) {
       this.title = e.title;
     }
@@ -188,24 +207,15 @@ export default {
     } else {
       this.id = uni.getStorageSync("wordType");
     }
-    if (e.id == 0) {
-      this.data.unitId = e.unitId;
-      this.chanllengeBtnText = "立即听写";
-    } else if (e.id == 1) {
+    if (e.id == 1) {
       this.dataB.lessonId = e.unitId;
       this.chanllengeBtnText = "立即听写";
-      this.lessonId = e.lessonId; //考纲传直接传上个页面的课时id(dict的id)
+      this.lessonId = e.btnTitle ? uni.getStorageSync("lessonId") : e.lessonId; //考纲传直接传上个页面的课时id(dict的id)
+      uni.setStorageSync("lessonId", this.lessonId);
       console.log(e.unitId);
-    } else if (e.id == 2) {
-      this.data.unitId = e.unitId;
-      this.chanllengeBtnText = "立即听写";
-    } else if (e.id == 3) {
-      this.dataC.id = e.unitId;
-    }
-    if (e.btnTitle) {
-      this.chanllengeBtnText = e.btnTitle;
     }
     this.dictBook = uni.getStorageSync("basicData").currWordConfig.dictBook;
+    this.unitOrLesson = uni.getStorageSync("nowUnitOrLesson");
   },
   onShow() {
     this.getWord();
@@ -238,6 +248,7 @@ export default {
           (item) => (item.wordCnList = item.wordCn.split("\n"))
         );
         this.lessonId = this.allData.id; //教材页面的课时id:返回单词列表同时返回课时id
+        uni.setStorageSync("lessonId", this.lessonId);
         uni.setStorageSync("wordList", data.data.result);
       } else if (this.id == 1) {
         let data = await lessonWordListByL(this.dataB);
@@ -260,6 +271,7 @@ export default {
           (item) => (item.wordCnList = item.wordCn.split("\n"))
         );
         this.lessonId = this.allData.id; //专题页面的课时id:返回单词列表同时返回课时id
+        uni.setStorageSync("lessonId", this.lessonId);
         uni.setStorageSync("wordList", data.data.result);
       } else if (this.id == 3) {
         let data = await queryById(this.dataC);
@@ -269,6 +281,7 @@ export default {
           (item) => (item.wordCnList = item.wordCn.split("\n"))
         );
         this.lessonId = this.allData.id; ////抗遗忘复习
+        uni.setStorageSync("lessonId", this.lessonId);
         uni.setStorageSync("wordList", data.data.result);
       }
     },
@@ -351,22 +364,10 @@ export default {
     box-sizing: border-box;
     text-align: center;
     background: #def0ff;
-
-    .book_name {
-      font-size: 28rpx;
-      font-weight: 500;
-      padding: 10rpx;
-    }
-
-    .unit {
-      font-size: 26rpx;
-      font-weight: 500;
-      color: #2e2e2e;
-    }
   }
 
   .list {
-    padding-top: 115rpx;
+    padding-top: 135rpx;
   }
 }
 

@@ -8,94 +8,154 @@
         <view class="headLeft-icon"></view>
         抗遗忘复习列表
       </view>
-      <view class="headRight" @click="show=true">
+      <view class="headRight" @click="show = true">
         <text>艾宾浩斯遗忘曲线</text>
         <u-icon name="question-circle-fill"></u-icon>
       </view>
     </view>
     <view class="list">
-      <view class="listItem" v-for="(items,index) in bookData" :key="index">
+      <view class="listItem" v-for="(items, index) in bookData" :key="index">
         <view class="listItem-title">
           {{ items.planDateName }}
         </view>
         <view class="listItem-content">
-<!--          @click="toNav('/pages/word/wordList?id=3'+'&unitId='+item.id)"-->
-          <view @click="toNav('/pages/word/wordList?id=3'+'&unitId='+item.id)"
-            class="listItem-contentBook" v-for="(item,i) in items.wordLessonList" :key="item.id">
+          <!--          @click="toNav('/pages/word/wordList?id=3'+'&unitId='+item.id)"-->
+          <view
+            @click="toNav('/pages/word/wordList?id=3' + '&unitId=' + item.id)"
+            class="listItem-contentBook"
+            v-for="(item, i) in items.wordLessonList"
+            :key="item.id"
+          >
             <view class="listItem-contentBook-head">
               <view class="flex align-item-center justify-content-between">
                 <view class="t-size-24 font-weight-bold t-color-1863E5">
-                  {{ getNameWithEllipsis(item.bookFullName) }}
+                  {{ item.bookFullName }}
+                  <!-- {{ getNameWithEllipsis(item.bookFullName) }}//// -->
                 </view>
               </view>
               <view class="flex justify-content-between align-item-center mt-3">
                 <view class="font-weight-bold t-size-22">复习日期</view>
-                <view class="t-size-22 t-color-8A8A8A">{{ item.reviewPlanDate }}</view>
+                <view class="t-size-22 t-color-8A8A8A">{{
+                  item.reviewPlanDate
+                }}</view>
               </view>
               <view class="flex align-item-center justify-content-between mt-3">
-                <view class="t-size-32 t-color-3D3D3D font-weight-bold lessonName-box">
-                  {{ getNameWithEllipsis(item.lessonName, 20) }}
+                <view
+                  class="t-size-32 t-color-3D3D3D font-weight-bold lessonName-box"
+                >
+                  {{ item.lessonName }}
+                  <!-- {{ getNameWithEllipsis(item.lessonName, 20) }}//// -->
                 </view>
                 <view class="t-size-26 font-weight-bold">
-                  <text class="t-color-24A800">正确({{ item.correctWordNum }})</text>
+                  <text class="t-color-24A800"
+                    >正确({{ item.correctWordNum }})</text
+                  >
                   <text class="t-color-8A8A8A mr-1">/</text>
-                  <text class="t-color-DC0C0C">错误({{ item.errorWordNum }})</text>
+                  <text class="t-color-DC0C0C"
+                    >错误({{ item.errorWordNum }})</text
+                  >
                 </view>
               </view>
-              <view class="listItem-contentBook-icon" @click.stop="launch(item.id)"
-                    :class="item.click?'listItem-contentBook-icons':''">
-                <image :src="imageBaseUrl+'/word/6-4-02.png'" mode=""></image>
+              <view
+                class="listItem-contentBook-icon"
+                @click.stop="launch(item.id)"
+                :class="item.click ? 'listItem-contentBook-icons' : ''"
+              >
+                <image :src="imageBaseUrl + '/word/6-4-02.png'" mode=""></image>
               </view>
             </view>
             <view class="listItem-contentBook-tab" v-show="item.click">
-              <view class="listItem-contentBook-tabItem" @click.stop="tabClick(0)"
-                    :class="tabNum==0?'listItem-contentBook-tabItem-select':''">
+              <view
+                class="listItem-contentBook-tabItem"
+                @click.stop="tabClick(0)"
+                :class="
+                  tabNum == 0 ? 'listItem-contentBook-tabItem-select' : ''
+                "
+              >
                 已复习历程
               </view>
-              <view class="listItem-contentBook-tabItem" @click.stop="tabClick(1)"
-                    :class="tabNum==1?'listItem-contentBook-tabItem-select':''">
+              <view
+                class="listItem-contentBook-tabItem"
+                @click.stop="tabClick(1)"
+                :class="
+                  tabNum == 1 ? 'listItem-contentBook-tabItem-select' : ''
+                "
+              >
                 待复习计划
               </view>
             </view>
             <view class="listItem-contentBook-form" v-show="item.click">
               <view class="listItem-contentBook-formTitle">
-                <view class="listItem-contentBook-formTitle-item" style="width: 20%;">
+                <view
+                  class="listItem-contentBook-formTitle-item"
+                  style="width: 20%"
+                >
                   日期
                 </view>
-                <view class="listItem-contentBook-formTitle-item" style="width: 20%;">
+                <view
+                  class="listItem-contentBook-formTitle-item"
+                  style="width: 20%"
+                >
                   用时(秒)
                 </view>
-                <view class="listItem-contentBook-formTitle-item" style="width: 20%;">
+                <view
+                  class="listItem-contentBook-formTitle-item"
+                  style="width: 20%"
+                >
                   正确数
                 </view>
-                <view class="listItem-contentBook-formTitle-item" style="width: 20%;">
+                <view
+                  class="listItem-contentBook-formTitle-item"
+                  style="width: 20%"
+                >
                   错误数
                 </view>
-                <view class="listItem-contentBook-formTitle-item" style="width: 20%;">
+                <view
+                  class="listItem-contentBook-formTitle-item"
+                  style="width: 20%"
+                >
                   结果
                 </view>
               </view>
-              <view class="listItem-contentBook-formList"
-                    v-for="(tab, tabIndex) in tabData" :key="item.id">
-                <view class="listItem-contentBook-formList-item" style="width: 20%;">
+              <view
+                class="listItem-contentBook-formList"
+                v-for="(tab, tabIndex) in tabData"
+                :key="item.id"
+              >
+                <view
+                  class="listItem-contentBook-formList-item"
+                  style="width: 20%"
+                >
                   {{ tab.reviewDate }}
                 </view>
-                <view class="listItem-contentBook-formList-item" style="width: 20%;">
-                  {{ tab.costTimes ? tab.costTimes : '-' }}
+                <view
+                  class="listItem-contentBook-formList-item"
+                  style="width: 20%"
+                >
+                  {{ tab.costTimes ? tab.costTimes : "-" }}
                 </view>
-                <view class="listItem-contentBook-formList-item" style="width: 20%;">
-                  {{ tab.correctWordNum ? tab.correctWordNum : '-' }}
+                <view
+                  class="listItem-contentBook-formList-item"
+                  style="width: 20%"
+                >
+                  {{ tab.correctWordNum ? tab.correctWordNum : "-" }}
                 </view>
-                <view class="listItem-contentBook-formList-item" style="width: 20%;">
+                <view
+                  class="listItem-contentBook-formList-item"
+                  style="width: 20%"
+                >
                   {{ tab.errorWordNum || 0 }}
                 </view>
-                <view class="listItem-contentBook-formList-item" style="width: 20%;">
-                  <view v-if="tabNum==0">
+                <view
+                  class="listItem-contentBook-formList-item"
+                  style="width: 20%"
+                >
+                  <view v-if="tabNum == 0">
                     <text v-if="tab.reviewResult == 0">不通过</text>
                     <text v-else-if="tab.reviewResult == 1">通过</text>
                     <text v-else>未完成答题</text>
                   </view>
-                  <view v-else>{{ tab.reviewResult == 1 ? '通过' : '-' }}</view>
+                  <view v-else>{{ tab.reviewResult == 1 ? "通过" : "-" }}</view>
                 </view>
               </view>
             </view>
@@ -103,16 +163,19 @@
         </view>
       </view>
     </view>
-    <view class="imgs" @click="toNav('/pages/word/reverseForgetting/wrongWords')">
-      <image :src="imageBaseUrl+'/word/6-4-01.png'" mode=""></image>
+    <view
+      class="imgs"
+      @click="toNav('/pages/word/reverseForgetting/wrongWords')"
+    >
+      <image :src="imageBaseUrl + '/word/6-4-01.png'" mode=""></image>
     </view>
     <u-popup v-model="show" mode="center" border-radius="20">
       <view class="popup">
         <view class="popupHead">
-          <u-icon name="close" @click="show=false"></u-icon>
+          <u-icon name="close" @click="show = false"></u-icon>
         </view>
         <view class="popupContent">
-          <image :src="imageBaseUrl+'/word/6-4-03.jpg'" mode=""></image>
+          <image :src="imageBaseUrl + '/word/6-4-03.jpg'" mode=""></image>
           <view class="popupContent-text">
             <view class="popupContent-textItem">
               艾宾浩斯记忆曲线是德国心理学家艾宾浩斯通过大量实验得出的关于记忆遗忘规律的曲线。
@@ -142,78 +205,75 @@
 
 <script>
 import MyMixin from "@/utils/MyMixin";
-import luanqingProgressbar from '@/pages/word/components/luanqing-progressbar/luanqing-progressbar.vue'
-import wordTab from '@/pages/word/components/word-tabbar/index.vue'
-import {
-  getUserLessonList,
-  queryListByLessonId
-} from "@/api/word"
+import luanqingProgressbar from "@/pages/word/components/luanqing-progressbar/luanqing-progressbar.vue";
+import wordTab from "@/pages/word/components/word-tabbar/index.vue";
+import { getUserLessonList, queryListByLessonId } from "@/api/word";
 
 export default {
   mixins: [MyMixin],
   components: {
-    wordTab
+    wordTab,
   },
   data() {
     return {
       bookData: [],
       tabData: [],
       show: false,
-      tabNum: 0
-    }
+      tabNum: 0,
+    };
   },
   onShow() {
-    this.getData()
+    this.getData();
   },
   methods: {
     toNav(urls) {
       uni.navigateTo({
-        url: urls
-      })
+        url: urls,
+      });
     },
     tabClick(i) {
-      this.tabData = this.tabAllData[i].wordReviewList
-      this.tabNum = i
+      this.tabData = this.tabAllData[i].wordReviewList;
+      this.tabNum = i;
     },
     async getData() {
-      var that = this
-      let data = await getUserLessonList()
-      this.bookData = data.data.result
+      var that = this;
+      let data = await getUserLessonList();
+      this.bookData = data.data.result;
       this.bookData.forEach(function (item, i) {
         item.wordLessonList.forEach(function (items, index) {
-          that.bookData[i].wordLessonList[index].click = false
-        })
-      })
+          that.bookData[i].wordLessonList[index].click = false;
+        });
+      });
     },
     async tab(id) {
       var res = {
-        lessonId: id
-      }
-      let data = await queryListByLessonId(res)
-      this.tabAllData = data.data.result
-      this.tabData = data.data.result[0].wordReviewList
-      console.log("tabData", this.tabData)
+        lessonId: id,
+      };
+      let data = await queryListByLessonId(res);
+      this.tabAllData = data.data.result;
+      this.tabData = data.data.result[0].wordReviewList;
+      console.log("tabData", this.tabData);
     },
     launch(id) {
-      var that = this
+      var that = this;
       this.bookData.forEach(function (item, i) {
         item.wordLessonList.forEach(function (items, index) {
           if (that.bookData[i].wordLessonList[index].id == id) {
             if (that.bookData[i].wordLessonList[index].click == false) {
-              that.bookData[i].wordLessonList[index].click = true
-              that.tab(id)
+              that.bookData[i].wordLessonList[index].click = true;
+              that.tab(id);
             } else {
-              that.bookData[i].wordLessonList[index].click = false
+              that.bookData[i].wordLessonList[index].click = false;
             }
           } else {
-            that.bookData[i].wordLessonList[index].click = false
+            that.bookData[i].wordLessonList[index].click = false;
           }
-        })
-      })
+        });
+      });
       this.bookData = JSON.parse(JSON.stringify(this.bookData));
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style>
@@ -224,7 +284,7 @@ export default {
 }
 
 .main {
-  background: linear-gradient(180deg, #D1EAFF 0%, #F8FDFF 14%) !important;
+  background: linear-gradient(180deg, #d1eaff 0%, #f8fdff 14%) !important;
 }
 
 .head {
@@ -238,11 +298,11 @@ export default {
   display: flex;
   align-items: center;
   font-size: 30rpx;
-  color: #3D3D3D;
+  color: #3d3d3d;
 }
 
 .headRight {
-  color: #8A8A8A;
+  color: #8a8a8a;
   font-size: 24rpx;
 }
 
@@ -254,7 +314,7 @@ export default {
   width: 8rpx;
   height: 30rpx;
   border-radius: 2rpx;
-  background: #3A73D9;
+  background: #3a73d9;
   margin-right: 10rpx;
 }
 
@@ -274,7 +334,7 @@ export default {
 .u-progress-info {
   font-size: 28rpx;
   padding-left: 16rpx;
-  letter-spacing: 2rpx
+  letter-spacing: 2rpx;
 }
 
 .list {
@@ -287,7 +347,7 @@ export default {
 }
 
 .listItem-title {
-  color: #8A8A8A;
+  color: #8a8a8a;
   font-size: 24rpx;
   padding: 20rpx 40rpx;
   background: #fff;
@@ -305,7 +365,7 @@ export default {
 }
 
 .listItem-contentBook-head {
-  background: linear-gradient(180deg, #D6E8FF 0%, #FFFFFF 100%);
+  background: linear-gradient(180deg, #d6e8ff 0%, #ffffff 100%);
   padding: 25rpx 40rpx 25rpx 40rpx;
   border-radius: 10rpx 10rpx 0 0;
 }
@@ -319,12 +379,12 @@ export default {
 }
 
 .listItem-contentBook-topTitle {
-  color: #1863E5;
+  color: #1863e5;
   font-size: 24rpx;
 }
 
 .listItem-contentBook-topDate {
-  color: #8A8A8A;
+  color: #8a8a8a;
 }
 
 .listItem-contentBook-bottom {
@@ -334,23 +394,21 @@ export default {
 }
 
 .listItem-contentBook-bottomL {
-  color: #3D3D3D;
+  color: #3d3d3d;
   font-weight: 600;
   font-size: 36rpx;
 }
 
 .listItem-contentBook-bottomC {
   font-size: 24rpx;
-  color: #8A8A8A;
+  color: #8a8a8a;
 }
 
 .listItem-contentBook-bottomC text {
-  color: #24A800;
+  color: #24a800;
 }
 
 .lessonName-box {
-
-
   width: 62%;
 }
 
@@ -363,13 +421,13 @@ export default {
 }
 
 .listItem-contentBook-tabItem {
-  color: #8A8A8A;
+  color: #8a8a8a;
   font-size: 24rpx;
 }
 
 .listItem-contentBook-tabItem-select {
-  color: #E79315;
-  border-bottom: 4rpx solid #E79315;
+  color: #e79315;
+  border-bottom: 4rpx solid #e79315;
   padding-bottom: 6rpx;
 }
 
@@ -393,7 +451,7 @@ export default {
 }
 
 .listItem-contentBook-formList:nth-child(even) {
-  background: #F9F9F9;
+  background: #f9f9f9;
 }
 
 .listItem-contentBook-icon {
@@ -429,7 +487,11 @@ export default {
 }
 
 .popupHead {
-  background: linear-gradient(180deg, rgba(195, 216, 255, 0.5) 0%, rgba(255, 255, 255, 0.5) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(195, 216, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.5) 100%
+  );
   height: 65rpx;
   font-size: 24rpx;
   text-align: right;

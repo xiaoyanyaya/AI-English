@@ -9,16 +9,17 @@
     >
       <view class="t-size-30">答题结果</view>
     </cy-navbar>
-    <view class="px-3 mt-2 text-center">
+    <view class="t-color-3D3D3D t-size-30 font-weight-bold text-center px-4">
       <view class="t-size-30" v-if="pageType === 'chanllenge'">
         <view>{{ data.bookFullName }}</view>
       </view>
       <view class="t-size-30" v-else>
         {{
-          wordList.lessonFullName
-            ? wordList.lessonFullName
-            : bookData.bookFullName
+          wordList.bookFullName ? wordList.bookFullName : bookData.bookFullName
         }}
+      </view>
+      <view>
+        {{ unitOrLesson }}
       </view>
     </view>
     <view class="head mt-1">
@@ -26,11 +27,13 @@
         v-if="data.reviewResult == 0 || data.challengeResult == 0"
         :src="imageBaseUrl + '/word/5-22-02.png'"
         mode="widthFix"
+        :style="{ top: systemInfo.statusBarHeight + 'px' }"
       ></image>
       <image
         v-if="data.reviewResult == 1 || data.challengeResult == 1"
         :src="imageBaseUrl + '/word/5-22-03.png'"
         mode="widthFix"
+        :style="{ top: systemInfo.statusBarHeight + 'px' }"
       ></image>
     </view>
     <view class="statistics">
@@ -328,6 +331,7 @@ export default {
       wordList: [],
       pageType: "",
       bookId: "",
+      unitOrLesson: "",
     };
   },
   onReady() {
@@ -350,6 +354,7 @@ export default {
     this.bookData = uni.getStorageSync("bookData");
     this.wordList = uni.getStorageSync("wordList");
     this.wordType = uni.getStorageSync("wordType");
+    this.unitOrLesson = uni.getStorageSync("nowUnitOrLesson");
   },
   methods: {
     returnCustom() {
@@ -457,9 +462,7 @@ export default {
 
 .head image {
   width: 100%;
-  height: 38% !important;
   position: absolute;
-  top: 0;
   left: 0;
 }
 

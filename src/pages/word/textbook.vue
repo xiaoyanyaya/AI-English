@@ -169,18 +169,7 @@
               </view>
               <view class="flex align-item-center">
                 <view
-                  @click.stop="
-                    toNav(
-                      '/pages/word/wordList?unitId=' +
-                        item.id +
-                        '&id=' +
-                        id +
-                        '&title=' +
-                        item.lessonName +
-                        '&lessonId=' +
-                        item.id
-                    )
-                  "
+                  @click.stop="wWrite(item)"
                   class="listItem-rightBottom-goStu"
                 >
                   单词听写
@@ -394,6 +383,7 @@ export default {
     // 监听切换教材
     uni.$on("switchTextbook", ({ textBookId }) => {
       this.unitIndex = 0;
+      this.openData = [];
       this.initData(this.query);
     });
   },
@@ -455,6 +445,7 @@ export default {
       this.openData.forEach(
         (item) => (item.wordCnList = item.wordCn.split("\n"))
       );
+      console.log("opendata00000", this.openData);
       this.pagingParams.totalPage = res.data.result.pages;
       let result2 = {
         wordLessonDictList: this.openData,
@@ -711,6 +702,21 @@ export default {
       this.pagingParams.pageNo++;
       this.getPagingList();
     },
+    wWrite(item) {
+      console.log("item0000", item);
+      const val = item.unitName ? item.unitName : item.lessonName;
+      uni.setStorageSync("nowUnitOrLesson", val);
+      this.toNav(
+        "/pages/word/wordList?unitId=" +
+          item.id +
+          "&id=" +
+          this.id +
+          "&title=" +
+          item.lessonName +
+          "&lessonId=" +
+          item.id
+      );
+    },
     play(src, id) {
       var that = this;
       this.gif = true;
@@ -952,7 +958,7 @@ export default {
 }
 .p_list {
   position: relative;
-  padding: 0 55rpx;
+  margin: 0 55rpx;
   width: 640rpx;
   height: 95vh;
 }

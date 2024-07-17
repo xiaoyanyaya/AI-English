@@ -236,14 +236,7 @@
             class="item-box-selectItem"
             v-for="item in typeData"
             :key="item.id"
-            @click="
-              toNav(
-                '/pages/word/wordList?id=2&unitId=' +
-                  item.id +
-                  '&lessonId=' +
-                  item.id
-              )
-            "
+            @click="goW(item)"
           >
             <view class="item-box-selectItem-head">
               <image :src="item.unitImage" mode="heightFix"></image>
@@ -316,6 +309,14 @@ export default {
     }
   },
   methods: {
+    goW(item) {
+      console.log("item00000", item);
+      const val = item.unitName ? item.unitName : item.lessonName;
+      uni.setStorageSync("nowUnitOrLesson", val);
+      this.toNav(
+        "/pages/word/wordList?id=2&unitId=" + item.id + "&lessonId=" + item.id
+      );
+    },
     shareTextBook() {
       this.shareContent.id = 0;
       this.shareContent.bookId = textBook.id;

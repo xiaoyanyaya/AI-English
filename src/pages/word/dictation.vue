@@ -312,11 +312,10 @@ export default {
         this.topicDataCache.push(this.currentTopicData);
       }
 
+      if (this.currentTopicData.currentTopicStatus === "normal") {
+        this.network().reviewNext(true);
+      }
       if (this.currentTopic < this.totalTopic) {
-        if (this.currentTopicData.currentTopicStatus === "normal") {
-          this.network().reviewNext(true);
-        }
-
         this.isInit = false;
         this.currentTopic++;
         var currentTopicData = this.topicList[this.currentTopic - 1];

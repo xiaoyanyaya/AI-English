@@ -77,27 +77,33 @@ export default {
 	  publicPlayAudio(url) {
 		  const innerAudioContext = uni.createInnerAudioContext();
 
+		  console.log("this.systemInfo.platform", this.systemInfo.platform)
 		  if (this.systemInfo.platform === "android") {
 			  uni.downloadFile({
 				  url: url,
 				  success: (res) => {
 					  if (res.statusCode === 200) {
-						  url = res.tempFilePath;
+						  console.log("下载成功", res.tempFilePath)
+						  innerAudioContext.src = res.tempFilePath;
+						  innerAudioContext.play();
+						  innerAudioContext.onPlay(() => {
+							  console.log('开始播放')
+						  })
 					  }
 				  },
 			  });
 		  } else {
 			  innerAudioContext.obeyMuteSwitch = false;
+			  innerAudioContext.src = url;
+			  innerAudioContext.play();
+			  innerAudioContext.onPlay(() => {
+				  console.log('开始播放')
+			  })
 		  }
 
-		  innerAudioContext.src = url;
-		  innerAudioContext.play();
-		  innerAudioContext.onPlay(() => {
-			  console.log('开始播放')
-		  })
+
 		  innerAudioContext.onError((res) => {
-			  console.log(res.errMsg)
-			  console.log(res.errCode)
+			  console.log("播放失败", res.errMsg)
 		  })
 	  },
     getSystemInfo() {

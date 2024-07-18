@@ -1,6 +1,11 @@
 <template>
   <view class="main">
-    <cy-navbar showBack bgColor="transparent" textColor="#3D3D3D">
+    <cy-navbar
+      showBack
+      :isReturnHome="isReturnHome"
+      bgColor="transparent"
+      textColor="#3D3D3D"
+    >
       <view class="t-size-30">单词挑战赛</view>
     </cy-navbar>
 
@@ -130,108 +135,101 @@
     </view>
 
     <view class="mt-3 content-box pt-1 px-1">
-      <scroll-view class="scroll-view_H" scroll-x="true">
-        <scroll-view scroll-y="true" style="height: 480rpx">
-          <view class="scroll-view-item_H uni-bg-red">
-            <view
-              :class="
-                index === 0
-                  ? 't-size-26 font-weight-bold t-color-3D3D3D mb-3'
-                  : 't-size-24 t-color-878787 pt-3 pb-3 border-bottom'
-              "
-              class="flex table-item justify-content-center"
-              v-for="(item, index) in tableData"
-              :key="index"
-              :style="{
-                width: `${tableItemWidth}rpx`,
-                backgroundColor: item.value1.isSelf ? '#E2EDFF' : '',
-              }"
-            >
-              <view :style="{ color: item.value1.tColor }">{{
-                item.value1.value
-              }}</view>
+      <scroll-view scroll-y="true" scroll-x="true">
+        <view class="scroll-view-item_H uni-bg-red">
+          <view
+            :class="
+              index === 0
+                ? 't-size-26 font-weight-bold t-color-3D3D3D mb-3'
+                : 't-size-24 t-color-878787 pt-3 pb-3 border-bottom'
+            "
+            class="flex table-item justify-content-center"
+            v-for="(item, index) in tableData"
+            :key="index"
+            :style="{
+              width: `${tableItemWidth}rpx`,
+              backgroundColor: item.value1.isSelf ? '#E2EDFF' : '',
+            }"
+          >
+            <view :style="{ color: item.value1.tColor }">{{
+              item.value1.value
+            }}</view>
 
-              <view>
+            <view>
+              <view
+                v-if="currentTopOptions < 2"
+                style="width: 100%"
+                class="flex"
+                :class="index === 0 ? 'justify-content-center' : 'pl-2'"
+              >
                 <view
-                  v-if="currentTopOptions < 2"
-                  style="width: 100%"
-                  class="flex"
-                  :class="index === 0 ? 'justify-content-center' : 'pl-2'"
+                  v-if="currentOptions === 0 || index === 0"
+                  :style="{ color: item.value2.tColor }"
                 >
-                  <view
-                    v-if="currentOptions === 0 || index === 0"
-                    :style="{ color: item.value2.tColor }"
-                  >
-                    {{ item.value2.value }}
-                  </view>
-                  <view v-else>
-                    <image :src="item.value2.value" class="avatar ml-3" />
-                  </view>
+                  {{ item.value2.value }}
                 </view>
-                <view
-                  v-else
-                  class="flex align-item-center"
-                  style="width: 100%; position: absolute"
-                  :style="index !== 0 ? ' margin-top: -10rpx;' : ''"
-                >
-                  <image
-                    v-if="item.value2.value2"
-                    :src="item.value2.value2"
-                    class="avatar"
-                  />
-                  <view
-                    :style="{ color: item.value2.tColor }"
-                    class="ml-1 flex-1 flex justify-content-start table-nowrap"
-                  >
-                    {{ item.value2.value }}
-                  </view>
+                <view v-else>
+                  <image :src="item.value2.value" class="avatar ml-3" />
                 </view>
               </view>
-
-              <view :style="{ color: item.value3.tColor }">{{
-                item.value3.value
-              }}</view>
-              <view :style="{ color: item.value4.tColor }">{{
-                item.value4.value
-              }}</view>
-              <view :style="{ color: item.value5.tColor }">{{
-                item.value5.value
-              }}</view>
               <view
-                v-if="item.value6.value"
-                :style="{ color: item.value6.tColor }"
-                >{{ item.value6.value }}</view
+                v-else
+                class="flex align-item-center"
+                style="width: 100%; position: absolute"
+                :style="index !== 0 ? ' margin-top: -10rpx;' : ''"
               >
-              <view
-                v-if="item.value7.value"
-                :style="{ color: item.value7.tColor }"
-                >{{ item.value7.value }}</view
-              >
-              <view
-                v-if="item.value8.value"
-                :style="{ color: item.value8.tColor }"
-                >{{ item.value8.value }}</view
-              >
-              <view
-                v-if="item.value9.value"
-                :style="{ color: item.value9.tColor }"
-                >{{ item.value9.value }}</view
-              >
-              <view
-                v-if="item.value10.value"
-                :style="{ color: item.value10.tColor }"
-                >{{ item.value10.value }}</view
-              >
+                <image
+                  v-if="item.value2.value2"
+                  :src="item.value2.value2"
+                  class="avatar"
+                />
+                <view
+                  :style="{ color: item.value2.tColor }"
+                  class="ml-1 flex-1 flex justify-content-start table-nowrap"
+                >
+                  {{ item.value2.value }}
+                </view>
+              </view>
             </view>
-          </view>
-        </scroll-view>
-      </scroll-view>
-      <!--      <view v-if="tableData.length < 2" class="mt-5 flex align-item-center justify-content-center">
-              <image :src="`${imageBaseUrl}/nodata.png`" style="width: 400rpx; height: 400rpx"></image>
-            </view>-->
-    </view>
 
-    <!-- <view style="height: 160rpx"></view> -->
+            <view :style="{ color: item.value3.tColor }">{{
+              item.value3.value
+            }}</view>
+            <view :style="{ color: item.value4.tColor }">{{
+              item.value4.value
+            }}</view>
+            <view :style="{ color: item.value5.tColor }">{{
+              item.value5.value
+            }}</view>
+            <view
+              v-if="item.value6.value != null"
+              :style="{ color: item.value6.tColor }"
+              >{{ item.value6.value }}</view
+            >
+            <view
+              v-if="item.value7.value != null"
+              :style="{ color: item.value7.tColor }"
+              >{{ item.value7.value }}</view
+            >
+            <view
+              v-if="item.value8.value != null"
+              :style="{ color: item.value8.tColor }"
+              >{{ item.value8.value }}</view
+            >
+            <view
+              v-if="item.value9.value != null"
+              :style="{ color: item.value9.tColor }"
+              >{{ item.value9.value }}</view
+            >
+            <view
+              v-if="item.value10.value != null"
+              :style="{ color: item.value10.tColor }"
+              >{{ item.value10.value }}</view
+            >
+          </view>
+        </view>
+      </scroll-view>
+    </view>
     <wordTab :type="2"></wordTab>
   </view>
 </template>
@@ -253,7 +251,6 @@ export default {
   data() {
     return {
       dateTIme: "今天",
-
       currentTopOptions: 0,
       topOptinsList: [
         {
@@ -269,7 +266,6 @@ export default {
           id: 2,
         },
       ],
-
       currentOptions: 0,
       optinsList: [
         {
@@ -281,10 +277,8 @@ export default {
           id: 1,
         },
       ],
-
       // table-item的宽度
       tableItemWidth: 0,
-
       // 我的挑战历程标题
       myChallengeTitle: {
         value1: {
@@ -396,21 +390,33 @@ export default {
       },
       // 存放第一到第三名
       rankingList: [],
-
       tableData: [],
       textBook: {},
+      isReturnHome: 0,
     };
   },
-  onLoad() {
+  onLoad(e) {
     this.initData();
     // 切换教材监听
     uni.$on("switchTextbook", ({ textBookId }) => {
-      console.log("switchTextbooks", textBookId);
       // this.tableData 去掉除了标题的数据
       var tableData = this.tableData.slice(0, 1);
       this.tableData = tableData;
       this.initBasicData();
     });
+    if (e.isReturnHome) {
+      console.log("分享页面进来~~~~~~~~~");
+      this.isReturnHome = 1;
+    }
+  },
+  onShareAppMessage(res) {
+    if (res.from === "button") {
+      // 来自页面内分享按钮
+      return {
+        title: "疯狂挑战",
+        path: `pages/word/chanllenge/index?isReturnHome=1`,
+      };
+    }
   },
   methods: {
     initData() {
@@ -435,10 +441,14 @@ export default {
     },
     toSwtichTextBook() {
       if (this.currentTopOptions === 0) {
-        this.$navigateTo(`/pages/common/switchTextbooks?pageType=textBook`);
+        this.$navigateTo(
+          `/pages/common/switchTextbooks?pageType=textBook&bookId=${this.textBook.id}`
+        );
       }
       if (this.currentTopOptions === 1) {
-        this.$navigateTo(`/pages/common/switchTextbooks?pageType=dictBook`);
+        this.$navigateTo(
+          `/pages/common/switchTextbooks?pageType=dictBook&bookId=${this.textBook.id}`
+        );
       }
     },
     changeTopOptions(index) {
@@ -514,6 +524,7 @@ export default {
               },
             };
             this.tableData.push(item);
+            console.log("我的tableData", this.tableData);
           });
         },
         queryChallengeByBook: async (id) => {
@@ -536,7 +547,7 @@ export default {
                 tColor: "#3D3D3D",
               },
               value4: {
-                value: data.costTimes,
+                value: data.challengeTimes,
                 type: "text",
                 tColor: "#3D3D3D",
               },
@@ -566,12 +577,13 @@ export default {
                 tColor: "#3D3D3D",
               },
               value10: {
-                value: data.totalWordNum,
+                value: data.avgCostTimes,
                 type: "text",
                 tColor: "#3D3D3D",
               },
             };
             this.tableData.push(item);
+            console.log("考纲tableData", this.tableData);
           });
         },
         queryChallengeByTotal: async () => {
@@ -794,24 +806,17 @@ export default {
 .content-box {
   border-radius: 50rpx 50rpx 0 0;
   width: 750rpx;
-  height: 500rpx;
+  height: 45vh;
   bottom: 160rpx;
   box-sizing: border-box;
   border-top: 1px solid #b4cfff;
 }
 
-.scroll-view_V {
-  height: 400rpx;
-}
-
-.scroll-view_H {
+.scroll-view-item_H {
   white-space: nowrap;
   width: 100%;
-}
-
-.scroll-view-item_H {
+  height: 43vh;
   display: inline-block;
-  height: 400rpx;
   text-align: center;
 }
 

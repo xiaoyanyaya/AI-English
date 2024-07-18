@@ -200,6 +200,7 @@ export default {
     };
   },
   onLoad({ id, lessonId, pageType, bookId }) {
+    this.getSystemInfo();
     this.pageType = pageType;
     this.id = id;
     this.lessonId = lessonId;
@@ -258,6 +259,7 @@ export default {
       var letterList = uni.getStorageSync("letterList");
       letterList.forEach((obj, index) => {
         if (obj.letter === value) {
+          console.log("点击了", obj.letter);
           this.publicPlayAudio(obj.audioFemale);
           return;
         }
@@ -418,17 +420,10 @@ export default {
       let newStr = chars.join("");
       return newStr;
     },
-    getSystemInfo() {
-      uni.getSystemInfo({
-        success: (res) => {
-          this.deviceBrand = res.platform;
-        },
-      });
-    },
     playAudio() {
       var data = this.currentTopicData;
       let voicePath = "";
-      if (this.deviceBrand === "android") {
+      if (this.systemInfo.platform === "android") {
         if (data.auditManager.templateFile) {
           voicePath = data.auditManager.templateFile;
         } else {

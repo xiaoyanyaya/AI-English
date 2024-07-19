@@ -13,162 +13,161 @@
         <u-icon name="question-circle-fill"></u-icon>
       </view>
     </view>
+    <!-- 复习列表 -->
     <view class="list">
-      <view class="listItem" v-for="(items, index) in bookData" :key="index">
-        <view class="listItem-title">
-          {{ items.planDateName }}
-        </view>
-        <view class="listItem-content">
-          <!--          @click="toNav('/pages/word/wordList?id=3'+'&unitId='+item.id)"-->
-          <view
-            @click="toNav('/pages/word/wordList?id=3' + '&unitId=' + item.id)"
-            class="listItem-contentBook"
-            v-for="(item, i) in items.wordLessonList"
-            :key="item.id"
-          >
-            <view class="listItem-contentBook-head">
-              <view class="flex align-item-center justify-content-between">
-                <view class="t-size-24 font-weight-bold t-color-1863E5">
-                  {{ item.bookFullName }}
-                  <!-- {{ getNameWithEllipsis(item.bookFullName) }}//// -->
-                </view>
-              </view>
-              <view class="flex justify-content-between align-item-center mt-3">
-                <view class="font-weight-bold t-size-22">复习日期</view>
-                <view class="t-size-22 t-color-8A8A8A">{{
-                  item.reviewPlanDate
-                }}</view>
-              </view>
-              <view class="flex align-item-center justify-content-between mt-3">
-                <view
-                  class="t-size-32 t-color-3D3D3D font-weight-bold lessonName-box"
-                >
-                  {{ item.lessonName }}
-                  <!-- {{ getNameWithEllipsis(item.lessonName, 20) }}//// -->
-                </view>
-                <view class="t-size-26 font-weight-bold">
-                  <text class="t-color-24A800"
-                    >正确({{ item.correctWordNum }})</text
-                  >
-                  <text class="t-color-8A8A8A mr-1">/</text>
-                  <text class="t-color-DC0C0C"
-                    >错误({{ item.errorWordNum }})</text
-                  >
-                </view>
-              </view>
-              <view
-                class="listItem-contentBook-icon"
-                @click.stop="launch(item.id)"
-                :class="item.click ? 'listItem-contentBook-icons' : ''"
-              >
-                <image :src="imageBaseUrl + '/word/6-4-02.png'" mode=""></image>
+      <!-- <view class="listItem" v-for="(item, index) in bookData" :key="index"> -->
+      <!-- <view class="listItem-title">
+          {{ item.reviewPlanDateName }}
+        </view> -->
+      <view class="listItem-content">
+        <!--          @click="toNav('/pages/word/wordList?id=3'+'&unitId='+item.id)"-->
+        <view
+          @click="toNav('/pages/word/wordList?id=3' + '&unitId=' + item.id)"
+          class="listItem-contentBook"
+          v-for="(item, i) in bookData"
+          :key="item.id"
+        >
+          <view class="listItem-contentBook-head">
+            <view class="flex align-item-center justify-content-between">
+              <view class="t-size-24 font-weight-bold t-color-1863E5">
+                {{ item.bookFullName }}
+                <!-- {{ getNameWithEllipsis(item.bookFullName) }}//// -->
               </view>
             </view>
-            <view class="listItem-contentBook-tab" v-show="item.click">
+            <view class="flex justify-content-between align-item-center mt-3">
+              <view class="font-weight-bold t-size-22">复习日期</view>
+              <view class="t-size-22 t-color-8A8A8A">{{
+                item.reviewPlanDate
+              }}</view>
+            </view>
+            <view class="flex align-item-center justify-content-between mt-3">
               <view
-                class="listItem-contentBook-tabItem"
-                @click.stop="tabClick(0)"
-                :class="
-                  tabNum == 0 ? 'listItem-contentBook-tabItem-select' : ''
-                "
+                class="t-size-32 t-color-3D3D3D font-weight-bold lessonName-box"
               >
-                已复习历程
+                {{ item.lessonName }}
+                <!-- {{ getNameWithEllipsis(item.lessonName, 20) }}//// -->
               </view>
-              <view
-                class="listItem-contentBook-tabItem"
-                @click.stop="tabClick(1)"
-                :class="
-                  tabNum == 1 ? 'listItem-contentBook-tabItem-select' : ''
-                "
-              >
-                待复习计划
+              <view class="t-size-26 font-weight-bold">
+                <text class="t-color-24A800"
+                  >正确({{ item.correctWordNum }})</text
+                >
+                <text class="t-color-8A8A8A mr-1">/</text>
+                <text class="t-color-DC0C0C"
+                  >错误({{ item.errorWordNum }})</text
+                >
               </view>
             </view>
-            <view class="listItem-contentBook-form" v-show="item.click">
-              <view class="listItem-contentBook-formTitle">
-                <view
-                  class="listItem-contentBook-formTitle-item"
-                  style="width: 20%"
-                >
-                  日期
-                </view>
-                <view
-                  class="listItem-contentBook-formTitle-item"
-                  style="width: 20%"
-                >
-                  用时(秒)
-                </view>
-                <view
-                  class="listItem-contentBook-formTitle-item"
-                  style="width: 20%"
-                >
-                  正确数
-                </view>
-                <view
-                  class="listItem-contentBook-formTitle-item"
-                  style="width: 20%"
-                >
-                  错误数
-                </view>
-                <view
-                  class="listItem-contentBook-formTitle-item"
-                  style="width: 20%"
-                >
-                  结果
-                </view>
+            <view
+              class="listItem-contentBook-icon"
+              @click.stop="launch(item.id)"
+              :class="item.click ? 'listItem-contentBook-icons' : ''"
+            >
+              <image :src="imageBaseUrl + '/word/6-4-02.png'" mode=""></image>
+            </view>
+          </view>
+          <view class="listItem-contentBook-tab" v-show="item.click">
+            <view
+              class="listItem-contentBook-tabItem"
+              @click.stop="tabClick(0)"
+              :class="tabNum == 0 ? 'listItem-contentBook-tabItem-select' : ''"
+            >
+              已复习历程
+            </view>
+            <view
+              class="listItem-contentBook-tabItem"
+              @click.stop="tabClick(1)"
+              :class="tabNum == 1 ? 'listItem-contentBook-tabItem-select' : ''"
+            >
+              待复习计划
+            </view>
+          </view>
+          <view class="listItem-contentBook-form" v-show="item.click">
+            <view class="listItem-contentBook-formTitle">
+              <view
+                class="listItem-contentBook-formTitle-item"
+                style="width: 20%"
+              >
+                日期
               </view>
               <view
-                class="listItem-contentBook-formList"
-                v-for="(tab, tabIndex) in tabData"
-                :key="item.id"
+                class="listItem-contentBook-formTitle-item"
+                style="width: 20%"
               >
-                <view
-                  class="listItem-contentBook-formList-item"
-                  style="width: 20%"
-                >
-                  {{ tab.reviewDate }}
+                用时(秒)
+              </view>
+              <view
+                class="listItem-contentBook-formTitle-item"
+                style="width: 20%"
+              >
+                正确数
+              </view>
+              <view
+                class="listItem-contentBook-formTitle-item"
+                style="width: 20%"
+              >
+                错误数
+              </view>
+              <view
+                class="listItem-contentBook-formTitle-item"
+                style="width: 20%"
+              >
+                结果
+              </view>
+            </view>
+            <view
+              class="listItem-contentBook-formList"
+              v-for="(tab, tabIndex) in tabData"
+              :key="item.id"
+            >
+              <view
+                class="listItem-contentBook-formList-item"
+                style="width: 20%"
+              >
+                {{ tab.reviewDate }}
+              </view>
+              <view
+                class="listItem-contentBook-formList-item"
+                style="width: 20%"
+              >
+                {{ tab.costTimes ? tab.costTimes : "-" }}
+              </view>
+              <view
+                class="listItem-contentBook-formList-item"
+                style="width: 20%"
+              >
+                {{ tab.correctWordNum ? tab.correctWordNum : "-" }}
+              </view>
+              <view
+                class="listItem-contentBook-formList-item"
+                style="width: 20%"
+              >
+                {{ tab.errorWordNum || 0 }}
+              </view>
+              <view
+                class="listItem-contentBook-formList-item"
+                style="width: 20%"
+              >
+                <view v-if="tabNum == 0">
+                  <text v-if="tab.reviewResult == 0">不通过</text>
+                  <text v-else-if="tab.reviewResult == 1">通过</text>
+                  <text v-else>未完成答题</text>
                 </view>
-                <view
-                  class="listItem-contentBook-formList-item"
-                  style="width: 20%"
-                >
-                  {{ tab.costTimes ? tab.costTimes : "-" }}
-                </view>
-                <view
-                  class="listItem-contentBook-formList-item"
-                  style="width: 20%"
-                >
-                  {{ tab.correctWordNum ? tab.correctWordNum : "-" }}
-                </view>
-                <view
-                  class="listItem-contentBook-formList-item"
-                  style="width: 20%"
-                >
-                  {{ tab.errorWordNum || 0 }}
-                </view>
-                <view
-                  class="listItem-contentBook-formList-item"
-                  style="width: 20%"
-                >
-                  <view v-if="tabNum == 0">
-                    <text v-if="tab.reviewResult == 0">不通过</text>
-                    <text v-else-if="tab.reviewResult == 1">通过</text>
-                    <text v-else>未完成答题</text>
-                  </view>
-                  <view v-else>{{ tab.reviewResult == 1 ? "通过" : "-" }}</view>
-                </view>
+                <view v-else>{{ tab.reviewResult == 1 ? "通过" : "-" }}</view>
               </view>
             </view>
           </view>
         </view>
       </view>
+      <!-- </view> -->
     </view>
+    <!-- 错词本 -->
     <view
       class="imgs"
       @click="toNav('/pages/word/reverseForgetting/wrongWords')"
     >
       <image :src="imageBaseUrl + '/word/6-4-01.png'" mode=""></image>
     </view>
+    <!-- 弹窗 -->
     <u-popup v-model="show" mode="center" border-radius="20">
       <view class="popup">
         <view class="popupHead">
@@ -237,13 +236,14 @@ export default {
     },
     async getData() {
       var that = this;
-      let data = await getUserLessonList();
-      this.bookData = data.data.result;
-      this.bookData.forEach(function (item, i) {
-        item.wordLessonList.forEach(function (items, index) {
-          that.bookData[i].wordLessonList[index].click = false;
-        });
-      });
+      let res = await getUserLessonList();
+      console.log("list res", res);
+      this.bookData = res.data.result;
+      // this.bookData.forEach(function (item, i) {///
+      //   item.wordLessonList.forEach(function (items, index) {
+      //     that.bookData[i].wordLessonList[index].click = false;
+      //   });
+      // });
     },
     async tab(id) {
       var res = {

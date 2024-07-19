@@ -8,7 +8,7 @@
       class="t-color-3D3D3D t-size-30 font-weight-bold text-center table-nowrap px-5 mt-5"
     >
       {{ baseInfo.bookFullName }}
-      <view>
+      <view v-if="pageType != 'chanllenge'">
         {{ unitOrLesson }}
       </view>
     </view>

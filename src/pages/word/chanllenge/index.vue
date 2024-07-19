@@ -36,13 +36,6 @@
             </view>
             <view class="headR-num flex t-size-20">
               <view class="mr-5">共{{ textBook.wordNums }}个单词</view>
-              <!-- <view class="share-friend ml-5 flex align-item-center">
-                <image
-                  :src="`${imageBaseUrl}/word/6-24-01.png`"
-                  style="width: 20rpx; height: 20rpx"
-                ></image>
-                <view class="t-size-22 t-color-1863E5 ml-1">邀请好友挑战</view>
-              </view> -->
               <button
                 open-type="share"
                 data-name="shareBtn"
@@ -56,7 +49,7 @@
                 <view class="t-size-22 t-color-1863E5 ml-1">邀请好友挑战</view>
               </button>
             </view>
-            <view class="flex align-item-center mt-4">
+            <view class="flex align-item-center mt-3">
               <view
                 class="swtich-book flex align-item-center justify-content-center mr-4"
                 @click="toSwtichTextBook"
@@ -104,18 +97,28 @@
             v-if="rankingList[0]"
             class="user-one flex flex-direction-column align-item-center"
           >
-            <image :src="rankingList[0].avatar" class="user-avatar"></image>
-            <view class="user-nickname">{{ rankingList[0].nickName }}</view>
-            <view class="user-corse mt-1">{{ rankingList[0].avgScore }}</view>
+            <image
+              :src="rankingList[0].value2.value2"
+              class="user-avatar"
+            ></image>
+            <view class="user-nickname">{{ rankingList[0].value2.value }}</view>
+            <view class="user-corse mt-1">{{
+              rankingList[0].value4.value
+            }}</view>
           </view>
 
           <view
             v-if="rankingList[1]"
             class="user-two flex flex-direction-column align-item-center"
           >
-            <image :src="rankingList[1].avatar" class="user-avatar"></image>
-            <view class="user-nickname">{{ rankingList[1].nickName }}</view>
-            <view class="user-corse mt-1">{{ rankingList[1].avgScore }}</view>
+            <image
+              :src="rankingList[1].value2.value2"
+              class="user-avatar"
+            ></image>
+            <view class="user-nickname">{{ rankingList[1].value2.value }}</view>
+            <view class="user-corse mt-1">{{
+              rankingList[1].value4.value
+            }}</view>
           </view>
           <image
             :src="`${imageBaseUrl}/word/6-30-04.png`"
@@ -126,107 +129,116 @@
             v-if="rankingList[2]"
             class="user-thire flex flex-direction-column align-item-center"
           >
-            <image :src="rankingList[2].avatar" class="user-avatar"></image>
-            <view class="user-nickname">{{ rankingList[2].nickName }}</view>
-            <view class="user-corse mt-1">{{ rankingList[2].avgScore }}</view>
+            <image
+              :src="rankingList[2].value2.value2"
+              class="user-avatar"
+            ></image>
+            <view class="user-nickname">{{ rankingList[2].value2.value }}</view>
+            <view class="user-corse mt-1">{{
+              rankingList[2].value4.value
+            }}</view>
           </view>
         </view>
       </view>
     </view>
 
-    <view class="mt-3 content-box pt-1 px-1">
-      <scroll-view scroll-y="true" scroll-x="true">
-        <view class="scroll-view-item_H uni-bg-red">
-          <view
-            :class="
-              index === 0
-                ? 't-size-26 font-weight-bold t-color-3D3D3D mb-3'
-                : 't-size-24 t-color-878787 pt-3 pb-3 border-bottom'
-            "
-            class="flex table-item justify-content-center"
-            v-for="(item, index) in tableData"
-            :key="index"
-            :style="{
-              width: `${tableItemWidth}rpx`,
-              backgroundColor: item.value1.isSelf ? '#E2EDFF' : '',
-            }"
-          >
-            <view :style="{ color: item.value1.tColor }">{{
-              item.value1.value
-            }}</view>
+    <view class="mt-3 pt-1 px-1">
+      <scroll-view scroll-y="true" scroll-x="true" class="content-box">
+        <image
+          v-if="tableData.length <= 1"
+          :src="`${imageBaseUrl}/nodata.png`"
+          style="width: 400rpx; height: 400rpx"
+        ></image>
+        <view
+          v-else
+          :class="
+            index === 0
+              ? 't-size-26 font-weight-bold t-color-3D3D3D mb-3'
+              : 't-size-24 t-color-878787 pt-3 pb-3 border-bottom'
+          "
+          class="flex table-item justify-content-center"
+          v-for="(item, index) in tableData"
+          :key="index"
+          :style="{
+            width: `${tableItemWidth}rpx`,
+            backgroundColor: item.value1.isSelf ? '#E2EDFF' : '',
+          }"
+        >
+          <view :style="{ color: item.value1.tColor }">{{
+            item.value1.value
+          }}</view>
 
-            <view>
+          <view>
+            <view
+              v-if="currentTopOptions < 2"
+              style="width: 100%"
+              class="flex"
+              :class="index === 0 ? 'justify-content-center' : 'pl-2'"
+            >
               <view
-                v-if="currentTopOptions < 2"
-                style="width: 100%"
-                class="flex"
-                :class="index === 0 ? 'justify-content-center' : 'pl-2'"
+                v-if="currentOptions === 0 || index === 0"
+                :style="{ color: item.value2.tColor }"
               >
-                <view
-                  v-if="currentOptions === 0 || index === 0"
-                  :style="{ color: item.value2.tColor }"
-                >
-                  {{ item.value2.value }}
-                </view>
-                <view v-else>
-                  <image :src="item.value2.value" class="avatar ml-3" />
-                </view>
+                {{ item.value2.value }}
               </view>
-              <view
-                v-else
-                class="flex align-item-center"
-                style="width: 100%; position: absolute"
-                :style="index !== 0 ? ' margin-top: -10rpx;' : ''"
-              >
-                <image
-                  v-if="item.value2.value2"
-                  :src="item.value2.value2"
-                  class="avatar"
-                />
-                <view
-                  :style="{ color: item.value2.tColor }"
-                  class="ml-1 flex-1 flex justify-content-start table-nowrap"
-                >
-                  {{ item.value2.value }}
-                </view>
+              <view v-else>
+                <image :src="item.value2.value" class="avatar ml-3" />
               </view>
             </view>
-
-            <view :style="{ color: item.value3.tColor }">{{
-              item.value3.value
-            }}</view>
-            <view :style="{ color: item.value4.tColor }">{{
-              item.value4.value
-            }}</view>
-            <view :style="{ color: item.value5.tColor }">{{
-              item.value5.value
-            }}</view>
             <view
-              v-if="item.value6.value != null"
-              :style="{ color: item.value6.tColor }"
-              >{{ item.value6.value }}</view
+              v-else
+              class="flex align-item-center"
+              style="width: 100%; position: absolute"
+              :style="index !== 0 ? ' margin-top: -10rpx;' : ''"
             >
-            <view
-              v-if="item.value7.value != null"
-              :style="{ color: item.value7.tColor }"
-              >{{ item.value7.value }}</view
-            >
-            <view
-              v-if="item.value8.value != null"
-              :style="{ color: item.value8.tColor }"
-              >{{ item.value8.value }}</view
-            >
-            <view
-              v-if="item.value9.value != null"
-              :style="{ color: item.value9.tColor }"
-              >{{ item.value9.value }}</view
-            >
-            <view
-              v-if="item.value10.value != null"
-              :style="{ color: item.value10.tColor }"
-              >{{ item.value10.value }}</view
-            >
+              <image
+                v-if="item.value2.value2"
+                :src="item.value2.value2"
+                class="avatar"
+              />
+              <view
+                :style="{ color: item.value2.tColor }"
+                class="ml-1 flex-1 flex justify-content-start table-nowrap"
+              >
+                {{ item.value2.value }}
+              </view>
+            </view>
           </view>
+
+          <view :style="{ color: item.value3.tColor }">{{
+            item.value3.value
+          }}</view>
+          <view :style="{ color: item.value4.tColor }">{{
+            item.value4.value
+          }}</view>
+          <view :style="{ color: item.value5.tColor }">{{
+            item.value5.value
+          }}</view>
+          <view
+            v-if="item.value6.value != null"
+            :style="{ color: item.value6.tColor }"
+            >{{ item.value6.value }}</view
+          >
+          <view
+            v-if="item.value7.value != null"
+            :style="{ color: item.value7.tColor }"
+            >{{ item.value7.value }}</view
+          >
+          <view
+            v-if="item.value8.value != null"
+            :style="{ color: item.value8.tColor }"
+            >{{ item.value8.value }}</view
+          >
+          <view
+            v-if="item.value9.value != null"
+            :style="{ color: item.value9.tColor }"
+            >{{ item.value9.value }}</view
+          >
+          <view
+            v-if="item.value10.value != null"
+            :style="{ color: item.value10.tColor }"
+            >{{ item.value10.value }}</view
+          >
         </view>
       </scroll-view>
     </view>
@@ -400,12 +412,10 @@ export default {
     // 切换教材监听
     uni.$on("switchTextbook", ({ textBookId }) => {
       // this.tableData 去掉除了标题的数据
-      var tableData = this.tableData.slice(0, 1);
-      this.tableData = tableData;
+      this.tableData = this.tableData.slice(0, 1);
       this.initBasicData();
     });
     if (e.isReturnHome) {
-      console.log("分享页面进来~~~~~~~~~");
       this.isReturnHome = 1;
     }
   },
@@ -426,17 +436,16 @@ export default {
       this.initBasicData();
     },
     initBasicData() {
-      var result = {};
       if (this.currentTopOptions === 0) {
-        result = uni.getStorageSync("basicData").currWordConfig.textBook;
+        this.textBook = uni.getStorageSync("basicData").currWordConfig.textBook;
       }
       if (this.currentTopOptions === 1) {
-        result = uni.getStorageSync("basicData").currWordConfig.dictBook;
+        this.textBook = uni.getStorageSync("basicData").currWordConfig.dictBook;
       }
-      this.textBook = result;
-      console.log("textBook", result);
-      if (result) {
-        this.network().queryChallengeByUser(result.id);
+      console.log("textBook", this.textBook);
+      if (this.textBook) {
+        // this.network().queryChallengeByUser(this.textBook.id);///不一定要获取我的挑战历程
+        this.changeOptions(this.currentOptions);
       }
     },
     toSwtichTextBook() {
@@ -524,8 +533,8 @@ export default {
               },
             };
             this.tableData.push(item);
-            console.log("我的tableData", this.tableData);
           });
+          console.log("我的tableData", this.tableData);
         },
         queryChallengeByBook: async (id) => {
           const res = await queryChallengeByBook({ bookId: id });
@@ -572,19 +581,25 @@ export default {
                 tColor: "#3D3D3D",
               },
               value9: {
-                value: data.avgScore,
+                value:
+                  typeof data.avgScore === "number"
+                    ? data.avgScore.toFixed(2)
+                    : data.avgScore,
                 type: "text",
                 tColor: "#3D3D3D",
               },
               value10: {
-                value: data.avgCostTimes,
+                value:
+                  typeof data.avgCostTimes === "number"
+                    ? data.avgCostTimes.toFixed(2)
+                    : data.avgCostTimes,
                 type: "text",
                 tColor: "#3D3D3D",
               },
             };
             this.tableData.push(item);
-            console.log("考纲tableData", this.tableData);
           });
+          console.log("考纲tableData", this.tableData);
         },
         queryChallengeByTotal: async () => {
           const self = await queryChallengeByMyself({
@@ -593,8 +608,12 @@ export default {
           console.log("self", self);
           const seldData = self.data.result[0];
           seldData.isSelect = true;
-
           const res = await queryChallengeByTotal({ bookId: this.textBook.id });
+          console.log("res.res.data.result0", res.data.result);
+          res.data.result?.sort((a, b) => {
+            return a.rankNum - b.rankNum;
+          });
+          console.log("res.res.data.result", res.data.result);
           res.data.result.forEach((data, index) => {
             let item = {
               value1: {
@@ -616,7 +635,10 @@ export default {
                 tColor: "#3D3D3D",
               },
               value4: {
-                value: data.avgScore,
+                value:
+                  typeof data.avgScore === "number"
+                    ? data.avgScore.toFixed(2)
+                    : data.avgScore,
                 type: "text",
                 tColor: "#DC0C0C",
               },
@@ -628,14 +650,13 @@ export default {
             };
             this.tableData.push(item);
             if (index < 3) {
-              this.rankingList.push(data);
+              this.rankingList.push(item);
             }
           });
 
           this.tableData.forEach((data, index) => {
-            console.log("data.userId", data, seldData.userId);
             if (data.value1.value2 == seldData.userId) {
-              this.tableData.splice(index, 1);
+              // this.tableData.splice(index, 1);///这里暂时不知道干啥的先去掉否则数组缺少一条数据
               this.tableData[1] = {
                 value1: {
                   value: seldData.rankNum,
@@ -657,7 +678,10 @@ export default {
                   tColor: "#3D3D3D",
                 },
                 value4: {
-                  value: seldData.avgScore,
+                  value:
+                    typeof seldData.avgScore === "number"
+                      ? seldData.avgScore.toFixed(2)
+                      : seldData.avgScore,
                   type: "text",
                   tColor: "#DC0C0C",
                 },
@@ -708,6 +732,8 @@ export default {
 
   .headR-num {
     color: #8a8a8a;
+    height: 40rpx;
+    line-height: 40rpx;
     .share_box {
       display: flex;
       justify-content: space-evenly;
@@ -804,18 +830,13 @@ export default {
 }
 
 .content-box {
+  white-space: nowrap;
   border-radius: 50rpx 50rpx 0 0;
   width: 750rpx;
-  height: 45vh;
+  height: 43vh;
   bottom: 160rpx;
   box-sizing: border-box;
   border-top: 1px solid #b4cfff;
-}
-
-.scroll-view-item_H {
-  white-space: nowrap;
-  width: 100%;
-  height: 43vh;
   display: inline-block;
   text-align: center;
 }

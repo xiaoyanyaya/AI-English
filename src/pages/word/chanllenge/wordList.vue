@@ -9,9 +9,11 @@
           <image :src="textBook.bookImage" mode=""></image>
         </view>
         <view class="headR">
-          <view class="headR-title mt-1"> 沪教版</view>
+          <view class="headR-title mt-1">
+            {{ textBook.bookFullName.split("-")[1] }}
+          </view>
           <view class="headR-name">
-            {{ textBook.bookName }}
+            {{ textBook.bookFullName.split("-")[0] }}
           </view>
           <view class="headR-num mt-2 t-color-1863E5">
             共{{ textBook.wordNums }}个单词
@@ -122,7 +124,13 @@ export default {
       audioSrc: "",
       gif: false,
       selectId: 0,
-      textBook: {},
+      bookInfo: {},
+      textBook: {
+        bookFullName: "",
+        correctWordNum: "",
+        totalWordNum: "",
+        correctWordNum: "",
+      },
       bookId: "",
     };
   },
@@ -245,12 +253,12 @@ export default {
         },
         queryBookById: async () => {
           const res = await queryBookById({ id: this.bookId });
-          this.textBook = res.data.result;
+          this.bookInfo = res.data.result;
         },
         queryBookChallengeInfo: async () => {
           const res = await queryBookChallengeInfo({ bookId: this.bookId });
-          this.textBook = Object.assign(this.textBook, res.data.result);
-          console.log("textBook", this.textBook);
+          this.textBook = Object.assign(this.bookInfo, res.data.result);
+          console.log("textBook1", this.textBook);
         },
       };
     },
@@ -271,9 +279,13 @@ export default {
 }
 
 .head {
+  position: fixed;
+  z-index: 999;
   display: flex;
-  margin-bottom: 50rpx;
-  padding-bottom: 0;
+  padding: 20rpx 0 50rpx 0;
+  box-sizing: border-box;
+  width: 100%;
+  background-color: rgba(225, 241, 255);
 
   .headL image {
     width: 170rpx;
@@ -282,7 +294,7 @@ export default {
   }
 
   .headR-title {
-    color: #c40000;
+    color: #1863e5;
     margin: 10rpx 0;
     font-weight: 600;
   }
@@ -306,24 +318,19 @@ export default {
 }
 
 .title {
-  /* 	position: fixed; */
   background: #def0ff;
   width: 100%;
   padding-bottom: 30rpx;
   z-index: 1;
-  /* top: 120rpx; */
   left: 0;
-  /* padding-left: 55rpx; */
-  /* padding-top: 30rpx; */
 }
 
 .content {
-  padding: 30rpx 50rpx;
-  /* padding-top: 90rpx; */
+  padding: 0 50rpx 30rpx;
 }
 
 .list {
-  margin-top: 50rpx;
+  padding-top: 300rpx;
 }
 
 .listItem {

@@ -6,56 +6,62 @@
     <view class="head">
       <view class="headLeft">
         <view class="headLeft-icon"></view>
-        抗遗忘复习列表
+        单词复习列表
       </view>
       <view class="headRight" @click="show = true">
         <text>艾宾浩斯遗忘曲线</text>
         <u-icon name="question-circle-fill"></u-icon>
       </view>
     </view>
+    <!-- 日历筛选 -->
+    <view class="calendar">
+      <view
+        v-for="(item, index) in calendarList"
+        :key="item"
+        class="c_filter"
+        @click="changeHighlight(index)"
+        :style="{
+          'background-image': `url(${imageBaseUrl}/word/7-18-0${item.highlight}.png)`,
+        }"
+        >{{ item.value }}
+      </view>
+    </view>
     <!-- 复习列表 -->
     <view class="list">
-      <!-- <view class="listItem" v-for="(item, index) in bookData" :key="index"> -->
-      <!-- <view class="listItem-title">
-          {{ item.reviewPlanDateName }}
-        </view> -->
-      <view class="listItem-content">
-        <!--          @click="toNav('/pages/word/wordList?id=3'+'&unitId='+item.id)"-->
+      <view
+        v-for="item in bookData"
+        :key="item.id"
+        @click="goWordList(item)"
+        class="listItem-contentBook"
+      >
         <view
-          @click="toNav('/pages/word/wordList?id=3' + '&unitId=' + item.id)"
-          class="listItem-contentBook"
-          v-for="(item, i) in bookData"
-          :key="item.id"
+          class="listItem-contentBook-head"
+          :style="{
+            'background-image': `url(${imageBaseUrl}/word/7-18-03.png)`,
+          }"
         >
-          <view class="listItem-contentBook-head">
-            <view class="flex align-item-center justify-content-between">
-              <view class="t-size-24 font-weight-bold t-color-1863E5">
-                {{ item.bookFullName }}
-                <!-- {{ getNameWithEllipsis(item.bookFullName) }}//// -->
-              </view>
+          <view class="l_date">
+            {{ item.reviewPlanDateName }}
+          </view>
+          <view class="flex align-item-center justify-content-between pl-5">
+            <view class="t-size-24 font-weight-bold t-color-1863E5">
+              {{ getNameWithEllipsis(item.bookFullName, 15) }}
             </view>
-            <view class="flex justify-content-between align-item-center mt-3">
-              <view class="font-weight-bold t-size-22">复习日期</view>
-              <view class="t-size-22 t-color-8A8A8A">{{
-                item.reviewPlanDate
-              }}</view>
+            <view class="t-size-26 font-weight-bold">
+              <text class="t-size-24 t-color-3D3D3D">
+                正确({{ item.correctWordNum }})
+              </text>
+              <text>/</text>
+              <text class="t-size-24 t-color-3D3D3D">
+                错误({{ item.errorWordNum }})
+              </text>
             </view>
-            <view class="flex align-item-center justify-content-between mt-3">
-              <view
-                class="t-size-32 t-color-3D3D3D font-weight-bold lessonName-box"
-              >
-                {{ item.lessonName }}
-                <!-- {{ getNameWithEllipsis(item.lessonName, 20) }}//// -->
-              </view>
-              <view class="t-size-26 font-weight-bold">
-                <text class="t-color-24A800"
-                  >正确({{ item.correctWordNum }})</text
-                >
-                <text class="t-color-8A8A8A mr-1">/</text>
-                <text class="t-color-DC0C0C"
-                  >错误({{ item.errorWordNum }})</text
-                >
-              </view>
+          </view>
+          <view
+            class="flex align-item-center justify-content-between mt-2 pl-5"
+          >
+            <view class="font-w-5 t-size-30">
+              {{ getNameWithEllipsis(item.lessonName, 28) }}
             </view>
             <view
               class="listItem-contentBook-icon"
@@ -65,7 +71,9 @@
               <image :src="imageBaseUrl + '/word/6-4-02.png'" mode=""></image>
             </view>
           </view>
-          <view class="listItem-contentBook-tab" v-show="item.click">
+        </view>
+        <view class="listItem-contentBook-form" v-show="item.click">
+          <view class="listItem-contentBook-tab">
             <view
               class="listItem-contentBook-tabItem"
               @click.stop="tabClick(0)"
@@ -81,84 +89,66 @@
               待复习计划
             </view>
           </view>
-          <view class="listItem-contentBook-form" v-show="item.click">
-            <view class="listItem-contentBook-formTitle">
-              <view
-                class="listItem-contentBook-formTitle-item"
-                style="width: 20%"
-              >
-                日期
-              </view>
-              <view
-                class="listItem-contentBook-formTitle-item"
-                style="width: 20%"
-              >
-                用时(秒)
-              </view>
-              <view
-                class="listItem-contentBook-formTitle-item"
-                style="width: 20%"
-              >
-                正确数
-              </view>
-              <view
-                class="listItem-contentBook-formTitle-item"
-                style="width: 20%"
-              >
-                错误数
-              </view>
-              <view
-                class="listItem-contentBook-formTitle-item"
-                style="width: 20%"
-              >
-                结果
-              </view>
+          <view class="listItem-contentBook-formTitle">
+            <view
+              class="listItem-contentBook-formTitle-item"
+              style="width: 20%"
+            >
+              日期
             </view>
             <view
-              class="listItem-contentBook-formList"
-              v-for="(tab, tabIndex) in tabData"
-              :key="item.id"
+              class="listItem-contentBook-formTitle-item"
+              style="width: 20%"
             >
-              <view
-                class="listItem-contentBook-formList-item"
-                style="width: 20%"
-              >
-                {{ tab.reviewDate }}
+              用时(秒)
+            </view>
+            <view
+              class="listItem-contentBook-formTitle-item"
+              style="width: 20%"
+            >
+              正确数
+            </view>
+            <view
+              class="listItem-contentBook-formTitle-item"
+              style="width: 20%"
+            >
+              错误数
+            </view>
+            <view
+              class="listItem-contentBook-formTitle-item"
+              style="width: 20%"
+            >
+              结果
+            </view>
+          </view>
+          <view
+            class="listItem-contentBook-formList"
+            v-for="tab in tabData"
+            :key="tab.id"
+          >
+            <view class="listItem-contentBook-formList-item" style="width: 20%">
+              {{ tab.reviewDate }}
+            </view>
+            <view class="listItem-contentBook-formList-item" style="width: 20%">
+              {{ tab.costTimesText ? tab.costTimesText : "-" }}
+            </view>
+            <view class="listItem-contentBook-formList-item" style="width: 20%">
+              {{ tab.correctWordNum || 0 }}
+            </view>
+            <view class="listItem-contentBook-formList-item" style="width: 20%">
+              {{ tab.errorWordNum || 0 }}
+            </view>
+            <view class="listItem-contentBook-formList-item" style="width: 20%">
+              <view v-if="tabNum == 0">
+                <text v-if="tab.reviewResult == 0">不通过</text>
+                <text v-else-if="tab.reviewResult == 1">通过</text>
+                <text v-else>未完成答题</text>
               </view>
-              <view
-                class="listItem-contentBook-formList-item"
-                style="width: 20%"
-              >
-                {{ tab.costTimes ? tab.costTimes : "-" }}
-              </view>
-              <view
-                class="listItem-contentBook-formList-item"
-                style="width: 20%"
-              >
-                {{ tab.correctWordNum ? tab.correctWordNum : "-" }}
-              </view>
-              <view
-                class="listItem-contentBook-formList-item"
-                style="width: 20%"
-              >
-                {{ tab.errorWordNum || 0 }}
-              </view>
-              <view
-                class="listItem-contentBook-formList-item"
-                style="width: 20%"
-              >
-                <view v-if="tabNum == 0">
-                  <text v-if="tab.reviewResult == 0">不通过</text>
-                  <text v-else-if="tab.reviewResult == 1">通过</text>
-                  <text v-else>未完成答题</text>
-                </view>
-                <view v-else>{{ tab.reviewResult == 1 ? "通过" : "-" }}</view>
-              </view>
+              <view v-else>{{ tab.reviewResult == 1 ? "通过" : "-" }}</view>
             </view>
           </view>
         </view>
       </view>
-      <!-- </view> -->
     </view>
     <!-- 错词本 -->
     <view
@@ -196,7 +186,6 @@
         </view>
       </view>
     </u-popup>
-
     <view style="height: 160rpx"></view>
     <wordTab :type="1"></wordTab>
   </view>
@@ -216,9 +205,23 @@ export default {
   data() {
     return {
       bookData: [],
+      allBookData: [],
+      tadayBookData: [],
+      tomorBookData: [],
+      tomor2BookData: [],
+      weekBookData: [],
+      mouthBookData: [],
       tabData: [],
       show: false,
       tabNum: 0,
+      calendarList: [
+        { value: "全部", highlight: 1 },
+        { value: "今天", highlight: 2 },
+        { value: "明天", highlight: 2 },
+        { value: "后天", highlight: 2 },
+        { value: "本周", highlight: 2 },
+        { value: "本月", highlight: 2 },
+      ],
     };
   },
   onShow() {
@@ -230,6 +233,10 @@ export default {
         url: urls,
       });
     },
+    goWordList(item) {
+      uni.setStorageSync("nowUnitOrLesson", item.lessonName);
+      this.toNav("/pages/word/wordList?id=3" + "&unitId=" + item.id);
+    },
     tabClick(i) {
       this.tabData = this.tabAllData[i].wordReviewList;
       this.tabNum = i;
@@ -237,46 +244,76 @@ export default {
     async getData() {
       var that = this;
       let res = await getUserLessonList();
-      console.log("list res", res);
       this.bookData = res.data.result;
-      // this.bookData.forEach(function (item, i) {///
-      //   item.wordLessonList.forEach(function (items, index) {
-      //     that.bookData[i].wordLessonList[index].click = false;
-      //   });
-      // });
+      this.allBookData = res.data.result;
+      this.tadayBookData = res.data.result.filter((item) => {
+        return item.reviewPlanDateName == "今天";
+      });
+      this.tomorBookData = res.data.result.filter((item) => {
+        console.log("item", item);
+        return item.reviewPlanDateName == "明天";
+      });
+      this.tomor2BookData = res.data.result.filter((item) => {
+        console.log("item", item);
+        return item.reviewPlanDateName == "后天";
+      });
+      this.weekBookData = res.data.result.filter((item) => {
+        console.log("item", item);
+        return item.reviewPlanDateName == "本周";
+      });
+      this.mouthBookData = res.data.result.filter((item) => {
+        console.log("item", item);
+        return item.reviewPlanDateName == "本月";
+      });
     },
-    async tab(id) {
+    async getTab(id) {
       var res = {
         lessonId: id,
       };
       let data = await queryListByLessonId(res);
       this.tabAllData = data.data.result;
-      this.tabData = data.data.result[0].wordReviewList;
-      console.log("tabData", this.tabData);
+      this.tabData = data.data.result[this.tabNum].wordReviewList;
     },
+    //展开/收起
     launch(id) {
-      var that = this;
-      this.bookData.forEach(function (item, i) {
-        item.wordLessonList.forEach(function (items, index) {
-          if (that.bookData[i].wordLessonList[index].id == id) {
-            if (that.bookData[i].wordLessonList[index].click == false) {
-              that.bookData[i].wordLessonList[index].click = true;
-              that.tab(id);
-            } else {
-              that.bookData[i].wordLessonList[index].click = false;
-            }
-          } else {
-            that.bookData[i].wordLessonList[index].click = false;
-          }
-        });
+      this.tabNum = 0;
+      this.bookData.forEach((item) => {
+        if (item.id == id) {
+          item.click = !item.click;
+          item.click && this.getTab(id);
+        } else {
+          item.click = false;
+        }
       });
       this.bookData = JSON.parse(JSON.stringify(this.bookData));
+    },
+    changeHighlight(index) {
+      this.calendarList.forEach((item, i) => {
+        if (i == index) {
+          item.highlight = 1;
+        } else {
+          item.highlight = 2;
+        }
+        if (index == 0) {
+          this.bookData = this.allBookData;
+        } else if (index == 1) {
+          this.bookData = this.tadayBookData;
+        } else if (index == 2) {
+          this.bookData = this.tomorBookData;
+        } else if (index == 3) {
+          this.bookData = this.tomor2BookData;
+        } else if (index == 4) {
+          this.bookData = this.weekBookData;
+        } else if (index == 5) {
+          this.bookData = this.mouthBookData;
+        }
+      });
     },
   },
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 .nav-icon,
 .nav-slot,
 .nav-btn {
@@ -285,6 +322,19 @@ export default {
 
 .main {
   background: linear-gradient(180deg, #d1eaff 0%, #f8fdff 14%) !important;
+}
+
+.calendar {
+  display: flex;
+  padding: 40rpx 50rpx 5rpx;
+  .c_filter {
+    margin-right: 20rpx;
+    width: 95rpx;
+    height: 95rpx;
+    text-align: center;
+    line-height: 95rpx;
+    background-size: cover;
+  }
 }
 
 .head {
@@ -338,36 +388,26 @@ export default {
 }
 
 .list {
-  padding: 40rpx;
-  padding-top: 0;
-}
+  padding: 0 40rpx 40rpx;
+  .listItem-contentBook {
+    margin-top: 35rpx;
 
-.listItem {
-  /* background: #fff; */
-}
-
-.listItem-title {
-  color: #8a8a8a;
-  font-size: 24rpx;
-  padding: 20rpx 40rpx;
-  background: #fff;
-  margin-bottom: 30rpx;
-  border-radius: 10rpx;
-  margin-top: 30rpx;
-}
-
-.listItem-content {
-}
-
-.listItem-contentBook {
-  background: #fff;
-  margin-top: 30rpx;
-}
-
-.listItem-contentBook-head {
-  background: linear-gradient(180deg, #d6e8ff 0%, #ffffff 100%);
-  padding: 25rpx 40rpx 25rpx 40rpx;
-  border-radius: 10rpx 10rpx 0 0;
+    .listItem-contentBook-head {
+      position: relative;
+      background-size: contain;
+      padding: 40rpx 40rpx 25rpx 10rpx;
+      border-radius: 10rpx 10rpx 0 0;
+      height: 160rpx;
+      .l_date {
+        transform: rotate(-45deg);
+        position: absolute;
+        top: 20rpx;
+        color: #7199d6;
+        width: 48rpx;
+        font-size: 24rpx;
+      }
+    }
+  }
 }
 
 .listItem-contentBook-top {
@@ -459,7 +499,7 @@ export default {
   justify-content: center;
   align-items: center;
   transform: rotateX(180deg);
-  height: 80rpx;
+  padding: 8rpx;
 }
 
 .imgs {

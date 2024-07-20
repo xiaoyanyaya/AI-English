@@ -16,7 +16,22 @@
           {{ unitOrLesson }}
         </view>
       </view>
+      <!-- 单词列表 -->
       <view class="list">
+        <view v-if="id == 3" class="noforget_box">
+          <view class="left">
+            {{ getNameWithEllipsis(allData.lessonName, 7) }}
+          </view>
+          <view class="right">
+            <view class="r_top">
+              {{ allData.createTime }}
+            </view>
+            <view class="r_body">
+              <view class="succ">正确（{{ allData.correctWordNum }}）</view>
+              <view class="err">错误 （{{ allData.errorWordNum }}）</view>
+            </view>
+          </view>
+        </view>
         <view
           class="listItem"
           v-for="item in allData.wordLessonDictList"
@@ -71,6 +86,13 @@
             "
           >
             词汇讲解
+          </view>
+          <view v-if="item.answerResult != null" class="listItem-img">
+            <image
+              v-if="item.answerResult == 0"
+              :src="imageBaseUrl + '/word/5-21-41.png'"
+            ></image>
+            <image v-else :src="imageBaseUrl + '/word/5-21-40.png'"></image>
           </view>
         </view>
         <view
@@ -191,6 +213,7 @@ export default {
     }
     if (e.id == 3) {
       this.dataC.id = e.unitId;
+      this.chanllengeBtnText = "开始复习";
     }
     if (e.btnTitle) {
       this.chanllengeBtnText = e.btnTitle;
@@ -280,7 +303,7 @@ export default {
         this.allData.wordLessonDictList.forEach(
           (item) => (item.wordCnList = item.wordCn.split("\n"))
         );
-        this.lessonId = this.allData.id; ////抗遗忘复习
+        this.lessonId = this.allData.id; //抗遗忘复习的课时id:返回单词列表同时返回课时id
         uni.setStorageSync("lessonId", this.lessonId);
         uni.setStorageSync("wordList", data.data.result);
       }
@@ -368,6 +391,43 @@ export default {
 
   .list {
     padding-top: 135rpx;
+
+    .noforget_box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10rpx 20rpx 30rpx 50rpx;
+      height: 140rpx;
+      background: #eaf3ff;
+      box-sizing: border-box;
+      border: 3rpx solid transparent; /* 使用透明边框，以便后面覆盖 */
+      margin-bottom: 20rpx;
+      border-image: linear-gradient(102deg, #e5f3ff 0%, #85b2ff 100%) 3;
+      border-radius: 10rpx !important;
+      .left {
+        font-size: 40rpx;
+        color: #1863e5;
+      }
+      .right {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .r_top {
+          font-size: 20rpx;
+          color: #8a8a8a;
+        }
+        .r_body {
+          margin-top: 25rpx;
+          display: flex;
+          .succ {
+            color: #24a800;
+          }
+          .err {
+            color: #dc0c0c;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -420,7 +480,7 @@ export default {
 .listItem-r {
   position: absolute;
   top: 50%;
-  right: 5%;
+  right: 11%;
   transform: translateY(-50%);
   background: #f7a751;
   border-radius: 50rpx;
@@ -429,6 +489,16 @@ export default {
   height: 50rpx;
   line-height: 50rpx;
   padding: 0 20rpx;
+}
+
+.listItem-img {
+  image {
+    position: absolute;
+    top: 32%;
+    right: 2%;
+    width: 40rpx;
+    height: 40rpx;
+  }
 }
 
 .listItem-l {

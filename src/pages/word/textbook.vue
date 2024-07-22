@@ -766,6 +766,7 @@ export default {
       console.log("添加任务res", res);
       let lesson = await lessonList(this.data); //刷新任务列表
       this.list = lesson.data.result;
+      uni.setStorageSync("nowUnitOrLesson", res.data.result.lessonName);
       if (res.data.code == 200) {
         this.toNav(
           "/pages/word/wordList?unitId=" +

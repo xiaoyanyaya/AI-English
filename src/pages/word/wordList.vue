@@ -1,6 +1,11 @@
 <template>
   <view class="main">
-    <cy-navbar :showBack="true" bgColor="#def0ff" textColor="#3D3D3D">
+    <cy-navbar
+      :showBack="true"
+      :isReturnHome="isReturnHome"
+      bgColor="#def0ff"
+      textColor="#3D3D3D"
+    >
       <view class="t-size-30">单词列表</view>
     </cy-navbar>
     <view class="content">
@@ -173,16 +178,6 @@ export default {
   data() {
     return {
       id: 0,
-      data: {
-        unitId: 0,
-      },
-      dataB: {
-        lessonId: 0,
-        // pageSize: 99,
-      },
-      dataC: {
-        id: 0,
-      },
       lessonId: "",
       allData: {
         bookFullName: "",
@@ -199,20 +194,24 @@ export default {
         num: 3,
       },
       unitOrLesson: "",
+      query: {},
+      isReturnHome: 0,
     };
   },
   onLoad(e) {
     console.log("eeee", e);
+    if (e.isReturnHome) {
+      console.log("分享页面进来~~~~~~~~~");
+      this.isReturnHome = 1;
+    }
+    this.query = e;
     if (e.id == 0) {
-      this.data.unitId = e.unitId;
       this.chanllengeBtnText = "立即听写";
     }
     if (e.id == 2) {
-      this.data.unitId = e.unitId;
       this.chanllengeBtnText = "立即听写";
     }
     if (e.id == 3) {
-      this.dataC.id = e.unitId;
       this.chanllengeBtnText = "开始复习";
     }
     if (e.btnTitle) {
@@ -231,11 +230,9 @@ export default {
       this.id = uni.getStorageSync("wordType");
     }
     if (e.id == 1) {
-      this.dataB.lessonId = e.unitId;
       this.chanllengeBtnText = "立即听写";
       this.lessonId = e.btnTitle ? uni.getStorageSync("lessonId") : e.lessonId; //考纲传直接传上个页面的课时id(dict的id)
       uni.setStorageSync("lessonId", this.lessonId);
-      console.log(e.unitId);
     }
     this.dictBook = uni.getStorageSync("basicData").currWordConfig.dictBook;
     this.unitOrLesson = uni.getStorageSync("nowUnitOrLesson");
@@ -259,12 +256,13 @@ export default {
         "&pageType=" +
         (this.pageType ? this.pageType : "") +
         "&bookId=" +
-        (this.id == 1 ? this.dataB.lessonId : this.allData.id);
+        (this.id == 1 ? this.lessonId : this.allData.id);
       this.toNav(urls);
     },
     async getWord() {
+      uni.setStorageSync("nowUnitId", this.query.unitId);
       if (this.id == 0) {
-        let data = await wordList(this.data);
+        let data = await wordList({ unitId: this.query.unitId });
         console.log("id=0单词列表res的data", data);
         this.allData = data.data.result;
         this.allData.wordLessonDictList.forEach(
@@ -274,7 +272,7 @@ export default {
         uni.setStorageSync("lessonId", this.lessonId);
         uni.setStorageSync("wordList", data.data.result);
       } else if (this.id == 1) {
-        let data = await lessonWordListByL(this.dataB);
+        let data = await lessonWordListByL({ lessonId: this.query.unitId });
         console.log("id=1单词列表res的data", data);
         this.allData = data.data.result;
         this.allData.forEach(
@@ -287,7 +285,7 @@ export default {
         };
         uni.setStorageSync("wordList", result);
       } else if (this.id == 2) {
-        let data = await lessonWordList(this.data);
+        let data = await lessonWordList({ unitId: this.query.unitId });
         console.log("id=2单词列表res的data", data);
         this.allData = data.data.result;
         this.allData.wordLessonDictList.forEach(
@@ -297,7 +295,7 @@ export default {
         uni.setStorageSync("lessonId", this.lessonId);
         uni.setStorageSync("wordList", data.data.result);
       } else if (this.id == 3) {
-        let data = await queryById(this.dataC);
+        let data = await queryById({ id: this.query.unitId });
         console.log("id=3单词列表res的data", data);
         this.allData = data.data.result;
         this.allData.wordLessonDictList.forEach(
@@ -312,7 +310,6 @@ export default {
       var that = this;
       this.gif = true;
       this.selectId = id;
-      // innerAudioContext.src = src;
       console.log(uni.getSystemInfoSync().platform);
       if (uni.getSystemInfoSync().platform === "ios") {
         innerAudioContext.src = encodeURI(src);
@@ -322,12 +319,6 @@ export default {
           console.log("音频播放结束");
           that.gif = false;
         });
-        // console.log('ios')
-        // bgAudioManager.src = src
-        // bgAudioManager.play()
-        // bgAudioManager.onEnded(()=>{
-        // 	bgAudioManager.stop()
-        // })
       } else {
         uni.showLoading({
           title: "加载中",

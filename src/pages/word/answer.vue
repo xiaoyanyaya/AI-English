@@ -18,7 +18,7 @@
           wordList.bookFullName ? wordList.bookFullName : bookData.bookFullName
         }}
       </view>
-      <view>
+      <view v-if="pageType != 'chanllenge'">
         {{ unitOrLesson }}
       </view>
     </view>
@@ -50,6 +50,19 @@
         <view class="statisticsItem-top"> 70% </view>
         <view class="statisticsItem-bottom"> 击败人数 </view>
       </view>
+      <button
+        open-type="share"
+        data-name="shareBtn"
+        size="mini"
+        class="share_box"
+        style="display: flex"
+      >
+        <image
+          :src="`${imageBaseUrl}/word/6-24-01.png`"
+          style="width: 30rpx; height: 30rpx"
+        ></image>
+        <view class="t-size-28 t-color-1863E5 ml-1">分享</view>
+      </button>
       <view class="statisticsItem">
         <view class="statisticsItem-top"> {{ data.costTimes }}s </view>
         <view class="statisticsItem-bottom"> 用时 </view>
@@ -112,7 +125,6 @@
         >
           <text v-if="item.answerResult == 0">× 错误</text>
           <text v-else-if="item.answerResult == 1">√ 正确</text>
-          <!--          <text v-else>× 跳过</text>-->
         </view>
       </view>
     </view>
@@ -126,12 +138,6 @@
           <view class="resultTitle-itemGreen"></view>
           <view class="resultTitle-itemText"> 正确 </view>
         </view>
-        <!--        <view class="resultTitle-item">
-          <view class="resultTitle-itemGrey"></view>
-          <view class="resultTitle-itemText">
-            跳过
-          </view>
-        </view>-->
       </view>
       <view class="resultList">
         <view
@@ -332,6 +338,7 @@ export default {
       pageType: "",
       bookId: "",
       unitOrLesson: "",
+      nowUnitId: "",
     };
   },
   onReady() {
@@ -342,6 +349,16 @@ export default {
       this.backColor = "#fff";
     } else {
       this.backColor = "transparent";
+    }
+  },
+  onShareAppMessage(res) {
+    if (res.from === "button") {
+      // 来自页面内分享按钮
+      console.log(res.target);
+      return {
+        title: "单词列表",
+        path: `/pages/word/wordList?id=${this.wordType}&unitId=${this.nowUnitId}&btnTitle=重新答题&isReturnHome=1`,
+      };
     }
   },
   onLoad({ id, pageType, bookId }) {
@@ -355,6 +372,7 @@ export default {
     this.wordList = uni.getStorageSync("wordList");
     this.wordType = uni.getStorageSync("wordType");
     this.unitOrLesson = uni.getStorageSync("nowUnitOrLesson");
+    this.nowUnitId = uni.getStorageSync("nowUnitId");
   },
   methods: {
     returnCustom() {
@@ -367,14 +385,11 @@ export default {
         case 0:
           if (this.pageType !== "chanllenge") {
             // 重新答题
-            console.log("添加");
             this.toNav(
               "/pages/word/wordList?id=" +
                 this.wordType +
                 "&unitId=" +
-                (this.wordList.unitId
-                  ? this.wordList.unitId
-                  : this.data.lessonId) +
+                this.nowUnitId +
                 "&btnTitle=重新答题"
             );
           } else {
@@ -467,13 +482,25 @@ export default {
 }
 
 .head {
-  height: 350rpx;
+  height: 390rpx;
 }
 
 .statistics {
   display: flex;
   justify-content: space-around;
-  padding: 0 30rpx;
+  padding: 0 150rpx;
+}
+
+.share_box {
+  justify-content: space-evenly;
+  align-items: center;
+  color: #8a8a8a;
+  height: 60rpx;
+  line-height: 60rpx;
+  background-color: #fff;
+}
+button::after {
+  border: none; /*去掉分享按钮的边框 */
 }
 
 .statisticsItem-top {

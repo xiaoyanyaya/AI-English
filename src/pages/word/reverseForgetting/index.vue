@@ -250,19 +250,15 @@ export default {
         return item.reviewPlanDateName == "今天";
       });
       this.tomorBookData = res.data.result.filter((item) => {
-        console.log("item", item);
         return item.reviewPlanDateName == "明天";
       });
       this.tomor2BookData = res.data.result.filter((item) => {
-        console.log("item", item);
         return item.reviewPlanDateName == "后天";
       });
       this.weekBookData = res.data.result.filter((item) => {
-        console.log("item", item);
         return item.reviewPlanDateName == "本周";
       });
       this.mouthBookData = res.data.result.filter((item) => {
-        console.log("item", item);
         return item.reviewPlanDateName == "本月";
       });
     },
@@ -394,7 +390,7 @@ export default {
 
     .listItem-contentBook-head {
       position: relative;
-      background-size: contain;
+      background-size: cover;
       padding: 40rpx 40rpx 25rpx 10rpx;
       border-radius: 10rpx 10rpx 0 0;
       height: 160rpx;
@@ -457,12 +453,13 @@ export default {
   align-items: center;
   justify-content: space-around;
   padding: 0 60rpx;
-  margin-top: 30rpx;
+  margin-top: 18rpx;
 }
 
 .listItem-contentBook-tabItem {
   color: #8a8a8a;
   font-size: 24rpx;
+  padding: 12rpx;
 }
 
 .listItem-contentBook-tabItem-select {
@@ -472,7 +469,7 @@ export default {
 }
 
 .listItem-contentBook-form {
-  margin-top: 20rpx;
+  margin-top: 8rpx;
 }
 
 .listItem-contentBook-formTitle {
@@ -499,7 +496,7 @@ export default {
   justify-content: center;
   align-items: center;
   transform: rotateX(180deg);
-  padding: 8rpx;
+  padding: 12rpx;
 }
 
 .imgs {

@@ -169,24 +169,20 @@
           }}</view>
 
           <view>
-            <view
-              v-if="currentTopOptions < 2"
-              style="width: 100%"
-              class="flex"
-              :class="index === 0 ? 'justify-content-center' : 'pl-2'"
-            >
+            <!-- <view v-if="currentTopOptions < 2" style="width: 100%" class="flex">
+              <image
+                v-if="item.value2.value2"
+                :src="item.value2.value2"
+                class="avatar"
+              />
               <view
-                v-if="currentOptions === 0 || index === 0"
                 :style="{ color: item.value2.tColor }"
+                class="flex-1 flex justify-content-start table-nowrap"
               >
                 {{ item.value2.value }}
               </view>
-              <view v-else>
-                <image :src="item.value2.value" class="avatar ml-3" />
-              </view>
-            </view>
+            </view> -->
             <view
-              v-else
               class="flex align-item-center"
               style="width: 100%; position: absolute"
               :style="index !== 0 ? ' margin-top: -10rpx;' : ''"
@@ -204,16 +200,19 @@
               </view>
             </view>
           </view>
-
-          <view :style="{ color: item.value3.tColor }">{{
-            item.value3.value
-          }}</view>
+          <view
+            v-if="item.value3.value != null"
+            :style="{ color: item.value3.tColor }"
+            >{{ item.value3.value }}</view
+          >
           <view :style="{ color: item.value4.tColor }">{{
             item.value4.value
           }}</view>
-          <view :style="{ color: item.value5.tColor }">{{
-            item.value5.value
-          }}</view>
+          <view
+            v-if="item.value5.value != null"
+            :style="{ color: item.value5.tColor }"
+            >{{ item.value5.value }}</view
+          >
           <view
             v-if="item.value6.value != null"
             :style="{ color: item.value6.tColor }"
@@ -327,25 +326,25 @@ export default {
           tColor: "#3D3D3D",
         },
         value2: {
-          value: "头像",
+          value: "用户",
           type: "image",
           tColor: "#3D3D3D",
         },
-        value3: {
-          value: "昵称",
-          type: "text",
-          tColor: "#3D3D3D",
-        },
+        // value3: {
+        //   value: "昵称",
+        //   type: "text",
+        //   tColor: "#3D3D3D",
+        // },
         value4: {
           value: "挑战次数",
           type: "text",
           tColor: "#3D3D3D",
         },
-        value5: {
-          value: "挑战单词数",
-          type: "text",
-          tColor: "#3D3D3D",
-        },
+        // value5: {
+        //   value: "挑战单词数",
+        //   type: "text",
+        //   tColor: "#3D3D3D",
+        // },
         value6: {
           value: "正确单词数",
           type: "text",
@@ -366,11 +365,11 @@ export default {
           type: "text",
           tColor: "#3D3D3D",
         },
-        value10: {
-          value: "平均用时",
-          type: "text",
-          tColor: "#3D3D3D",
-        },
+        // value10: {
+        //   value: "平均用时",
+        //   type: "text",
+        //   tColor: "#3D3D3D",
+        // },
       },
       // 挑战总排名标题 （字段：名次，头像/昵称，正确数/总数，得分，总耗时）
       totalChallengeTitle: {
@@ -471,7 +470,7 @@ export default {
           break;
         case 1:
           this.tableData = [];
-          this.tableItemWidth = 1400;
+          this.tableItemWidth = 1000;
           this.tableData.push(this.textChallengeTitle);
           this.initBasicData();
           break;
@@ -494,7 +493,7 @@ export default {
           break;
         case 1:
           this.tableData = [];
-          this.tableItemWidth = 1400;
+          this.tableItemWidth = 1000;
           this.tableData.push(this.textChallengeTitle);
           this.network().queryChallengeByBook(this.textBook.id);
           break;
@@ -546,25 +545,26 @@ export default {
                 tColor: "#3D3D3D",
               },
               value2: {
-                value: data.avatar,
-                type: "text",
-                tColor: "#3D3D3D",
-              },
-              value3: {
                 value: data.nickName,
+                value2: data.avatar,
                 type: "text",
                 tColor: "#3D3D3D",
               },
+              // value3: {
+              //   value: data.nickName,
+              //   type: "text",
+              //   tColor: "#3D3D3D",
+              // },
               value4: {
                 value: data.challengeTimes,
                 type: "text",
                 tColor: "#3D3D3D",
               },
-              value5: {
-                value: data.totalWordNum,
-                type: "text",
-                tColor: "#3D3D3D",
-              },
+              // value5: {
+              //   value: data.totalWordNum,
+              //   type: "text",
+              //   tColor: "#3D3D3D",
+              // },
               value6: {
                 value: data.correctWordNum,
                 type: "text",
@@ -588,14 +588,14 @@ export default {
                 type: "text",
                 tColor: "#3D3D3D",
               },
-              value10: {
-                value:
-                  typeof data.avgCostTimes === "number"
-                    ? data.avgCostTimes.toFixed(2)
-                    : data.avgCostTimes,
-                type: "text",
-                tColor: "#3D3D3D",
-              },
+              // value10: {
+              //   value:
+              //     typeof data.avgCostTimes === "number"
+              //       ? data.avgCostTimes.toFixed(2)
+              //       : data.avgCostTimes,
+              //   type: "text",
+              //   tColor: "#3D3D3D",
+              // },
             };
             this.tableData.push(item);
           });

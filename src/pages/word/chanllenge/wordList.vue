@@ -9,7 +9,10 @@
           <image :src="textBook.bookImage" mode=""></image>
         </view>
         <view class="headR">
-          <view class="headR-title mt-1">
+          <view
+            v-if="textBook.bookFullName.split('-')[1]"
+            class="headR-title mt-1"
+          >
             {{ textBook.bookFullName.split("-")[1] }}
           </view>
           <view class="headR-name">
@@ -132,9 +135,11 @@ export default {
         correctWordNum: "",
       },
       bookId: "",
+      query: {},
     };
   },
-  onLoad() {
+  onLoad(e) {
+    this.query = e;
     this.initData();
   },
   onPageScroll(e) {
@@ -195,13 +200,15 @@ export default {
       }
     },
     async initData() {
-      var result = uni.getStorageSync("basicData").currWordConfig.textBook;
-      if (result) {
-        this.bookId = result.id;
-        this.network().queryListByBookId();
-        await this.network().queryBookById();
-        await this.network().queryBookChallengeInfo();
-      }
+      // var result = uni.getStorageSync("basicData").currWordConfig.textBook;
+      // if (result) {
+      // this.bookId = result.id;
+      console.log("iddddddddddddd", this.query.bookId);
+      this.bookId = this.query.bookId;
+      this.network().queryListByBookId();
+      await this.network().queryBookById();
+      await this.network().queryBookChallengeInfo();
+      // }
     },
     play(src, id) {
       var that = this;
@@ -282,7 +289,7 @@ export default {
   position: fixed;
   z-index: 999;
   display: flex;
-  padding: 20rpx 0 50rpx 0;
+  padding: 20rpx 0 30rpx 0;
   box-sizing: border-box;
   width: 100%;
   background-color: rgba(225, 241, 255);

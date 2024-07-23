@@ -21,7 +21,6 @@
           @change="changeTopOptions"
         ></u-tabs>
       </view>
-
       <view v-if="currentTopOptions < 2">
         <view class="head">
           <view class="headL mr-1">
@@ -34,8 +33,8 @@
             <view class="headR-name">
               {{ textBook.bookName }}
             </view>
-            <view class="headR-num flex t-size-20">
-              <view class="mr-5">共{{ textBook.wordNums }}个单词</view>
+            <view class="headR-num t-size-22 mt-2">
+              <view>共{{ textBook.wordNums }}个单词</view>
               <button
                 open-type="share"
                 data-name="shareBtn"
@@ -46,10 +45,10 @@
                   :src="`${imageBaseUrl}/word/6-24-01.png`"
                   style="width: 20rpx; height: 20rpx"
                 ></image>
-                <view class="t-size-22 t-color-1863E5 ml-1">邀请好友挑战</view>
+                <view class="t-color-1863E5 ml-1">邀请好友挑战</view>
               </button>
             </view>
-            <view class="flex align-item-center mt-3">
+            <view class="flex align-item-center mt-2">
               <view
                 class="swtich-book flex align-item-center justify-content-center mr-4"
                 @click="toSwtichTextBook"
@@ -85,7 +84,6 @@
           ></u-tabs>
         </view>
       </view>
-
       <view v-if="currentTopOptions === 2">
         <view class="flex align-item-center justify-content-center ranking-box">
           <image
@@ -141,7 +139,7 @@
         </view>
       </view>
     </view>
-
+    <!-- 滚动区域 -->
     <view class="mt-3 pt-1 px-1">
       <scroll-view scroll-y="true" scroll-x="true" class="content-box">
         <image
@@ -156,7 +154,7 @@
               ? 't-size-26 font-weight-bold t-color-3D3D3D mb-3'
               : 't-size-24 t-color-878787 pt-3 pb-3 border-bottom'
           "
-          class="flex table-item justify-content-center"
+          class="flex table-item justify-content-center align-item-center"
           v-for="(item, index) in tableData"
           :key="index"
           :style="{
@@ -167,35 +165,14 @@
           <view :style="{ color: item.value1.tColor }">{{
             item.value1.value
           }}</view>
-
           <view>
-            <!-- <view v-if="currentTopOptions < 2" style="width: 100%" class="flex">
+            <view class="flex align-item-center" style="width: 100%">
               <image
                 v-if="item.value2.value2"
                 :src="item.value2.value2"
                 class="avatar"
               />
-              <view
-                :style="{ color: item.value2.tColor }"
-                class="flex-1 flex justify-content-start table-nowrap"
-              >
-                {{ item.value2.value }}
-              </view>
-            </view> -->
-            <view
-              class="flex align-item-center"
-              style="width: 100%; position: absolute"
-              :style="index !== 0 ? ' margin-top: -10rpx;' : ''"
-            >
-              <image
-                v-if="item.value2.value2"
-                :src="item.value2.value2"
-                class="avatar"
-              />
-              <view
-                :style="{ color: item.value2.tColor }"
-                class="ml-1 flex-1 flex justify-content-start table-nowrap"
-              >
+              <view :style="{ color: item.value2.tColor }">
                 {{ item.value2.value }}
               </view>
             </view>
@@ -203,7 +180,11 @@
           <view
             v-if="item.value3.value != null"
             :style="{ color: item.value3.tColor }"
-            >{{ item.value3.value }}</view
+            >{{
+              item.value3.value2
+                ? item.value3.value + "/" + item.value3.value2
+                : item.value3.value
+            }}</view
           >
           <view :style="{ color: item.value4.tColor }">{{
             item.value4.value
@@ -379,7 +360,7 @@ export default {
           tColor: "#3D3D3D",
         },
         value2: {
-          value: "头像/昵称",
+          value: "用户",
           type: "image",
           tColor: "#3D3D3D",
         },
@@ -712,6 +693,10 @@ export default {
   padding: 30rpx;
   padding-bottom: 0;
 
+  .headR {
+    padding-right: 30rpx;
+  }
+
   .headL image {
     width: 197rpx;
     height: 277rpx;
@@ -731,15 +716,21 @@ export default {
   }
 
   .headR-num {
+    display: flex;
+    justify-content: space-between;
     color: #8a8a8a;
     height: 40rpx;
     line-height: 40rpx;
     .share_box {
+      flex: 1;
       display: flex;
-      justify-content: space-evenly;
+      justify-content: flex-end;
       align-items: center;
       background-color: #dff0ff;
     }
+  }
+  button {
+    padding: 0;
   }
   button::after {
     border: none; /*去掉分享按钮的边框 */
@@ -855,9 +846,6 @@ export default {
       border-radius: 50%;
     }
   }
-}
-
-.user-info {
 }
 
 .top {

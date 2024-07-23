@@ -377,7 +377,7 @@ export default {
   methods: {
     returnCustom() {
       uni.navigateBack({
-        delta: 2,
+        delta: 3,
       });
     },
     clickBtn(type) {

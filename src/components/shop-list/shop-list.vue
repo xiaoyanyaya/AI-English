@@ -69,7 +69,38 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      windowHeight: "",
+    };
+  },
+  async mounted() {
+    await uni.getSystemInfo({
+      success: (res) => {
+        this.windowHeight = res.windowHeight;
+      },
+    });
+    // 获取到当前教材距离顶部的高度 this===当前组件实例
+    setTimeout(() => {
+      uni
+        .createSelectorQuery()
+        .in(this)
+        .select(".checked")
+        .boundingClientRect((rect) => {
+          if (rect) {
+            console.log("元素信息", rect);
+            // 高度快要大于手机屏幕时就滚动
+            if (rect.top >= this.windowHeight - rect.height) {
+              uni.pageScrollTo({
+                scrollTop: rect.top - this.windowHeight + rect.height + 30,
+                duration: 200,
+              });
+            }
+          } else {
+            console.log("获取不到元素");
+          }
+        })
+        .exec();
+    }, 1000);
   },
   methods: {
     handleChangeType(typeValue) {
@@ -148,12 +179,6 @@ page {
           border: 2px solid #2196f3;
           border-radius: 10rpx;
         }
-        // .r_img {
-        //   position: absolute;
-        //   z-index: 999;
-        //   bottom: 50rpx;
-        //   right: 10rpx;
-        // }
       }
     }
   }

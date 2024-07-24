@@ -172,4 +172,8 @@ export const queryChallengeByMyself = (params) =>
 
 // 首页 - 查询26个字母的发音 get http://localhost:8080/v1/word/dict/queryLetterList
 export const queryLetterList = (params) =>
-	fly.get("/word/dict/queryLetterList", params);
+  fly.get("/word/dict/queryLetterList", params);
+
+// 更具教材id查询教材详情
+export const queryBookInfo = (params) =>
+  fly.get("/word/book/queryById", params);

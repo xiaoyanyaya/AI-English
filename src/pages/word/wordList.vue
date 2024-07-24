@@ -25,7 +25,7 @@
       <view class="list">
         <view v-if="id == 3" class="noforget_box">
           <view class="left">
-            {{ getNameWithEllipsis(allData.lessonName, 7) }}
+            {{ getNameWithEllipsis(allData.lessonName, 14) }}
           </view>
           <view class="right">
             <view class="r_top">
@@ -182,6 +182,8 @@ export default {
       allData: {
         bookFullName: "",
         lessonName: "",
+        errorWordNum: "",
+        correctWordNum: "",
       },
       dictBook: {},
       audioSrc: "",

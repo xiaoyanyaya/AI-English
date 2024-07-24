@@ -388,7 +388,7 @@ export default {
     });
   },
   mounted() {
-    // 获取到盒子的高度
+    // 获取到盒子的高度 this===当前组件实例
     uni
       .createSelectorQuery()
       .in(this)

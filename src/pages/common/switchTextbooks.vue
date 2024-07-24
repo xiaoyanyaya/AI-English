@@ -24,6 +24,7 @@ import {
   getBookList,
   queryMapByBookProperties,
   switchBook,
+  queryBookInfo,
 } from "../../api/word";
 
 export default {
@@ -41,16 +42,24 @@ export default {
       bookId: null,
       /* 当前页面类型 */
       pageType: "",
+      bookType: "",
+      allBookData: [], //所有书籍 而维数组
     };
   },
-  onLoad({ pageType, bookId }) {
+  async onLoad({ pageType, bookId }) {
     console.log("eeeeeeee", pageType, bookId);
     this.pageType = pageType;
     this.bookId = bookId;
-
+    // 获取到当前用户的教材分类->获取书籍列表
     if (this.pageType === "textBook") {
+      const id = uni.getStorageSync("basicData").currWordConfig.textBook.id;
+      const res = await queryBookInfo({ id });
+      this.bookType = res.data.result.bookSecondTypeText;
       this.network().getBookList(101);
     } else if (this.pageType === "dictBook") {
+      const id = uni.getStorageSync("basicData").currWordConfig.dictBook.id;
+      const res = await queryBookInfo({ id });
+      this.bookType = res.data.result.bookSecondTypeText;
       this.network().getBookList(102);
     }
   },
@@ -74,7 +83,6 @@ export default {
     handleDetail(item) {
       const basicData = uni.getStorageSync("basicData");
       const currWordConfig = { ...basicData.currWordConfig };
-
       if (this.pageType === "textBook") {
         currWordConfig.textBook = item;
         this.network().switchBook({ textBookId: item.id });
@@ -82,7 +90,6 @@ export default {
         currWordConfig.dictBook = item;
         this.network().switchBook({ dictBookId: item.id });
       }
-
       uni.setStorageSync("basicData", { ...basicData, currWordConfig });
     },
     handleSort(sortType) {
@@ -93,25 +100,25 @@ export default {
       return {
         getBookList: async (bookProperties) => {
           const res = await queryMapByBookProperties({ bookProperties });
-          console.log("res", res);
           this.bookData = res.data.result;
-          // 获取有多少个key
           const keyLength = Object.keys(res.data.result).length;
           for (let i = 0; i < keyLength; i++) {
             // 获取key
             const key = Object.keys(res.data.result)[i];
             // 获取value
             const value = res.data.result[key];
-            console.log(key, value);
             this.typeList.push({
               _id: i + 1,
               label: key,
             });
-
-            if (i === this.typeValue - 1) {
-              this.shopList = value;
-            }
+            this.allBookData.push(value);
           }
+          // 初始化页面书籍列表
+          const bookTypeIndex = this.typeList.findIndex(
+            (item) => item.label == this.bookType
+          );
+          this.typeValue = bookTypeIndex + 1;
+          this.shopList = this.allBookData[bookTypeIndex];
         },
         switchBook: async (params) => {
           const res = await switchBook(params);

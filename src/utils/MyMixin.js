@@ -38,7 +38,6 @@ export default {
     // 是否授权获取了手机号
     this.isAuthPhone = uni.getStorageSync("isAuthPhone");
     // this.login();
-
   },
   methods: {
     // 根据需求截取字符串

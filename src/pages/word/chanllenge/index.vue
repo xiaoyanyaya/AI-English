@@ -142,6 +142,26 @@
     <!-- 滚动区域 -->
     <view class="mt-3 pt-1 px-1">
       <scroll-view scroll-y="true" scroll-x="true" class="content-box">
+        <!-- 二维表头 -->
+        <view
+          v-if="currentOptions == 1 || currentTopOptions == 2"
+          class="flex t-size-26 font-weight-bold t-color-3D3D3D mb-3 justify-content-around align-item-center"
+        >
+          <view
+            v-for="item in tTableTile"
+            :key="item"
+            class="flex flex-direction-column"
+          >
+            <view class="">
+              {{ item.lable }}
+            </view>
+            <view class="flex hhhh">
+              <view v-for="item2 in item.chil" :key="item2">
+                {{ item2.val }}
+              </view>
+            </view>
+          </view>
+        </view>
         <image
           v-if="tableData.length <= 1"
           :src="`${imageBaseUrl}/nodata.png`"
@@ -150,7 +170,7 @@
         <view
           v-else
           :class="
-            index === 0
+            index === 0 && currentTopOptions != 2 && currentOptions != 1
               ? 't-size-26 font-weight-bold t-color-3D3D3D mb-3'
               : 't-size-24 t-color-878787 pt-3 pb-3 border-bottom'
           "
@@ -158,14 +178,16 @@
           v-for="(item, index) in tableData"
           :key="index"
           :style="{
-            width: `${tableItemWidth}rpx`,
             backgroundColor: item.value1.isSelf ? '#E2EDFF' : '',
           }"
         >
-          <view :style="{ color: item.value1.tColor }">{{
-            item.value1.value
-          }}</view>
-          <view>
+          <view
+            v-if="currentOptions != 1 && currentTopOptions != 2"
+            :style="{ color: item.value1.tColor }"
+          >
+            {{ item.value1.value }}
+          </view>
+          <view style="width: 140rpx">
             <view class="flex align-item-center" style="width: 100%">
               <image
                 v-if="item.value2.value2"
@@ -180,15 +202,22 @@
           <view
             v-if="item.value3.value != null"
             :style="{ color: item.value3.tColor }"
-            >{{
-              item.value3.value2
-                ? item.value3.value + "/" + item.value3.value2
-                : item.value3.value
-            }}</view
+            >{{ item.value3.value }}
+          </view>
+          <view
+            v-if="item.value4.value != null"
+            :style="{ color: item.value4.tColor }"
           >
-          <view :style="{ color: item.value4.tColor }">{{
-            item.value4.value
-          }}</view>
+            {{
+              item.value4.value2 != null
+                ? item.value4.value +
+                  "/" +
+                  item.value4.value2 +
+                  "/" +
+                  item.value4.value3
+                : item.value4.value
+            }}
+          </view>
           <view
             v-if="item.value5.value != null"
             :style="{ color: item.value5.tColor }"
@@ -197,14 +226,35 @@
           <view
             v-if="item.value6.value != null"
             :style="{ color: item.value6.tColor }"
-            >{{ item.value6.value }}</view
           >
+            <!-- {{
+              item.value6.value2 == 0
+                ? item.value6.value +
+                  "/" +
+                  item.value6.value2 +
+                  "/" +
+                  item.value6.value3
+                : item.value6.value
+            }} -->
+            {{
+              item.value6.value +
+              "/" +
+              item.value6.value2 +
+              "/" +
+              item.value6.value3
+            }}
+          </view>
           <view
             v-if="item.value7.value != null"
             :style="{ color: item.value7.tColor }"
-            >{{ item.value7.value }}</view
           >
-          <view
+            {{
+              item.value7.value2 != null
+                ? item.value7.value + "/" + item.value7.value2
+                : item.value7.value
+            }}</view
+          >
+          <!-- <view
             v-if="item.value8.value != null"
             :style="{ color: item.value8.tColor }"
             >{{ item.value8.value }}</view
@@ -218,7 +268,7 @@
             v-if="item.value10.value != null"
             :style="{ color: item.value10.tColor }"
             >{{ item.value10.value }}</view
-          >
+          > -->
         </view>
       </scroll-view>
     </view>
@@ -270,7 +320,7 @@ export default {
         },
       ],
       // table-item的宽度
-      tableItemWidth: 0,
+      tableItemWidth: 0, ///
       // 我的挑战历程标题
       myChallengeTitle: {
         value1: {
@@ -380,6 +430,19 @@ export default {
           tColor: "#3D3D3D",
         },
       },
+      // 二维表头
+      tTableTile: [
+        { lable: "用户" },
+        {
+          lable: "单词数",
+          chil: [{ val: "总数/" }, { val: "正确/" }, { val: "错误" }],
+        },
+        {
+          lable: "分数",
+          chil: [{ val: "最高/" }, { val: "最低/" }, { val: "平均" }],
+        },
+        { lable: "耗时/", chil: [{ val: "累计/" }, { val: "平均" }] },
+      ],
       // 存放第一到第三名
       rankingList: [],
       tableData: [],
@@ -418,13 +481,14 @@ export default {
     initBasicData() {
       if (this.currentTopOptions === 0) {
         this.textBook = uni.getStorageSync("basicData").currWordConfig.textBook;
+        uni.setStorageSync("answerFromType", [3, 0]);
       }
       if (this.currentTopOptions === 1) {
         this.textBook = uni.getStorageSync("basicData").currWordConfig.dictBook;
+        uni.setStorageSync("answerFromType", [3, 1]);
       }
       console.log("textBook", this.textBook);
       if (this.textBook) {
-        // this.network().queryChallengeByUser(this.textBook.id);///不一定要获取我的挑战历程
         this.changeOptions(this.currentOptions);
       }
     },
@@ -458,7 +522,6 @@ export default {
         case 2:
           this.tableData = [];
           this.tableItemWidth = 700;
-          this.tableData.push(this.totalChallengeTitle);
           this.network().queryChallengeByTotal();
           break;
       }
@@ -467,15 +530,16 @@ export default {
       this.currentOptions = index;
       switch (index) {
         case 0:
+          uni.setStorageSync("answerFromType", [3, 0]);
           this.tableData = [];
           this.tableItemWidth = 700;
           this.tableData.push(this.myChallengeTitle);
           this.network().queryChallengeByUser(this.textBook.id);
           break;
         case 1:
+          uni.setStorageSync("answerFromType", [3, 1]);
           this.tableData = [];
           this.tableItemWidth = 1000;
-          this.tableData.push(this.textChallengeTitle);
           this.network().queryChallengeByBook(this.textBook.id);
           break;
       }
@@ -526,7 +590,7 @@ export default {
                 tColor: "#3D3D3D",
               },
               value2: {
-                value: data.nickName,
+                value: this.getNameWithEllipsis(data.nickName, 4),
                 value2: data.avatar,
                 type: "text",
                 tColor: "#3D3D3D",
@@ -537,7 +601,9 @@ export default {
               //   tColor: "#3D3D3D",
               // },
               value4: {
-                value: data.challengeTimes,
+                value: data.totalWordNum,
+                value2: data.correctWordNum,
+                value3: data.errorWordNum,
                 type: "text",
                 tColor: "#3D3D3D",
               },
@@ -547,28 +613,34 @@ export default {
               //   tColor: "#3D3D3D",
               // },
               value6: {
-                value: data.correctWordNum,
-                type: "text",
-                tColor: "#DC0C0C",
-              },
-              value7: {
                 value: data.maxScore,
-                type: "text",
-                tColor: "#3D3D3D",
-              },
-              value8: {
-                value: data.minScore,
-                type: "text",
-                tColor: "#3D3D3D",
-              },
-              value9: {
-                value:
+                value2: data.minScore,
+                value3:
                   typeof data.avgScore === "number"
                     ? data.avgScore.toFixed(2)
                     : data.avgScore,
                 type: "text",
                 tColor: "#3D3D3D",
               },
+              value7: {
+                value: data.totalCostTimes,
+                value2: data.avgCostTimes,
+                type: "text",
+                tColor: "#3D3D3D",
+              },
+              // value8: {
+              //   value: data.minScore,
+              //   type: "text",
+              //   tColor: "#3D3D3D",
+              // },
+              // value9: {
+              //   value:
+              //     typeof data.avgScore === "number"
+              //       ? data.avgScore.toFixed(2)
+              //       : data.avgScore,
+              //   type: "text",
+              //   tColor: "#3D3D3D",
+              // },
               // value10: {
               //   value:
               //     typeof data.avgCostTimes === "number"
@@ -586,7 +658,6 @@ export default {
           const self = await queryChallengeByMyself({
             bookId: this.textBook.id,
           });
-          console.log("self", self);
           const seldData = self.data.result[0];
           seldData.isSelect = true;
           const res = await queryChallengeByTotal({ bookId: this.textBook.id });
@@ -598,33 +669,39 @@ export default {
           res.data.result.forEach((data, index) => {
             let item = {
               value1: {
-                value: data.rankNum,
-                value2: data.userId,
+                value: index + 1,
                 type: "text",
                 tColor: "#3D3D3D",
               },
               value2: {
-                value: data.nickName,
+                value: this.getNameWithEllipsis(data.nickName, 4),
                 value2: data.avatar,
                 type: "text",
                 tColor: "#3D3D3D",
               },
-              value3: {
-                value: data.correctWordNum,
-                value2: data.totalWordNum,
+              value4: {
+                value: data.totalWordNum,
+                value2: data.correctWordNum,
+                value3: data.errorWordNum,
                 type: "text",
                 tColor: "#3D3D3D",
               },
-              value4: {
-                value:
+              value6: {
+                value: data.maxScore,
+                value2: data.minScore,
+                value3:
                   typeof data.avgScore === "number"
                     ? data.avgScore.toFixed(2)
                     : data.avgScore,
                 type: "text",
-                tColor: "#DC0C0C",
+                tColor: "#3D3D3D",
               },
-              value5: {
-                value: data.totalCostTimes || "",
+              value7: {
+                value: data.totalCostTimes,
+                value2:
+                  typeof data.avgCostTimes === "number"
+                    ? data.avgCostTimes.toFixed(2)
+                    : data.avgCostTimes,
                 type: "text",
                 tColor: "#3D3D3D",
               },
@@ -637,8 +714,7 @@ export default {
 
           this.tableData.forEach((data, index) => {
             if (data.value1.value2 == seldData.userId) {
-              // this.tableData.splice(index, 1);///这里暂时不知道干啥的先去掉否则数组缺少一条数据
-              this.tableData[1] = {
+              this.tableData[0] = {
                 value1: {
                   value: seldData.rankNum,
                   value2: seldData.userId,
@@ -647,14 +723,15 @@ export default {
                   tColor: "#1863E5",
                 },
                 value2: {
-                  value: seldData.nickName,
+                  value: this.getNameWithEllipsis(seldData.nickName, 4),
                   value2: seldData.avatar,
                   type: "text",
                   tColor: "#1863E5",
                 },
                 value3: {
-                  value: seldData.correctWordNum,
-                  value2: seldData.totalWordNum,
+                  value: seldData.totalWordNum,
+                  value2: seldData.correctWordNum,
+                  value3: seldData.errorWordNum,
                   type: "text",
                   tColor: "#3D3D3D",
                 },
@@ -674,6 +751,7 @@ export default {
               };
             }
           });
+          console.log("挑战tableData", this.tableData);
         },
       };
     },

@@ -487,7 +487,8 @@ export default {
 .listItem-img {
   image {
     position: absolute;
-    top: 32%;
+    top: 50%;
+    transform: translateY(-50%);
     right: 2%;
     width: 40rpx;
     height: 40rpx;

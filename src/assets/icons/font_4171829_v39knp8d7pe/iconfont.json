@@ -1,0 +1,16 @@
+{
+  "id": "4171829",
+  "name": "no name",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "22338972",
+      "name": "左右滑动",
+      "font_class": "zuoyouhuadong",
+      "unicode": "e6d3",
+      "unicode_decimal": 59091
+    }
+  ]
+}

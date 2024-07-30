@@ -230,13 +230,16 @@
       </view>
       <!-- 专题 -->
       <view class="special_box">
-        <view class="title"> <text class="text">专题</text>词汇速记 </view>
+        <view class="title">
+          <view><text class="text">专题</text>词汇速记</view>
+          <view class="iconfont icon-zuoyouhuadong icon"> </view>
+        </view>
         <view class="item-box-select">
           <view
             class="item-box-selectItem"
             v-for="item in typeData"
             :key="item.id"
-            @click="goW(item)"
+            @click="goTextBook(item)"
           >
             <view class="item-box-selectItem-head">
               <image :src="item.unitImage" mode="heightFix"></image>
@@ -294,7 +297,6 @@ export default {
   onLoad(e) {
     this.getList();
     if (e.isReturnHome) {
-      console.log("分享页面进来~~~~~~~~~");
       this.isReturnHome = 1;
     }
   },
@@ -309,13 +311,19 @@ export default {
     }
   },
   methods: {
-    goW(item) {
-      console.log("item00000", item);
-      const val = item.unitName ? item.unitName : item.lessonName;
-      uni.setStorageSync("nowUnitOrLesson", val);
-      this.toNav(
-        "/pages/word/wordList?id=2&unitId=" + item.id + "&lessonId=" + item.id
-      );
+    goTextBook(item) {
+      // const val = item.unitName ? item.unitName : item.lessonName;
+      // uni.setStorageSync("nowUnitOrLesson", val);
+      // uni.setStorageSync("answerFromType", 2);
+      // this.toNav(
+      //   "/pages/word/wordList?id=2&unitId=" + item.id + "&lessonId=" + item.id
+      // );////
+
+      const basicData = uni.getStorageSync("basicData");
+      const currWordConfig = { ...basicData.currWordConfig };
+      currWordConfig.specBook = item;
+      uni.setStorageSync("basicData", { ...basicData, currWordConfig });
+      this.toNav(`/pages/word/textbook?id=2&bookId=${item.bookId}`);
     },
     shareTextBook() {
       this.shareContent.id = 0;
@@ -333,7 +341,6 @@ export default {
     async getList() {
       let data = await listByBookType(this.getData);
       this.typeData = data.data.result;
-      // this.typePages = data.data.result.pages
     },
     plus() {
       if (this.getData.pageNo != this.typePages) {
@@ -490,6 +497,7 @@ export default {
       padding-left: 43rpx;
       .title {
         display: flex;
+        justify-content: space-between;
         flex-wrap: nowrap;
         align-items: center;
         height: 93rpx;
@@ -502,6 +510,11 @@ export default {
           font-size: 34rpx;
           font-weight: 500;
           color: #3d3d3d;
+        }
+        .icon {
+          color: #3a73d9;
+          font-size: 48rpx !important;
+          padding-right: 70rpx;
         }
       }
       .item-box-select {

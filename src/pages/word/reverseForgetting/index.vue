@@ -90,61 +90,36 @@
             </view>
           </view>
           <view class="listItem-contentBook-formTitle">
-            <view
-              class="listItem-contentBook-formTitle-item"
-              style="width: 20%"
-            >
-              日期
-            </view>
-            <view
-              class="listItem-contentBook-formTitle-item"
-              style="width: 20%"
-            >
-              用时(秒)
-            </view>
-            <view
-              class="listItem-contentBook-formTitle-item"
-              style="width: 20%"
-            >
-              正确数
-            </view>
-            <view
-              class="listItem-contentBook-formTitle-item"
-              style="width: 20%"
-            >
-              错误数
-            </view>
-            <view
-              class="listItem-contentBook-formTitle-item"
-              style="width: 20%"
-            >
-              结果
-            </view>
+            <view style="width: 20%"> 日期 </view>
+            <view style="width: 20%"> 用时(秒) </view>
+            <view style="width: 20%"> 正确数 </view>
+            <view style="width: 20%"> 错误数 </view>
+            <view style="width: 20%"> 结果 </view>
           </view>
           <view
             class="listItem-contentBook-formList"
             v-for="tab in tabData"
             :key="tab.id"
           >
-            <view class="listItem-contentBook-formList-item" style="width: 20%">
-              {{ tab.reviewDate }}
-            </view>
-            <view class="listItem-contentBook-formList-item" style="width: 20%">
-              {{ tab.costTimesText ? tab.costTimesText : "-" }}
-            </view>
-            <view class="listItem-contentBook-formList-item" style="width: 20%">
-              {{ tab.correctWordNum || 0 }}
-            </view>
-            <view class="listItem-contentBook-formList-item" style="width: 20%">
-              {{ tab.errorWordNum || 0 }}
-            </view>
-            <view class="listItem-contentBook-formList-item" style="width: 20%">
+            <view style="width: 20%">{{ tab.reviewDate }}</view>
+            <view style="width: 20%">{{
+              tab.costTimesText ? tab.costTimesText : "-"
+            }}</view>
+            <view style="width: 20%">{{ tab.correctWordNum || 0 }}</view>
+            <view style="width: 20%">{{ tab.errorWordNum || 0 }}</view>
+            <view style="width: 20%">
               <view v-if="tabNum == 0">
-                <text v-if="tab.reviewResult == 0">不通过</text>
-                <text v-else-if="tab.reviewResult == 1">通过</text>
+                <text class="t-color-C40000" v-if="tab.reviewResult == 0"
+                  >不通过</text
+                >
+                <text class="t-color-24A800" v-else-if="tab.reviewResult == 1"
+                  >通过</text
+                >
                 <text v-else>未完成答题</text>
               </view>
-              <view v-else>{{ tab.reviewResult == 1 ? "通过" : "-" }}</view>
+              <view class="t-color-24A800" v-else>{{
+                tab.reviewResult == 1 ? "通过" : "-"
+              }}</view>
             </view>
           </view>
         </view>
@@ -453,12 +428,12 @@ export default {
   align-items: center;
   justify-content: space-around;
   padding: 0 60rpx;
-  margin-top: 18rpx;
+  margin-top: 15rpx;
 }
 
 .listItem-contentBook-tabItem {
   color: #8a8a8a;
-  font-size: 24rpx;
+  font-size: 25rpx;
   padding: 12rpx;
 }
 
@@ -482,9 +457,9 @@ export default {
 .listItem-contentBook-formList {
   display: flex;
   color: #878787;
-  font-size: 20rpx;
+  font-size: 23rpx;
   text-align: center;
-  padding: 16rpx;
+  padding: 13rpx;
 }
 
 .listItem-contentBook-formList:nth-child(even) {
@@ -496,7 +471,7 @@ export default {
   justify-content: center;
   align-items: center;
   transform: rotateX(180deg);
-  padding: 12rpx;
+  padding: 15rpx;
 }
 
 .imgs {

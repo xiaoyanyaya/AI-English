@@ -8,25 +8,33 @@
     >
       <view class="t-size-30" v-if="id == 0">教材单元列表</view>
       <view class="t-size-30" v-if="id == 1">考纲单元列表</view>
+      <view class="t-size-30" v-if="id == 2">专题单元列表</view>
     </cy-navbar>
     <view class="pb-2">
       <view class="top">
         <view class="head">
           <view class="headL">
-            <image :src="bookData.bookImage" mode=""></image>
+            <image v-if="id == 2" :src="bookData.unitImage" mode=""></image>
+            <image v-else :src="bookData.bookImage" mode=""></image>
           </view>
           <view class="headR">
             <view v-if="id == 1" class="headR-title">
               {{ bookData.bookFullName }}
             </view>
-            <view v-else class="headR-title">
+            <view v-else-if="id == 0" class="headR-title">
               {{ bookData.bookFullName.split("-")[1] }}
+            </view>
+            <view v-else class="headR-title">
+              {{ bookData.unitFullName.split("-")[0] }}
             </view>
             <view v-if="id == 1" class="headR-name">
               {{ bookData.bookName }}
             </view>
-            <view v-else class="headR-name">
+            <view v-else-if="id == 0" class="headR-name">
               {{ bookData.bookFullName.split("-")[0] }}
+            </view>
+            <view v-else class="headR-name">
+              {{ bookData.unitFullName.split("-")[1] }}
             </view>
             <view class="headR-num"> 共{{ bookData.wordNums }}个单词</view>
             <view class="change_share">
@@ -153,7 +161,10 @@
       <view v-else :style="{ 'padding-top': topBoxHeight + 'px' }">
         <!-- 单元列表 -->
         <view class="listItem" v-for="(item, index) in list" :key="item.id">
-          <view class="unit" @click="openWord(index)">
+          <view
+            :class="{ unit: true, ufixed: item.isOpen }"
+            @click="openWord(index)"
+          >
             <image
               class="listItem-img"
               :src="imageBaseUrl + '/word/6-27-02.png'"
@@ -372,10 +383,15 @@ export default {
   async onLoad(e) {
     this.id = e.id;
     this.query = e;
+    if (this.id == 0) {
+      uni.setStorageSync("answerFromType", 0);
+    }
+    if (this.id == 1) {
+      uni.setStorageSync("answerFromType", 1);
+    }
     this.initData(e); //首次进入页面初始化数据
 
     if (e.isReturnHome) {
-      console.log("分享页面进来~~~~~~~~~");
       this.isReturnHome = 1;
     }
   },
@@ -414,7 +430,7 @@ export default {
       console.log(res.target);
       return {
         title: "词汇速记",
-        path: `pages/word/textbook?id=${this.query.id}&bookId=${this.bookData.id}&isReturnHome=1`,
+        path: `pages/word/textbook?id=${this.query.id}&bookId=${this.data.bookId}&isReturnHome=1`,
       };
     }
   },
@@ -425,17 +441,20 @@ export default {
         this.bookData = uni.getStorageSync("basicData").currWordConfig.textBook;
         this.bookType = "textBook";
         this.data.bookId = this.bookData.id;
-      } else {
+      } else if (e.id == 1) {
         this.bookData = uni.getStorageSync("basicData").currWordConfig.dictBook;
         this.bookType = "dictBook";
         this.data.bookId = this.bookData.id; //获取bookid后再去获取分页数据
         this.getPagingList();
+      } else if (e.id == 2) {
+        this.bookData = uni.getStorageSync("basicData").currWordConfig.specBook; ////专题那本
+        this.bookType = "specBook";
+        this.data.bookId = this.bookData.bookId;
       }
       this.currentOptions = 0;
       this.getUnit();
       this.getLabelWordCount();
       uni.$off("switchTextbook");
-      console.log("结束监听"); ////
     },
     // 获取分页数据
     async getPagingList() {
@@ -445,7 +464,6 @@ export default {
       this.openData.forEach(
         (item) => (item.wordCnList = item.wordCn.split("\n"))
       );
-      console.log("opendata00000", this.openData);
       this.pagingParams.totalPage = res.data.result.pages;
       let result2 = {
         wordLessonDictList: this.openData,
@@ -456,12 +474,12 @@ export default {
     },
     // 切换标签
     async changeOptions(index) {
-      console.log("index_change!", index);
       this.resetOpen();
       this.currentOptions = index;
       switch (this.id) {
         case "0": //教材
-          console.log("教材列表");
+        case "2": //专题
+          console.log("教材列表 || 专题列表");
           if (index == 0) {
             let data = await listByUnitId({
               unitId: this.list[this.unitIndex]?.id,
@@ -552,17 +570,33 @@ export default {
     },
     // 下拉单词列表
     async openWord(index) {
+      //  scrollToElement() {
+      // 获取目标元素信息
+      // uni
+      //   .createSelectorQuery()
+      //   .select(".w_list")
+      //   .boundingClientRect((rect) => {
+      //     if (rect) {
+      //       // 使用 scrollTop 将页面滚动到目标元素的位置
+      //       uni.pageScrollTo({
+      //         // scrollTop: rect.top, // 将页面滚动到目标元素顶部
+      //         scrollTop: uni.getSystemInfoSync().windowHeight / 38 - 110, // 将页面滚动到目标元素顶部
+      //         duration: 300, // 滚动动画时长
+      //       });
+      //     }
+      //   })
+      //   .exec();
+      // }
       console.log("下拉index", index);
       this.list.forEach((item, index2) => {
         if (index == index2) return;
         item.isOpen = false;
       });
       this.unitIndex = index;
-      this.list[index].isOpen = !this.list[index].isOpen;
-      console.log("list????????", this.list);
       switch (this.id) {
         case "0": //教材
-          console.log("教材列表");
+        case "2": //专题
+          console.log("教材列表||专题列表");
           if (this.currentOptions == 0) {
             let data = await listByUnitId({
               unitId: this.list[index]?.id,
@@ -651,9 +685,10 @@ export default {
           uni.setStorageSync("wordList", result2);
           break;
       }
+      this.list[index].isOpen = !this.list[index].isOpen;
     },
     async getUnit() {
-      if (this.id == 0) {
+      if (this.id == 0 || this.id == 2) {
         let unit = await unitList(this.data);
         this.list = unit.data.result;
         let res1 = await listByUnitId({
@@ -686,7 +721,7 @@ export default {
     },
     // 获取标签单词数量
     async getLabelWordCount() {
-      const res = await labelWordCount({ bookId: this.bookData.id });
+      const res = await labelWordCount({ bookId: this.data.bookId });
       this.optinsList[0].name =
         "词汇" + "(" + res.data.result[0].totalCnt + ")";
       this.optinsList[1].name = "已学" + "(" + res.data.result[0].passCnt + ")";
@@ -703,7 +738,6 @@ export default {
       this.getPagingList();
     },
     wWrite(item) {
-      console.log("item0000", item);
       const val = item.unitName ? item.unitName : item.lessonName;
       uni.setStorageSync("nowUnitOrLesson", val);
       this.toNav(
@@ -968,6 +1002,7 @@ export default {
   position: relative;
   width: 640rpx;
   min-height: 130rpx;
+  // padding-top: 110rpx;
 
   .no_word {
     position: absolute;
@@ -996,6 +1031,11 @@ export default {
   border-radius: 10px;
   background: linear-gradient(90deg, #def1ff 0%, #ffffff 100%);
 }
+// .ufixed {
+//   position: fixed;
+//   top: 38%;
+//   z-index: 999;
+// }
 
 .listItem_word {
   position: relative;

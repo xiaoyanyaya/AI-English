@@ -1,6 +1,11 @@
 <template>
   <view class="main">
-    <cy-navbar :showBack="true" :bgColor="backColor" textColor="#3D3D3D">
+    <cy-navbar
+      :isReturnHome="isReturnHome"
+      :showBack="true"
+      :bgColor="backColor"
+      textColor="#3D3D3D"
+    >
       单词挑战赛
     </cy-navbar>
     <view class="content">
@@ -136,9 +141,13 @@ export default {
       },
       bookId: "",
       query: {},
+      isReturnHome: 0,
     };
   },
   onLoad(e) {
+    if (e.isReturnHome) {
+      this.isReturnHome = 1;
+    }
     this.query = e;
     this.initData();
   },

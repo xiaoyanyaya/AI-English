@@ -39,6 +39,7 @@
             <view class="headR-num"> 共{{ bookData.wordNums }}个单词</view>
             <view class="change_share">
               <view
+                v-if="id != 2"
                 class="change_box"
                 @click="
                   toNav(

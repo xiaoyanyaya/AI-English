@@ -188,7 +188,10 @@
             {{ item.value1.value }}
           </view>
           <view style="width: 140rpx">
-            <view class="flex align-item-center" style="width: 100%">
+            <view
+              class="flex align-item-center position-relative"
+              style="width: 100%"
+            >
               <image
                 v-if="item.value2.value2"
                 :src="item.value2.value2"
@@ -196,6 +199,14 @@
               />
               <view :style="{ color: item.value2.tColor }">
                 {{ item.value2.value }}
+              </view>
+              <view
+                v-if="currentOptions == 1 || currentTopOptions == 2"
+                class="left_top"
+              >
+                <text>{{
+                  getNameWithEllipsis(item.value1.value.toString(), 2)
+                }}</text>
               </view>
             </view>
           </view>
@@ -512,12 +523,14 @@ export default {
           this.tableItemWidth = 700;
           this.tableData.push(this.myChallengeTitle);
           this.initBasicData();
+          uni.setStorageSync("answerFromType", [3, 0]);
           break;
         case 1:
           this.tableData = [];
           this.tableItemWidth = 1000;
           this.tableData.push(this.textChallengeTitle);
           this.initBasicData();
+          uni.setStorageSync("answerFromType", [3, 1]);
           break;
         case 2:
           this.tableData = [];
@@ -936,5 +949,24 @@ export default {
   width: 195rpx;
   height: 114rpx;
   background: linear-gradient(180deg, #b5d3ff 0%, #ffffff 100%);
+}
+
+.left_top {
+  position: absolute;
+  left: -48rpx;
+  top: -38rpx;
+  width: 0;
+  height: 0;
+  border-left: 40rpx solid transparent; /* 左侧透明边框 */
+  border-right: 40rpx solid transparent; /* 右侧透明边框 */
+  border-bottom: 40rpx solid #73aaff; /* 底部实色边框（红色示例） */
+  transform: rotate(-45deg);
+  color: #fff;
+  text {
+    position: absolute;
+    left: -10rpx;
+    top: 13rpx;
+    font-size: 20rpx;
+  }
 }
 </style>

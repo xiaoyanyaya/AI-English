@@ -21,7 +21,7 @@
             <view class="font-weight-bold t-size-36 t-color-DC0C0C">3.96</view>
             <view class="t-size-24 mt-1 t-color-3D3D3D">可提现佣金(元)</view>
           </view>
-          <view class="withdraw flex align-item-center justify-content-center t-color-fff">
+          <view class="withdraw flex align-item-center justify-content-center t-color-fff" @click="toPrice">
             申请提现
           </view>
         </view>
@@ -104,6 +104,9 @@ export default {
       commissionIndex().then(res => {
         console.log(res)
       });
+    },
+    toPrice() {
+      this.$navigateTo("/pages/me/withdraw")
     }
   },
 }

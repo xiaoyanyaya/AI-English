@@ -318,12 +318,6 @@ export default {
       this.toNav(
         "/pages/word/wordList?id=2&unitId=" + item.id + "&lessonId=" + item.id
       );
-
-      const basicData = uni.getStorageSync("basicData");
-      const currWordConfig = { ...basicData.currWordConfig };
-      currWordConfig.specBook = item;
-      uni.setStorageSync("basicData", { ...basicData, currWordConfig });
-      // this.toNav(`/pages/word/textbook?id=2&bookId=${item.bookId}`);
     },
     shareTextBook() {
       this.shareContent.id = 0;

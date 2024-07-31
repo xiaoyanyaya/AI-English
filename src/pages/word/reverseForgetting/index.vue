@@ -209,6 +209,13 @@ export default {
       });
     },
     goWordList(item) {
+      if (item.bookProperties == "101") {
+        uni.setStorageSync("answerFromType", 0);
+      } else if (item.bookProperties == "102") {
+        uni.setStorageSync("answerFromType", 1);
+      } else if (item.bookProperties == "103") {
+        uni.setStorageSync("answerFromType", 2);
+      }
       uni.setStorageSync("nowUnitOrLesson", item.lessonName);
       this.toNav("/pages/word/wordList?id=3" + "&unitId=" + item.id);
     },

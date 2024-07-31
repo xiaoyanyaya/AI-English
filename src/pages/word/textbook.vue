@@ -18,23 +18,17 @@
             <image v-else :src="bookData.bookImage" mode=""></image>
           </view>
           <view class="headR">
-            <view v-if="id == 1" class="headR-title">
+            <view v-if="id == 1 || id == 2" class="headR-title">
               {{ bookData.bookFullName }}
             </view>
             <view v-else-if="id == 0" class="headR-title">
               {{ bookData.bookFullName.split("-")[1] }}
             </view>
-            <view v-else class="headR-title">
-              {{ bookData.unitFullName.split("-")[0] }}
-            </view>
-            <view v-if="id == 1" class="headR-name">
+            <view v-if="id == 1 || id == 2" class="headR-name">
               {{ bookData.bookName }}
             </view>
             <view v-else-if="id == 0" class="headR-name">
               {{ bookData.bookFullName.split("-")[0] }}
-            </view>
-            <view v-else class="headR-name">
-              {{ bookData.unitFullName.split("-")[1] }}
             </view>
             <view class="headR-num"> 共{{ bookData.wordNums }}个单词</view>
             <view class="change_share">
@@ -315,6 +309,8 @@ import {
   unLearnDictBookList,
   learnDictBookList,
   labelWordCount,
+  listByBookType,
+  queryBookById,
 } from "@/api/word";
 
 const innerAudioContext = uni.createInnerAudioContext();
@@ -448,9 +444,12 @@ export default {
         this.data.bookId = this.bookData.id; //获取bookid后再去获取分页数据
         this.getPagingList();
       } else if (e.id == 2) {
-        this.bookData = uni.getStorageSync("basicData").currWordConfig.specBook; ////专题那本
+        const res = await listByBookType({ bookType: 101 });
+        const bookId = res.data.result[0].bookId;
+        const res2 = await queryBookById({ id: bookId });
+        this.bookData = res2.data.result;
         this.bookType = "specBook";
-        this.data.bookId = this.bookData.bookId;
+        this.data.bookId = this.bookData.id;
       }
       this.currentOptions = 0;
       this.getUnit();

@@ -73,6 +73,7 @@ export default {
       displayTime += `${seconds % 60}秒`;
       return displayTime;
     },
+	  // 播放音频文件
 	  publicPlayAudio(url) {
 		  const innerAudioContext = uni.createInnerAudioContext();
 
@@ -105,6 +106,7 @@ export default {
 			  console.log("播放失败", res.errMsg)
 		  })
 	  },
+	  // 获取系统信息
     getSystemInfo() {
       uni.getSystemInfo({
         success: (res) => {
@@ -114,6 +116,7 @@ export default {
         },
       });
     },
+	  // 登录账号
     login() {
       return new Promise((resolve, reject) => {
         uni.login({
@@ -131,6 +134,7 @@ export default {
         });
       });
     },
+	  // 获取基本信息
     getBasicData(isNew = false) {
       basicData().then((data) => {
         console.log(data, "基础数据");
@@ -142,6 +146,7 @@ export default {
         }, 500);
       });
     },
+	  // 获取手机号
     getPhone(res, toPageUr) {
       if (res.detail.errMsg !== "getPhoneNumber:ok") {
         return;
@@ -183,6 +188,7 @@ export default {
         });
       });
     },
+	  // 获取用户信息
     getUserInfo() {
       return new Promise((resolve, reject) => {
         baseInfo().then((res) => {
@@ -191,6 +197,7 @@ export default {
         });
       });
     },
+	  // 上传文件
     unploadFile(tempFilePath, url) {
       return new Promise((resolve, reject) => {
         uni.uploadFile({

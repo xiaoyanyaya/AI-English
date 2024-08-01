@@ -14,8 +14,7 @@
       <view class="top">
         <view class="head">
           <view class="headL">
-            <image v-if="id == 2" :src="bookData.unitImage" mode=""></image>
-            <image v-else :src="bookData.bookImage" mode=""></image>
+            <image :src="bookData.bookImage" mode=""></image>
           </view>
           <view class="headR">
             <view v-if="id == 1 || id == 2" class="headR-title">

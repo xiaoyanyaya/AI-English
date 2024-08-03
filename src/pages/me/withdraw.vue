@@ -10,7 +10,7 @@
         <view class="mt-3 font-weight-bold t-color-E4483C flex align-item-end">
           <span class="mr-1 price-l">￥</span>
           <input :placeholder="`最高提现金额${maxPrice}元`" :max="maxPrice"
-            class="t-size-40 t-color-E4483C ml-4" v-model="price" type="number"/>
+            class="t-size-40 t-color-E4483C ml-4" v-model="price" type="digit"/>
         </view>
       </view>
 
@@ -75,6 +75,7 @@ export default {
       selectWay: '支付宝',
       selectWayValue: 'alipay',
       maxPrice: 100,
+      // 可提现金额
       price: 3.98,
       paywey: [
         {
@@ -106,8 +107,12 @@ export default {
           type: 'text',
           value: ''
         }
-      ]
+      ],
     };
+  },
+  onLoad({ canWithdrawAmount }) {
+    this.maxPrice = canWithdrawAmount;
+    this.price = canWithdrawAmount;
   },
   methods: {
     clickPayWay(index) {
@@ -148,6 +153,23 @@ export default {
     network() {
       return {
         withdrawApply: async () => {
+          if (this.price <= 0) {
+            uni.showToast({
+              title: '提现金额不能小于0',
+              icon: 'none',
+              duration: 2000
+            });
+            return;
+          }
+          if (this.price > this.maxPrice) {
+            uni.showToast({
+              title: `提现金额不能大于可提现金额(${this.maxPrice}元)`,
+              icon: 'none',
+              duration: 2000
+            });
+            return;
+          }
+
           var prams = {
             amount: this.price,
             withdrawType: this.selectWayValue,

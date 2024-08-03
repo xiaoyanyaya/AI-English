@@ -7,18 +7,19 @@
     <view class="px-4">
       <view class="flex align-item-center user-info px-3 pt-3 pb-3 pl-1">
         <view class="mr-4 mt-1">
-          <image :src="`${imageBaseUrl}/new_icon4.png`" mode="widthFix" class="avatar"/>
+          <image :src="userInfo.avatar ? userInfo.avatar : `${imageBaseUrl}/icon_11.png`"
+                 mode="widthFix" class="avatar"/>
         </view>
         <view class="flex flex-direction-column justify-content-center">
-          <view class="t-color-3D3D3D mb-1">Jim</view>
-          <view class="t-size-24 t-color-8A8A8A">推广员</view>
+          <view class="t-color-3D3D3D mb-1">{{ userInfo.nickName }}</view>
+          <view class="t-size-24 t-color-8A8A8A">{{ userInfo.title }}</view>
         </view>
       </view>
 
       <view class="mt-4 my-promotion flex flex-direction-column justify-content-between">
         <view class="price px-4 pt-3 pb-3 flex align-item-center justify-content-between">
           <view class="flex flex-direction-column justify-content-start">
-            <view class="font-weight-bold t-size-36 t-color-DC0C0C">3.96</view>
+            <view class="font-weight-bold t-size-36 t-color-DC0C0C">{{ userInfo.canWithdrawAmount }}</view>
             <view class="t-size-24 mt-1 t-color-3D3D3D">可提现佣金(元)</view>
           </view>
           <view class="withdraw flex align-item-center justify-content-center t-color-fff" @click="toPrice">
@@ -77,23 +78,24 @@ export default {
       contentMenuList: [{
         title: '佣金明细',
         image: 'icon_13.png',
-        subTitle: '3.96元'
+        subTitle: ''
       },{
         title: '下级推广员',
         image: 'icon_17.png',
-        subTitle: '0人'
+        subTitle: ''
       },{
         title: '直推用户',
         image: 'icon_14.png',
-        subTitle: '20人'
+        subTitle: ''
       },{
         title: '推广订单',
         image: 'icon_16.png',
-        subTitle: '1笔'
+        subTitle: ''
       }],
       menuList: [
         { title: '邀请下级推广员', image: 'icon_15.png' },
-      ]
+      ],
+      userInfo: {}
     };
   },
   onLoad() {
@@ -102,11 +104,16 @@ export default {
   methods: {
     commissionIndex() {
       commissionIndex().then(res => {
-        console.log(res)
+        console.log(res.data.result)
+        this.userInfo = res.data.result
+        this.contentMenuList[0].subTitle = res.data.result.totalAmount + '元'
+        this.contentMenuList[1].subTitle = res.data.result.directPromoters + '人'
+        this.contentMenuList[2].subTitle = res.data.result.directReferrals + '人'
+        this.contentMenuList[3].subTitle = res.data.result.promotionOrders + '笔'
       });
     },
     toPrice() {
-      this.$navigateTo("/pages/me/withdraw")
+      this.$navigateTo("/pages/me/withdraw?canWithdrawAmount=" + this.userInfo.canWithdrawAmount)
     }
   },
 }

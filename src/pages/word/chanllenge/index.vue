@@ -452,7 +452,7 @@ export default {
           lable: "分数",
           chil: [{ val: "最高/" }, { val: "最低/" }, { val: "平均" }],
         },
-        { lable: "耗时/", chil: [{ val: "累计/" }, { val: "平均" }] },
+        { lable: "耗时(分钟)", chil: [{ val: "累计/" }, { val: "平均" }] },
       ],
       // 存放第一到第三名
       rankingList: [],
@@ -630,7 +630,7 @@ export default {
                 value2: data.minScore,
                 value3:
                   typeof data.avgScore === "number"
-                    ? data.avgScore.toFixed(2)
+                    ? data.avgScore.toFixed(0)
                     : data.avgScore,
                 type: "text",
                 tColor: "#3D3D3D",
@@ -704,7 +704,7 @@ export default {
                 value2: data.minScore,
                 value3:
                   typeof data.avgScore === "number"
-                    ? data.avgScore.toFixed(2)
+                    ? data.avgScore.toFixed(0)
                     : data.avgScore,
                 type: "text",
                 tColor: "#3D3D3D",
@@ -713,7 +713,7 @@ export default {
                 value: data.totalCostTimes,
                 value2:
                   typeof data.avgCostTimes === "number"
-                    ? data.avgCostTimes.toFixed(2)
+                    ? data.avgCostTimes.toFixed(0)
                     : data.avgCostTimes,
                 type: "text",
                 tColor: "#3D3D3D",
@@ -751,7 +751,7 @@ export default {
                 value4: {
                   value:
                     typeof seldData.avgScore === "number"
-                      ? seldData.avgScore.toFixed(2)
+                      ? seldData.avgScore.toFixed(0)
                       : seldData.avgScore,
                   type: "text",
                   tColor: "#DC0C0C",

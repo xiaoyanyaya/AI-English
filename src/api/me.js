@@ -18,8 +18,8 @@ export const vipBuy = params => fly.post('/member/vip/buy', params)
 //卡密兑换 /member/card/exchange
 export const cardExchange = params => fly.post('/member/card/exchange', params)
 
-//首页 /member/commission/index
-export const commissionIndex = params => fly.get('/member/commission/index', params)
+//首页 /distribution/commission/summary/index
+export const commissionIndex = params => fly.get('/distribution/commission/summary/index', params)
 //佣金提现列表 /distribution/commission/withdraw/list
 export const withdrawList = params => fly.get('/distribution/commission/withdraw/list', params)
 //佣金提现申请 /distribution/commission/withdraw/apply

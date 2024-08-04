@@ -34,6 +34,24 @@
       <span class="text" @click="toUserPage(1, '隐私政策')">《隐私政策》</span>
     </div>
 
+    <u-modal
+      :width="550"
+      :mask-close-able="true"
+      :show-confirm-button="false"
+      :show-title="false"
+      v-model="showModel">
+      <view class="slot-content">
+        <view class="t-color-8A8A8A t-size-30 review">已阅读并同意《用户注册协议》《隐私政策》</view>
+        <view class="flex align-item-center justify-content-around t-size-24 font-weight-bold mt-4">
+          <view class="t-color-8A8A8A" @click="showModel = false">不同意</view>
+          <view @click="clickAllow"
+            class="t-color-fff allow flex align-item-center justify-content-center">
+            同意并登录
+          </view>
+        </view>
+      </view>
+    </u-modal>
+
   </div>
 </template>
 
@@ -45,13 +63,19 @@ export default {
   data() {
     return {
       isAuthorize: false,
-      pagePath: ''
+      pagePath: '',
+      showModel: false
     };
   },
   onLoad({pagePath}) {
     this.pagePath = pagePath;
   },
   methods: {
+    clickAllow() {
+      this.isAuthorize = true;
+      this.showModel = false;
+      this.loginInfo();
+    },
     toUserPage(type, title) {
       uni.navigateTo({
         url: `/pages/me/content?type=${type}&title=${title}`
@@ -78,7 +102,7 @@ export default {
     },
     async getPhoneNumberWx(res) {
       if (!this.isAuthorize) {
-        return this.utils().$toast('请先勾选同意用户协议');
+        return this.showModel = true;
       }
       this.utils().$toast('登录中...', 'loading');
 
@@ -92,7 +116,7 @@ export default {
     },
     async loginInfo() {
       if (!this.isAuthorize) {
-        return this.utils().$toast('请先勾选同意用户协议');
+        return this.showModel = true;
       }
       this.utils().$toast('登录中...', 'loading');
 
@@ -293,5 +317,20 @@ export default {
 .c-active {
   background: #3A73D9;
   border: 1rpx solid #3A73D9;
+}
+
+.slot-content {
+  padding: 40rpx;
+
+  .review {
+    line-height: 40rpx;
+  }
+
+  .allow {
+    background: #2b55a0;
+    width: 200rpx;
+    height: 64rpx;
+    border-radius: 30rpx;
+  }
 }
 </style>

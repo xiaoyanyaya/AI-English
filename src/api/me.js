@@ -12,8 +12,8 @@ export const saveNickname = params => fly.post('/member/saveNickname', params)
 //VIP会员套餐 /operation/charge/vip/package
 export const vipPackage = params => fly.get('/operation/charge/vip/package', params)
 
-//开通VIP会员 /member/vip/buy
-export const vipBuy = params => fly.post('/member/vip/buy', params)
+//开通VIP会员 /vip/order/buy
+export const vipBuy = params => fly.post('/vip/order/buy', params)
 
 //卡密兑换 /member/card/exchange
 export const cardExchange = params => fly.post('/member/card/exchange', params)
@@ -50,3 +50,8 @@ export const modifyEnglishLevel = params => fly.post('/member/modifyEnglishLevel
 // 会员修改年级 /member/modifyGrade post
 export const modifyGrade = params => fly.post('/member/modifyGrade', params)
 
+// 小程序发起支付前需要准备的请求参数 /weixin/getPrepayPaymentResponse post
+export const getPrepayPaymentResponse = params => fly.post('/weixin/getPrepayPaymentResponse', params)
+
+// APP发起支付前需要准备的请求参数 /weixin/getAppNeedParam post
+export const getAppNeedParam = params => fly.post('/weixin/getAppNeedParam', params)

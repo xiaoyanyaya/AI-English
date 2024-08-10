@@ -255,29 +255,32 @@ export default {
         }
       }).then(res => {
         console.log(res);
-        if (res.data.code !== 200) {
+        if (res.code !== 200) {
           uni.showToast({
             title: res.data.message,
             icon: 'none'
           });
         } else {
-          /*uni.requestPayment({
-            provider: 'wxpay',
-            timeStamp: res.data.result.timeStamp,
-            nonceStr: res.data.result.nonceStr,
-            package: res.data.result.package,
-            signType: res.data.result.signType,
-            paySign: res.data.result.paySign,
-            success: function (res) {
-              console.log('success:' + JSON.stringify(res));
-            },
-            fail: function (err) {
-              console.log('fail:' + JSON.stringify(err));
-            }
-          });*/
+          this.requestPayment(res);
         }
       });
     },
+    requestPayment(data) {
+      uni.requestPayment({
+        provider: 'wxpay',
+        timeStamp: data.result.timeStamp,
+        nonceStr: data.result.nonceStr,
+        package: data.result.packageVal,
+        signType: data.result.signType,
+        paySign: data.result.paySign,
+        success: function (res) {
+          console.log('success:' + JSON.stringify(res));
+        },
+        fail: function (err) {
+          console.log('fail:' + JSON.stringify(err));
+        }
+      });
+    }
   },
 }
 </script>

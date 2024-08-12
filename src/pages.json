@@ -54,7 +54,16 @@
       "path": "pages/me/userCenter"
     },
     {
+      "path": "pages/me/order"
+    },
+    {
       "path": "pages/me/setting"
+    },
+    {
+      "path": "pages/me/mingxi"
+    },
+    {
+      "path": "pages/me/agent"
     },
     {
       "path": "pages/me/cardConversion"

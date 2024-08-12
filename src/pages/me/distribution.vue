@@ -34,6 +34,7 @@
 
       <view class="content-menu mt-4 pr-1 pb-1">
         <view class="item flex justify-content-center align-item-center"
+              @click="toPage(0, index)"
               v-for="(item, index) in contentMenuList" :key="index">
           <image class="mr-3 mt-1" :src="`${imageBaseUrl}/${item.image}`" mode="widthFix"/>
           <view class="flex flex-direction-column justify-content-center pt-3 pb-3">
@@ -46,7 +47,7 @@
       <view class="person-info-box px-4 pb-4 mt-4">
         <view class="flex align-item-center justify-content-between pt-4 mt-1"
               v-for="(item, index) in menuList" :key="index"
-              @click="toPage(parentIndex, index)">
+              @click="toPage(1, index)">
           <view class="flex align-item-center">
             <image :src="`${imageBaseUrl}/${item.image}`" class="ml-1" mode="widthFix"></image>
             <view class="ml-3">{{item.title}}</view>
@@ -114,6 +115,24 @@ export default {
     },
     toPrice() {
       this.$navigateTo("/pages/me/withdraw?canWithdrawAmount=" + this.userInfo.canWithdrawAmount)
+    },
+    toPage(type, index) {
+      if (type === 0) {
+        switch (index) {
+          case 0:
+            this.$navigateTo("/pages/me/mingxi")
+            break
+          case 1:
+            this.$navigateTo("/pages/me/agent?paegType=0")
+            break
+          case 2:
+            this.$navigateTo("/pages/me/agent?paegType=1")
+            break
+          case 3:
+            this.$navigateTo("/pages/me/order")
+            break
+        }
+      }
     }
   },
 }

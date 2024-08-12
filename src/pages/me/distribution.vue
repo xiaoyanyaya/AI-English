@@ -126,7 +126,7 @@ export default {
             this.$navigateTo("/pages/me/agent?paegType=0")
             break
           case 2:
-            this.$navigateTo("/pages/me/agent?paegType=1")
+            this.$navigateTo("/pages/me/directThrust")
             break
           case 3:
             this.$navigateTo("/pages/me/order")

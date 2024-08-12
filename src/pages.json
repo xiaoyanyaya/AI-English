@@ -75,6 +75,9 @@
       "path": "pages/me/content"
     },
     {
+      "path": "pages/me/directThrust"
+    },
+    {
       "path": "pages/login/index"
     },
     {

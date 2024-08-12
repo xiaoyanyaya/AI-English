@@ -5,7 +5,7 @@
     </cy-navbar>
     <view class="agent">
       <view class="head">
-        共 <span>10000</span> 人
+        共 <span>{{listTotal}}</span> 人
       </view>
       <view class="t_tou mt-2 mb-1">
         <view class="tou_1">微信头像</view>
@@ -19,7 +19,7 @@
               <image :src="item.avatar"></image>
             </view>
             <view class="t_01_1">{{item.nickName}}</view>
-            <view class="t_01_1">{{item.distributionType}}级代理</view>
+            <view class="t_01_1">{{item.distributionType}}</view>
           </li>
         </block>
       </view>
@@ -38,13 +38,14 @@ export default {
       },
       isModeData: true,
       list: [],
+      listTotal: 0,
       pageTitle: '下级推广员',
       paegType: '',
     };
   },
   onLoad({ paegType }) {
     console.log('paegType', paegType)
-    this.paegType = paegType || '1'
+    this.paegType = paegType || '0'
     this.pageTitle = paegType === '0' ? '下级推广员' : '我的直推'
     this.getData();
   },
@@ -55,8 +56,6 @@ export default {
   },
   methods: {
     getData() {
-      this.list = []
-      this.queryParams.pageNo = 1
       this.isModeData = true
       if (this.paegType === '0') {
         console.log('下级推广员')
@@ -69,7 +68,8 @@ export default {
     // 我的推广员
     directPromoters() {
       if (!this.isModeData) return
-      directPromoters().then(res => {
+      directPromoters(this.queryParams).then(res => {
+        this.listTotal = res.data.result.total
         this.list = this.list.concat(res.data.result.records)
         if (res.data.result.records.length < this.queryParams.pageSize) {
           this.isModeData = false
@@ -79,7 +79,7 @@ export default {
     // 我的直推
     directReferrals() {
       if (!this.isModeData) return
-      directReferrals().then(res => {
+      directReferrals(this.queryParams).then(res => {
         this.list = this.list.concat(res.data.result.records)
         if (res.data.result.records.length < this.queryParams.pageSize) {
           this.isModeData = false

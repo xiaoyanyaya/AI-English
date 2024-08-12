@@ -1,21 +1,26 @@
 <template>
   <view class="pb-5">
     <cy-navbar show-back>
-      <view class="t-size-30">佣金明细</view>
+      <view class="t-size-30">我推广的用户</view>
     </cy-navbar>
     <view class="mingxi" v-show="list.length > 0">
-      <view class="ticheng">
+      <view >
         <block v-for="(item,index) of list" :key="index">
           <li class="tc" @click="jump(item.id)">
             <view class="flex align-item-center">
-              <u-icon name="rmb-circle" color="#3a73d9" size="60"></u-icon>
+              <image :src="item.avatar" class="avatar"></image>
               <view class="ml-3">
-                <span class="t-size-30 t-color-000">{{item.title}}</span><br/>
-                <span class="t-size-26 t-color-8A8A8A">{{ item.createTime }}</span>
+                <view class="flex align-item-end mb-1">
+                  <span class="t-size-30 t-color-000 mr-1">{{item.nickName}}</span>
+                  <span class="t-size-24 t-color-8A8A8A">(MID:{{item.memberNo}})</span>
+                </view>
+                <span class="t-size-26 t-color-8A8A8A">注册时间：{{ item.createTime }}</span>
               </view>
             </view>
-            <view class="font-weight-bold" :class="item.type === 'withdraw' ? 'tc_3' : 'tc_2'">
-              {{ item.amount }}<br/>
+            <view class="">
+              <view class="t-size-30">
+                共消费 <span class="t-color-E1461D orderNums">{{item.orderNums}}</span> 单
+              </view>
             </view>
           </li>
         </block>
@@ -28,7 +33,7 @@
 </template>
 
 <script>
-import {detailList} from "../../api/me";
+import {detailList, directReferrals} from "../../api/me";
 import MyMixin from "../../utils/MyMixin";
 
 export default {
@@ -47,15 +52,15 @@ export default {
   // 触底加载
   onReachBottom() {
     this.queryParams.pageNo += 1
-    this.detailList()
+    this.directReferrals()
   },
   onLoad() {
-    this.detailList()
+    this.directReferrals()
   },
   methods: {
-    detailList() {
+    directReferrals() {
       if (!this.isModeData) return
-      detailList(this.queryParams).then(res => {
+      directReferrals(this.queryParams).then(res => {
         this.list = this.list.concat(res.data.result.records)
         if (res.data.result.records.length < this.queryParams.pageSize) {
           this.isModeData = false
@@ -123,31 +128,23 @@ export default {
     font-weight: bold;
   }
 
-  .ticheng li:nth-of-type(odd) {
-    background-color: #EEEEEE;
-  }
-
-  .ticheng li:nth-of-type(even) {
-    background-color: #fff;
-  }
-
   .tc {
     display: flex;
     justify-content: space-between;
     padding: 10px;
     line-height: 46rpx;
     align-items: center;
+    border-bottom: 1px solid #F2F2F2;
   }
 
-  .tc_2 {
-    color: #4cab5b;
-  }
-  .tc_3 {
-    color: #E1461D;
-  }
+}
 
-  .tc_2 span {
-    color: #9A9A9A;
-  }
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
+}
+.orderNums {
+  margin: 0 6rpx;
 }
 </style>

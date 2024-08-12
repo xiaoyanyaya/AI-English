@@ -1,23 +1,22 @@
 <template>
-  <view class="main-body pb-5 pt-4">
+  <view class="main-body pb-5">
     <cy-navbar show-back>
       <view class="t-size-30">推广订单</view>
     </cy-navbar>
 
     <view class="px-3">
-      <view class="px-3 pt-3 pb-4 bg-white radio-10">
+      <view class="px-3 pt-3 mt-4 pb-4 bg-white radio-10"
+            v-for="(data, dataIndex) in orderContent" :key="dataIndex">
         <view class="flex justify-content-between">
           <view class="flex align-item-end">
-            <view class="t-size-30 mr-1">物业先生</view>
-            <view class="t-size-26 t-color-8A8A8A">(MID:1124)</view>
-          </view>
-          <view class="t-color-3A73D9 t-size-26">
-            已付款
+            <image :src="data.userInfo.avatar" class="avatar mr-2"/>
+            <view class="t-size-30">{{ data.userInfo.nickName }}</view>
+            <view class="t-size-26 t-color-8A8A8A">(MID:{{ data.userInfo.memberNo }})</view>
           </view>
         </view>
 
         <view class="mt-4 order-content px-3 pt-1 pb-3 t-size-30 t-color-6a6a6a">
-          <view v-for="(item, index) in orderContent" :key="index">
+          <view v-for="(item, index) in data.data" :key="index">
             <view class="flex align-item-center justify-content-between mt-2">
               <view>{{ item.title }}</view>
               <view v-if="index === 3" class="flex align-item-center recomment">
@@ -32,42 +31,72 @@
         </view>
       </view>
     </view>
+    <!--    <view v-show="list.length < 1" class="mt-5 flex align-item-center justify-content-center">
+          <image :src="`${imageBaseUrl}/nodata.png`" style="width: 400rpx; height: 400rpx"></image>
+        </view>-->
   </view>
 </template>
 <script>
 
 import MyMixin from "../../utils/MyMixin";
 import {orderList} from "../../api/me";
+
 export default {
   mixins: [MyMixin],
   data() {
     return {
-      orderContent: [{
-        title: "订单编号：",
-        content: "202012121212121212"
-      }, {
-        title: "付款时间：",
-        content: "2020-12-12 12:12:12"
-      }, {
-        title: "订单金额：",
-        content: "￥100.00"
-      }, {
-        title: "推荐人：",
-        avatar: "https://wapi-dev.aien.xiaolixb.com/v1/sys/common/static/avatar/U8pNyZmEpbZm49be7eb68e426f2254dabc7cff85422e_1714556046292.jpeg",
-        nickName: "物业先生"
-      }, {
-        title: "佣金：",
-        content: "￥10.00"
-      }]
+      isModeData: true,
+      queryParams: {
+        pageNo: 1,
+        pageSize: 10,
+      },
+      orderContent: []
     };
   },
   onLoad() {
     this.orderList();
   },
+  // 触底加载
+  onReachBottom() {
+    this.queryParams.pageNo += 1
+    this.orderList()
+  },
   methods: {
     orderList() {
-      orderList().then(res => {
+      if (!this.isModeData) return
+      orderList(this.queryParams).then(res => {
         console.log("res", res)
+        res.data.result.records.forEach(d => {
+          this.orderContent.push({
+            userInfo: {
+              avatar: d.avatar,
+              nickName: d.nickName,
+              memberNo: d.memberNo
+            },
+            data: [
+              {
+                title: "订单编号：",
+                content: d.orderNo
+              }, {
+                title: "付款时间：",
+                content: d.payTime
+              }, {
+                title: "订单金额：",
+                content: `￥${d.payAmount}`
+              }, {
+                title: "推荐人：",
+                avatar: d.promoAvatar,
+                nickName: d.promoNickName
+              }, {
+                title: "佣金：",
+                content: `￥${d.promoCommissionAmount}`
+              }
+            ]
+          })
+        })
+        if (res.data.result.records.length < this.queryParams.pageSize) {
+          this.isModeData = false
+        }
       });
     }
   },
@@ -79,11 +108,9 @@ export default {
   background: #e7e7e7;
 }
 
-.recomment {
-  .avatar {
-    width: 50rpx;
-    height: 50rpx;
-    border-radius: 50%;
-  }
+.avatar {
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 50%;
 }
 </style>

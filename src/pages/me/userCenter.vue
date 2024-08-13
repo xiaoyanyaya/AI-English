@@ -67,7 +67,7 @@
       </view>
 
       <view @click="showPayWay = true"
-        class="pay-way mt-5 px-5 pt-5 pb-5 flex align-item-center justify-content-between">
+            class="pay-way mt-5 px-5 pt-5 pb-5 flex align-item-center justify-content-between">
         <view class="t-color-3D3D3D">支付方式</view>
         <view class="flex align-item-center">
           <view class="t-color-8A8A8A">{{ payWayList[payWay].title || "请选择" }}</view>
@@ -88,7 +88,7 @@
           </view>
         </view>
         <view class="pay-btn flex align-item-center justify-content-center t-color-fff"
-          @click="vipBuy">
+              @click="vipBuy">
           确认协议并缴费
         </view>
       </view>
@@ -113,18 +113,18 @@
       <view class="pay-way-box">
         <view class="px-4 pt-3 pb-3 flex align-item-center title">
           <u-icon name="arrow-left" color="iconcss" size="28"
-          @click="showPayWay = false"></u-icon>
+                  @click="showPayWay = false"></u-icon>
           <view class="ml-5">选择支付方式</view>
         </view>
         <view style="height: 110rpx"></view>
         <view v-for="(item, index) in payWayList" :key="index"
               @click="clickPayWay(index)"
-        class="flex align-item-center item-box">
+              class="flex align-item-center item-box">
           <view>
             <image :src="`${imageBaseUrl}${item.image}`" mode="widthFix"></image>
           </view>
           <view class="flex align-item-center ml-3 item-title">
-            <view>{{item.title}}</view>
+            <view>{{ item.title }}</view>
             <view class="ml-2" v-if="item.isRecommend">推荐</view>
           </view>
         </view>
@@ -136,7 +136,9 @@
 <script>
 import MyMixin from "@/utils/MyMixin";
 import {vipBuy, vipPackage} from "@/api/me";
-
+import {getPrepayPaymentResponse} from "../../api/me";
+import {requestApi} from "@/jslibs/uRequest";
+import store from "@/store";
 export default {
   mixins: [MyMixin],
   data() {
@@ -157,6 +159,7 @@ export default {
       }, */{
         title: '微信支付',
         image: '/wechatpay.png',
+        value: 1,
         isRecommend: true
       }],
       payWay: 0,
@@ -164,7 +167,14 @@ export default {
       selectPackageData: {},
       showPayWay: false,
       // 是否同意协议
-      isAgree: true
+      isAgree: true,
+      paymentData: {
+        orderNo: '',
+        payWay: 1,
+        amount: 0,
+        description: '',
+        orderType: 'vip_order_applet'
+      }
     };
   },
   onLoad() {
@@ -174,6 +184,8 @@ export default {
     clickPayWay(index) {
       this.payWay = index;
       this.showPayWay = false;
+
+      this.paymentData.payWay = this.payWayList[index].value;
     },
     selectPackage(index, item) {
       this.packageList.forEach((item, i) => {
@@ -184,7 +196,12 @@ export default {
     vipPackage() {
       vipPackage().then(res => {
         res.data.result.forEach(item => {
-          item.isActive = false;
+          if (item.ifDefault === 1) {
+            item.isActive = true;
+            this.selectPackageData = item;
+          } else {
+            item.isActive = false;
+          }
         });
         this.packageList = res.data.result;
       });
@@ -207,9 +224,61 @@ export default {
       }
 
       vipBuy({
-        vipPackageId: data.id
+        chargeVipId: data.id
       }).then(res => {
         console.log(res);
+        if (res.data.code !== 200) {
+          uni.showToast({
+            title: res.data.message,
+            icon: 'none'
+          });
+        } else {
+          let {chargeVipId, orderNo, amount, description} = res.data.result;
+          this.paymentData.orderNo = orderNo;
+          this.paymentData.amount = amount;
+          this.paymentData.description = description;
+          this.getPrepayPaymentResponse();
+        }
+      });
+    },
+    getPrepayPaymentResponse() {
+      let url = "/weixin/getPrepayPaymentResponse"
+      requestApi({
+        url,
+        method: 'post',
+        data: this.paymentData,
+        header: {
+          'content-type': 'application/json',
+          'X-Sign': this.getSign(url, this.paymentData),
+          "X-TIMESTAMP": this.getDateTimeToString(),
+          'X-Access-Token': store.state.token
+        }
+      }).then(res => {
+        console.log(res);
+        if (res.code !== 200) {
+          uni.showToast({
+            title: res.data.message,
+            icon: 'none'
+          });
+        } else {
+          this.requestPayment(res);
+        }
+      });
+    },
+    requestPayment(data) {
+      uni.requestPayment({
+        provider: 'wxpay',
+        timeStamp: data.result.timeStamp,
+        nonceStr: data.result.nonceStr,
+        package: data.result.packageVal,
+        signType: data.result.signType,
+        paySign: data.result.paySign,
+        success: function (res) {
+          console.log('success:' + JSON.stringify(res));
+        },
+        fail: function (err) {
+          console.log('fail:' + JSON.stringify(err));
+        }
       });
     }
   },
@@ -335,6 +404,7 @@ page {
   background: #FFB546;
   border-radius: 50%;
 }
+
 .cricle2 {
   width: 50rpx;
   height: 50rpx;
@@ -343,6 +413,7 @@ page {
   &.isAgree {
     background: #2D6CDA;
   }
+
   &.noAgree {
     border: 1px solid #C0C4CC;
   }

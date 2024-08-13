@@ -80,6 +80,14 @@
   margin-top: 30rpx;
 }
 
+.mt-33 {
+  margin-top: 33rpx;
+}
+
+.mt-37 {
+  margin-top: 37rpx;
+}
+
 .mt-4 {
   margin-top: 40rpx;
 }
@@ -408,7 +416,6 @@
 .t-color-E4483C {
   color: #e4483c;
 }
-
 
 .t-color-BFBFBF {
   color: #bfbfbf;

@@ -152,11 +152,13 @@
             :key="item"
             class="flex flex-direction-column"
           >
-            <view class="">
-              {{ item.lable }}
-            </view>
+            <view> {{ item.lable }}</view>
             <view class="flex hhhh">
-              <view v-for="item2 in item.chil" :key="item2">
+              <view
+                v-for="item2 in item.chil"
+                :key="item2"
+                :class="{ red: item2.color }"
+              >
                 {{ item2.val }}
               </view>
             </view>
@@ -219,7 +221,18 @@
             v-if="item.value4.value != null"
             :style="{ color: item.value4.tColor }"
           >
-            {{
+            <text v-if="item.value4.value2 != null" class="">
+              <text style="color: #c40000">
+                {{ item.value4.value }}
+              </text>
+              <text class="">
+                {{ " / " + item.value4.value2 + " / " + item.value4.value3 }}
+              </text>
+            </text>
+            <text v-else class="">
+              {{ item.value4.value }}
+            </text>
+            <!-- {{
               item.value4.value2 != null
                 ? item.value4.value +
                   "/" +
@@ -227,7 +240,7 @@
                   "/" +
                   item.value4.value3
                 : item.value4.value
-            }}
+            }} -->
           </view>
           <view
             v-if="item.value5.value != null"
@@ -249,9 +262,9 @@
             }} -->
             {{
               item.value6.value +
-              "/" +
+              " / " +
               item.value6.value2 +
-              "/" +
+              " / " +
               item.value6.value3
             }}
           </view>
@@ -261,7 +274,7 @@
           >
             {{
               item.value7.value2 != null
-                ? item.value7.value + "/" + item.value7.value2
+                ? item.value7.value + " / " + item.value7.value2
                 : item.value7.value
             }}</view
           >
@@ -347,7 +360,7 @@ export default {
         value3: {
           value: "单词数",
           type: "text",
-          tColor: "#3D3D3D",
+          tColor: "#c40000",
         },
         value4: {
           value: "准确数",
@@ -446,7 +459,11 @@ export default {
         { lable: "用户" },
         {
           lable: "单词数",
-          chil: [{ val: "总数/" }, { val: "正确/" }, { val: "错误" }],
+          chil: [
+            { val: "总数", color: "#c40000" },
+            { val: "/正确/" },
+            { val: "错误" },
+          ],
         },
         {
           lable: "分数",
@@ -576,12 +593,12 @@ export default {
               value3: {
                 value: data.totalWordNum,
                 type: "text",
-                tColor: "#3D3D3D",
+                tColor: "#c40000",
               },
               value4: {
                 value: data.correctWordNum,
                 type: "text",
-                tColor: "#DC0C0C",
+                tColor: "#3D3D3D",
               },
               value5: {
                 value: data.costTimes,
@@ -776,6 +793,9 @@ export default {
 .main {
   height: 100vh;
   background: linear-gradient(180deg, #d1eaff 0%, #fff 100%) !important;
+}
+.red {
+  color: #c40000;
 }
 
 .head {

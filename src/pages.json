@@ -24,6 +24,18 @@
       "path": "pages/index/generateResult"
     },
     {
+      "path": "pages/frank/index"
+    },
+    {
+      "path": "pages/frank/components/courseOutline"
+    },
+    {
+      "path": "pages/frank/videoList"
+    },
+    {
+      "path": "pages/frank/leaningFoot"
+    },
+    {
       "path": "pages/full-screen/full-screen"
     },
     {
@@ -103,15 +115,15 @@
         {
           "path": "answer"
         },
-		{
-		  "path": "reverseForgetting/index"
-		},
-		{
-		  "path": "reverseForgetting/review"
-		},
-		{
-		  "path": "reverseForgetting/wrongWords"
-		},
+        {
+          "path": "reverseForgetting/index"
+        },
+        {
+          "path": "reverseForgetting/review"
+        },
+        {
+          "path": "reverseForgetting/wrongWords"
+        },
         {
           "path": "chanllenge/index"
         },
@@ -196,6 +208,12 @@
         "text": "首页",
         "iconPath": "/static/icon_4.png",
         "selectedIconPath": "/static/icon_2.png"
+      },
+      {
+        "pagePath": "pages/frank/index",
+        "text": "Frank英语",
+        "iconPath": "/static/frank_inactive.png",
+        "selectedIconPath": "/static/frank_active.png"
       },
       {
         "pagePath": "pages/me/index",

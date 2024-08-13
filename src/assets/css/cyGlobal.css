@@ -28,6 +28,26 @@
     margin-left: 50rpx;
 }
 
+.ml-6 {
+    margin-left: 60rpx;
+}
+
+.ml-7 {
+    margin-left: 70rpx;
+}
+
+.ml-8 {
+    margin-left: 80rpx;
+}
+
+.ml-9 {
+    margin-left: 90rpx;
+}
+
+.ml-10 {
+    margin-left: 100rpx;
+}
+
 .mr-1 {
     margin-right: 10rpx;
 }

@@ -89,6 +89,20 @@
   ],
   "subPackages": [
     {
+      "root": "pages/me/apply",
+      "pages": [
+        {
+          "path": "cooperative"
+        },
+        {
+          "path": "apply"
+        },
+        {
+          "path": "applySuccess"
+        }
+      ]
+    },
+    {
       "root": "pages/word",
       "pages": [
         {
@@ -115,15 +129,15 @@
         {
           "path": "answer"
         },
-		{
-		  "path": "reverseForgetting/index"
-		},
-		{
-		  "path": "reverseForgetting/review"
-		},
-		{
-		  "path": "reverseForgetting/wrongWords"
-		},
+        {
+          "path": "reverseForgetting/index"
+        },
+        {
+          "path": "reverseForgetting/review"
+        },
+        {
+          "path": "reverseForgetting/wrongWords"
+        },
         {
           "path": "chanllenge/index"
         },

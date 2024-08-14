@@ -104,6 +104,20 @@
   ],
   "subPackages": [
     {
+      "root": "pages/me/apply",
+      "pages": [
+        {
+          "path": "cooperative"
+        },
+        {
+          "path": "apply"
+        },
+        {
+          "path": "applySuccess"
+        }
+      ]
+    },
+    {
       "root": "pages/word",
       "pages": [
         {

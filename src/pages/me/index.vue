@@ -43,12 +43,17 @@
       </view>
 
       <view v-if="isShowOther" class="person-info-box px-4 pb-4 mt-4">
-        <view class="flex align-item-center justify-content-between pt-4 mt-1"
+        <view class="flex align-item-center justify-content-between pt-3 mt-1"
+              :class="item.noPartner ? 'person-item pb-5' : 'person-border pb-4'"
               v-for="(item, index) in menuList" :key="index"
               @click="toPage(index)">
-          <view class="flex align-item-center">
+          <view class="flex align-item-center" v-if="item.noPartner">
             <image :src="`${imageBaseUrl}/${item.image}`" class="ml-1" mode="widthFix"></image>
-            <view class="ml-3">{{item.title}}</view>
+            <view class="ml-5 noPartner-title">{{item.title}}</view>
+          </view>
+          <view class="flex align-item-center" v-else>
+            <image :src="`${imageBaseUrl}/${item.image}`" class="ml-1" mode="widthFix"></image>
+            <view class="ml-6">{{item.title}}</view>
           </view>
           <view class="flex align-item-center">
             <view class="ml-2">
@@ -79,7 +84,8 @@ export default {
       currentPage: 1,
 
       menuList: [
-        { title: '分销中心', image: 'icon_7.png' },
+        { title: '申请成为合作商', image: '8-13-04.png', noPartner: true },
+        // { title: '分销中心', image: 'icon_7.png' },
         { title: '卡密兑换', image: 'icon_8.png' },
         { title: '联系客服', image: 'icon_9.png' },
         { title: '邀请好友', image: 'icon_10.png' }
@@ -91,6 +97,28 @@ export default {
       isShowOther: false,
       version: ''
     };
+  },
+  // 深度监听userInfo
+  watch: {
+    userInfo: {
+      handler: function (val) {
+        if (val) {
+          if (val.distributionType) {
+            this.menuList[0] = {
+              title: '分销中心',
+              image: 'icon_7.png'
+            }
+          } else {
+            this.menuList[0] = {
+              title: '申请成为合作商',
+              image: '8-13-04.png',
+              noPartner: true
+            }
+          }
+        }
+      },
+      deep: true
+    }
   },
   computed: {
     userCenterBoxStyle() {
@@ -145,7 +173,13 @@ export default {
       }
     },
     toPage(index) {
-      if (index == 0) this.$navigateTo('/pages/me/distribution')
+      if (index == 0) {
+        if (this.menuList[index].noPartner) {
+          this.$navigateTo('/pages/me/apply/cooperative')
+        } else {
+          this.$navigateTo('/pages/me/distribution')
+        }
+      }
       if (index == 1) this.$navigateTo('/pages/me/cardConversion')
     },
     network() {
@@ -159,12 +193,12 @@ export default {
 
 <style lang="scss">
 page {
-  background: #F5FBFD;
+  background: #F5F9FF;
 }
 
 .user-box {
   height: 152rpx;
-  border-radius: 30rpx;
+  border-radius: 10rpx;
   background: #FFFFFF;
   box-shadow: 0px 0px 10rpx 0px #D8D8D8;
 
@@ -194,7 +228,7 @@ page {
 .user-center-box {
   height: 200rpx;
   margin-top: 40rpx;
-  border-radius: 30rpx;
+  border-radius: 10rpx;
   padding-left: 60rpx;
   padding-right: 50rpx;
 
@@ -232,9 +266,26 @@ page {
 
 .person-info-box {
   border-radius: 30rpx;
-  background: #FFFFFF;
-  box-shadow: 0px 0px 10rpx 0px #D8D8D8;
   font-size: 30rpx;
+
+  .person-item {
+    background: linear-gradient(90deg, #FFFFFF 56%, rgba(255, 255, 255, 0) 102%);
+    position: relative;
+
+    image {
+      position: absolute;
+      left: -50rpx;
+      width: 150rpx;
+      height: 150rpx;
+    }
+
+    .noPartner-title {
+      margin-left: 114rpx;
+    }
+  }
+  .person-border {
+    border-bottom: 1rpx solid rgba(216, 216 ,216, 0.5);
+  }
 
   image {
     width: 40rpx;
@@ -245,6 +296,6 @@ page {
 .version-box {
   width: 750rpx;
   position: fixed;
-  bottom: 100rpx;
+  bottom: 60rpx;
 }
 </style>

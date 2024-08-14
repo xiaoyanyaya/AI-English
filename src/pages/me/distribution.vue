@@ -22,18 +22,19 @@
             <view class="font-weight-bold t-size-36 t-color-DC0C0C">{{ userInfo.canWithdrawAmount }}</view>
             <view class="t-size-24 mt-1 t-color-3D3D3D">可提现佣金(元)</view>
           </view>
-          <view class="withdraw flex align-item-center justify-content-center t-color-fff" @click="toPrice">
+          <view class="withdraw flex align-item-center t-size-24 justify-content-center t-color-fff" @click="toPrice">
             申请提现
           </view>
         </view>
-        <view class="record px-3 flex align-item-center">
+        <view class="record px-3 flex align-item-center justify-content-end">
           <image :src="`${imageBaseUrl}/icon_12.png`" mode="widthFix" class="mr-2 ml-1"/>
-          <view class="t-color-8A8A8A t-size-24">提现记录</view>
+          <view class="t-color-8A8A8A t-size-24 mr-4">提现记录</view>
         </view>
       </view>
 
       <view class="content-menu mt-4 pr-1 pb-1">
         <view class="item flex justify-content-center align-item-center"
+              :class="index === 3 ? 'mr-3' : ''"
               @click="toPage(0, index)"
               v-for="(item, index) in contentMenuList" :key="index">
           <image class="mr-3 mt-1" :src="`${imageBaseUrl}/${item.image}`" mode="widthFix"/>
@@ -50,7 +51,7 @@
               @click="toPage(1, index)">
           <view class="flex align-item-center">
             <image :src="`${imageBaseUrl}/${item.image}`" class="ml-1" mode="widthFix"></image>
-            <view class="ml-3">{{item.title}}</view>
+            <view class="ml-3 t-size-28">{{item.title}}</view>
           </view>
           <view class="flex align-item-center">
             <view class="ml-2">
@@ -78,23 +79,23 @@ export default {
     return {
       contentMenuList: [{
         title: '佣金明细',
-        image: 'icon_13.png',
+        image: '8-13-08.png',
         subTitle: ''
       },{
         title: '下级推广员',
-        image: 'icon_17.png',
+        image: '8-13-09.png',
         subTitle: ''
       },{
         title: '直推用户',
-        image: 'icon_14.png',
+        image: '8-13-10.png',
         subTitle: ''
       },{
         title: '推广订单',
-        image: 'icon_16.png',
+        image: '8-13-11.png',
         subTitle: ''
       }],
       menuList: [
-        { title: '邀请下级推广员', image: 'icon_15.png' },
+        { title: '邀请下级推广员', image: '8-13-12.png' },
       ],
       userInfo: {}
     };
@@ -140,18 +141,18 @@ export default {
 
 <style lang="scss">
 page {
-  background: #F5FBFD;
+  background: #F5F9FF;
 }
 
 .user-info {
-  border-radius: 30rpx;
+  border-radius: 10rpx;
   opacity: 1;
   background: #FFFFFF;
   box-shadow: 0px 0px 10rpx 0px #D8D8D8;
 
   .avatar {
-    width: 60rpx;
-    height: 60rpx;
+    width: 80rpx;
+    height: 80rpx;
     border-radius: 50%;
   }
 }
@@ -164,14 +165,14 @@ page {
   .withdraw {
     padding: 12rpx 40rpx;
     border-radius: 50rpx;
-    background: #23B32A;
+    background: #5ED063;
     box-shadow: 0px 0px 10rpx 0px #D8D8D8;
   }
 
   .record {
-    height: 60rpx;
+    height: 70rpx;
     opacity: 1;
-    background: #FFF3F6;
+    border-top: 1rpx solid rgba(216,216,216,0.2);
 
     image {
       width: 30rpx;
@@ -185,7 +186,7 @@ page {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 20rpx;
-  border-radius: 30rpx;
+  border-radius: 10rpx;
   background: #FFFFFF;
   box-shadow: 0px 0px 10rpx 0px #D8D8D8;
 
@@ -201,7 +202,7 @@ page {
   border-radius: 30rpx;
   background: #FFFFFF;
   box-shadow: 0px 0px 10rpx 0px #D8D8D8;
-  font-size: 30rpx;
+  font-size: 10rpx;
 
   image {
     width: 40rpx;

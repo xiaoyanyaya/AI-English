@@ -26,12 +26,12 @@ export const withdrawList = params => fly.get('/distribution/commission/withdraw
 export const withdrawApply = params => fly.post('/distribution/commission/withdraw/apply', params)
 //佣金明细列表 /distribution/commission/detail/list
 export const detailList = params => fly.get('/distribution/commission/detail/list', params)
-//下级推广员   /distribution/promotion/referral/directPromoters
-export const directPromoters = params => fly.get('/distribution/promotion/referral/directPromoters', params)
+//下级推广员   /distribution/promotion/partner/directPromoters
+export const directPromoters = params => fly.get('/distribution/promotion/partner/directPromoters', params)
 //推广订单 /distribution/promotion/order/list
 export const orderList = params => fly.get('/distribution/promotion/order/list', params)
-//直推用户 /distribution/promotion/referral/directReferrals
-export const directReferrals = params => fly.get('/distribution/promotion/referral/directReferrals', params)
+//直推用户 /distribution/promotion/partner/directReferrals
+export const directReferrals = params => fly.get('/distribution/promotion/partner/directReferrals', params)
 
 
 // 用户协议 /article/userAgreement/detail
@@ -55,3 +55,6 @@ export const getPrepayPaymentResponse = params => fly.post('/weixin/getPrepayPay
 
 // APP发起支付前需要准备的请求参数 /weixin/getAppNeedParam post
 export const getAppNeedParam = params => fly.post('/weixin/getAppNeedParam', params)
+
+// 申请合作商 /distribution/promotion/partner/apply post
+export const partnerApply = params => fly.post('/distribution/promotion/partner/apply', params)

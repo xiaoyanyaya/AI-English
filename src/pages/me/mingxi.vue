@@ -18,7 +18,7 @@
               {{ item.amount }}<br/>
             </view>
           </li>
-        </block>wei
+        </block>
       </view>
     </view>
     <view v-show="list.length < 1" class="mt-5 flex align-item-center justify-content-center">

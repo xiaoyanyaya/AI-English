@@ -39,3 +39,7 @@ export const getUserPayList = (params) =>
 // 课程体系 - 搜索视频列表
 export const getSearchVideoList = (params) =>
   fly.get("/course/video/queryByKeyword", params);
+
+// 获取视频播放凭证
+export const getPlayAuth = (videoId) =>
+  fly.get(`/aliyun/vod/playAuth/${videoId}`);

@@ -47,7 +47,7 @@
       :show-title="false"
       v-model="showModel">
       <view class="slot-content">
-        <view class="t-color-8A8A8A t-size-30 review">已阅读并同意《用户注册协议》《隐私政策》</view>
+        <view class="t-color-8A8A8A t-size-30 review">已阅读并同意《用户推广协议》</view>
         <view class="flex align-item-center justify-content-around t-size-24 font-weight-bold mt-4">
           <view class="t-color-8A8A8A" @click="showModel = false">不同意</view>
           <view @click="clickAllow"

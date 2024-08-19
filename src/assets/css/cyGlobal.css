@@ -88,6 +88,9 @@
     margin-right: 100rpx;
 }
 
+.mt-05 {
+    margin-top: 5rpx;
+}
 .mt-1 {
     margin-top: 10rpx;
 }
@@ -401,6 +404,9 @@
     color: #2d6cda;
 }
 
+.t-color-ED7E1F {
+    color: #ed7e1f;
+}
 .t-color-2A67D2 {
     color: #2a67d2;
 }

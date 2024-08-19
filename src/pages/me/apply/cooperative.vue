@@ -30,7 +30,7 @@
           </view>
         </view>
         <span class="ml-2 t-color-8A8A8A">阅读并同意</span>
-        <span class="text" @click="toUserPage(0, '用户协议')">《用户推广协议》</span>
+        <span class="text" @click="toUserPage(4, '用户推广协议')">《用户推广协议》</span>
       </view>
 
       <view class="flex align-item-center justify-content-center">
@@ -85,6 +85,11 @@ export default {
     }
   },
   methods: {
+    toUserPage(type, title) {
+      uni.navigateTo({
+        url: `/pages/me/content?type=${type}&title=${title}`
+      })
+    },
     clickAllow() {
       this.isAuthorize = true;
       this.showModel = false;

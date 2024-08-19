@@ -21,7 +21,7 @@ export default {
 	onShareAppMessage() {
 		return {
 			title: "小礼AI极简英语",
-			path: "pages/index/index"
+			path: "pages/index/index?promoCode=" + this.$store.state.userInfo.promoCode,
 		}
 	},
 	created() {
@@ -127,9 +127,13 @@ export default {
         uni.login({
           provider: "weixin",
           success: (res) => {
-            login({
-              code: res.code,
-            }).then((res) => {
+						let data = {
+							code: res.code,
+						}
+						if (this.$store.state.inviteePromoCode) {
+							data.inviteePromoCode = this.$store.state.invite
+						}
+            login(data).then((res) => {
               // store.dispatch('generateContent', text)
               resolve(res);
               this.$store.dispatch("setToken", res.data.result.token);

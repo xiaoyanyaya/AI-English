@@ -275,6 +275,9 @@ export default {
         paySign: data.result.paySign,
         success: function (res) {
           console.log('success:' + JSON.stringify(res));
+          uni.navigateTo({
+            url: '/pages/me/paySuccess'
+          })
         },
         fail: function (err) {
           console.log('fail:' + JSON.stringify(err));

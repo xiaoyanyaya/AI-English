@@ -130,8 +130,9 @@ export default {
 						let data = {
 							code: res.code,
 						}
-						if (this.$store.state.inviteePromoCode) {
-							data.inviteePromoCode = this.$store.state.invite
+						var promoCode = uni.getStorageSync("promoCode")
+						if (promoCode) {
+							data.inviteePromoCode = promoCode
 						}
             login(data).then((res) => {
               // store.dispatch('generateContent', text)

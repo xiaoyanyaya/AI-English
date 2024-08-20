@@ -43,3 +43,7 @@ export const getSearchVideoList = (params) =>
 // 获取视频播放凭证
 export const getPlayAuth = (videoId) =>
   fly.get(`/aliyun/vod/playAuth/${videoId}`);
+
+// 获取视频播放地址
+export const getPlayUrl = (videoId) =>
+  fly.get(`/aliyun/vod/playUrl/${videoId}`);

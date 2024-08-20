@@ -22,7 +22,7 @@
             item.videoName
           }}</view>
           <view class="t-color-8A8A8A t-size-20"
-            >发布时间： {{ item.publishTime.slice(0, 10) }}</view
+            >发布时间： {{ item.createTime.slice(0, 10) }}</view
           >
         </view>
       </view>
@@ -32,8 +32,10 @@
 
 <script>
 import { getUserPayList } from "@/api/frank";
+import MyMixin from "@/utils/MyMixin";
 
 export default {
+  mixins: [MyMixin],
   data() {
     return {
       backColor: "transparent",
@@ -83,7 +85,6 @@ export default {
       .image {
         width: 317rpx;
         height: 178rpx;
-        background-color: pink;
         image {
           width: 100%;
           height: 100%;

@@ -99,17 +99,17 @@
                 <view
                   @click="
                     toNav(
-                      `/pages/frank/videoDetail?videoId=${item3.vodVideoId}`
+                      `/pages/frank/webview?videoId=${item3.vodVideoId}&id=${item3.id}`
                     )
                   "
-                  class="flex"
+                  class="flex align-item-center"
                 >
                   <image :src="imageBaseUrl + '/frank/8-7-27.png'"></image>
-                  <view class="font-w-500 t-size-30">{{
+                  <view class="font-w-500 t-size-30 w-320">{{
                     item3.videoName
                   }}</view>
                 </view>
-                <text class="t-color-24A800 t-size-26 font-w-5">·已学???</text>
+                <text class="t-color-24A800 t-size-26 font-w-5">·已学</text>
                 <!-- <text class="t-color-FFAB2D t-size-26 font-w-5">·学习中</text> -->
                 <!-- <text class="t-color-636363 t-size-26 font-w-5">·未学</text> -->
               </view>
@@ -325,6 +325,10 @@ export default {
         .video_title {
           @extend .cont_title;
           padding-left: 110rpx;
+          image {
+            width: 33rpx;
+            height: 30rpx;
+          }
         }
       }
     }

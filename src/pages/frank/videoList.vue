@@ -99,7 +99,7 @@
             item.videoName
           }}</view>
           <view class="t-color-8A8A8A t-size-20"
-            >发布时间： {{ item.publishTime.slice(0, 10) }}</view
+            >发布时间： {{ item.createTime.slice(0, 10) }}</view
           >
         </view>
       </view>

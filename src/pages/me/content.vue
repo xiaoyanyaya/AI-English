@@ -11,6 +11,7 @@
 
 <script>
 import {aboutUs, privacyPolicy, userAgreement, userGuide} from "@/api/me";
+import {promoAgreement} from "../../api/me";
 
 export default {
   data() {
@@ -49,6 +50,10 @@ export default {
             this.content = res.data.result;
           });
           break;
+        case "4":
+          promoAgreement().then(res => {
+            this.content = res.data.result;
+          });
       }
     }
   },

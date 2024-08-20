@@ -42,6 +42,8 @@ export const privacyPolicy = params => fly.get('/article/privacyPolicy/detail', 
 export const userGuide = params => fly.get('/article/userGuide/detail', params)
 // 关于 /article/aboutUs/detail
 export const aboutUs = params => fly.get('/article/aboutUs/detail', params)
+// 推广协议 /article/promoAgreement/detail
+export const promoAgreement = params => fly.get('/article/promoAgreement/detail', params)
 
 // 基础数据 /app/common/basicData get
 export const basicData = params => fly.get('/app/common/basicData', params)

@@ -3,7 +3,7 @@
     <cy-navbar>
       <view class="t-size-30">小礼AI极简英语</view>
     </cy-navbar>
-<!--    <button @click="test">测试</button>-->
+    <!--    <button @click="test">测试</button>-->
     <view class="px-4 mt-5">
       <view class="user-box flex align-item-center justify-content-between border-box px-3">
         <view class="flex align-item-center">
@@ -13,11 +13,19 @@
           </viwe>
           <view v-if="!userInfo.memberNo" class="t-color-3D3D3D" @click="loginInfo">点击登录</view>
           <view v-else class="ml-3" @click="$navigateTo('/pages/me/personInfo')">
-            <view class="t-size-30 t-color-3D3D3D flex align-item-center">
-              <view>{{userInfo.nickName || "小礼AI"}}</view>
+            <view class="t-size-32 t-color-3D3D3D flex align-item-center">
+              <view>{{ userInfo.nickName || "小礼AI" }}</view>
               <image :src="`${imageBaseUrl}/icon_6.png`" mode="widthFix" class="user-write mt-1 ml-1"></image>
             </view>
-            <view class="t-size-24 t-color-8A8A8A mt-1">会员ID: {{userInfo.memberNo || ""}}</view>
+            <view class="t-size-24 t-color-8A8A8A mt-1">会员ID: {{ userInfo.memberNo || "" }}</view>
+            <view v-if="isVipExpired != -1">
+              <view class="t-size-24 t-color-8A8A8A mt-05 flex align-item-center">
+                <image :src="`${imageBaseUrl}/${isVipExpired === 0 ? '8-19-01.png' : '8-19-02.png'}`" mode="widthFix"
+                       class="vipExpired mr-1"></image>
+                <span v-if="isVipExpired === 0" class="t-color-ED7E1F">会员有效期至{{ userInfo.vipExpireDate }}</span>
+                <span v-else>会员已过期</span>
+              </view>
+            </view>
           </view>
         </view>
         <view @click="$navigateTo('/pages/me/setting')">
@@ -37,23 +45,27 @@
             开通VIP立享所有权益
           </view>
         </view>
-        <view class="user-center-btn t-color-fff flex align-item-center justify-content-center t-size-24" @click="$navigateTo('/pages/me/userCenter')">
+        <view class="user-center-btn t-color-fff flex align-item-center justify-content-center t-size-24"
+              @click="$navigateTo('/pages/me/userCenter')">
           立享优惠
         </view>
       </view>
 
       <view v-if="isShowOther" class="person-info-box px-4 pb-4 mt-4">
-        <view class="flex align-item-center justify-content-between pt-3 mt-1"
+        <view class="flex align-item-center justify-content-between pt-3 mt-1 position-relative"
               :class="item.noPartner ? 'person-item pb-5' : 'person-border pb-4'"
               v-for="(item, index) in menuList" :key="index"
               @click="toPage(index)">
+          <view v-if="index === 3" class="share-btn">
+            <button open-type="share">分享</button>
+          </view>
           <view class="flex align-item-center" v-if="item.noPartner">
             <image :src="`${imageBaseUrl}/${item.image}`" class="ml-1" mode="widthFix"></image>
-            <view class="ml-5 noPartner-title">{{item.title}}</view>
+            <view class="ml-5 noPartner-title">{{ item.title }}</view>
           </view>
           <view class="flex align-item-center" v-else>
             <image :src="`${imageBaseUrl}/${item.image}`" class="ml-1" mode="widthFix"></image>
-            <view class="ml-6">{{item.title}}</view>
+            <view class="ml-6">{{ item.title }}</view>
           </view>
           <view class="flex align-item-center">
             <view class="ml-2">
@@ -66,7 +78,7 @@
 
     <view style="width: 750rpx; height: 100rpx"></view>
     <view class="version-box flex align-item-center justify-content-center">
-      版本号：{{version}}
+      版本号：{{ version }}
     </view>
 
     <cy-tabbar :currentActive="1"></cy-tabbar>
@@ -77,6 +89,7 @@
 
 import MyMixin from '@/utils/MyMixin.js'
 import store from '@/store/';
+
 export default {
   mixins: [MyMixin],
   data() {
@@ -84,11 +97,11 @@ export default {
       currentPage: 1,
 
       menuList: [
-        { title: '申请成为合作商', image: '8-13-04.png', noPartner: true },
+        {title: '申请成为合作商', image: '8-13-04.png', noPartner: true},
         // { title: '分销中心', image: 'icon_7.png' },
-        { title: '卡密兑换', image: 'icon_8.png' },
-        { title: '联系客服', image: 'icon_9.png' },
-        { title: '邀请好友', image: 'icon_10.png' }
+        {title: '卡密兑换', image: 'icon_8.png'},
+        {title: '联系客服', image: 'icon_9.png'},
+        {title: '邀请好友', image: 'icon_10.png'}
       ],
 
       userInfo: {},
@@ -123,6 +136,22 @@ export default {
   computed: {
     userCenterBoxStyle() {
       return `background: url(${this.imageBaseUrl}/img_17.png) no-repeat center center; background-size: cover;`
+    },
+    // 会员是否过期
+    isVipExpired() {
+      // 0: 未过期 1: 已过期 -1: 未开通
+      // 时间格式 vipExpireDate: "2028-04-29"
+      if (this.userInfo.vipExpireDate) {
+        var vipExpireDate = new Date(this.userInfo.vipExpireDate).getTime()
+        var now = new Date().getTime()
+        if (vipExpireDate < now) {
+          return 1
+        } else {
+          return 0
+        }
+      } else {
+        return -1
+      }
     }
   },
   onLoad() {
@@ -137,6 +166,16 @@ export default {
       })
     }
     this.initData()
+  },
+  onShareAppMessage() {
+    const SRC = `pages/me/index?promoCode=${this.userInfo.promoCode}`;
+    const path = ``;
+    // 来自页面内分享按钮
+    return {
+      title: "小礼AI极简英语",
+      path: `${SRC}${path}`,
+      // imageUrl: `${this.imgDomain}wxapp/icon1.1/pic_visit.png`,
+    };
   },
   methods: {
     getSystemInfo() {
@@ -183,9 +222,7 @@ export default {
       if (index == 1) this.$navigateTo('/pages/me/cardConversion')
     },
     network() {
-      return {
-
-      }
+      return {}
     }
   },
 }
@@ -214,6 +251,7 @@ page {
     border-radius: 50%;
     overflow: hidden;
   }
+
   .user-img {
     width: 80rpx;
     height: 80rpx;
@@ -283,8 +321,9 @@ page {
       margin-left: 114rpx;
     }
   }
+
   .person-border {
-    border-bottom: 1rpx solid rgba(216, 216 ,216, 0.5);
+    border-bottom: 1rpx solid rgba(216, 216, 216, 0.5);
   }
 
   image {
@@ -297,5 +336,18 @@ page {
   width: 750rpx;
   position: fixed;
   bottom: 60rpx;
+}
+
+.share-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+}
+
+.vipExpired {
+  width: 30rpx;
+  height: 30rpx;
 }
 </style>

@@ -137,7 +137,10 @@ export default {
       this.backColor = 'transparent'
     }
   },
-  onLoad() {
+  onLoad({promoCode}) {
+    if (promoCode) {
+      uni.setStorageSync('promoCode', promoCode)
+    }
     if (!store.state.token) {
       this.network().loginAndGetVirtual();
     }

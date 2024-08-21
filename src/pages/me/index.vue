@@ -154,7 +154,10 @@ export default {
       }
     }
   },
-  onLoad() {
+  onLoad({promoCode}) {
+    if (promoCode) {
+      uni.setStorageSync('promoCode', promoCode)
+    }
     this.getSystemInfo()
   },
   onShow() {

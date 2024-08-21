@@ -51,11 +51,14 @@
         </view>
       </view>
 
-      <view v-if="isShowOther" class="person-info-box px-4 pb-4 mt-4">
-        <view class="flex align-item-center justify-content-between pt-3 mt-1 position-relative"
+      <view v-if="isShowOther" class="person-info-box pb-4 mt-4">
+        <view class="flex align-item-center justify-content-between pt-3 mt-1 position-relative px-4"
               :class="item.noPartner ? 'person-item pb-5' : 'person-border pb-4'"
               v-for="(item, index) in menuList" :key="index"
               @click="toPage(index)">
+          <view v-if="index === 2" class="share-btn">
+            <button open-type="contact">客服</button>
+          </view>
           <view v-if="index === 3" class="share-btn">
             <button open-type="share">分享</button>
           </view>
@@ -74,6 +77,10 @@
           </view>
         </view>
       </view>
+    </view>
+
+    <view class="flex align-item-center justify-content-center">
+      <image :src="`${imageBaseUrl}/8-21-01.png`" mode="widthFix" class=" notes"></image>
     </view>
 
     <view style="width: 750rpx; height: 100rpx"></view>
@@ -352,5 +359,9 @@ page {
 .vipExpired {
   width: 30rpx;
   height: 30rpx;
+}
+
+.notes {
+  width: 700rpx;
 }
 </style>

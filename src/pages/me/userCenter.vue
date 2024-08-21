@@ -6,13 +6,13 @@
 
     <view class="px-4 mt-5">
       <view class="open-user-box px-4 pt-3 pb-5">
-        <view class="flex align-item-center">
+        <view class="flex align-item-center pb-3">
           <view class="font-weight-bold t-size-26">开通VIP会员</view>
           <image class="customer ml-3" :src="`${imageBaseUrl}/icon_9.png`" mode="widthFix"></image>
         </view>
 
         <view class="package-grade">
-          <view class="package-item mt-4 flex flex-direction-column align-item-center"
+          <view class="package-item  flex flex-direction-column align-item-center"
                 :class="{ active: item.isActive }"
                 @click="selectPackage(index, item)"
                 v-for="(item, index) in packageList" :key="index">
@@ -28,11 +28,11 @@
           </view>
         </view>
 
-        <view class="desc-menu-box mt-3 px-5 pt-4">
-          <view class="flex align-item-center t-size-26 pb-4"
+        <view class="desc-menu-box mt-5 px-2 pt-4">
+          <view class="flex align-item-center t-size-24 pb-4"
                 v-for="(item, index) in descMenu">
-            <view class="cricle flex align-item-center justify-content-center">
-              <u-icon name="checkbox-mark" color="#FFFFFF" size="28"></u-icon>
+            <view class="cricle flex align1-item-center justify-content-center">
+              <u-icon name="checkbox-mark" color="#FFFFFF" size="22"></u-icon>
             </view>
             <view class="title ml-2">{{ item.title }}</view>
           </view>
@@ -146,11 +146,11 @@ export default {
       // 套餐
       packageList: [],
       descMenu: [{
-        title: '每天抽空一练，3个月后口语'
+        title: '独创弗兰克英语理念，颠覆性重塑学习方法'
       }, {
-        title: '大胆开口说，AI外教帮你矫正'
+        title: '融合AI技术，让英语学习智能、高效、有趣'
       }, {
-        title: '练口语不再枯燥，海量趣味话题'
+        title: '匹配全国英语教材新课改，轻松掌握提分秘籍'
       }],
       payWayList: [/*{
         title: '支付宝',
@@ -402,8 +402,8 @@ page {
 }
 
 .cricle {
-  width: 24px;
-  height: 24px;
+  width: 34rpx;
+  height: 34rpx;
   background: #FFB546;
   border-radius: 50%;
 }

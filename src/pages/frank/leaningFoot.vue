@@ -4,6 +4,27 @@
       <view class="t-size-30">学习足迹</view>
     </cy-navbar>
 
+    <view class="search-box">
+      <image :src="imageBaseUrl + '/word/icon3.png'" mode=""></image>
+      <input
+        type="text"
+        placeholder="输入课程或视频名称"
+        v-model="serchParams.keyword"
+      />
+      <view class="search-box-icon" @click="serchParams.keyword = ''">
+        <u-icon
+          v-if="serchParams.keyword.length > 0"
+          name="close-circle"
+        ></u-icon>
+      </view>
+      <view
+        @click="getSearchFooList"
+        v-if="serchParams.keyword.length > 0"
+        class="search-boxIcon"
+        >搜索</view
+      >
+    </view>
+
     <!-- 视屏列表 -->
     <view class="v_list">
       <view v-for="(item, index) in videoList" :key="item.id" class="v_item">
@@ -32,6 +53,7 @@
 
 <script>
 import { getUserPayList } from "@/api/frank";
+// import { getSearchVideoList } from "@/api/frank";
 import MyMixin from "@/utils/MyMixin";
 
 export default {
@@ -44,6 +66,11 @@ export default {
         pageSize: 10,
       },
       videoList: [],
+      serchParams: {
+        keyword: "",
+        pageNo: 1,
+        pageSize: 10,
+      },
     };
   },
   onPageScroll(e) {
@@ -62,6 +89,11 @@ export default {
       this.videoList = res.data.result.records;
       console.log("this.videoList", this.videoList);
     },
+    async getSearchFooList() {
+      // const res = await getSearchVideoList(this.serchParams);
+      // this.videoList = res.data.result.records;
+      // console.log("this.videoList", this.videoList);
+    },
   },
 };
 </script>
@@ -71,6 +103,47 @@ export default {
   background: linear-gradient(164deg, #bfd8fd 3%, #f0f7fd 20%, #ffffff 200%);
   min-height: 100vh;
   padding-bottom: 40rpx;
+
+  .search-boxIcon {
+    position: absolute;
+    right: 40rpx;
+    background: #e9f5ff;
+    width: 100rpx;
+    height: 50rpx;
+    line-height: 50rpx;
+    text-align: center;
+    border-radius: 40rpx;
+    color: #1863e5;
+  }
+  .search-box-icon {
+    position: absolute;
+    right: 160rpx;
+  }
+  .search-box input {
+    flex: 1;
+    margin-right: 150rpx;
+    z-index: 0;
+  }
+  .search-box {
+    margin: 50rpx 40rpx 40rpx;
+    height: 70rpx;
+    line-height: 70rpx;
+    color: #8a8a8a;
+    height: 70rpx;
+    border-radius: 401rpx;
+    box-sizing: border-box;
+    padding: 0 50rpx;
+    display: flex;
+    align-items: center;
+    font-size: 24rpx;
+    position: relative;
+    background-color: #fff;
+  }
+  .search-box image {
+    width: 26rpx;
+    height: 26rpx;
+    margin-right: 30rpx;
+  }
 
   .v_list {
     margin: 20rpx 20rpx 40rpx;

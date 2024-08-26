@@ -2,7 +2,7 @@
   <view class="main">
     <web-view
       :src="
-        'https://aien.xiaolixb.com/h5/index.html?videoId=' +
+        'https://wapi-dev.aien.xiaolixb.com/h5/index.html?videoId=' +
         videoId +
         '&playauth=' +
         playauth +

@@ -9,17 +9,17 @@
       <input
         type="text"
         placeholder="输入课程或视频名称"
-        v-model="serchParams.keyword"
+        v-model="pagingParams.keyword"
       />
-      <view class="search-box-icon" @click="serchParams.keyword = ''">
+      <view class="search-box-icon" @click="pagingParams.keyword = ''">
         <u-icon
-          v-if="serchParams.keyword.length > 0"
+          v-if="pagingParams.keyword.length > 0"
           name="close-circle"
         ></u-icon>
       </view>
       <view
         @click="getSearchVideoList"
-        v-if="serchParams.keyword.length > 0"
+        v-if="pagingParams.keyword.length > 0"
         class="search-boxIcon"
         >搜索</view
       >
@@ -82,28 +82,30 @@
     </view>
 
     <!-- 视屏列表 -->
-    <view class="v_list">
-      <view v-for="(item, index) in videoList" :key="item.id" class="v_item">
-        <view class="image">
-          <image :src="imageBaseUrl + '/frank/8-7-21.png'" mode=""></image>
-        </view>
-        <view class="r_content">
-          <view class="flex mt-2">
-            口语练习视频
-            <image
-              v-if="index == 0 || index == 1"
-              :src="imageBaseUrl + '/frank/路径.png'"
-            ></image>
+    <scroll-view @scrolltolower="onScrolltolower" scroll-y>
+      <view class="v_list">
+        <view v-for="(item, index) in videoList" :key="item.id" class="v_item">
+          <view class="image">
+            <image :src="item.videoImageUrl" mode=""></image>
           </view>
-          <view class="t-color-8A8A8A t-size-20 mt-1 mb-1">{{
-            item.videoName
-          }}</view>
-          <view class="t-color-8A8A8A t-size-20"
-            >发布时间： {{ item.createTime.slice(0, 10) }}</view
-          >
+          <view class="r_content">
+            <view class="flex mt-2">
+              {{ item.videoFullName }}
+              <image
+                v-if="index == 0 || index == 1"
+                :src="imageBaseUrl + '/frank/路径.png'"
+              ></image>
+            </view>
+            <view class="t-color-8A8A8A t-size-20 mt-1 mb-1">{{
+              item.videoName
+            }}</view>
+            <view class="t-color-8A8A8A t-size-20"
+              >发布时间： {{ item.createTime.slice(0, 10) }}</view
+            >
+          </view>
         </view>
       </view>
-    </view>
+    </scroll-view>
   </view>
 </template>
 
@@ -116,10 +118,11 @@ export default {
   data() {
     return {
       backColor: "transparent",
-      serchParams: {
+      pagingParams: {
         keyword: "",
         pageNo: 1,
-        pageSize: 10,
+        pageSize: 20,
+        totalPage: null,
         orderFiledName: "publish_time", ////publish_time， play_times，collect_times，目前三选一
         orderType: "asc", ////asc, desc ， 目前二选一
       },
@@ -139,40 +142,48 @@ export default {
   },
   onLoad(e) {
     if (e.value) {
-      this.serchParams.keyword = e.value;
+      this.pagingParams.keyword = e.value;
       this.getSearchVideoList();
     }
   },
   methods: {
     async getSearchVideoList() {
-      const res = await getSearchVideoList(this.serchParams);
-      this.videoList = res.data.result.records;
+      const res = await getSearchVideoList(this.pagingParams);
+      this.videoList.push(...(res.data.result.records || []));
+      this.pagingParams.totalPage = res.data.result.pages;
       console.log("this.videoList", this.videoList);
     },
     cickFlexbox1() {
       this.activeTab = 0;
       this.isOpenOne = !this.isOpenOne;
-      this.serchParams.orderFiledName = "publish_time";
+      this.pagingParams.orderFiledName = "publish_time";
       this.resetChangeTab(this.isOpenOne);
     },
     cickFlexbox2() {
       this.activeTab = 1;
       this.isOpenTwo = !this.isOpenTwo;
-      this.serchParams.orderFiledName = "play_times";
+      this.pagingParams.orderFiledName = "play_times";
       this.resetChangeTab(this.isOpenTwo);
     },
     cickFlexbox3() {
       this.activeTab = 2;
       this.isOpenThr = !this.isOpenThr;
-      this.serchParams.orderFiledName = "collect_times";
+      this.pagingParams.orderFiledName = "collect_times";
       this.resetChangeTab(this.isOpenThr);
     },
     resetChangeTab(isOpen) {
       if (isOpen) {
-        this.serchParams.orderType = "asc";
+        this.pagingParams.orderType = "asc";
       } else {
-        this.serchParams.orderType = "desc";
+        this.pagingParams.orderType = "desc";
       }
+      this.getSearchVideoList();
+    },
+    // 上划加载更多
+    onScrolltolower() {
+      if (this.pagingParams.pageNo >= this.pagingParams.totalPage)
+        return uni.showToast({ title: "没有更多了哦~", icon: "none" });
+      this.pagingParams.pageNo++;
       this.getSearchVideoList();
     },
   },
@@ -262,6 +273,7 @@ export default {
 }
 
 .v_list {
+  height: 74vh;
   margin: 20rpx 20rpx 40rpx;
   .v_item {
     display: flex;

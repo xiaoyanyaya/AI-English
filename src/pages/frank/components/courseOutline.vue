@@ -58,11 +58,7 @@
           ></image>
           <text class="t-color-2A67D2 t-size-3">{{ item.nodeName }}</text>
         </view>
-        <view class="t_right">
-          <text class="t-color-FFAB2D">·学习中</text>
-          <!-- <text class="t-color-636363">·未学</text>
-          <text class="t-color-24A800">·已学</text> -->
-        </view>
+        <view class="t_right"> </view>
       </view>
       <view v-if="item.isOpen">
         <view
@@ -84,9 +80,6 @@
               ></image>
               <view class="font-w-500 t-size-30">{{ item2.nodeName }}</view>
             </view>
-            <text class="t-color-24A800 t-size-26 font-w-5">·已学</text>
-            <!-- <text class="t-color-FFAB2D t-size-26 font-w-5">·学习中</text> -->
-            <!-- <text class="t-color-636363 t-size-26 font-w-5">·未学</text> -->
           </view>
           <view class="border"></view>
           <view v-if="item2.isOpen">
@@ -109,9 +102,9 @@
                     item3.videoName
                   }}</view>
                 </view>
-                <text class="t-color-24A800 t-size-26 font-w-5">·已学</text>
+                <!-- <text class="t-color-24A800 t-size-26 font-w-5">·{{item3.studyStatusText}}</text> -->
                 <!-- <text class="t-color-FFAB2D t-size-26 font-w-5">·学习中</text> -->
-                <!-- <text class="t-color-636363 t-size-26 font-w-5">·未学</text> -->
+                <text class="t-color-636363 t-size-26 font-w-5">·未学</text>
               </view>
               <view class="border"></view>
             </view>

@@ -4,7 +4,7 @@
       <view class="t-size-30">学习足迹</view>
     </cy-navbar>
 
-    <view class="search-box">
+    <!-- <view class="search-box">
       <image :src="imageBaseUrl + '/word/icon3.png'" mode=""></image>
       <input
         type="text"
@@ -23,31 +23,37 @@
         class="search-boxIcon"
         >搜索</view
       >
-    </view>
+    </view> -->
 
     <!-- 视屏列表 -->
-    <view class="v_list">
-      <view v-for="(item, index) in videoList" :key="item.id" class="v_item">
-        <view class="image">
-          <image :src="imageBaseUrl + '/frank/8-7-21.png'" mode=""></image>
-        </view>
-        <view class="r_content">
-          <view class="flex mt-2">
-            口语练习视频
-            <image
-              v-if="index == 0 || index == 1"
-              :src="imageBaseUrl + '/frank/路径.png'"
-            ></image>
+    <scroll-view @scrolltolower="onScrolltolower" scroll-y>
+      <view class="v_list">
+        <view v-for="(item, index) in videoList" :key="item.id" class="v_item">
+          <view class="image">
+            <image :src="item.videoImageUrl" mode=""></image>
           </view>
-          <view class="t-color-8A8A8A t-size-20 mt-1 mb-1">{{
-            item.videoName
-          }}</view>
-          <view class="t-color-8A8A8A t-size-20"
-            >发布时间： {{ item.createTime.slice(0, 10) }}</view
-          >
+          <view class="r_content">
+            <view class="flex mt-2">
+              {{ item.videoFullName }}
+              <image
+                class="ml-1"
+                v-if="index == 0 || index == 1"
+                :src="imageBaseUrl + '/frank/路径.png'"
+              ></image>
+            </view>
+            <view class="t-color-8A8A8A t-size-20 mt-1 mb-1">{{
+              item.videoName
+            }}</view>
+            <view v-if="item.updateTime" class="t-color-8A8A8A t-size-20">
+              播放时间： {{ item.updateTime.slice(0, 10) }}
+            </view>
+            <view v-else class="t-color-8A8A8A t-size-20">
+              播放时间： {{ item.finishTime.slice(0, 10) }}
+            </view>
+          </view>
         </view>
       </view>
-    </view>
+    </scroll-view>
   </view>
 </template>
 
@@ -61,15 +67,16 @@ export default {
   data() {
     return {
       backColor: "transparent",
-      footPrintsParams: {
+      pagingParams: {
         pageNo: 1,
-        pageSize: 10,
+        pageSize: 20,
+        totalPage: null,
       },
       videoList: [],
       serchParams: {
         keyword: "",
         pageNo: 1,
-        pageSize: 10,
+        pageSize: 30,
       },
     };
   },
@@ -85,14 +92,22 @@ export default {
   },
   methods: {
     async getUserPayList() {
-      const res = await getUserPayList(this.footPrintsParams);
-      this.videoList = res.data.result.records;
+      const res = await getUserPayList(this.pagingParams);
+      this.videoList.push(...(res.data.result.records || []));
+      this.pagingParams.totalPage = res.data.result.pages;
       console.log("this.videoList", this.videoList);
     },
     async getSearchFooList() {
       // const res = await getSearchVideoList(this.serchParams);
       // this.videoList = res.data.result.records;
       // console.log("this.videoList", this.videoList);
+    },
+    // 上划加载更多
+    onScrolltolower() {
+      if (this.pagingParams.pageNo >= this.pagingParams.totalPage)
+        return uni.showToast({ title: "没有更多了哦~", icon: "none" });
+      this.pagingParams.pageNo++;
+      this.getUserPayList();
     },
   },
 };
@@ -146,6 +161,7 @@ export default {
   }
 
   .v_list {
+    height: 85vh;
     margin: 20rpx 20rpx 40rpx;
     .v_item {
       display: flex;

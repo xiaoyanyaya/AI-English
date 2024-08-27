@@ -609,43 +609,6 @@ export default {
         url: `/pages/scan-frame/scan-frame?type=${type}`
       })
     },
-    // 识别图片文字
-    getPhotoRecognition2(tempFilePath, type) {
-      var _this = this;
-      uni.getFileSystemManager().readFile({
-        filePath: tempFilePath,
-        encoding: 'base64',
-        success: function (data) {
-          var base64Data = data.data;
-          uni.showLoading({
-            title: '上传中...'
-          })
-          getPhotoRecognition({
-            imageBase64: base64Data,
-            // imageUrl: tempFilePaths[0],
-            ocrApiName: "accurateOCR",
-            ocrServiceProvider: "tencent"
-          }).then(res => {
-            switch (type) {
-              case 'title':
-                _this.essayData.title = res.data.result.ocrText
-                _this.essayDataShow.title = res.data.result.ocrText
-                break;
-              case 'content':
-                _this.essayData.content = res.data.result.ocrText
-                _this.essayDataShow.content = res.data.result.ocrText
-                break;
-              case 'generateContent':
-                _this.generateContent = res.data.result.ocrText
-                break;
-            }
-            uni.hideLoading()
-          })
-        },
-        fail: function (err) {
-        }
-      });
-    },
     getPhotoRecognition(tempFilePath, type) {
       var _this = this;
       uni.uploadFile({

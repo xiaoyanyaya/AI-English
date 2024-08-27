@@ -39,6 +39,9 @@
       "path": "pages/frank/webview"
     },
     {
+      "path": "pages/frank/frankDetail"
+    },
+    {
       "path": "pages/full-screen/full-screen"
     },
     {

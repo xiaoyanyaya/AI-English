@@ -15,14 +15,7 @@
           <text class="mr-3">· 一朝掌握方法</text>
           <text>· 一生远离补习</text>
         </view>
-        <view
-          @click="
-            toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${introduceCirList.nodeCode}&nodeName=${introduceCirList.nodeName}`
-            )
-          "
-          class="frank_buton"
-        >
+        <view @click="toNav('/pages/frank/frankDetail')" class="frank_buton">
           <text class="mr-1">点击查看详情</text>
           <uni-icons type="arrow-right" size="20" color="#fff"></uni-icons>
         </view>

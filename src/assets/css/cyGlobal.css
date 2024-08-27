@@ -89,7 +89,7 @@
 }
 
 .mt-05 {
-    margin-top: 5rpx;
+  margin-top: 5rpx;
 }
 .mt-1 {
   margin-top: 10rpx;
@@ -417,7 +417,7 @@
 }
 
 .t-color-ED7E1F {
-    color: #ed7e1f;
+  color: #ed7e1f;
 }
 .t-color-2A67D2 {
   color: #2a67d2;
@@ -520,7 +520,11 @@
 }
 
 .t-color-E77415 {
-  color: #E77415;
+  color: #e77415;
+}
+
+.t-color-6D6D6D {
+  color: #6d6d6d;
 }
 
 .t-color-636363 {
@@ -574,7 +578,7 @@
 }
 
 .t-size-34 {
-    font-size: 34rpx;
+  font-size: 34rpx;
 }
 
 .t-size-32 {
@@ -682,6 +686,10 @@
 
 .font-w-5 {
   font-weight: 500;
+}
+
+.font-w-4 {
+  font-weight: 400;
 }
 
 .border-box {

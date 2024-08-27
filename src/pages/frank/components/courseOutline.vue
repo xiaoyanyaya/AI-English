@@ -102,9 +102,19 @@
                     item3.videoName
                   }}</view>
                 </view>
-                <!-- <text class="t-color-24A800 t-size-26 font-w-5">·{{item3.studyStatusText}}</text> -->
-                <!-- <text class="t-color-FFAB2D t-size-26 font-w-5">·学习中</text> -->
-                <text class="t-color-636363 t-size-26 font-w-5">·未学</text>
+                <text
+                  v-if="item3 == '已学'"
+                  class="t-color-24A800 t-size-26 font-w-5"
+                  >·已学</text
+                >
+                <text
+                  v-else-if="item3.studyStatusText == '学习中'"
+                  class="t-color-FFAB2D t-size-26 font-w-5"
+                  >·学习中</text
+                >
+                <text v-else class="t-color-636363 t-size-26 font-w-5"
+                  >·未学</text
+                >
               </view>
               <view class="border"></view>
             </view>
@@ -301,7 +311,7 @@ export default {
       .cont_title {
         display: flex;
         justify-content: space-between;
-        padding: 0 55rpx;
+        padding: 0 5rpx;
         image {
           width: 33rpx;
           height: 33rpx;

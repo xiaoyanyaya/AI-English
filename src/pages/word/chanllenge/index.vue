@@ -6,7 +6,7 @@
       bgColor="transparent"
       textColor="#3D3D3D"
     >
-      <view class="t-size-30">单词挑战赛</view>
+      <view class="t-size-30">疯狂挑战</view>
     </cy-navbar>
 
     <view class="px-3 mt-3">

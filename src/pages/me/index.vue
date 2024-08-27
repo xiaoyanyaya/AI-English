@@ -177,7 +177,7 @@ export default {
     this.initData()
   },
   onShareAppMessage() {
-    const SRC = `pages/me/index?promoCode=${this.userInfo.promoCode}`;
+    const SRC = `pages/index/index?promoCode=${this.userInfo.promoCode}`;
     const path = ``;
     // 来自页面内分享按钮
     return {

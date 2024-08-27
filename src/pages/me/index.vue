@@ -83,7 +83,6 @@
       <image :src="`${imageBaseUrl}/8-21-01.png`" mode="widthFix" class=" notes"></image>
     </view>
 
-    <view style="width: 750rpx; height: 100rpx"></view>
     <view class="version-box flex align-item-center justify-content-center">
       版本号：{{ version }}
     </view>
@@ -344,8 +343,6 @@ page {
 
 .version-box {
   width: 750rpx;
-  position: fixed;
-  bottom: 60rpx;
 }
 
 .share-btn {

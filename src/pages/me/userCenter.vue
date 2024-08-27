@@ -6,9 +6,9 @@
 
     <view class="px-4 mt-5">
       <view class="open-user-box px-4 pt-3 pb-5">
-        <view class="flex align-item-center pb-3">
+        <view class="flex  pb-3">
           <view class="font-weight-bold t-size-26">开通VIP会员</view>
-          <image class="customer ml-3" :src="`${imageBaseUrl}/icon_9.png`" mode="widthFix"></image>
+          <image class="customer ml-3" :src="`${imageBaseUrl}/8-19-01.png`" mode="widthFix"></image>
         </view>
 
         <view class="package-grade">
@@ -28,7 +28,7 @@
           </view>
         </view>
 
-        <view class="desc-menu-box mt-5 px-2 pt-4">
+        <view class="desc-menu-box mt-3 px-2 pt-4">
           <view class="flex align-item-center t-size-24 pb-4"
                 v-for="(item, index) in descMenu">
             <view class="cricle flex align1-item-center justify-content-center">
@@ -41,7 +41,7 @@
         <view class="mt-4 pay-desc">会员购买后不支持7天无理由退货</view>
       </view>
 
-      <view class="why-box mt-6 flex align-item-center justify-content-around">
+<!--      <view class="why-box mt-6 flex align-item-center justify-content-around">
         <view class="left">
           <view class="text-center font-weight-bold">普通软件</view>
           <view class="flex ml-2 mr-2 mt-2 align-item-start">
@@ -64,10 +64,10 @@
             <view class="ml-1 c-24A800">枯燥的背诵记忆</view>
           </view>
         </view>
-      </view>
+      </view>-->
 
       <view @click="showPayWay = true"
-            class="pay-way mt-5 px-5 pt-5 pb-5 flex align-item-center justify-content-between">
+            class="pay-way mt-3 px-5 pt-5 pb-5 flex align-item-center justify-content-between">
         <view class="t-color-3D3D3D">支付方式</view>
         <view class="flex align-item-center">
           <view class="t-color-8A8A8A">{{ payWayList[payWay].title || "请选择" }}</view>
@@ -78,7 +78,7 @@
       </view>
     </view>
 
-    <view class="pay-price-box mt-6">
+    <view class="pay-price-box mt-1">
       <view class="flex align-item-center justify-content-between">
         <view class="flex align-item-center">
           <view class="t-size-26 t-color-3D3D3D mt-1">实付：</view>

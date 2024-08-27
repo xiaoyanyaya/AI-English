@@ -71,35 +71,19 @@
       </view>
 
       <view class="flex mt-5 justify-content-between">
-        <view class="mr-2 mt-3 nots-box flex pt-3 pb-2 flex-direction-column align-item-center">
-          <view class="font-weight-bold t-size-32">
-            <span class="t-color-1863E5">全国</span>中小学
-          </view>
-          <view class="font-weight-bold t-size-32 mt-1 mb-1">
-            英语教材<span class="t-color-E77415">新课改</span>
-          </view>
+        <view style="flex: 1; background: #ebf1fb" class="mr-2">
 
-          <view v-for="(item, index) in menu3" :key="index"
-            class="nots-item flex justify-content-between align-item-center px-3 mt-2">
-            <view class="font-weight-bold t-size-26">重 <span class="t-color-1863E5 t-italic">{{item.text}}</span> </view>
-            <view class="t-size-18">
-              <view>{{ item.subText }}</view>
-              <view>{{ item.subText2 }}</view>
-            </view>
-          </view>
         </view>
-
         <view class="ai-grid-container">
-          <view class="ai-tools-box mt-3 pl-5 pt-2 pb-2 flex flex-direction-column justify-content-center"
+          <view class="ai-tools-box px-3 pt-2 pb-2"
                 @click="toProduct(index)"
                 v-for="(item, index) in menu2" :key="index"
+                :class="index === 1 ? 'mt-3' : ''"
                 :style="{ background: item.bgColor }">
-            <view class="t-color-3D3D3D font-weight-bold mt-1 t-size-34">{{ item.text }}</view>
-            <view class="t-color-3D3D3D t-size-22 mt-2">{{ item.subText }}</view>
-            <view class="t-color-3D3D3D t-size-22 mt-05">{{ item.subText2 }}</view>
+            <view class="t-color-3D3D3D font-weight-bold t-size-36">{{ item.text }}</view>
+            <view class="t-color-3D3D3D t-size-20 mt-1">{{ item.subText }}</view>
 
-            <image :src="`${imageBaseUrl}/${item.image}`"
-                   :class="index === 1 ? 'image2' : 'image'"></image>
+            <image :src="`${imageBaseUrl}/${item.image}`" class="image"></image>
           </view>
         </view>
       </view>
@@ -142,37 +126,31 @@ export default {
       menu2: [{
         image: 'word/6-30-01.png',
         text: 'AI理念',
-        subText: '智能、科技、',
-        subText2: '极简、高效、有趣',
+        subText: '智能、科技、极简、高效、有趣',
         bgColor: 'linear-gradient(134deg, #EAF2FF 20%, #FFECEC 98%)'
       }, {
         image: 'word/6-30-02.png',
         text: '用户故事',
-        subText: '家长更少操心',
-        subText2: '孩子学的开心',
+        subText: '家长更少操心，孩子学的开心',
         bgColor: 'linear-gradient(134deg, #EAF2FF 14%, #FFF5E4 100%)'
       }],
 
       // 菜单3
       menu3: [{
-        text: '口语',
-        subText: '听说分数占比大幅提升',
-        subText2: '每周口语不少于30分钟',
+        text: '重口语',
+        subText: '听说分数占比大幅提升每周口语不少于30分钟',
         bgColor: '#45901a'
       }, {
-        text: '词汇',
-        subText: '词汇量从1600到2000',
-        subText2: '拿高分词汇须达3000',
-        bgColor: '#d55700'
-      }, {
-        text: '写作',
-        subText: '强化写作能力，准确描',
-        subText2: '述事物和表达观点',
+        text: '重写作',
+        subText: '强化写作能力，准确描述事物和表达观点',
         bgColor: '#1f55a7'
       }, {
-        text: '阅读',
-        subText: '取消传统语法选择题转',
-        subText2: '转向阅读理解',
+        text: '重词汇',
+        subText: '词汇量从1600到2000拿高分词汇须达3000',
+        bgColor: '#d55700'
+      }, {
+        text: '重阅读',
+        subText: '取消传统语法选择题转向阅读理解',
         bgColor: '#8aade5'
       }]
     }
@@ -342,11 +320,6 @@ export default {
   }
 }
 
-.nots-box {
-  flex: 1;
-  background: #EFF6FF;
-  border-radius: 20rpx;
-}
 
 .grid-container {
   display: grid;
@@ -388,38 +361,20 @@ export default {
   }
 }
 
-.nots-item {
-  background-image: url("https://aien.xiaolixb.com/assets/8-24-01.png");
-  background-size: 100% 100%;
-  width: 90%;
-  height: 80rpx;
-
-}
-
 .ai-grid-container {
 
   .ai-tools-box {
     width: 250rpx;
-    height: 260rpx;
+    height: 230rpx;
     border-radius: 20rpx;
     position: relative;
 
-    .image, .image2 {
-      position: absolute;
-      right: 0;
-      top: -50rpx;
-    }
-
     .image {
+      position: absolute;
       width: 90rpx;
       height: 80rpx;
-    }
-
-    .image2 {
-      width: 80rpx;
-      height: 90rpx;
-      margin-top: 20rpx;
-      right: -10rpx;
+      right: 20rpx;
+      bottom: 20rpx;
     }
   }
 }

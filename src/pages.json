@@ -236,16 +236,16 @@
     "borderStyle": "black",
     "list": [
       {
-        "pagePath": "pages/index/index",
-        "text": "首页",
-        "iconPath": "/static/icon_4.png",
-        "selectedIconPath": "/static/icon_2.png"
-      },
-      {
         "pagePath": "pages/frank/index",
         "text": "Frank英语",
         "iconPath": "/static/frank_inactive.png",
         "selectedIconPath": "/static/frank_active.png"
+      },
+      {
+        "pagePath": "pages/index/index",
+        "text": "Aime",
+        "iconPath": "/static/icon_4.png",
+        "selectedIconPath": "/static/icon_2.png"
       },
       {
         "pagePath": "pages/me/index",

@@ -519,6 +519,10 @@
   color: #1863e5;
 }
 
+.t-color-E77415 {
+  color: #E77415;
+}
+
 .t-color-636363 {
   color: #636363;
 }
@@ -567,6 +571,10 @@
 
 .t-size-36 {
   font-size: 36rpx;
+}
+
+.t-size-34 {
+    font-size: 34rpx;
 }
 
 .t-size-32 {
@@ -665,7 +673,9 @@
 .t-line-14 {
   line-height: 14rpx;
 }
-
+.t-italic {
+  font-style: italic;
+}
 .font-weight-bold {
   font-weight: bold;
 }

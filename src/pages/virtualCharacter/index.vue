@@ -15,7 +15,7 @@
           <view @click="$navigateTo('/pages/me/selectLevel')"
             v-if="item.title == '切换'" class="switch-level flex align-item-center justify-content-center">
             <image :src="`${imageBaseUrl}/6-3-01.png`" mode="widthFix" class="mr-1" style="width: 24rpx;"></image>
-            新手
+            {{ currEnglishLevel }}
           </view>
           <view v-if="item.title != '切换'" class="item-title t-size-24 flex align-item-center justify-content-center"
             :style="{width: `${item.width}rpx`, right: `${item.right}rpx`}"
@@ -88,7 +88,8 @@ export default {
       optionsBtnsMenu: [],
       selectBtnsMenu: [],
       isShowPopup: false,
-      personInfo: {}
+      personInfo: {},
+      currEnglishLevel: ""
     }
   },
   onLoad() {
@@ -98,6 +99,14 @@ export default {
     uni.$on("switchVirtual", () => {
       this.network().defaultVirtual(1);
     })
+  },
+  onShow() {
+    var basicData = uni.getStorageSync("basicData");
+    console.log("basicData", basicData)
+    this.currEnglishLevel = basicData.currEnglishLevel;
+
+    if (basicData) {
+    }
   },
   computed: {
     contentBoxStyle() {

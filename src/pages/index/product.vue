@@ -4,7 +4,7 @@
       <view class="t-size-30">{{ title }}</view>
     </cy-navbar>
 
-    <view v-if="title === '产品理念'">
+    <view v-if="title === 'AI理念'">
       <image v-for="(item, index) in productConcept" :key="index"
              :src="`${imageBaseUrl}/${item}`" mode="widthFix" style="width: 750rpx"></image>
     </view>
@@ -26,7 +26,7 @@ export default {
       backColor: 'transparent',
       title: '',
 
-      // 产品理念数组
+      // AI理念数组
       productConcept: ['6-30-07_01.png', '6-30-07_02.png', '6-30-07_03.png', '6-30-07_04.png', '6-30-07_05.png', '6-30-07_06.png'],
       // 用户故事数组
       userStory: ['6-30-06_01.png', '6-30-06_02.png', '6-30-06_03.png'],

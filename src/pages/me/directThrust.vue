@@ -1,7 +1,7 @@
 <template>
   <view class="pb-5">
     <cy-navbar show-back>
-      <view class="t-size-30">直推用户</view>
+      <view class="t-size-30">直销用戶</view>
     </cy-navbar>
     <view class="mingxi" v-show="list.length > 0">
       <view >

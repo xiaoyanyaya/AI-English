@@ -16,6 +16,8 @@ export default {
       systemInfo: {},
       imageBaseUrl: "https://aien.xiaolixb.com/assets",
       isAuthPhone: false,
+	    // 提交表单--节流
+	    lastTimestamp: 0,
     };
   },
 	onShareAppMessage() {
@@ -45,6 +47,19 @@ export default {
     // this.login();
   },
   methods: {
+	  /**
+	   * 节流处理（time秒内点击只有一次生效，点击提交按钮可用）
+	   * @param time 毫秒
+	   */
+	  throttle(time = 2000) {
+		  const nowTime = new Date().getTime();
+		  const lastTime = this.lastTimestamp;
+		  if (nowTime - lastTime > time) {
+			  this.lastTimestamp = nowTime;
+			  return true;
+		  }
+		  return false;
+	  },
     // 根据需求截取字符串
     getNameWithEllipsis(name, maxLength) {
       if (name.length > maxLength) {
@@ -183,6 +198,8 @@ export default {
             });
             uni.setStorageSync("isAuthPhone", true);
             this.isAuthPhone = true;
+						// 更新手机号
+	          uni.setStorageSync("userPhone", res.data.result)
             resolve(res);
             if (toPageUr) {
               setTimeout(() => {

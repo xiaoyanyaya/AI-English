@@ -5,9 +5,9 @@
     </cy-navbar>
 
     <view class="px-4">
-      <view class="person-info-box px-4 pb-4 pt-4 mt-4">
-        <input class="t-size-28"
-               :maxlength="10" style="width: 80%;" :placeholder="'请输入卡密'" v-model="value"/>
+      <view class="person-info-box mt-4">
+        <input class="t-size-28 px-4 pb-4 pt-4" :focus="isFocused"
+               :maxlength="10" style="width: 80%" :placeholder="'请输入卡密'" v-model="value"/>
       </view>
 
       <view class="save-btn flex align-item-center justify-content-center t-color-fff mt-3" @click="exchange">
@@ -26,8 +26,15 @@ export default {
   mixins: [MyMixin],
   data() {
     return {
-      value:''
+      value:'',
+      isFocused: true, // 默认自动聚焦
     };
+  },
+  mounted() {
+    // 在组件挂载后自动聚焦
+    this.$nextTick(() => {
+      this.isFocused = true;
+    });
   },
   methods: {
     exchange() {
@@ -38,6 +45,8 @@ export default {
           return;
         }
         this.utils().$toast('兑换成功');
+        // 返回会员中心
+        this.$navigateTo('/pages/me/index');
       });
     }
   },

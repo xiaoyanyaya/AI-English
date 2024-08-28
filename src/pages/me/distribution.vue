@@ -46,7 +46,7 @@
       </view>
 
       <view class="person-info-box px-4 pb-4 mt-4">
-        <view class="flex align-item-center justify-content-between pt-4 mt-1"
+        <view class="flex align-item-center justify-content-between pt-4 mt-1 position-relative"
               v-for="(item, index) in menuList" :key="index"
               @click="toPage(1, index)">
           <view class="flex align-item-center">
@@ -57,6 +57,10 @@
             <view class="ml-2">
               <u-icon name="arrow-right" color="#8A8A8A" size="28"></u-icon>
             </view>
+          </view>
+
+          <view v-if="index === 0" class="share-btn">
+            <button open-type="share">分享</button>
           </view>
         </view>
       </view>
@@ -72,32 +76,44 @@
 <script>
 import MyMixin from "@/utils/MyMixin";
 import {commissionIndex} from "@/api/me";
+import store from "@/store";
 
 export default {
   mixins: [MyMixin],
   data() {
     return {
       contentMenuList: [{
-        title: '佣金明细',
+        title: '直销佣金',
         image: '8-13-08.png',
         subTitle: ''
       },{
-        title: '下级推广员',
+        title: '下级合伙人',
         image: '8-13-09.png',
         subTitle: ''
       },{
-        title: '直推用户',
+        title: '直销用戶',
         image: '8-13-10.png',
         subTitle: ''
       },{
-        title: '推广订单',
+        title: '直销订单',
         image: '8-13-11.png',
         subTitle: ''
       }],
       menuList: [
-        { title: '邀请下级推广员', image: '8-13-12.png' },
+        { title: '邀请好友', image: '8-13-12.png' },
       ],
       userInfo: {}
+    };
+  },
+  onShareAppMessage() {
+    var promoCode = store.state.userInfo.promoCode;
+    const SRC = `pages/index/index?promoCode=${promoCode}`;
+    const path = ``;
+    // 来自页面内分享按钮
+    return {
+      title: "小礼AI极简英语",
+      path: `${SRC}${path}`,
+      // imageUrl: `${this.imgDomain}wxapp/icon1.1/pic_visit.png`,
     };
   },
   onLoad() {
@@ -109,7 +125,8 @@ export default {
         console.log(res.data.result)
         this.userInfo = res.data.result
         this.contentMenuList[0].subTitle = res.data.result.totalAmount + '元'
-        this.contentMenuList[1].subTitle = res.data.result.directPromoters + '人'
+        // this.contentMenuList[1].subTitle = res.data.result.directPromoters + '人'
+        this.contentMenuList[1].subTitle = res.data.result.directPartners + '人'
         this.contentMenuList[2].subTitle = res.data.result.directReferrals + '人'
         this.contentMenuList[3].subTitle = res.data.result.promotionOrders + '笔'
       });
@@ -212,5 +229,13 @@ page {
 
 .agreement {
   border-bottom: 1px solid #2D6CDA;
+}
+
+.share-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
 }
 </style>

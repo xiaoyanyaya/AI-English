@@ -46,7 +46,7 @@ export default {
   onLoad({ paegType }) {
     console.log('paegType', paegType)
     this.paegType = paegType || '0'
-    this.pageTitle = paegType === '0' ? '下级推广员' : '我的直推'
+    this.pageTitle = paegType === '0' ? '下级合伙人' : '我的直推'
     this.getData();
   },
   // 触底加载

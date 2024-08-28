@@ -103,10 +103,7 @@ export default {
   onShow() {
     var basicData = uni.getStorageSync("basicData");
     console.log("basicData", basicData)
-    this.currEnglishLevel = basicData.currEnglishLevel;
-
-    if (basicData) {
-    }
+    this.$set(this, "currEnglishLevel", basicData.currEnglishLevel);
   },
   computed: {
     contentBoxStyle() {

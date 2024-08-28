@@ -32,8 +32,6 @@ fly.interceptors.response.use(
 		}
 		const {data} = response;
 
-		console.log("da111ta", data)
-		console.log("response", response)
 		if (data.code !== 200) {
 			uni.showToast({title: data.message, icon: 'none', duration: 3000});
 			return Promise.resolve(data);

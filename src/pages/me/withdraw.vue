@@ -153,6 +153,9 @@ export default {
     network() {
       return {
         withdrawApply: async () => {
+          const throttleStatus = this.throttle(); // 节流
+          if (!throttleStatus) return;
+
           if (this.price <= 0) {
             uni.showToast({
               title: '提现金额不能小于0',
@@ -226,8 +229,6 @@ export default {
               }
             })
           }
-
-
         }
       }
     }

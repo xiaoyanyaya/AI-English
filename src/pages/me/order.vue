@@ -1,7 +1,7 @@
 <template>
   <view class="body pb-5" :style="bodyStyle">
     <cy-navbar showBack bgColor="transparent" textColor="#3D3D3D">
-      <view class="t-size-30">推广订单</view>
+      <view class="t-size-30">直销订单</view>
     </cy-navbar>
 
     <view class="px-3">

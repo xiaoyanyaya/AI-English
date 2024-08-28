@@ -18,7 +18,7 @@
         <span class="font-weight-bold t-size-36 ml-2">手机号</span>
       </view>
       <view class="username-box mt-2 flex align-item-center px-4">
-        <input v-model="params.phone" class="flex-1" type="number" placeholder="手机号"/>
+        <input v-model="params.phone" disabled class="flex-1" type="number" placeholder="手机号"/>
       </view>
 
       <view class="footer ml-5 mt-7">
@@ -84,6 +84,9 @@ export default {
               background-size: 100% 100%;`
     }
   },
+  onLoad() {
+    this.params.phone = uni.getStorageSync("userPhone");
+  },
   methods: {
     toUserPage(type, title) {
       uni.navigateTo({
@@ -134,7 +137,7 @@ export default {
 
   .username-box {
     height: 100rpx;
-    border-radius: 100rpx;
+    border-radius: 30rpx;
     background: #ffffff;
   }
 }

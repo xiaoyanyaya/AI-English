@@ -56,6 +56,10 @@
               :class="item.noPartner ? 'person-item pb-5' : 'person-border pb-4'"
               v-for="(item, index) in menuList" :key="index"
               @click="toPage(index)">
+          <view v-if="index === 0 && item.noPartner" class="share-btn">
+            <button open-type="getPhoneNumber"
+                    @getphonenumber="getPhone($event, '/pages/me/apply/cooperative')">>客服</button>
+          </view>
           <view v-if="index === 2" class="share-btn">
             <button open-type="contact">客服</button>
           </view>
@@ -223,7 +227,6 @@ export default {
     toPage(index) {
       if (index == 0) {
         if (this.menuList[index].noPartner) {
-          this.$navigateTo('/pages/me/apply/cooperative')
         } else {
           this.$navigateTo('/pages/me/distribution')
         }

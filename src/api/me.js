@@ -26,8 +26,8 @@ export const withdrawList = params => fly.get('/distribution/commission/withdraw
 export const withdrawApply = params => fly.post('/distribution/commission/withdraw/apply', params)
 //佣金明细列表 /distribution/commission/detail/list
 export const detailList = params => fly.get('/distribution/commission/detail/list', params)
-//下级推广员   /distribution/promotion/partner/directPromoters
-export const directPromoters = params => fly.get('/distribution/promotion/partner/directPromoters', params)
+//下级推广员   /distribution/promotion/partner/directPartners
+export const directPromoters = params => fly.get('/distribution/promotion/partner/directPartners', params)
 //推广订单 /distribution/promotion/order/list
 export const orderList = params => fly.get('/distribution/promotion/order/list', params)
 //直推用户 /distribution/promotion/partner/directReferrals

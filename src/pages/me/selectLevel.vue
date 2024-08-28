@@ -65,6 +65,10 @@ export default {
         })
         if (this.pageForm === 'login') {
           this.$navigateTo('/pages/me/selectGrade?pageForm=login')
+        } else {
+          setTimeout(() => {
+            uni.navigateBack()
+          }, 1000)
         }
       });
     },

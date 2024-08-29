@@ -6,14 +6,13 @@
 
     <view class="frank_en">
       <view class="frank_left">
-        <image :src="imageBaseUrl + '/frank/8-7-01.png'" mode=""></image>
+        <image :src="imageBaseUrl + '/frank/8-28-02.png'" mode=""></image>
       </view>
       <view class="frank_right">
         <view class="t-color-1863E5 t-size-30">Frank英语介绍</view>
-        <view class="t-size-26">Frank自学理念的核心价值</view>
-        <view class="flex t-size-22 f-w-5">
-          <text class="mr-3">· 一朝掌握方法</text>
-          <text>· 一生远离补习</text>
+        <view class="t-size-22 f-w-5">
+          <view>· 一朝掌握方法</view>
+          <view>· 一生远离补习</view>
         </view>
         <view @click="toNav('/pages/frank/frankDetail')" class="frank_buton">
           <text class="mr-1">点击查看详情</text>
@@ -518,7 +517,7 @@ export default {
   .frank_en {
     display: flex;
     justify-content: space-between;
-    padding: 40rpx;
+    padding: 40rpx 80rpx 40rpx 50rpx;
     margin: 40rpx 40rpx 0 40rpx;
     width: 670rpx;
     height: 323rpx;
@@ -526,7 +525,7 @@ export default {
     background-color: #fff;
     .frank_left {
       width: 229rpx;
-      height: 247rpx;
+      height: 250rpx;
       image {
         width: 100%;
         height: 100%;

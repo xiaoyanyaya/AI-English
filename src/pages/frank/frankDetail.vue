@@ -1,7 +1,7 @@
 <template>
   <view class="main">
     <cy-navbar :showBack="true" :bgColor="backColor" textColor="#3D3D3D">
-      <view class="t-size-30">查看详情</view>
+      <view class="t-size-30">Frank英语介绍</view>
     </cy-navbar>
 
     <view class="tabs">
@@ -22,7 +22,7 @@
     <!-- 简介 -->
     <view v-if="activeTab == 0" class="tab1">
       <view class="image">
-        <image :src="imageBaseUrl + '/frank/8-27-01.png'"></image>
+        <image :src="imageBaseUrl + '/frank/8-28-01.png'"></image>
       </view>
       <view class="box">
         <view class="title">弗兰克英语: 陈东Frank</view>
@@ -30,7 +30,7 @@
         <view class="text">北京大学百年讲堂专题讲座特邀专家</view>
         <view class="text">CCTV-影响力对话栏目专访人物</view>
         <view class="text">IEEA国际英语精英大赛中方专家评委</view>
-        <view class="text">原北京 101网校高中英语名师面授主讲</view>
+        <view class="text">原北京101网校高中英语名师面授主讲</view>
         <view class="text">福建三明学院海外学院客座教授、研究生导师</view>
         <view class="text">全国总工会中国职工技协英语名师工作室首席教研员</view>
       </view>
@@ -43,7 +43,7 @@
         <view class="text">教材好，才好教，才教好!</view>
         <view class="text"
           >彻底
-          <view class="hig"> 解放老师，解救学生，解困家长，解忧校长 </view>
+          <view class="hig"> 解放老师，解救学生，解困家长，解忧校长</view>
           !</view
         >
       </view>
@@ -59,14 +59,12 @@
         </view>
         <view class="cont">
           <view class="text">
+            <view> 减轻了老师的备课工作量，提高了教学质量。 </view>
+            <view>《弗兰克“四维”英语教学法》具有完整的教学软件系统。</view>
             <view>
-              减轻了老师的备课工作量，提高了教学质《弗兰克“四维”英语教学法》具有完整的量。教学
-              软件系统。
+              通过短时间的培训授课老师，使其快速掌握《弗兰克“四维”英语教学法》的教学原理、应用方法及操作原理，授课老师应用该系统实现标准化快速备课，可以大大减轻英语教师备课的困难，大大提高了教学质量！
             </view>
-            <view>
-              通过短时间的培训授课老师，使其快速掌握《弗兰克“四维”英语教学法》的教学原理、应用方法及操作原理，授课老师应用该系统实现标准化快速备课，可以大大减轻英语教师备课的困难，大大提高了教学质量!
-            </view>
-            <view>
+            <view class="t-color-ED7E1F">
               第一堂课就可以使学生“开光开窍”，对英语产生兴趣，打破对英语“不好学”“不好掌握”“记忆不牢”等观念，给学员颠覆性重塑对英语学习的认知，树立自学意识。
             </view>
             <view>
@@ -90,14 +88,17 @@
           </view>
           <view class="text">
             <view
-              >1-2 年学完并掌握全日制学校
-              6-9年必修课程内容，既能应试又能应用!雅思考试达6分以上。</view
+              ><text class="t-color-ED7E1F">1-2年</text>学完并掌握全日制学校
+              <text class="t-color-ED7E1F">6-9年</text
+              >必修课程内容，既能应试又能应用<text class="t-color-ED7E1F"
+                >雅思考试达6分以上，托福考试80分以上</text
+              >。</view
             >
-            <view>弗兰克英语产品研发团队</view>
+            <!-- <view>弗兰克英语产品研发团队</view>
             <view
               >该团队在创始人陈东老师带领下钻研和开发教材，完善课程体系，教师好教，学生好学，教材好，才好教，才教好!彻底解放老师，解救学生，解困家长，解忧校长!</view
             >
-            <view>托福考试 80 分以上。</view>
+            <view>托福考试80分以上。</view> -->
           </view>
         </view>
       </view>
@@ -110,8 +111,11 @@
         <view class="cont">
           <view class="text">
             <view
-              >学生用半年到一年时间掌握学习能力后，学
-              生会根据自己的兴趣和爱好结合学校所学的教材。</view
+              >学生用<text class="t-color-ED7E1F">半年到一年</text>时间<text
+                class="t-color-ED7E1F"
+                >掌握学习能力</text
+              >
+              后，学 生会根据自己的兴趣和爱好结合学校所学的教材。</view
             >
             <view
               >海量阅读和纯外教视频内容，做到学习生活化，生活学习化，家长不再为孩子的英语学习“犯愁”。</view
@@ -133,8 +137,10 @@
             <image :src="imageBaseUrl + '/frank/8-27-05.png'"></image>
           </view>
           <view class="text">
-            英语老师通过弗兰克英语教学体系的严格培训后，掌握弗兰克英语的教学理念，应用先进的教学体系和弗兰克英语教学U盘(全套课程体系课件，训练题库等)辅助教学，快速提升教师本身的教学技术和教学艺术，教学工作量和教学质量轻松提升
-            3-5 倍，彻底解忧校长!
+            英语老师通过弗兰克英语教学体系的严格培训后，掌握弗兰克英语的教学理念，应用先进的教学体系，快速提升教师本身的教学技术和教学艺术，<text
+              class="t-color-ED7E1F"
+              >教学工作量和教学质量轻松提升3-5倍</text
+            >，彻底解忧校长！
           </view>
         </view>
       </view>
@@ -161,13 +167,18 @@
           >创新一</view
         >
         <view class="t-size-30 t-color-1863E5 font-weight-bold text-center"
-          >语音方面 听与说的解决方案</view
+          >听说能力课程体系</view
         >
         <view class="text">
-          <view>独创神奇的语音体系:</view>
-          <view>汉字“草书”原理运用于“听说”训练,</view>
-          <view>彻底“治愈”中国人“聋哑口吃“英语之”症结”</view>
-          <view>“草书”原理:字写快变形，话说快变音连读有三种:</view>
+          <view class=""
+            ><text class="t-color-ED7E1F"
+              >见词能拼读，见句能连读，见文能诵读</text
+            >，让中国人的语音语调语速与英语母语同频，同调，同速。</view
+          >
+          <view class="t-color-ED7E1F">独创神奇的语音体系:</view>
+          <view>汉字“草书”原理运用于“听说”训练，</view>
+          <view>彻底“治愈”中国人“聋哑口吃英语之“症结”!</view>
+          <view>“草书”原理：字写快变形，话说快变音！连读有三种：</view>
           <view>
             ① <text class="t-color-E77415">辅音+元音</text> ②
             <text class="t-color-E77415">辅音+辅音</text> ③<text
@@ -176,7 +187,10 @@
             >
           </view>
           <view
-            >目前国内知晓并同时掌握三种连读技能的英语老师不足万分之五!绝大多数略懂连读的老师也局限在第一种连读情况。外国人都是用连读形式进行交流的，不具备三种连读技能根本无法真正听懂外国人说话!</view
+            >目前国内知晓并同时掌握三种连读技能的英语老师不足<text
+              class="t-color-ED7E1F"
+              >万分之五！</text
+            >绝大多数略懂连读的老师也局限在第一种连读情况。外国人都是用连读形式进行交流的，不具备三种连读技能根本无法真正听懂外国人说话！</view
           >
         </view>
       </view>
@@ -189,8 +203,7 @@
         >
         <view class="text">
           <view
-            >弗兰克英语听说读写娱乐操练机(屏蔽网络游戏功能)听与模仿纯外教语料
-            50-2000 小时“肌肉记忆”操练。</view
+            >弗兰克英语听说读写与模仿纯外教语料50-2000小时“肌肉记忆”操练。</view
           >
         </view>
       </view>
@@ -203,8 +216,11 @@
         >
         <view class="text">
           <view
-            >30-40 小时掌握 6-9
-            年的语法知识，独创《图解的语法》用生活化的图片或视频解释抽象的语法概念，“全脑”教学模式，通俗易懂，科学趣味实用，终生难忘!</view
+            ><text class="t-color-ED7E1F">30-40小时掌握6-9年的语法知识</text
+            >，独创《图解的语法》：用生活化的图片或视频解释抽象的语法概念，“全脑”教学模式，通俗易懂，科学趣味实用，终生难忘！整个语法精简为词法的“四大家族”，长难句的“五大鬼门关”，<text
+              class="t-color-ED7E1F"
+              >2小时可以穿越“16种时态”</text
+            >，效果明显！</view
           >
           <view
             >整个语法精简为词法的“四大家族”，长难句的“五大鬼门关”，2
@@ -230,7 +246,7 @@
           >创新五</view
         >
         <view class="t-size-30 t-color-1863E5 font-weight-bold text-center"
-          >独创弗兰克英语 “双境” 记忆法</view
+          >独创弗兰克英语“双境”记忆法</view
         >
         <view class="t-size-24 t-color-1863E5 font-weight-bold text-center"
           >（虚拟语境记忆法和真实语境记忆法）</view
@@ -259,7 +275,7 @@
       <view class="top_text">
         <image :src="imageBaseUrl + '/frank/8-27-11.png'"></image>
         <view class="text_color">
-          <view class="blue">"四维"</view>
+          <view class="blue">“四维”</view>
           <view class="orange">英语教学法</view>
         </view>
         <text>最好的医生是自己，最好的老师也是自己!</text>
@@ -269,14 +285,14 @@
         <view class="title">声音能听会说</view>
         <view class="cir_box">
           <view class="circle">点<text>见词拼读</text></view>
-          <view class="circle">线<text>见句连续</text></view>
-          <view class="circle">面<text>见文诵</text></view>
-          <view class="circle">体<text>见问诵读同声传译</text></view>
+          <view class="circle">线<text>见句连读</text></view>
+          <view class="circle">面<text>见文诵读</text></view>
+          <view class="circle">体<text>见文诵读同声传译</text></view>
         </view>
         <view class="line"></view>
       </view>
       <view class="box">
-        <view class="title">声音能听会说</view>
+        <view class="title">“四维” 体系</view>
         <view class="cir_box">
           <view class="circle">点<text>单词</text></view>
           <view class="circle">线<text>单句</text></view>
@@ -286,7 +302,7 @@
         <view class="line"></view>
       </view>
       <view class="box">
-        <view class="title">声音能听会说</view>
+        <view class="title">文章能读会写</view>
         <view class="cir_box">
           <view class="circle">点<text>用词造句</text></view>
           <view class="circle">线<text>长难句分析</text></view>
@@ -307,7 +323,7 @@ export default {
   data() {
     return {
       backColor: "transparent",
-      activeTab: 3,
+      activeTab: 0,
     };
   },
   onPageScroll(e) {
@@ -341,7 +357,7 @@ export default {
   padding-bottom: 40rpx;
 
   .tabs {
-    padding: 45rpx 95rpx 40px 95rpx;
+    padding: 45rpx 95rpx 25px 95rpx;
     display: flex;
     justify-content: space-between;
     .higlight {
@@ -352,6 +368,7 @@ export default {
   }
 
   .tab1 {
+    margin-top: 15rpx;
     .image {
       margin-left: 85rpx;
       width: 568rpx;
@@ -393,7 +410,7 @@ export default {
   }
 
   .tab2 {
-    padding: 0rpx 40rpx 80rpx;
+    padding: 15rpx 40rpx 40rpx;
     .box {
       padding: 30rpx;
       margin-bottom: 40rpx;
@@ -432,7 +449,7 @@ export default {
         .text {
           text-indent: 2em;
           width: 400rpx;
-          font-size: 20rpx;
+          font-size: 24rpx;
           color: #3d3d3d;
         }
         .image {
@@ -524,7 +541,7 @@ export default {
         padding: 0 40rpx;
         text-indent: 2em;
         margin-top: 20rpx;
-        font-size: 20rpx;
+        font-size: 24rpx;
         color: #3d3d3d;
         view {
           margin: 5rpx 0;
@@ -614,6 +631,7 @@ export default {
         .circle {
           display: flex;
           flex-direction: column;
+          padding: 0 10rpx;
           text-align: center;
           font-size: 22rpx;
           width: 127rpx;

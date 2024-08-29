@@ -5,26 +5,14 @@
     </cy-navbar>
 
     <view class="top_button">
-      <view class="flex">
-        <view
-          @click="activeIndex = 0"
-          :class="{ active_bu: activeIndex == 0, text: true }"
-        >
-          课程介绍
-        </view>
-        <view @click="activeIndex = 1" :class="{ active_bu: activeIndex == 1 }">
-          课程大纲
-        </view>
+      <view
+        @click="activeIndex = 0"
+        :class="{ active_bu: activeIndex == 0, text: true }"
+      >
+        课程介绍
       </view>
-      <view v-if="activeIndex == 1">
-        <view @click="toggleTopOpen" class="button3" v-if="topIsOpen">
-          <image :src="imageBaseUrl + '/frank/8-7-29.png'" mode=""></image>
-          <text> 展开 </text>
-        </view>
-        <view @click="toggleTopClose" class="button3" v-else>
-          <image :src="imageBaseUrl + '/frank/8-7-28.png'" mode=""></image>
-          <text> 收起 </text>
-        </view>
+      <view @click="activeIndex = 1" :class="{ active_bu: activeIndex == 1 }">
+        课程大纲
       </view>
     </view>
 
@@ -57,6 +45,20 @@
             mode=""
           ></image>
           <text class="t-color-2A67D2 t-size-3">{{ item.nodeName }}</text>
+          <view class="topOpen">
+            <view
+              @click="toggleTopOpen(index)"
+              class="button3"
+              v-if="item.topIsOpen"
+            >
+              <image :src="imageBaseUrl + '/frank/8-7-29.png'" mode=""></image>
+              <text> 展开 </text>
+            </view>
+            <view @click="toggleTopClose(index)" class="button3" v-else>
+              <image :src="imageBaseUrl + '/frank/8-7-28.png'" mode=""></image>
+              <text> 收起 </text>
+            </view>
+          </view>
         </view>
         <view class="t_right"> </view>
       </view>
@@ -92,7 +94,7 @@
                 <view
                   @click="
                     toNav(
-                      `/pages/frank/webview?videoId=${item3.vodVideoId}&id=${item3.id}`
+                      `/pages/frank/webview?videoId=${item3.vodVideoId}&id=${item3.id}&vName=${item3.videoFullName}&pTime=${item3.publishTime}&cover=${item3.videoImageUrl}`
                     )
                   "
                   class="flex align-item-center"
@@ -138,7 +140,6 @@ export default {
       activeIndex: "0",
       introduce: "",
       query: {},
-      topIsOpen: true,
       videoList: [],
       videoPId: null, //获取视频
     };
@@ -176,38 +177,39 @@ export default {
           });
         } else {
           item.isOpen = false;
+          item.topIsOpen = true;
           item.children.forEach((item2) => {
             item2.isOpen = false;
           });
         }
       });
       this.videoPId = this.videoList[0].children[0].id;
-      console.log("this.videoList000000", this.videoList);
     },
     async getInitNodeVideo() {
       const res = await getNodeVideo({ nodeId: this.videoPId });
-      console.log("res00000", res);
       this.videoList[0].children[0].children = res.data.result;
-      console.log("this.videoList0001111", this.videoList);
     },
-    toggleTopOpen() {
-      this.topIsOpen = false;
-      this.videoList.forEach((item, index) => {
-        // 使用 $set 更新每一项的 isOpen 属性
-        this.$set(this.videoList, index, {
-          ...item,
-          isOpen: true,
-        });
+    toggleTopOpen(index) {
+      this.$set(this.videoList[index], "topIsOpen", false);
+      this.$set(this.videoList[index], "isOpen", false);
+      this.videoList[index].children.forEach(async (item) => {
+        if (item.children?.length == 0) {
+          const res = await getNodeVideo({ nodeId: item.id });
+          item.children = res.data.result;
+        }
+        item.isOpen = true;
+        console.log("item.isopem", item.isOpen);
       });
+      this.videoList = [...this.videoList];
     },
-    toggleTopClose() {
-      this.topIsOpen = true;
-      this.videoList.forEach((item, index) => {
-        this.$set(this.videoList, index, {
-          ...item,
-          isOpen: false,
-        });
+    toggleTopClose(index) {
+      this.$set(this.videoList[index], "topIsOpen", true);
+      this.$set(this.videoList[index], "isOpen", true);
+      this.videoList[index].children.forEach(async (item) => {
+        item.isOpen = false;
+        console.log("item.isopem", item.isOpen);
       });
+      this.videoList = [...this.videoList];
     },
     toggleTileOpen(index) {
       // this.videoList[index].isOpen = !this.videoList[index].isOpen;
@@ -216,6 +218,12 @@ export default {
         ...this.videoList[index],
         isOpen: !this.videoList[index].isOpen,
       });
+      if (this.videoList[index].isOpen) {
+        this.videoList[index].topIsOpen = false;
+      } else {
+        this.videoList[index].topIsOpen = true;
+      }
+      this.videoList = [...this.videoList];
     },
     async toggleContOpen(index, index2) {
       const target = this.videoList[index].children[index2];
@@ -223,7 +231,7 @@ export default {
         ...target,
         isOpen: !target.isOpen,
       });
-      if (target.children.length == 0) {
+      if (target.children?.length == 0) {
         this.videoPId = target.id;
         const res = await getNodeVideo({ nodeId: this.videoPId });
         this.videoList[index].children[index2].children = res.data.result;
@@ -241,37 +249,25 @@ export default {
 
   .top_button {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     height: 80rpx;
     line-height: 80rpx;
-    margin: 20rpx 40rpx 0 70rpx;
+    margin: 20rpx 100rpx 0 100rpx;
     font-size: 26rpx;
     .active_bu {
-      width: 172rpx;
-      text-align: center;
-      font-size: 32rpx;
-      font-weight: bold;
-      color: #fff;
-      border-radius: 163rpx;
-      background: linear-gradient(180deg, #5a95fb 0%, #1258d0 100%);
+      color: #1863e5;
+      padding-bottom: 10rpx;
+      border-bottom: 7rpx solid #1863e5;
+      // width: 172rpx;
+      // text-align: center;
+      // font-size: 32rpx;
+      // font-weight: bold;
+      // color: #fff;
+      // border-radius: 163rpx;
+      // background: linear-gradient(180deg, #5a95fb 0%, #1258d0 100%);
     }
     .text {
       margin-right: 21rpx;
-    }
-    .button3 {
-      display: flex;
-      align-items: center;
-      height: 80rpx;
-      line-height: 80rpx;
-      image {
-        margin-right: 10rpx;
-        width: 25rpx;
-        height: 21rpx;
-      }
-      text {
-        font-size: 26rpx;
-        color: #8a8a8a;
-      }
     }
   }
 
@@ -298,6 +294,24 @@ export default {
           width: 33rpx;
           height: 33rpx;
           margin: 0 20rpx 0 30rpx;
+        }
+        .topOpen {
+          margin-left: 300rpx;
+          .button3 {
+            display: flex;
+            align-items: center;
+            height: 80rpx;
+            line-height: 80rpx;
+            image {
+              margin-right: 10rpx;
+              width: 25rpx;
+              height: 21rpx;
+            }
+            text {
+              font-size: 26rpx;
+              color: #8a8a8a;
+            }
+          }
         }
       }
       .t_right {
@@ -327,7 +341,7 @@ export default {
       .box_video {
         .video_title {
           @extend .cont_title;
-          padding-left: 110rpx;
+          padding-left: 60rpx;
           image {
             width: 33rpx;
             height: 30rpx;

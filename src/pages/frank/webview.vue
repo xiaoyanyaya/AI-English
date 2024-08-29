@@ -11,7 +11,13 @@
         '&token=' +
         token +
         '&id=' +
-        id
+        id +
+        '&vName=' +
+        vName +
+        'pTime=' +
+        pTime +
+        'cover=' +
+        cover
       "
     ></web-view>
   </view>
@@ -29,12 +35,18 @@ export default {
       source: null,
       token: null,
       id: null,
+      vName: "",
+      pTime: "",
+      cover: "",
     };
   },
   onLoad(e) {
     console.log("webviw eeeeeeeeeeeee", e);
     this.videoId = e.videoId;
     this.id = e.id;
+    this.vName = e.vName;
+    this.pTime = e.pTime;
+    this.cover = e.cover;
     this.token = store.state.token;
     this.getLive();
   },

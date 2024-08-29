@@ -688,7 +688,7 @@ export default {
           const self = await queryChallengeByMyself({
             bookId: this.textBook.id,
           });
-          const seldData = self.data.result[0];
+          const seldData = self.data.result[0] ? self.data.result[0] : {};
           seldData.isSelect = true;
           const res = await queryChallengeByTotal({ bookId: this.textBook.id });
           console.log("res.res.data.result0", res.data.result);

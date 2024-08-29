@@ -26,9 +26,14 @@
             申请提现
           </view>
         </view>
-        <view class="record px-3 flex align-item-center justify-content-end">
-          <image :src="`${imageBaseUrl}/icon_12.png`" mode="widthFix" class="mr-2 ml-1"/>
-          <view class="t-color-8A8A8A t-size-24 mr-4">提现记录</view>
+        <view class="record px-3 flex align-item-center justify-content-between">
+          <view class="t-size-24 t-color-9F9F9F pl-1">
+            冻结佣金 {{ userInfo.freezeAmount }}
+          </view>
+          <view class="flex align-item-center">
+            <image :src="`${imageBaseUrl}/icon_12.png`" mode="widthFix" class="mr-2 ml-1"/>
+            <view class="t-color-8A8A8A t-size-24 mr-4">提现记录</view>
+          </view>
         </view>
       </view>
 
@@ -66,7 +71,7 @@
       </view>
 
       <view class="flex justify-content-center mt-5">
-        <text class="text-center t-color-2D6CDA agreement ">《用户推广协议》</text>
+        <text class="text-center t-color-2D6CDA agreement" @click="toUserPage(4, '用户推广协议')">《用户推广协议》</text>
       </view>
     </view>
 
@@ -87,7 +92,7 @@ export default {
         image: '8-13-08.png',
         subTitle: ''
       },{
-        title: '下级合伙人',
+        title: '下级合作伙伴',
         image: '8-13-09.png',
         subTitle: ''
       },{
@@ -120,6 +125,11 @@ export default {
     this.commissionIndex();
   },
   methods: {
+    toUserPage(type, title) {
+      uni.navigateTo({
+        url: `/pages/me/content?type=${type}&title=${title}`
+      })
+    },
     commissionIndex() {
       commissionIndex().then(res => {
         console.log(res.data.result)

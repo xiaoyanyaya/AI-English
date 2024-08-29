@@ -53,7 +53,7 @@
 
       <view v-if="isShowOther" class="person-info-box pb-4 mt-4">
         <view class="flex align-item-center justify-content-between pt-3 mt-1 position-relative px-4"
-              :class="item.noPartner ? 'person-item pb-5' : 'person-border pb-4'"
+              :class="item.noPartner ? 'person-item pb-4 18' : 'person-border pb-4'"
               v-for="(item, index) in menuList" :key="index"
               @click="toPage(index)">
           <view v-if="index === 0 && item.noPartner" class="share-btn">
@@ -319,14 +319,15 @@ page {
   font-size: 30rpx;
 
   .person-item {
-    background: linear-gradient(90deg, #FFFFFF 56%, rgba(255, 255, 255, 0) 102%);
+    background: linear-gradient(90deg, #FFFFFF 56%, rgba(255, 255, 255, 0) 100%);
     position: relative;
+    color: #1863E5;
 
     image {
       position: absolute;
-      left: -50rpx;
-      width: 150rpx;
-      height: 150rpx;
+      left: 0rpx;
+      width: 120rpx;
+      height: 120rpx;
     }
 
     .noPartner-title {

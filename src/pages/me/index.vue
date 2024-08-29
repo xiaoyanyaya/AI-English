@@ -109,7 +109,7 @@ export default {
       menuList: [
         {title: '申请成为合作商', image: '8-13-04.png', noPartner: true},
         // { title: '分销中心', image: 'icon_7.png' },
-        {title: '卡密兑换', image: 'icon_8.png'},
+        {title: '卡密激活', image: 'icon_8.png'},
         {title: '联系客服', image: 'icon_9.png'},
         {title: '邀请好友', image: 'icon_10.png'}
       ],

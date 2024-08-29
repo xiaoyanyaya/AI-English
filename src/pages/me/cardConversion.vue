@@ -1,7 +1,7 @@
 <template>
   <view class="pt-3">
     <cy-navbar show-back>
-      <view class="t-size-30">卡密兑换</view>
+      <view class="t-size-30">卡密激活</view>
     </cy-navbar>
 
     <view class="px-4">
@@ -10,8 +10,11 @@
                :maxlength="10" style="width: 80%" :placeholder="'请输入卡密'" v-model="value"/>
       </view>
 
-      <view class="save-btn flex align-item-center justify-content-center t-color-fff mt-3" @click="exchange">
-        立即兑换
+      <view class="save-btn flex align-item-center justify-content-center t-color-fff mt-4" @click="exchange">
+        立即激活
+      </view>
+      <view class="flex align-item-center justify-content-center t-size-28 t-color-8A8A8A mt-1">
+        请输入VIP会员激活码
       </view>
     </view>
 

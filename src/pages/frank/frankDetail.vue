@@ -284,30 +284,30 @@
       <view class="box">
         <view class="title">声音能听会说</view>
         <view class="cir_box">
-          <view class="circle">点<text>见词拼读</text></view>
-          <view class="circle">线<text>见句连读</text></view>
-          <view class="circle">面<text>见文诵读</text></view>
-          <view class="circle">体<text>见文诵读同声传译</text></view>
+          <view class="circle px-1">点<text>见词拼读</text></view>
+          <view class="circle px-1">线<text>见句连读</text></view>
+          <view class="circle px-1">面<text>见文诵读</text></view>
+          <view class="circle px-15">体<text>双语切换同声传译</text></view>
         </view>
         <view class="line"></view>
       </view>
       <view class="box">
         <view class="title">“四维” 体系</view>
         <view class="cir_box">
-          <view class="circle">点<text>单词</text></view>
-          <view class="circle">线<text>单句</text></view>
-          <view class="circle">面<text>篇章</text></view>
-          <view class="circle">体<text>听说读写译</text></view>
+          <view class="circle px-1">点<text>单词</text></view>
+          <view class="circle px-1">线<text>单句</text></view>
+          <view class="circle px-1">面<text>篇章</text></view>
+          <view class="circle px-1">体<text>听说读写译</text></view>
         </view>
         <view class="line"></view>
       </view>
       <view class="box">
         <view class="title">文章能读会写</view>
         <view class="cir_box">
-          <view class="circle">点<text>用词造句</text></view>
-          <view class="circle">线<text>长难句分析</text></view>
-          <view class="circle">面<text>懂篇章结构</text></view>
-          <view class="circle">体<text>能读会写</text></view>
+          <view class="circle px-1">点<text>用词造句</text></view>
+          <view class="circle px-1">线<text>长难句分析</text></view>
+          <view class="circle px-1">面<text>懂篇章结构</text></view>
+          <view class="circle px-1">体<text>能读会写</text></view>
         </view>
         <view class="line"></view>
       </view>
@@ -631,7 +631,6 @@ export default {
         .circle {
           display: flex;
           flex-direction: column;
-          padding: 0 10rpx;
           text-align: center;
           font-size: 22rpx;
           width: 127rpx;

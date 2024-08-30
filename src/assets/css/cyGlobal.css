@@ -276,6 +276,11 @@
   padding-right: 10rpx;
 }
 
+.px-15 {
+  padding-left: 15rpx;
+  padding-right: 15rpx;
+}
+
 .px-2 {
   padding-left: 20rpx;
   padding-right: 20rpx;

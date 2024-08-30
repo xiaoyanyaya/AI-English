@@ -1,7 +1,7 @@
 <template>
   <view class="main">
     <cy-navbar :showBack="false" :bgColor="backColor" textColor="#3D3D3D">
-      <view class="t-size-30">Frank英语</view>
+      <view class="t-size-30">小礼AI极简英语</view>
     </cy-navbar>
 
     <view class="frank_en">

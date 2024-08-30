@@ -14,7 +14,7 @@ export default {
     return {
       // 系统信息
       systemInfo: {},
-      imageBaseUrl: "https://aien.xiaolixb.com/assets",
+      imageBaseUrl: "https://aien.xiaolixb.com/assets/6-30-06_01.png",
       isAuthPhone: false,
 	    // 提交表单--节流
 	    lastTimestamp: 0,

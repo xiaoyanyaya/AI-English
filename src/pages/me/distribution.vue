@@ -70,9 +70,9 @@
         </view>
       </view>
 
-      <view class="flex justify-content-center mt-5">
+<!--      <view class="flex justify-content-center mt-5">
         <text class="text-center t-color-2D6CDA agreement" @click="toUserPage(4, '用户推广协议')">《用户推广协议》</text>
-      </view>
+      </view>-->
     </view>
 
   </view>

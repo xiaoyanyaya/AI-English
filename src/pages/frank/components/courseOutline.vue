@@ -34,17 +34,19 @@
     >
       <view class="title">
         <view class="t_left" @click="toggleTileOpen(index)">
-          <image
-            v-if="item.isOpen"
-            :src="imageBaseUrl + '/frank/8-7-25.png'"
-            mode=""
-          ></image>
-          <image
-            v-else
-            :src="imageBaseUrl + '/frank/8-7-26.png'"
-            mode=""
-          ></image>
-          <text class="t-color-2A67D2 t-size-3">{{ item.nodeName }}</text>
+          <view>
+            <image
+              v-if="item.isOpen"
+              :src="imageBaseUrl + '/frank/8-7-25.png'"
+              mode=""
+            ></image>
+            <image
+              v-else
+              :src="imageBaseUrl + '/frank/8-7-26.png'"
+              mode=""
+            ></image>
+            <text class="t-color-2A67D2 t-size-3">{{ item.nodeName }}</text>
+          </view>
           <view class="topOpen">
             <view
               @click="toggleTopOpen(index)"
@@ -94,7 +96,7 @@
                 <view
                   @click="
                     toNav(
-                      `/pages/frank/webview?videoId=${item3.vodVideoId}&id=${item3.id}&vName=${item3.videoFullName}&pTime=${item3.publishTime}&cover=${item3.videoImageUrl}`
+                      `/pages/frank/webview?videoId=${item3.vodVideoId}&id=${item3.id}&vName=${item3.videoFullName}&pTime=${item3.publishTime}&cover=${item3.videoImageUrl}&playTimes=${item3.playTimes}&currTime=${item3.currTime}`
                     )
                   "
                   class="flex align-item-center"
@@ -288,15 +290,16 @@ export default {
       border-top-right-radius: 10rpx; /* 右上角圆角，以10rpx为单位 */
       background: #e7f0ff;
       .t_left {
+        width: 100%;
         display: flex;
         align-items: center;
+        justify-content: space-between;
         image {
           width: 33rpx;
           height: 33rpx;
           margin: 0 20rpx 0 30rpx;
         }
         .topOpen {
-          margin-left: 300rpx;
           .button3 {
             display: flex;
             align-items: center;

@@ -22,10 +22,10 @@
     <!-- 简介 -->
     <view v-if="activeTab == 0" class="tab1">
       <view class="image">
-        <image :src="imageBaseUrl + '/frank/8-28-01.png'"></image>
+        <image :src="imageBaseUrl + '/frank/9-2-01.png'"></image>
       </view>
       <view class="box">
-        <view class="title">弗兰克英语: 陈东Frank</view>
+        <view class="title">弗兰克英语：陈东Frank</view>
         <view class="blue"></view>
         <view class="text">北京大学百年讲堂专题讲座特邀专家</view>
         <view class="text">CCTV-影响力对话栏目专访人物</view>
@@ -59,17 +59,18 @@
         </view>
         <view class="cont">
           <view class="text">
-            <view> 减轻了老师的备课工作量，提高了教学质量。 </view>
-            <view>《弗兰克“四维”英语教学法》具有完整的教学软件系统。</view>
-            <view>
-              通过短时间的培训授课老师，使其快速掌握《弗兰克“四维”英语教学法》的教学原理、应用方法及操作原理，授课老师应用该系统实现标准化快速备课，可以大大减轻英语教师备课的困难，大大提高了教学质量！
-            </view>
-            <view class="t-color-ED7E1F">
-              第一堂课就可以使学生“开光开窍”，对英语产生兴趣，打破对英语“不好学”“不好掌握”“记忆不牢”等观念，给学员颠覆性重塑对英语学习的认知，树立自学意识。
-            </view>
-            <view>
-              学生经过短期接触《弗兰克“四维”英语教学法》，并在老师引导下从自主学习到脱离老师完全自学，促使学生学习英语的兴趣大升，舒缓或解决了厌学情绪，由于有了科学的学习方法和工具，大大提高了学习效率。
-            </view>
+            <view
+              >《弗兰克“四维”英语教学法》具有完整的教学理念，通过短时间的培训授课老师，使老师快速掌握教学原理、教学方法。</view
+            >
+            <view
+              ><text class="t-color-ED7E1F">第一堂课</text>就可以使学生<text
+                class="t-color-ED7E1F"
+                >“开光开窍”</text
+              >，打破对英语<text class="t-color-ED7E1F"
+                >“不好学”“不好掌握”“记忆不牢”</text
+              >等观念，给学员<text class="t-color-ED7E1F">颠覆性重塑</text
+              >对英语学习的认知。学生在老师引导下从自主学习到脱离老师完全自学，解放老师。</view
+            >
           </view>
           <view class="image">
             <image :src="imageBaseUrl + '/frank/8-27-02.png'"></image>
@@ -90,15 +91,10 @@
             <view
               ><text class="t-color-ED7E1F">1-2年</text>学完并掌握全日制学校
               <text class="t-color-ED7E1F">6-9年</text
-              >必修课程内容，既能应试又能应用<text class="t-color-ED7E1F"
+              >必修课程内容，既能应试又能应用！<text class="t-color-ED7E1F"
                 >雅思考试达6分以上，托福考试80分以上</text
               >。</view
             >
-            <!-- <view>弗兰克英语产品研发团队</view>
-            <view
-              >该团队在创始人陈东老师带领下钻研和开发教材，完善课程体系，教师好教，学生好学，教材好，才好教，才教好!彻底解放老师，解救学生，解困家长，解忧校长!</view
-            >
-            <view>托福考试80分以上。</view> -->
           </view>
         </view>
       </view>
@@ -111,14 +107,11 @@
         <view class="cont">
           <view class="text">
             <view
-              >学生用<text class="t-color-ED7E1F">半年到一年</text>时间<text
+              >学生用<text class="t-color-ED7E1F">半年到一年</text>时间即可<text
                 class="t-color-ED7E1F"
                 >掌握学习能力</text
               >
-              后，学 生会根据自己的兴趣和爱好结合学校所学的教材。</view
-            >
-            <view
-              >海量阅读和纯外教视频内容，做到学习生活化，生活学习化，家长不再为孩子的英语学习“犯愁”。</view
+              ，再根据自己的兴趣结合学校所学教材，阅读更多纯外教视频内容，做到学习生活化，生活学习化，家长不再为孩子英语学习“犯愁”。</view
             >
           </view>
           <view class="image3">
@@ -137,9 +130,9 @@
             <image :src="imageBaseUrl + '/frank/8-27-05.png'"></image>
           </view>
           <view class="text">
-            英语老师通过弗兰克英语教学体系的严格培训后，掌握弗兰克英语的教学理念，应用先进的教学体系，快速提升教师本身的教学技术和教学艺术，<text
+            英语老师通过弗兰克英语教学体系的培训后，掌握应用先进的教学理念和教学体系，快速提升自身的教学技术和教学艺术，<text
               class="t-color-ED7E1F"
-              >教学工作量和教学质量轻松提升3-5倍</text
+              >教学效率和教学质量轻松提升3-5倍</text
             >，彻底解忧校长！
           </view>
         </view>
@@ -171,26 +164,18 @@
         >
         <view class="text">
           <view class=""
-            ><text class="t-color-ED7E1F"
-              >见词能拼读，见句能连读，见文能诵读</text
-            >，让中国人的语音语调语速与英语母语同频，同调，同速。</view
-          >
-          <view class="t-color-ED7E1F">独创神奇的语音体系:</view>
-          <view>汉字“草书”原理运用于“听说”训练，</view>
-          <view>彻底“治愈”中国人“聋哑口吃英语之“症结”!</view>
-          <view>“草书”原理：字写快变形，话说快变音！连读有三种：</view>
-          <view>
-            ① <text class="t-color-E77415">辅音+元音</text> ②
-            <text class="t-color-E77415">辅音+辅音</text> ③<text
+            >英语连读有三种：1、辅音+元音 2、辅音+辅音
+            3、元音+元音，国内知晓并同时掌握三种连读技能的英语老师不足<text
               class="t-color-E77415"
-              >元音+元音</text
+              >万分之五！</text
             >
           </view>
           <view
-            >目前国内知晓并同时掌握三种连读技能的英语老师不足<text
-              class="t-color-ED7E1F"
-              >万分之五！</text
-            >绝大多数略懂连读的老师也局限在第一种连读情况。外国人都是用连读形式进行交流的，不具备三种连读技能根本无法真正听懂外国人说话！</view
+            ><text class="t-color-ED7E1F">弗兰克独创神奇的语音体系</text
+            >：汉字“草书”原理运用于“听说”训练，彻底“治愈”中国人“聋哑口吃”英语之“症结”！做到<text
+              class="t-color-E77415"
+              >见词能拼读，见句能连读，见文能诵读。</text
+            ></view
           >
         </view>
       </view>
@@ -199,7 +184,7 @@
           >创新二</view
         >
         <view class="t-size-30 t-color-1863E5 font-weight-bold text-center"
-          >告别无声的“纸上刷题” 低效或无效的学习模式</view
+          >告别无声的“纸上刷题”低效或无效的学习模式</view
         >
         <view class="text">
           <view
@@ -217,14 +202,10 @@
         <view class="text">
           <view
             ><text class="t-color-ED7E1F">30-40小时掌握6-9年的语法知识</text
-            >，独创《图解的语法》：用生活化的图片或视频解释抽象的语法概念，“全脑”教学模式，通俗易懂，科学趣味实用，终生难忘！整个语法精简为词法的“四大家族”，长难句的“五大鬼门关”，<text
+            >，独创《图解的语法》：用生活化的图片或视频解释抽象的语法概念，精简为词法的“四大家族”，长难句的“五大鬼门关”，“全脑”教学模式，通俗易懂，科学趣味实用，终生难忘！<text
               class="t-color-ED7E1F"
               >2小时可以穿越“16种时态”</text
-            >，效果明显！</view
-          >
-          <view
-            >整个语法精简为词法的“四大家族”，长难句的“五大鬼门关”，2
-            小时可以穿越“16种时态”，效果明显!</view
+            >！</view
           >
         </view>
       </view>
@@ -237,7 +218,12 @@
         >
         <view class="text">
           <view
-            >以英语语言应试和应用所必备的两种能力为导向(两种能力:理解能力和表达能力)，教会学生具备文章分析能力和文章内化的能力，扩充词汇量，建立词汇库，拓展知识，建立知识体系(包含:人物传记，政史地百科等)，实现声音阅读和文字阅读，最后完全具备自学能力。</view
+            >以英语<text class="t-color-E77415">语言应试和应用</text>
+            所必备的二种能力，教会学生具备文章分析能力和文章内化能力，扩充词汇量、建立词汇库、建立知识体系，实现声音阅读和文字阅读，<text
+              class="t-color-E77415"
+              >内化为自学能力</text
+            >
+            ！</view
           >
         </view>
       </view>
@@ -254,17 +240,17 @@
         <view class="text">
           <view
             >1、
-            <text class="t-color-E77415">虚拟语境记忆法</text>
-            :遇到单个单词临时记忆，即把单词按:字母形状或发音谐音，找到“像人”“像物”“像场地等三维，有图像，有音像，联想一键有趣的事件发生来记忆词汇，结合弗兰克英语的单词拼读技能，语法应用技能，做到单词能拼读，能拼写，能应用，即学即记即用，有趣有用好玩，过目不忘。(
-            <text class="t-color-6D6D6D">
-              该方法结合真实语境的语料同步记忆，起到锦上添花的作用
-            </text>
-            )</view
+            <text class="t-color-E77415">虚拟语境记忆法：</text>
+            单词记忆结合图像、音像，应用弗兰克单词拼读技能、语法应用技能，做到单词能拼读、能拼写、能应用，即学即用，有趣好玩，过目不忘；</view
           >
           <view
             >2、
-            <text class="t-color-E77415">真实语境记忆法</text>
-            :在文字阅读和外国生活场景教学视频等两种真实语境中，体验和消化单词，做到听音能拼读，拼写，能复述，能应用在真正的语境中进行肌肉运动记忆单词，结合虚拟语境三维记忆法实现单词记忆标本同治，抗遗忘。</view
+            <text class="t-color-E77415">真实语境记忆法：</text>
+            在文字阅读和外国生活场景教学视频里，体验和消化单词，在真正语境中进行肌肉运动记忆单词，结合虚拟语境记忆法实现单词记忆<text
+              class="t-color-E77415"
+              >治标治本</text
+            >
+            ，抗遗忘。</view
           >
         </view>
       </view>
@@ -451,6 +437,7 @@ export default {
           width: 400rpx;
           font-size: 24rpx;
           color: #3d3d3d;
+          line-height: 1.8;
         }
         .image {
           width: 150rpx;
@@ -543,6 +530,7 @@ export default {
         margin-top: 20rpx;
         font-size: 24rpx;
         color: #3d3d3d;
+        line-height: 1.8;
         view {
           margin: 5rpx 0;
         }

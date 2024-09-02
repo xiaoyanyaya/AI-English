@@ -13,7 +13,11 @@
         '&pTime=' +
         pTime +
         '&cover=' +
-        cover
+        cover +
+        '&playTimes=' +
+        playTimes +
+        '&currTime=' +
+        currTime
       "
     ></web-view>
   </view>
@@ -34,6 +38,8 @@ export default {
       vName: "",
       pTime: "",
       cover: "",
+      playTimes: "",
+      currTime: "",
     };
   },
   onLoad(e) {
@@ -43,6 +49,8 @@ export default {
     this.vName = e.vName;
     this.pTime = e.pTime;
     this.cover = e.cover;
+    this.playTimes = e.playTimes;
+    this.currTime = e.currTime;
     this.token = store.state.token;
     this.getLive();
   },

@@ -102,7 +102,7 @@
         </view>
         <view class="t-size-22 t-color-3D3D3D ml-2">
           已阅读并同意
-          <text class="t-color-2D6CDA" @click="toPage(0, '用户协议')">《用户协议》</text>
+          <text class="t-color-2D6CDA" @click="toPage(5, '购买协议')">《购买协议》</text>
           &
           <text class="t-color-2D6CDA" @click="toPage(1, '隐私政策')">《隐私政策》</text>
         </view>

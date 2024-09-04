@@ -13,7 +13,7 @@
         @click="selectGrade(index, item)">
           <image class="mt-2"
                  style="width: 130rpx"
-                 :src="`${imageBaseUrl}${item.image}`" mode="widthFix"></image>
+                 :src="`${item.image}`" mode="widthFix"></image>
           <view class="criteria" :style="{background: `${item.color}`}"></view>
           <view class="criteria2" :style="{background: `${item.color}`}"></view>
           <view class="criteria3" :style="{background: `${item.color}`}"></view>
@@ -50,7 +50,7 @@ export default {
     console.log("data", data)
     data.forEach((item, index) => {
       item.isSelect = item.value === currGrade;
-      item.image = `/img_18.png`;
+      item.image = item.label;
       item.color = color[index % color.length];
     });
     this.gradeList = data;
@@ -71,6 +71,10 @@ export default {
             uni.switchTab({
               url: '/pages/index/index'
             });
+          }, 1000)
+        } else {
+          setTimeout(() => {
+            uni.navigateBack()
           }, 1000)
         }
       });

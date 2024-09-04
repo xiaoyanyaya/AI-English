@@ -69,6 +69,10 @@ export default {
     this.personInfo[0][1].value = userInfo.nickName || ""
     this.personInfo[0][2].value = userInfo.phone || ""
     this.personInfo[0][3].value = userInfo.memberNo || ""
+
+    this.setGrade()
+    this.setEnglishLevel()
+    this.setInterest()
   },
   methods: {
     getphonenumber(res) {
@@ -90,6 +94,39 @@ export default {
           this.personInfo[0][3].value = data.memberNo || ""
         })
       }
+    },
+    // 设置年年级
+    setGrade() {
+      var basicData = uni.getStorageSync('basicData')
+      var currGrade = basicData.currGrade || "";
+      var data = basicData.dictCodeList.grade
+      data.forEach((item, index) => {
+        if (item.value === currGrade) {
+          this.personInfo[1][0].value = item.title
+        }
+      });
+    },
+    // 设置英语等级
+    setEnglishLevel() {
+      var basicData = uni.getStorageSync('basicData')
+      var currLevel = basicData.currEnglishLevel || "";
+      var data = basicData.dictCodeList.english_level
+      data.forEach((item, index) => {
+        if (item.value === currLevel) {
+          this.personInfo[1][1].value = item.title
+        }
+      });
+    },
+    // 设置兴趣爱好
+    setInterest(interest) {
+      var basicData = uni.getStorageSync('basicData')
+      var currTags = basicData.currTags || "";
+      var data = basicData.dictCodeList.personal_tag
+      data.forEach((item, index) => {
+        if (item.value === currTags) {
+          this.personInfo[1][2].value = item.title
+        }
+      });
     },
     toPage(parentIndex, index) {
       if (parentIndex == 0) {

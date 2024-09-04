@@ -19,7 +19,7 @@
                 {{item.title}}
               </view>
             </view>
-            <image :src="`${imageBaseUrl}${item.image}`" mode="widthFix"></image>
+            <image :src="`${item.image}`" mode="widthFix"></image>
           </view>
         </view>
       </view>
@@ -36,24 +36,39 @@
 
 <script>
 import MyMixin from "@/utils/MyMixin";
+import {modifyTags} from "../../api/me";
 export default {
   mixins: [MyMixin],
   data() {
     return {
-      englishLevelList: [
-        {title: '全面提升', value: '', image: '/img_24.png', isSelect: true},
-        {title: '口语更溜', value: '', image: '/img_25.png', isSelect: false},
-        {title: '满分作文', value: '', image: '/img_26.png', isSelect: false},
-        {title: '纯粹好玩', value: '', image: '/img_27.png', isSelect: false},
-        {title: '不想背单词', value: '', image: '/img_28.png', isSelect: false},
-        {title: '语法好难', value: '', image: '/img_29.png', isSelect: false},
-      ],
+      englishLevelList: [],
     };
+  },
+  onLoad() {
+    var basicData = uni.getStorageSync('basicData')
+    var currGrade = basicData.currTags || "";
+    var data = basicData.dictCodeList.personal_tag
+    data.forEach((item, index) => {
+      item.isSelect = item.value === currGrade;
+      item.image = item.label;
+      item.title = item.title;
+    });
+    this.englishLevelList = data;
   },
   methods: {
     selectLevel(index) {
       this.englishLevelList.forEach((item, i) => {
         item.isSelect = i === index
+      })
+      modifyTags({tags: this.englishLevelList[index].value}).then(res => {
+        this.getBasicData()
+        uni.showToast({
+          title: '设置成功',
+          icon: 'none'
+        })
+        setTimeout(() => {
+          uni.navigateBack()
+        }, 1000)
       })
     },
   },

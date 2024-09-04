@@ -1,6 +1,9 @@
 <template>
   <view class="body" :style="bodyStyle">
-    <cy-navbar showBack bgColor="transparent" textColor="#3D3D3D">
+    <cy-navbar
+      @customBack="returnCustom"
+      customBack
+      showBack bgColor="transparent" textColor="#3D3D3D">
       <view class="t-size-30">申请成为合作商</view>
     </cy-navbar>
 
@@ -46,6 +49,11 @@ export default {
     this.messageDate = messageDate;
   },
   methods: {
+    returnCustom() {
+      uni.switchTab({
+        url: '/pages/me/index'
+      })
+    },
     clickBtn() {
       this.$navigateTo("/pages/me/distribution")
     }

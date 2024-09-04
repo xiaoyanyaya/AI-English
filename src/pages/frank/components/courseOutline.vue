@@ -157,7 +157,19 @@ export default {
     this.query = e;
     this.navbarTitle = e.nodeName;
     await this.getCourseOutline();
-    await this.getInitNodeVideo();
+    this.getInitNodeVideo();
+  },
+  onShow() {
+    // 刷新展开项状态
+    this.videoList.forEach((item) => {
+      item.children.forEach(async (item2) => {
+        if (item2.isOpen) {
+          const res = await getNodeVideo({ nodeId: item2.id });
+          item2.children = res.data.result;
+        }
+      });
+    });
+    this.videoList = [...this.videoList];
   },
   methods: {
     toNav(url) {

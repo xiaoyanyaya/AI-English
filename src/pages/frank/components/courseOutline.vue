@@ -107,17 +107,17 @@
                   }}</view>
                 </view>
                 <text
-                  v-if="item3 == '已学'"
-                  class="t-color-24A800 t-size-26 font-w-5"
-                  >·已学</text
+                  v-if="item3.studyStatusText == '已学'"
+                  class="t-color-43A71C t-size-26 font-w-5"
+                  >·{{ item3.studyStatusText }}</text
                 >
                 <text
                   v-else-if="item3.studyStatusText == '学习中'"
                   class="t-color-FFAB2D t-size-26 font-w-5"
-                  >·学习中</text
+                  >·{{ item3.studyStatusText }}</text
                 >
                 <text v-else class="t-color-636363 t-size-26 font-w-5"
-                  >·未学</text
+                  >·{{ item3.studyStatusText }}</text
                 >
               </view>
               <view class="border"></view>
@@ -162,6 +162,7 @@ export default {
   onShow() {
     // 刷新展开项状态
     this.videoList.forEach((item) => {
+      if (!item.isOpen) return;
       item.children.forEach(async (item2) => {
         if (item2.isOpen) {
           const res = await getNodeVideo({ nodeId: item2.id });

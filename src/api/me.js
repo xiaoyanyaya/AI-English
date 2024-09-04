@@ -45,12 +45,17 @@ export const aboutUs = params => fly.get('/article/aboutUs/detail', params)
 // 推广协议 /article/promoAgreement/detail
 export const promoAgreement = params => fly.get('/article/promoAgreement/detail', params)
 
+// 购买协议 /article/payAgreement/detail
+export const payAgreement = params => fly.get('/article/payAgreement/detail', params)
+
 // 基础数据 /app/common/basicData get
 export const basicData = params => fly.get('/app/common/basicData', params)
 // 会员修改英语水平 /member/modifyEnglishLevel post
 export const modifyEnglishLevel = params => fly.post('/member/modifyEnglishLevel', params)
 // 会员修改年级 /member/modifyGrade post
 export const modifyGrade = params => fly.post('/member/modifyGrade', params)
+// 会员修改兴趣爱好 /member/modifyTags post
+export const modifyTags = params => fly.post('/member/modifyTags', params)
 
 // 小程序发起支付前需要准备的请求参数 /weixin/getPrepayPaymentResponse post
 export const getPrepayPaymentResponse = params => fly.post('/weixin/getPrepayPaymentResponse', params)

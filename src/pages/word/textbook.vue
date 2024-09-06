@@ -392,6 +392,7 @@ export default {
     }
   },
   onShow() {
+    this.show = false;
     // 监听切换教材
     uni.$on("switchTextbook", ({ textBookId }) => {
       this.unitIndex = 0;

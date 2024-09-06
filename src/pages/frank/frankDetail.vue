@@ -54,6 +54,27 @@
       <view class="box">
         <view class="title">
           <view class="zhu"></view>
+          <view class="blue">解救</view>
+          <view class="orange">学生</view>
+        </view>
+        <view class="cont">
+          <view class="image2">
+            <image :src="imageBaseUrl + '/frank/8-27-03.png'"></image>
+          </view>
+          <view class="text">
+            <view
+              ><text class="t-color-ED7E1F">1-2年</text>学完并掌握全日制学校
+              <text class="t-color-ED7E1F">6-9年</text
+              >必修课程内容，既能应试又能应用！<text class="t-color-ED7E1F"
+                >考试成绩平均提分20-50分</text
+              >。</view
+            >
+          </view>
+        </view>
+      </view>
+      <view class="box">
+        <view class="title">
+          <view class="zhu"></view>
           <view class="blue">解放</view>
           <view class="orange">老师</view>
         </view>
@@ -74,27 +95,6 @@
           </view>
           <view class="image">
             <image :src="imageBaseUrl + '/frank/8-27-02.png'"></image>
-          </view>
-        </view>
-      </view>
-      <view class="box">
-        <view class="title">
-          <view class="zhu"></view>
-          <view class="blue">解救</view>
-          <view class="orange">学生</view>
-        </view>
-        <view class="cont">
-          <view class="image2">
-            <image :src="imageBaseUrl + '/frank/8-27-03.png'"></image>
-          </view>
-          <view class="text">
-            <view
-              ><text class="t-color-ED7E1F">1-2年</text>学完并掌握全日制学校
-              <text class="t-color-ED7E1F">6-9年</text
-              >必修课程内容，既能应试又能应用！<text class="t-color-ED7E1F"
-                >雅思考试达6分以上，托福考试80分以上</text
-              >。</view
-            >
           </view>
         </view>
       </view>

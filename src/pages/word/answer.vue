@@ -418,13 +418,15 @@ export default {
         case 1:
           if (this.pageType !== "chanllenge") {
             // this.toNav('/pages/word/textbook?id=' + this.wordType + '&bookId=' + this.bookData.id)
-            uni.redirectTo({
-              url: "/pages/word/reverseForgetting/index",
-            });
+            // uni.redirectTo({
+            //   url: "/pages/word/reverseForgetting/index",
+            // });
+            this.toNav("/pages/word/reverseForgetting/index");
           } else {
-            uni.redirectTo({
-              url: "/pages/word/chanllenge/index",
-            });
+            // uni.redirectTo({
+            //   url: "/pages/word/chanllenge/index",
+            // });
+            this.toNav("/pages/word/chanllenge/index");
           }
           break;
       }

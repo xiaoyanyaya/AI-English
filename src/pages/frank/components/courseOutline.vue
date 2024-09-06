@@ -94,11 +94,7 @@
             >
               <view class="video_title">
                 <view
-                  @click="
-                    toNav(
-                      `/pages/frank/webview?videoId=${item3.vodVideoId}&id=${item3.id}&vName=${item3.videoFullName}&pTime=${item3.publishTime}&cover=${item3.videoImageUrl}&playTimes=${item3.playTimes}&currTime=${item3.currTime}`
-                    )
-                  "
+                  @click="goStudy(item2, item3)"
                   class="flex align-item-center"
                 >
                   <image :src="imageBaseUrl + '/frank/8-7-27.png'"></image>
@@ -144,6 +140,7 @@ export default {
       query: {},
       videoList: [],
       videoPId: null, //获取视频
+      studyVideoPid: null, //被点击的视频节点id
     };
   },
   onPageScroll(e) {
@@ -160,11 +157,11 @@ export default {
     this.getInitNodeVideo();
   },
   onShow() {
-    // 刷新展开项状态
+    // 刷新刚学习的视频状态
     this.videoList.forEach((item) => {
       if (!item.isOpen) return;
       item.children.forEach(async (item2) => {
-        if (item2.isOpen) {
+        if (item2.id == this.studyVideoPid) {
           const res = await getNodeVideo({ nodeId: item2.id });
           item2.children = res.data.result;
         }
@@ -181,7 +178,7 @@ export default {
       this.introduce = res.data.result[0].nodeContent;
       this.videoList = res.data.result[0].children;
       this.videoList.forEach((item, index) => {
-        if (index == 0) {
+        if (index == this.query.clickIndex) {
           item.isOpen = true;
           item.children.forEach((item2, index2) => {
             if (index2 == 0) {
@@ -198,11 +195,19 @@ export default {
           });
         }
       });
-      this.videoPId = this.videoList[0].children[0].id;
+      this.videoPId = this.videoList[this.query.clickIndex].children[0].id;
     },
     async getInitNodeVideo() {
       const res = await getNodeVideo({ nodeId: this.videoPId });
-      this.videoList[0].children[0].children = res.data.result;
+      // this.videoList[0].children[0].children = res.data.result;///
+      this.videoList[this.query.clickIndex].children[0].children =
+        res.data.result;
+    },
+    goStudy(item2, item3) {
+      this.studyVideoPid = item2.id;
+      this.toNav(
+        `/pages/frank/webview?videoId=${item3.vodVideoId}&id=${item3.id}&vName=${item3.videoFullName}&pTime=${item3.publishTime}&cover=${item3.videoImageUrl}&playTimes=${item3.playTimes}&currTime=${item3.currTime}`
+      );
     },
     toggleTopOpen(index) {
       this.$set(this.videoList[index], "topIsOpen", false);

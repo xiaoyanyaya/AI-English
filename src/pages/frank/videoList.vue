@@ -85,12 +85,19 @@
     <scroll-view @scrolltolower="onScrolltolower" scroll-y>
       <view class="v_list">
         <view v-for="(item, index) in videoList" :key="item.id" class="v_item">
-          <view class="image">
+          <view
+            @click="
+              toNav(
+                `/pages/frank/webview?videoId=${item.vodVideoId}&id=${item.id}&vName=${item.videoFullName}&pTime=${item.publishTime}&cover=${item.videoImageUrl}&playTimes=${item.playTimes}&currTime=${item.currTime}`
+              )
+            "
+            class="image"
+          >
             <image :src="item.videoImageUrl" mode=""></image>
           </view>
           <view class="r_content">
             <view class="flex mt-2">
-              {{ item.videoFullName }}
+              <text>{{ item.videoFullName }}</text>
               <image
                 v-if="index == 0 || index == 1"
                 :src="imageBaseUrl + '/frank/路径.png'"
@@ -189,6 +196,9 @@ export default {
       this.pagingParams.pageNo++;
       this.getSearchVideoList();
     },
+    toNav(url) {
+      uni.navigateTo({ url });
+    },
   },
 };
 </script>
@@ -259,7 +269,7 @@ export default {
 .borders {
   display: flex;
   justify-content: space-between;
-  padding: 0 125rpx 25rpx 112rpx;
+  padding: 5rpx 140rpx 25rpx 110rpx;
   height: 21rpx;
   line-height: 21rpx;
   .a_border {
@@ -281,7 +291,6 @@ export default {
   .v_item {
     display: flex;
     width: 710rpx;
-    height: 228rpx;
     border-radius: 10rpx;
     background: #ffffff;
     margin-bottom: 20rpx;
@@ -289,15 +298,21 @@ export default {
     .image {
       width: 317rpx;
       height: 178rpx;
-      background-color: pink;
       image {
         width: 100%;
         height: 100%;
       }
     }
     .r_content {
+      width: 300rpx;
+      position: relative;
       margin-left: 40rpx;
+      text {
+        width: 275rpx;
+      }
       image {
+        position: absolute;
+        right: 5rpx;
         width: 24rpx;
         height: 33rpx;
       }

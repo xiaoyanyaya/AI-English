@@ -199,7 +199,6 @@ export default {
     },
     async getInitNodeVideo() {
       const res = await getNodeVideo({ nodeId: this.videoPId });
-      // this.videoList[0].children[0].children = res.data.result;///
       this.videoList[this.query.clickIndex].children[0].children =
         res.data.result;
     },

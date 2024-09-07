@@ -133,8 +133,8 @@ export default {
         pageNo: 1,
         pageSize: 20,
         totalPage: null,
-        orderFiledName: "publish_time", ////publish_time， play_times，collect_times，目前三选一
-        orderType: "asc", ////asc, desc ， 目前二选一
+        orderFiledName: "publish_time", //publish_time， play_times，collect_times，目前三选一
+        orderType: "asc", //asc, desc ， 目前二选一
       },
       videoList: [],
       activeTab: 0,

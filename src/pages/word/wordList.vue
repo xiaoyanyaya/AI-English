@@ -259,7 +259,9 @@ export default {
         (this.pageType ? this.pageType : "") +
         "&bookId=" +
         (this.id == 1 ? this.lessonId : this.allData.id);
-      this.toNav(urls);
+      uni.redirectTo({
+        url: urls,
+      });
     },
     async getWord() {
       uni.setStorageSync("nowUnitId", this.query.unitId);

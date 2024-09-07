@@ -123,7 +123,7 @@
           mode=""
         ></image>
         <view :class="{ 't-color-1863E5': debounceShow }" class="mt-2 t-size-24"
-        >上一个
+          >上一个
         </view>
       </view>
       <view
@@ -138,7 +138,7 @@
           mode=""
         ></image>
         <view :class="{ 't-color-1863E5': debounceShow }" class="mt-2 t-size-24"
-        >{{ currentTopic < totalTopic ? "下一个" : "结束" }}
+          >{{ currentTopic < totalTopic ? "下一个" : "结束" }}
         </view>
       </view>
     </view>
@@ -154,7 +154,7 @@ import {
   reviewFinish,
   reviewNext,
 } from "@/api/word";
-import {challengeFinishPost} from "../../api/word";
+import { challengeFinishPost } from "../../api/word";
 
 export default {
   mixins: [MyMixin],
@@ -199,7 +199,7 @@ export default {
       unitOrLesson: "", //单元名称、课时名称
     };
   },
-  onLoad({id, lessonId, pageType, bookId}) {
+  onLoad({ id, lessonId, pageType, bookId }) {
     this.baseInfo = uni.getStorageSync("wordList");
     this.topicList = this.baseInfo.wordLessonDictList;
     this.totalTopic = this.topicList.length;
@@ -321,24 +321,23 @@ export default {
         // 判断是挑战还是复习
         let data = {};
         if (this.pageType == "chanllenge") {
-          data = await challengeFinishPost({id: this.id});
+          data = await challengeFinishPost({ id: this.id });
         } else {
-          data = await reviewFinish({id: this.id});
+          data = await reviewFinish({ id: this.id });
         }
-        this.$navigateTo(
-          "/pages/word/answer?id=" +
-          this.id +
-          "&pageType=" +
-          this.pageType +
-          "&bookId=" +
-          this.bookId
-        );
+        uni.redirectTo({
+          url:
+            "/pages/word/answer?id=" +
+            this.id +
+            "&pageType=" +
+            this.pageType +
+            "&bookId=" +
+            this.bookId,
+        });
       }
-
       if (this.currentTopicData.currentTopicStatus === "normal") {
         this.network().reviewNext(true);
       }
-
       setTimeout(() => {
         this.debounceShow = true;
       }, 500);
@@ -421,7 +420,7 @@ export default {
       return newStr;
     },
     playAudio() {
-      console.log("准备播放")
+      console.log("准备播放");
       var data = this.currentTopicData;
       let voicePath = "";
       if (this.systemInfo.platform === "android") {
@@ -434,7 +433,7 @@ export default {
 
               data.auditManager.manager.src = voicePath;
               data.auditManager.manager.play();
-              console.log("播放音频")
+              console.log("播放音频");
               // 播放中
               data.auditManager.manager.onPlay(() => {
                 this.playing = true;
@@ -458,7 +457,7 @@ export default {
 
         data.auditManager.manager.src = voicePath;
         data.auditManager.manager.play();
-        console.log("播放音频")
+        console.log("播放音频");
         // 播放中
         data.auditManager.manager.onPlay(() => {
           this.playing = true;
@@ -479,7 +478,7 @@ export default {
     network() {
       return {
         getWordEn: async (wordEn) => {
-          let res = await getWordEn({wordEn});
+          let res = await getWordEn({ wordEn });
           let data = res.data.result;
 
           // 可选单词乱序
@@ -547,17 +546,17 @@ export default {
               let data = {};
               // 判断是挑战还是复习
               if (this.pageType == "chanllenge") {
-                data = await challengeFinishPost({id: this.id});
+                data = await challengeFinishPost({ id: this.id });
               } else {
-                data = await reviewFinish({id: this.id});
+                data = await reviewFinish({ id: this.id });
               }
               this.$navigateTo(
                 "/pages/word/answer?id=" +
-                this.id +
-                "&pageType=" +
-                this.pageType +
-                "&bookId=" +
-                this.bookId
+                  this.id +
+                  "&pageType=" +
+                  this.pageType +
+                  "&bookId=" +
+                  this.bookId
               );
             }
           } else {
@@ -574,10 +573,10 @@ export default {
 <style lang="scss" scoped>
 .main {
   background: linear-gradient(
-      180deg,
-      #dff0ff 0%,
-      #f0f7fd 6%,
-      #ffffff 21%
+    180deg,
+    #dff0ff 0%,
+    #f0f7fd 6%,
+    #ffffff 21%
   ) !important;
 }
 

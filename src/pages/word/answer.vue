@@ -1,12 +1,6 @@
 <template>
   <view class="main">
-    <cy-navbar
-      @customBack="returnCustom"
-      customBack
-      :showBack="true"
-      :bgColor="backColor"
-      textColor="#3D3D3D"
-    >
+    <cy-navbar :showBack="true" :bgColor="backColor" textColor="#3D3D3D">
       <view class="t-size-30">答题结果</view>
     </cy-navbar>
     <view class="t-color-3D3D3D t-size-30 font-weight-bold text-center px-4">
@@ -394,11 +388,6 @@ export default {
     this.nowUnitId = uni.getStorageSync("nowUnitId");
   },
   methods: {
-    returnCustom() {
-      uni.navigateBack({
-        delta: 3,
-      });
-    },
     clickBtn(type) {
       switch (type) {
         case 0:

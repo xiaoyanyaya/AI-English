@@ -187,7 +187,7 @@ export default {
     return {
       title: "小礼AI极简英语",
       path: `${SRC}${path}`,
-      imageUrl: `${this.imageBaseUrl}/9-02-01.png`,
+      imageUrl: `${this.imageBaseUrl}/9-07-01.png`,
     };
   },
   methods: {

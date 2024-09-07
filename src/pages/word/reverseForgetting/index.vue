@@ -186,6 +186,8 @@ export default {
       tomor2BookData: [],
       weekBookData: [],
       mouthBookData: [],
+      smouthBookData: [],
+      otherBookData: [],
       tabData: [],
       show: false,
       tabNum: 0,
@@ -196,6 +198,8 @@ export default {
         { value: "后天", highlight: 2 },
         { value: "本周", highlight: 2 },
         { value: "本月", highlight: 2 },
+        { value: "上月", highlight: 2 },
+        { value: "其他", highlight: 2 },
       ],
     };
   },
@@ -224,7 +228,6 @@ export default {
       this.tabNum = i;
     },
     async getData() {
-      var that = this;
       let res = await getUserLessonList();
       this.bookData = res.data.result;
       this.allBookData = res.data.result;
@@ -242,6 +245,12 @@ export default {
       });
       this.mouthBookData = res.data.result.filter((item) => {
         return item.reviewPlanDateName == "本月";
+      });
+      this.smouthBookData = res.data.result.filter((item) => {
+        return item.reviewPlanDateName == "上月";
+      });
+      this.otherBookData = res.data.result.filter((item) => {
+        return item.reviewPlanDateName == "其它";
       });
     },
     async getTab(id) {
@@ -284,6 +293,10 @@ export default {
           this.bookData = this.weekBookData;
         } else if (index == 5) {
           this.bookData = this.mouthBookData;
+        } else if (index == 6) {
+          this.bookData = this.smouthBookData;
+        } else if (index == 7) {
+          this.bookData = this.otherBookData;
         }
       });
     },
@@ -305,13 +318,15 @@ export default {
 .calendar {
   display: flex;
   padding: 40rpx 50rpx 5rpx;
+  overflow-x: auto;
   .c_filter {
     margin-right: 20rpx;
-    width: 95rpx;
+    width: 94rpx;
     height: 95rpx;
     text-align: center;
     line-height: 95rpx;
     background-size: cover;
+    flex-shrink: 0; /* 防止挤压 */
   }
 }
 

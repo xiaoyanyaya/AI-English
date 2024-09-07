@@ -165,7 +165,7 @@
           </view>
         </view>
         <image
-          v-if="tableData.length <= 1"
+          v-if="tableData.length <= 0"
           :src="`${imageBaseUrl}/nodata.png`"
           style="width: 400rpx; height: 400rpx"
         ></image>
@@ -536,6 +536,7 @@ export default {
       this.currentTopOptions = index;
       switch (index) {
         case 0:
+          this.optinsList[1].name = "教材挑战排名";
           this.tableData = [];
           this.tableItemWidth = 700;
           this.tableData.push(this.myChallengeTitle);
@@ -543,6 +544,7 @@ export default {
           uni.setStorageSync("answerFromType", [3, 0]);
           break;
         case 1:
+          this.optinsList[1].name = "考纲挑战排名";
           this.tableData = [];
           this.tableItemWidth = 1000;
           this.tableData.push(this.textChallengeTitle);

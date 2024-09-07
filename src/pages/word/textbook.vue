@@ -862,6 +862,7 @@ export default {
     @extend .box;
     width: 172rpx;
     border: 1rpx solid #1863e5;
+    margin-right: 30rpx;
 
     .image {
       width: 26rpx;
@@ -880,7 +881,6 @@ export default {
     border: 1rpx solid #1863e5 !important;
     background-color: #fff;
     padding: 0;
-    margin-left: 30rpx;
 
     .image {
       width: 30rpx;

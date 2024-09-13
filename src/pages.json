@@ -160,6 +160,9 @@
           "path": "reverseForgetting/wrongWords"
         },
         {
+          "path": "reverseForgetting/studyReport"
+        },
+        {
           "path": "chanllenge/index"
         },
         {

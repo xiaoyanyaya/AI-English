@@ -126,11 +126,18 @@
       </view>
     </view>
     <!-- 错词本 -->
-    <view
+    <!-- <view
       class="imgs"
       @click="toNav('/pages/word/reverseForgetting/wrongWords')"
     >
       <image :src="imageBaseUrl + '/word/6-4-01.png'" mode=""></image>
+    </view> -->
+    <!-- 学习报告 -->
+    <view
+      class="imgs"
+      @click="toNav('/pages/word/reverseForgetting/studyReport')"
+    >
+      <image :src="imageBaseUrl + '/word/9-11.png'" mode=""></image>
     </view>
     <!-- 弹窗 -->
     <u-popup v-model="show" mode="center" border-radius="20">
@@ -401,44 +408,6 @@ export default {
       }
     }
   }
-}
-
-.listItem-contentBook-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 20rpx;
-  margin-bottom: 22rpx;
-}
-
-.listItem-contentBook-topTitle {
-  color: #1863e5;
-  font-size: 24rpx;
-}
-
-.listItem-contentBook-topDate {
-  color: #8a8a8a;
-}
-
-.listItem-contentBook-bottom {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.listItem-contentBook-bottomL {
-  color: #3d3d3d;
-  font-weight: 600;
-  font-size: 36rpx;
-}
-
-.listItem-contentBook-bottomC {
-  font-size: 24rpx;
-  color: #8a8a8a;
-}
-
-.listItem-contentBook-bottomC text {
-  color: #24a800;
 }
 
 .lessonName-box {

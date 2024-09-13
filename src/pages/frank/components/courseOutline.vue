@@ -92,11 +92,8 @@
               :key="item3.id"
               class="box_video"
             >
-              <view class="video_title">
-                <view
-                  @click="goStudy(item2, item3)"
-                  class="flex align-item-center"
-                >
+              <view @click="goStudy(item2, item3)" class="video_title">
+                <view class="flex align-item-center">
                   <image :src="imageBaseUrl + '/frank/8-7-27.png'"></image>
                   <view class="font-w-500 t-size-30 w-320">{{
                     item3.videoName

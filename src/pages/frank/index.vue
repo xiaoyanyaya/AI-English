@@ -279,7 +279,7 @@
       </view>
     </view>
     <!-- 秘籍课程 -->
-    <view class="bag_box">
+    <!-- <view class="bag_box">
       <view class="mb_title">
         <view class="bu"></view>
         <text class="text">{{ secretCourseBagList.nodeName }}</text>
@@ -348,9 +348,9 @@
           <image :src="imageBaseUrl + '/frank/8-7-14.png'" mode=""></image>
         </view>
       </view>
-    </view>
+    </view> -->
     <!-- 学段提分 -->
-    <view class="bag_box">
+    <!-- <view class="bag_box">
       <view class="mb_title">
         <view class="bu"></view>
         <text class="text">{{ leaningIncreaseList.nodeName }}</text>
@@ -450,7 +450,7 @@
         </view>
         <view class="box9"> </view>
       </view>
-    </view>
+    </view> -->
     <!-- 学习足迹 -->
     <view @click="toNav('/pages/frank/leaningFoot')" class="imgs">
       <image :src="imageBaseUrl + '/frank/8-7-21.png'" mode=""></image>
@@ -497,11 +497,11 @@ export default {
     async getCourseSystem() {
       const res = await getCourseSystem(this.rootNodeCode);
       this.introduceCirList = res.data.result[0].children[0];
-      this.courseSystemOneList = res.data.result[0].children[1];
-      this.courseSystemTwoList = res.data.result[0].children[2];
-      this.courseSystemThrList = res.data.result[0].children[3];
-      this.secretCourseBagList = res.data.result[0].children[4];
-      this.leaningIncreaseList = res.data.result[0].children[5];
+      this.courseSystemOneList = res.data.result[0].children[1].children[0];
+      this.courseSystemTwoList = res.data.result[0].children[1].children[1];
+      this.courseSystemThrList = res.data.result[0].children[1].children[2];
+      // this.secretCourseBagList = res.data.result[0].children[4];
+      // this.leaningIncreaseList = res.data.result[0].children[5];
       console.log("000", res.data.result[0]);
     },
   },

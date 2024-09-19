@@ -170,6 +170,9 @@
         },
         {
           "path": "reverseForgetting/reviewCourse"
+        },
+        {
+          "path": "webview"
         }
       ]
     },

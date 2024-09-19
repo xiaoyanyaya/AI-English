@@ -36,6 +36,7 @@
               <view class="font-w-5 t-size-30">
                 {{ item.lessonName }}
               </view>
+              <view class="t-color-DC0C0C">{{ item.reviewScore }}分</view>
             </view>
             <view class="t-size-24 t-color-3D3D3D ml-5 mt-2">
               答题时间：{{ item.finishTime }}
@@ -108,7 +109,7 @@ export default {
       background-color: #f1f6ff;
       position: relative;
       background-size: cover;
-      padding: 40rpx 40rpx 25rpx 10rpx;
+      padding: 30rpx 40rpx 30rpx 10rpx;
       border-radius: 10rpx;
       height: 200rpx;
       .l_date {

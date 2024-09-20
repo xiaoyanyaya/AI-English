@@ -26,7 +26,7 @@
     </view>
 
     <!-- 课程大纲内容 -->
-    <view
+    <!-- <view
       v-else
       v-for="(item, index) in videoList"
       class="box_tree"
@@ -118,21 +118,27 @@
           </view>
         </view>
       </view>
-    </view>
+    </view> -->
+
+    <tree-view v-else :qNodeCode="query.nodeCode"></tree-view>
   </view>
 </template>
 
 <script>
 import { getCourseOutline, getNodeVideo } from "@/api/frank";
 import MyMixin from "@/utils/MyMixin";
+import TreeView from "./tree-view.vue";
 
 export default {
   mixins: [MyMixin],
+  components: {
+    TreeView,
+  },
   data() {
     return {
       backColor: "transparent",
       navbarTitle: "了解Frank英语",
-      activeIndex: "0",
+      activeIndex: "1", ///
       introduce: "",
       query: {},
       videoList: [],
@@ -150,20 +156,22 @@ export default {
   async onLoad(e) {
     this.query = e;
     this.navbarTitle = e.nodeName;
-    await this.getCourseOutline();
-    this.getInitNodeVideo();
+    // await this.getCourseOutline();
+    // this.getInitNodeVideo();
   },
   onShow() {
+    console.log("666666666666666666");
+
     // 刷新刚学习的视频状态
-    this.videoList.forEach((item) => {
-      if (!item.isOpen) return;
-      item.children.forEach(async (item2) => {
-        if (item2.id == this.studyVideoPid) {
-          const res = await getNodeVideo({ nodeId: item2.id });
-          item2.children = res.data.result;
-        }
-      });
-    });
+    // this.videoList.forEach((item) => {
+    //   if (!item.isOpen) return;
+    //   item.children.forEach(async (item2) => {
+    //     if (item2.id == this.studyVideoPid) {
+    //       const res = await getNodeVideo({ nodeId: item2.id });
+    //       item2.children = res.data.result;
+    //     }
+    //   });
+    // });
     this.videoList = [...this.videoList];
   },
   methods: {
@@ -174,25 +182,25 @@ export default {
       const res = await getCourseOutline({ rootNodeCode: this.query.nodeCode });
       this.introduce = res.data.result[0].nodeContent;
       this.videoList = res.data.result[0].children;
-      this.videoList.forEach((item, index) => {
-        if (index == this.query.clickIndex) {
-          item.isOpen = true;
-          item.children.forEach((item2, index2) => {
-            if (index2 == 0) {
-              item2.isOpen = true;
-            } else {
-              item2.isOpen = false;
-            }
-          });
-        } else {
-          item.isOpen = false;
-          item.topIsOpen = true;
-          item.children.forEach((item2) => {
-            item2.isOpen = false;
-          });
-        }
-      });
-      this.videoPId = this.videoList[this.query.clickIndex].children[0].id;
+      // this.videoList.forEach((item, index) => {
+      //   if (index == this.query.clickIndex) {
+      //     item.isOpen = true;
+      //     item.children.forEach((item2, index2) => {
+      //       if (index2 == 0) {
+      //         item2.isOpen = true;
+      //       } else {
+      //         item2.isOpen = false;
+      //       }
+      //     });
+      //   } else {
+      //     item.isOpen = false;
+      //     item.topIsOpen = true;
+      //     item.children.forEach((item2) => {
+      //       item2.isOpen = false;
+      //     });
+      //   }
+      // });
+      // this.videoPId = this.videoList[this.query.clickIndex].children[0].id;///
     },
     async getInitNodeVideo() {
       const res = await getNodeVideo({ nodeId: this.videoPId });

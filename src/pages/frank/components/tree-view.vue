@@ -77,88 +77,19 @@ export default {
   name: "treeView",
   mixins: [MyMixin],
   props: {
-    qNodeCode: {
-      type: String,
+    videoList: {
+      type: Array,
       require: true,
     },
   },
-  data() {
-    return {
-      videoList: [],
-    };
-  },
-  mounted() {
-    this.getCourseOutline();
-  },
-  onShow() {
-    console.log("6666666666666666667");
-
-    // 刷新刚学习的视频状态
-    // this.videoList.forEach((item) => {
-    //   if (!item.isOpen) return;
-    //   item.children.forEach(async (item2) => {
-    //     if (item2.id == this.studyVideoPid) {
-    //       const res = await getNodeVideo({ nodeId: item2.id });
-    //       item2.children = res.data.result;
-    //     }
-    //   });
-    // });
-    this.videoList = [...this.videoList];
-  },
   methods: {
-    async getCourseOutline() {
-      console.log("0000000000000000000000000000000000", this.qNodeCode);
-      const res = await getCourseOutline({ rootNodeCode: this.qNodeCode });
-      console.log("00000000000000000000000000000000001", res);
-      this.videoList = res.data.result[0].children;
-      // let data = { id: "10086", nodeName: "呵呵" };
-      // this.videoList[0].children.push(data);
-      // this.$set(
-      //   this.videoList[0].children,
-      //   this.videoList[0].children.length,
-      //   data
-      // );
-
-      console.log("33videoList33", this.videoList);
-
-      // this.videoList.forEach((item, index) => {
-      //   if (index == this.query.clickIndex) {
-      //     item.isOpen = true;
-      //     item.children.forEach((item2, index2) => {
-      //       if (index2 == 0) {
-      //         item2.isOpen = true;
-      //       } else {
-      //         item2.isOpen = false;
-      //       }
-      //     });
-      //   } else {
-      //     item.isOpen = false;
-      //     item.topIsOpen = true;
-      //     item.children.forEach((item2) => {
-      //       item2.isOpen = false;
-      //     });
-      //   }
-      // });
-      // this.videoPId = this.videoList[this.query.clickIndex].children[0].id;///
-    },
     async toggleTileOpen(node, index) {
       console.log("inde", index, node);
       //如果是叶子节点 就去请求节点下的视频
       if (node.isLeafNode == 1) {
         const vData = await getNodeVideo({ nodeId: node.id });
         console.log("vData000", vData);
-        this.$set(this.videoList, index, {
-          ...this.videoList[index],
-          isOpen: !this.videoList[index].isOpen,
-          vList: vData.data.result,
-        });
-        if (this.videoList[index].isOpen) {
-          this.videoList[index].topIsOpen = false;
-        } else {
-          this.videoList[index].topIsOpen = true;
-        }
-        this.videoList = [...this.videoList];
-        console.log("展开收起videoList", this.videoList);
+        this.$emit("update-video-list", vData, index);
       }
     },
     goStudy(node, item) {

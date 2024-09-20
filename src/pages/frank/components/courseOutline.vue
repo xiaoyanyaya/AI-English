@@ -120,7 +120,11 @@
       </view>
     </view> -->
 
-    <tree-view v-else :qNodeCode="query.nodeCode"></tree-view>
+    <tree-view
+      v-else
+      :videoList="videoList"
+      @update-video-list="handleUpdateVideoList"
+    ></tree-view>
   </view>
 </template>
 
@@ -144,6 +148,7 @@ export default {
       videoList: [],
       videoPId: null, //获取视频
       studyVideoPid: null, //被点击的视频节点id
+      topIndex: 0, ////
     };
   },
   onPageScroll(e) {
@@ -156,7 +161,7 @@ export default {
   async onLoad(e) {
     this.query = e;
     this.navbarTitle = e.nodeName;
-    // await this.getCourseOutline();
+    await this.getCourseOutline();
     // this.getInitNodeVideo();
   },
   onShow() {
@@ -172,9 +177,32 @@ export default {
     //     }
     //   });
     // });
-    this.videoList = [...this.videoList];
+    this.videoList.forEach(async (item, index) => {
+      if (index == this.topIndex) {
+        console.log("index", index, this.topIndex);
+        const vData = await getNodeVideo({ nodeId: item.id });
+        console.log("vData00000666888", vData);
+        this.videoList[index].vList = vData.data.result;
+        this.videoList = [...this.videoList];
+      }
+    });
   },
   methods: {
+    async handleUpdateVideoList(vData, index) {
+      console.log("vdata自组举荐的", vData);
+      this.$set(this.videoList, index, {
+        ...this.videoList[index],
+        isOpen: !this.videoList[index].isOpen,
+        vList: vData.data.result,
+      });
+      if (this.videoList[index].isOpen) {
+        this.videoList[index].topIsOpen = false;
+      } else {
+        this.videoList[index].topIsOpen = true;
+      }
+      this.videoList = [...this.videoList];
+      console.log("展开收起videoList", this.videoList);
+    },
     toNav(url) {
       uni.navigateTo({ url });
     },
@@ -182,6 +210,10 @@ export default {
       const res = await getCourseOutline({ rootNodeCode: this.query.nodeCode });
       this.introduce = res.data.result[0].nodeContent;
       this.videoList = res.data.result[0].children;
+      //测试数据///
+      // this.videoList[0].children = [{ id: "10086", nodeName: "cxk" }];
+      // this.videoList = [...this.videoList];
+
       // this.videoList.forEach((item, index) => {
       //   if (index == this.query.clickIndex) {
       //     item.isOpen = true;

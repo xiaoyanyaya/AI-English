@@ -2,7 +2,7 @@
   <view>
     <view v-for="(node, index) in videoList" :key="node.id" class="box_tree">
       <view class="title">
-        <view class="t_left" @click="toggleTileOpen(node, index)">
+        <view class="t_left" @click="toggleTitleOpen(node, index)">
           <view>
             <image
               v-if="node.isOpen"
@@ -33,14 +33,22 @@
         </view>
         <view class="t_right"> </view>
       </view>
-      <tree-view
-        v-if="node.children.length"
-        :videoList="node.children"
-      ></tree-view>
+
+      <!-- 组件递归 -->
+      <view v-if="node.children.length">
+        <cube-node
+          v-if="node.isOpen"
+          :videoList="node.children"
+          @updateVideoListOne="emitVideoListOne(node.children, index)"
+          @updateVideoListTwo="emitVideoListTwo(node.children, index)"
+        ></cube-node>
+      </view>
+
+      <!-- 视屏列表 -->
       <view v-else>
         <view v-if="node.isOpen">
           <view v-for="item in node.vList" :key="item.id" class="box_video">
-            <view @click="goStudy(node, item)" class="video_title">
+            <view @click="goStudy(node, item, index)" class="video_title">
               <view class="flex align-item-center">
                 <image :src="imageBaseUrl + '/frank/8-7-27.png'"></image>
                 <view class="font-w-500 t-size-30 w-395">{{
@@ -71,10 +79,14 @@
 
 <script>
 import MyMixin from "@/utils/MyMixin";
-import { getCourseOutline, getNodeVideo } from "@/api/frank";
+import { getNodeVideo } from "@/api/frank";
+import cubeNode from "./tree-view.vue";
 
 export default {
-  name: "treeView",
+  name: "cubeNode",
+  components: {
+    cubeNode,
+  },
   mixins: [MyMixin],
   props: {
     videoList: {
@@ -82,18 +94,43 @@ export default {
       require: true,
     },
   },
+  data() {
+    return {};
+  },
   methods: {
-    async toggleTileOpen(node, index) {
-      console.log("inde", index, node);
+    async toggleTitleOpen(node, index) {
+      console.log("1折叠展开index, node", index, node);
       //如果是叶子节点 就去请求节点下的视频
       if (node.isLeafNode == 1) {
         const vData = await getNodeVideo({ nodeId: node.id });
-        console.log("vData000", vData);
-        this.$emit("update-video-list", vData, index);
+        console.log("1视频列表vData000", vData);
+        this.$emit("updateVideoListOne", vData, index); //子节点没有触发emit
+      } else {
+        this.$emit("updateVideoListTwo", index);
       }
     },
-    goStudy(node, item) {
-      this.studyVideoPid = node.id;
+    async emitVideoListOne(node, index) {
+      console.log("2折叠展开index, node", index, node);
+      if (node.isLeafNode == 1) {
+        const vData = await getNodeVideo({ nodeId: node.id });
+        console.log("2视频列表vData000", vData);
+        this.$emit("updateVideoListOne", vData, index);
+      } else {
+        this.$emit("updateVideoListTwo", index);
+      }
+    },
+    async emitVideoListTwo(node, index) {
+      console.log("3折叠展开index, node", index, node);
+      if (node.isLeafNode == 1) {
+        const vData = await getNodeVideo({ nodeId: node.id });
+        console.log("3视频列表vData000", vData);
+        this.$emit("updateVideoListOne", vData, index);
+      } else {
+        this.$emit("updateVideoListTwo", index);
+      }
+    },
+    goStudy(node, item, index) {
+      this.$emit("updateClickInfo", node.id, index);
       this.toNav(
         `/pages/frank/webview?videoId=${item.vodVideoId}&id=${item.id}&vName=${item.videoFullName}&pTime=${item.publishTime}&cover=${item.videoImageUrl}&playTimes=${item.playTimes}&currTime=${item.currTime}`
       );

@@ -26,104 +26,12 @@
     </view>
 
     <!-- 课程大纲内容 -->
-    <!-- <view
-      v-else
-      v-for="(item, index) in videoList"
-      class="box_tree"
-      :key="item.id"
-    >
-      <view class="title">
-        <view class="t_left" @click="toggleTileOpen(index)">
-          <view>
-            <image
-              v-if="item.isOpen"
-              :src="imageBaseUrl + '/frank/8-7-25.png'"
-              mode=""
-            ></image>
-            <image
-              v-else
-              :src="imageBaseUrl + '/frank/8-7-26.png'"
-              mode=""
-            ></image>
-            <text class="t-color-2A67D2 t-size-3">{{ item.nodeName }}</text>
-          </view>
-          <view class="topOpen">
-            <view
-              @click="toggleTopOpen(index)"
-              class="button3"
-              v-if="item.topIsOpen"
-            >
-              <image :src="imageBaseUrl + '/frank/8-7-29.png'" mode=""></image>
-              <text> 展开 </text>
-            </view>
-            <view @click="toggleTopClose(index)" class="button3" v-else>
-              <image :src="imageBaseUrl + '/frank/8-7-28.png'" mode=""></image>
-              <text> 收起 </text>
-            </view>
-          </view>
-        </view>
-        <view class="t_right"> </view>
-      </view>
-      <view v-if="item.isOpen">
-        <view
-          class="box_cont"
-          v-for="(item2, index2) in item.children"
-          :key="item2.id"
-        >
-          <view class="cont_title">
-            <view class="flex" @click="toggleContOpen(index, index2)">
-              <image
-                v-if="item2.isOpen"
-                :src="imageBaseUrl + '/frank/8-7-25.png'"
-                mode=""
-              ></image>
-              <image
-                v-else
-                :src="imageBaseUrl + '/frank/8-7-26.png'"
-                mode=""
-              ></image>
-              <view class="font-w-500 t-size-30">{{ item2.nodeName }}</view>
-            </view>
-          </view>
-          <view class="border"></view>
-          <view v-if="item2.isOpen">
-            <view
-              v-for="item3 in item2.children"
-              :key="item3.id"
-              class="box_video"
-            >
-              <view @click="goStudy(item2, item3)" class="video_title">
-                <view class="flex align-item-center">
-                  <image :src="imageBaseUrl + '/frank/8-7-27.png'"></image>
-                  <view class="font-w-500 t-size-30 w-320">{{
-                    item3.videoName
-                  }}</view>
-                </view>
-                <text
-                  v-if="item3.studyStatusText == '已学'"
-                  class="t-color-43A71C t-size-26 font-w-5"
-                  >·{{ item3.studyStatusText }}</text
-                >
-                <text
-                  v-else-if="item3.studyStatusText == '学习中'"
-                  class="t-color-FFAB2D t-size-26 font-w-5"
-                  >·{{ item3.studyStatusText }}</text
-                >
-                <text v-else class="t-color-636363 t-size-26 font-w-5"
-                  >·{{ item3.studyStatusText }}</text
-                >
-              </view>
-              <view class="border"></view>
-            </view>
-          </view>
-        </view>
-      </view>
-    </view> -->
-
     <tree-view
       v-else
       :videoList="videoList"
-      @update-video-list="handleUpdateVideoList"
+      @updateVideoListOne="handleUpdateVideoListOne"
+      @updateVideoListTwo="handleUpdateVideoListTwo"
+      @updateClickInfo="handeleUpdateClickInfo"
     ></tree-view>
   </view>
 </template>
@@ -131,7 +39,7 @@
 <script>
 import { getCourseOutline, getNodeVideo } from "@/api/frank";
 import MyMixin from "@/utils/MyMixin";
-import TreeView from "./tree-view.vue";
+import TreeView from "../cube/tree-view.vue";
 
 export default {
   mixins: [MyMixin],
@@ -148,7 +56,7 @@ export default {
       videoList: [],
       videoPId: null, //获取视频
       studyVideoPid: null, //被点击的视频节点id
-      topIndex: 0, ////
+      studyVideoIndex: null, //被点击视频的根索引
     };
   },
   onPageScroll(e) {
@@ -165,8 +73,6 @@ export default {
     // this.getInitNodeVideo();
   },
   onShow() {
-    console.log("666666666666666666");
-
     // 刷新刚学习的视频状态
     // this.videoList.forEach((item) => {
     //   if (!item.isOpen) return;
@@ -178,18 +84,16 @@ export default {
     //   });
     // });
     this.videoList.forEach(async (item, index) => {
-      if (index == this.topIndex) {
-        console.log("index", index, this.topIndex);
+      if (index == this.studyVideoIndex && item.isLeafNode) {
         const vData = await getNodeVideo({ nodeId: item.id });
-        console.log("vData00000666888", vData);
+        console.log("刷新vData00000", vData);
         this.videoList[index].vList = vData.data.result;
-        this.videoList = [...this.videoList];
       }
     });
+    this.videoList = [...this.videoList];
   },
   methods: {
-    async handleUpdateVideoList(vData, index) {
-      console.log("vdata自组举荐的", vData);
+    async handleUpdateVideoListOne(vData, index) {
       this.$set(this.videoList, index, {
         ...this.videoList[index],
         isOpen: !this.videoList[index].isOpen,
@@ -201,7 +105,24 @@ export default {
         this.videoList[index].topIsOpen = true;
       }
       this.videoList = [...this.videoList];
-      console.log("展开收起videoList", this.videoList);
+      console.log("this.videoList", this.videoList);
+    },
+    handleUpdateVideoListTwo(index) {
+      this.$set(this.videoList, index, {
+        ...this.videoList[index],
+        isOpen: !this.videoList[index].isOpen,
+      });
+      if (this.videoList[index].isOpen) {
+        this.videoList[index].topIsOpen = false;
+      } else {
+        this.videoList[index].topIsOpen = true;
+      }
+      this.videoList = [...this.videoList];
+      console.log("this.videoList", this.videoList);
+    },
+    handeleUpdateClickInfo(vPid, index) {
+      this.studyVideoPid = vPid;
+      this.studyVideoIndex = index;
     },
     toNav(url) {
       uni.navigateTo({ url });
@@ -210,9 +131,6 @@ export default {
       const res = await getCourseOutline({ rootNodeCode: this.query.nodeCode });
       this.introduce = res.data.result[0].nodeContent;
       this.videoList = res.data.result[0].children;
-      //测试数据///
-      // this.videoList[0].children = [{ id: "10086", nodeName: "cxk" }];
-      // this.videoList = [...this.videoList];
 
       // this.videoList.forEach((item, index) => {
       //   if (index == this.query.clickIndex) {

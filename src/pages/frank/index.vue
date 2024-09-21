@@ -4,6 +4,8 @@
       <view class="t-size-30">小礼AI极简英语</view>
     </cy-navbar>
 
+    <view @click="toNav('/pages/frank/courseOutline')"> 555 </view>
+
     <view class="frank_en">
       <view class="frank_left">
         <image :src="imageBaseUrl + '/frank/8-28-02.png'" mode=""></image>

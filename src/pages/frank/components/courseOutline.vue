@@ -26,13 +26,21 @@
     </view>
 
     <!-- 课程大纲内容 -->
-    <tree-view
-      v-else
+    <view v-else>
+      <view v-for="item in videoList" :key="item.id" class="box_tree">
+        <tree-view
+          :node="item"
+          @updateVideoList="handeleUpdateVideoList"
+        ></tree-view>
+      </view>
+    </view>
+
+    <!-- <tree-view
       :videoList="videoList"
       @updateVideoListOne="handleUpdateVideoListOne"
       @updateVideoListTwo="handleUpdateVideoListTwo"
       @updateClickInfo="handeleUpdateClickInfo"
-    ></tree-view>
+    ></tree-view> -->
   </view>
 </template>
 
@@ -93,19 +101,56 @@ export default {
     this.videoList = [...this.videoList];
   },
   methods: {
-    async handleUpdateVideoListOne(vData, index, node) {
+    //递归找到需要添加视频列表的节点
+    addVListToNode(tree, targetId, vList) {
+      for (const node of tree) {
+        if (node.id === targetId) {
+          node.vList = vList; //添加视频列表
+          return true;
+        }
+        if (node.children && node.children.length > 0) {
+          const found = this.addVListToNode(node.children, targetId, vList);
+          if (found) return true;
+        }
+      }
+      return false;
+    },
+    //刷新videoList的视频列表
+    handeleUpdateVideoList(vData, nodeId) {
+      console.log("父组件收到的vdata nodeId", vData, nodeId);
+      this.addVListToNode(this.videoList, nodeId, vData.data.result);
+      console.log("list111111", this.videoList);
+      this.videoList = [...this.videoList];
+    },
+
+    //更新isopen + vList
+    async handleUpdateVideoListOne(vData, index) {
+      // console.log("handleUpdateVideoListOne", vData, index);
       this.$set(this.videoList, index, {
         ...this.videoList[index],
         isOpen: !this.videoList[index].isOpen,
         vList: vData.data.result,
       });
-
       if (this.videoList[index].isOpen) {
         this.videoList[index].topIsOpen = false;
       } else {
         this.videoList[index].topIsOpen = true;
       }
-
+      this.videoList = [...this.videoList];
+      console.log("父组件修改this.videoList", this.videoList);
+    },
+    //更新isopen
+    handleUpdateVideoListTwo(index) {
+      // console.log("handleUpdateVideoListTwo", index);
+      this.$set(this.videoList, index, {
+        ...this.videoList[index],
+        isOpen: !this.videoList[index].isOpen,
+      });
+      if (this.videoList[index].isOpen) {
+        this.videoList[index].topIsOpen = false;
+      } else {
+        this.videoList[index].topIsOpen = true;
+      }
       this.videoList = [...this.videoList];
       console.log("父组件修改this.videoList", this.videoList);
     },
@@ -115,23 +160,6 @@ export default {
       } else {
         this.handleClickOpenItem(node);
       }
-    },
-    handleUpdateVideoListTwo(index, node) {
-      console.log("zytttt", node);
-
-      // this.$set(this.videoList, index, {
-      //   ...this.videoList[index],
-      //   isOpen: !this.videoList[index].isOpen,
-      // });
-
-      // if (this.videoList[index].isOpen) {
-      //   this.videoList[index].topIsOpen = false;
-      // } else {
-      //   this.videoList[index].topIsOpen = true;
-      // }
-
-      // this.videoList = [...this.videoList];
-      console.log("父组件修改this.videoList", this.videoList);
     },
     handeleUpdateClickInfo(vPid, index) {
       this.studyVideoPid = vPid;

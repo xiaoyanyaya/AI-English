@@ -40,7 +40,7 @@
           v-if="node.isOpen"
           :videoList="node.children"
           @updateVideoListOne="emitVideoListOne(node.children, index)"
-          @updateVideoListTwo="emitVideoListTwo(node.children, index)"
+          @updateVideoListTwo="emitVideoListTwo()"
         ></cube-node>
       </view>
 
@@ -99,35 +99,39 @@ export default {
   },
   methods: {
     async toggleTitleOpen(node, index) {
-      console.log("1折叠展开index, node", index, node);
+      console.log("toggleTitleOpen", node, index);
       //如果是叶子节点 就去请求节点下的视频
       if (node.isLeafNode == 1) {
+        console.log("如果是叶子节点 就去请求节点下的视频");
         const vData = await getNodeVideo({ nodeId: node.id });
-        console.log("1视频列表vData000", vData);
-        this.$emit("updateVideoListOne", vData, index); //子节点没有触发emit
+        this.$emit("updateVideoListOne", vData, index, node); //子节点没有触发emit
       } else {
-        this.$emit("updateVideoListTwo", index);
+        // 节点数组
+        this.$emit("updateVideoListTwo", index, node);
       }
     },
     async emitVideoListOne(node, index) {
+      console.log("test", node[index]);
       console.log("2折叠展开index, node", index, node);
       if (node.isLeafNode == 1) {
         const vData = await getNodeVideo({ nodeId: node.id });
         console.log("2视频列表vData000", vData);
         this.$emit("updateVideoListOne", vData, index);
       } else {
-        this.$emit("updateVideoListTwo", index);
+        this.$emit("updateVideoListTwo", index, node[index]);
       }
     },
-    async emitVideoListTwo(node, index) {
-      console.log("3折叠展开index, node", index, node);
-      if (node.isLeafNode == 1) {
-        const vData = await getNodeVideo({ nodeId: node.id });
-        console.log("3视频列表vData000", vData);
-        this.$emit("updateVideoListOne", vData, index);
-      } else {
-        this.$emit("updateVideoListTwo", index);
-      }
+    // async emitVideoListTwo(node, index) {
+    async emitVideoListTwo(item) {
+      // console.log("3折叠展开index, node", index, node);
+      console.log("333item", item);
+      // if (node.isLeafNode == 1) {
+      //   const vData = await getNodeVideo({ nodeId: node.id });
+      //   console.log("3视频列表vData000", vData);
+      //   this.$emit("updateVideoListOne", vData, index);
+      // } else {
+      //   this.$emit("updateVideoListTwo", index);
+      // }
     },
     goStudy(node, item, index) {
       this.$emit("updateClickInfo", node.id, index);

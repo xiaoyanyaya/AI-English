@@ -93,32 +93,45 @@ export default {
     this.videoList = [...this.videoList];
   },
   methods: {
-    async handleUpdateVideoListOne(vData, index) {
+    async handleUpdateVideoListOne(vData, index, node) {
       this.$set(this.videoList, index, {
         ...this.videoList[index],
         isOpen: !this.videoList[index].isOpen,
         vList: vData.data.result,
       });
+
       if (this.videoList[index].isOpen) {
         this.videoList[index].topIsOpen = false;
       } else {
         this.videoList[index].topIsOpen = true;
       }
+
       this.videoList = [...this.videoList];
-      console.log("this.videoList", this.videoList);
+      console.log("父组件修改this.videoList", this.videoList);
     },
-    handleUpdateVideoListTwo(index) {
-      this.$set(this.videoList, index, {
-        ...this.videoList[index],
-        isOpen: !this.videoList[index].isOpen,
-      });
-      if (this.videoList[index].isOpen) {
-        this.videoList[index].topIsOpen = false;
+    // 处理点击的open
+    handleClickOpenItem(node, index, totalNum) {
+      if (num === totalNum - 1) {
       } else {
-        this.videoList[index].topIsOpen = true;
+        this.handleClickOpenItem(node);
       }
-      this.videoList = [...this.videoList];
-      console.log("this.videoList", this.videoList);
+    },
+    handleUpdateVideoListTwo(index, node) {
+      console.log("zytttt", node);
+
+      // this.$set(this.videoList, index, {
+      //   ...this.videoList[index],
+      //   isOpen: !this.videoList[index].isOpen,
+      // });
+
+      // if (this.videoList[index].isOpen) {
+      //   this.videoList[index].topIsOpen = false;
+      // } else {
+      //   this.videoList[index].topIsOpen = true;
+      // }
+
+      // this.videoList = [...this.videoList];
+      console.log("父组件修改this.videoList", this.videoList);
     },
     handeleUpdateClickInfo(vPid, index) {
       this.studyVideoPid = vPid;
@@ -127,10 +140,23 @@ export default {
     toNav(url) {
       uni.navigateTo({ url });
     },
+    assignParentIndex(nodes, parentIndex = []) {
+      nodes.forEach((node, index) => {
+        node.parentIndex = [...parentIndex, index];
+
+        if (node.children && node.children.length > 0) {
+          this.assignParentIndex(node.children, node.parentIndex);
+        }
+      });
+
+      console.log("格式化数据", this.videoList);
+    },
     async getCourseOutline() {
       const res = await getCourseOutline({ rootNodeCode: this.query.nodeCode });
       this.introduce = res.data.result[0].nodeContent;
       this.videoList = res.data.result[0].children;
+      // 格式化
+      this.assignParentIndex(this.videoList);
 
       // this.videoList.forEach((item, index) => {
       //   if (index == this.query.clickIndex) {

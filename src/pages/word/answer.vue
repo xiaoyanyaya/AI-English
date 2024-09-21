@@ -371,11 +371,13 @@ export default {
       bookId = uni.getStorageSync("basicData").currWordConfig.dictBook.id; //-->单词挑战赛页-考纲挑战
       path = `/pages/word/chanllenge/wordList?bookId=${bookId}&isReturnHome=1`;
     }
+    // 获取userInfo
+    const userInfo = this.$store.state.userInfo;
     if (res.from === "button") {
       // 来自页面内分享按钮
       console.log(res.target);
       return {
-        title: "单词列表",
+        title: `${userInfo.nickName}的听写榜，快来试试吧`,
         path,
       };
     }

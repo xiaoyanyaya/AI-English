@@ -367,12 +367,9 @@ export default {
     network() {
       return {
         getChatInit: async (sceneId) => {
-          setTimeout(() => {
-            console.log("显示连接")
-            uni.showLoading({
-              title: '正在连接...'
-            })
-          }, 1000)
+          uni.showLoading({
+            title: '正在连接...'
+          })
 
           let res;
           if (sceneId) {

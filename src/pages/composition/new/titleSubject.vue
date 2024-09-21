@@ -194,11 +194,10 @@
 </template>
 
 <script>
+import {getAiVoiceResult, getChatInit, saveVoiceText} from "@/api/aiDialogue";
 import {
   addCompositionCollect,
   getCompositionCollectInfo,
-  getCompositionDictList,
-  getPhotoRecognition
 } from "@/api/composition";
 import {apiDomain} from "@/configs/env";
 import store from '@/store/';
@@ -528,6 +527,15 @@ export default {
       this.popupContnet[parentIndex].activeIndex = index;
     },
     clickBtn() {
+      // 检测会员是否过期
+      getChatInit().then(res => {
+        if (res.code !== 10500) {
+          this.aiCorrection()
+        }
+      })
+    },
+    // 执行AI
+    aiCorrection() {
       if (this.btnTitle == '分享') {
         uni.share
         return;
@@ -610,6 +618,14 @@ export default {
       })
     },
     getPhotoRecognition(tempFilePath, type) {
+      // 检测会员是否过期
+      getChatInit().then(res => {
+        if (res.code !== 10500) {
+          this.ocrPhotos(tempFilePath, type)
+        }
+      })
+    },
+    ocrPhotos(tempFilePath, type) {
       var _this = this;
       uni.uploadFile({
         url: `https://wapi-dev.aien.xiaolixb.com/v1/ocr/record/serviceByFile`,

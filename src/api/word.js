@@ -174,6 +174,14 @@ export const queryChallengeByMyself = (params) =>
 export const queryLetterList = (params) =>
   fly.get("/word/dict/queryLetterList", params);
 
-// 更具教材id查询教材详情
+// 根据教材id查询教材详情
 export const queryBookInfo = (params) =>
   fly.get("/word/book/queryById", params);
+
+//查询复习记录
+export const queryStudyReport = (params) =>
+  fly.get("/word/review/getUserReviewList", params);
+
+//某个复习记录详情
+export const queryStudyReportDetail = (params) =>
+  fly.get("/word/review/queryById", params);

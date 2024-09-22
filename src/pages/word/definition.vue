@@ -618,6 +618,7 @@ export default {
 }
 
 .controllerItem {
+  padding: 15rpx;
   text-align: center;
   font-size: 24rpx;
   color: #8a8a8a;

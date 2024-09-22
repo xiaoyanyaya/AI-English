@@ -160,6 +160,9 @@
           "path": "reverseForgetting/wrongWords"
         },
         {
+          "path": "reverseForgetting/studyReport"
+        },
+        {
           "path": "chanllenge/index"
         },
         {
@@ -167,6 +170,9 @@
         },
         {
           "path": "reverseForgetting/reviewCourse"
+        },
+        {
+          "path": "webview"
         }
       ]
     },

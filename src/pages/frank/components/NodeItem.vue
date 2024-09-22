@@ -3,7 +3,7 @@
     <div @click="toggleChildren" style="cursor: pointer;">
       {{ node.nodeName }} <span v-if="hasChildren">[{{ isOpen ? '-' : '+' }}]</span>
     </div>
-    <div v-if="isOpen && node.children && node.children.length > 0">
+    <div v-if="isOpen && hasChildren">
       <div v-for="child in node.children" :key="child.id">
         <NodeItem :node="child" />
       </div>
@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { getNodeVideo } from "@/api/frank";
 import NodeItem from './NodeItem.vue';
 
 export default {
@@ -27,17 +28,30 @@ export default {
   },
   data() {
     return {
-      isOpen: false // 用于控制子节点的展开和收起
+      isOpen: false // 控制子节点的展开和收起
     };
   },
   computed: {
     hasChildren() {
-      return this.node.children && this.node.children.length > 0;
+      console.log("执行判断hasChildren")
+      return this.node.children && this.node.children.length > 0 || this.node.videoNum == 0;
     }
   },
   methods: {
-    toggleChildren() {
-      this.isOpen = !this.isOpen; // 切换展开状态
+    async toggleChildren() {
+      // 如果是最后一级节点，请求视频列表
+      if (this.node.children.length === 0) {
+        await this.getVideoList(); // 请求视频列表并等待结果
+      }
+
+      this.isOpen = true; // 切换展开状态
+      // 判断是否有子节点
+      console.log("this.node", this.node)
+    },
+    async getVideoList() {
+      // 请求视频列表 并放入对应的节点中
+      const res = await getNodeVideo({ nodeId: this.node.id });
+      this.$set(this.node, 'children', res.data.result);
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <view class="main">
     <cy-navbar :showBack="false" :bgColor="backColor" textColor="#3D3D3D">
-      <view class="t-size-30">Frank英语</view>
+      <view class="t-size-30">小礼AI极简英语</view>
     </cy-navbar>
 
     <view class="frank_en">
@@ -12,7 +12,7 @@
         <view class="t-color-1863E5 t-size-30">Frank英语介绍</view>
         <view class="t-size-22 f-w-5">
           <view>· 一朝掌握方法</view>
-          <view>· 一生远离补习</view>
+          <view class="mt-1">· 一生远离补习</view>
         </view>
         <view @click="toNav('/pages/frank/frankDetail')" class="frank_buton">
           <text class="mr-1">点击查看详情</text>
@@ -27,7 +27,7 @@
           class="circle"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${introduceCirList.nodeCode}&nodeName=${introduceCirList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${introduceCirList.nodeCode}&nodeName=${introduceCirList.nodeName}&clickIndex=0`
             )
           "
         >
@@ -42,7 +42,7 @@
           class="circle"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${introduceCirList.nodeCode}&nodeName=${introduceCirList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${introduceCirList.nodeCode}&nodeName=${introduceCirList.nodeName}&clickIndex=1`
             )
           "
         >
@@ -57,7 +57,7 @@
           class="circle"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${introduceCirList.nodeCode}&nodeName=${introduceCirList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${introduceCirList.nodeCode}&nodeName=${introduceCirList.nodeName}&clickIndex=2`
             )
           "
         >
@@ -98,7 +98,7 @@
           class="box"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemOneList.nodeCode}&nodeName=${courseSystemOneList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${courseSystemOneList.nodeCode}&nodeName=${courseSystemOneList.nodeName}&clickIndex=0`
             )
           "
         >
@@ -111,7 +111,7 @@
           class="box"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemOneList.nodeCode}&nodeName=${courseSystemOneList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${courseSystemOneList.nodeCode}&nodeName=${courseSystemOneList.nodeName}&clickIndex=1`
             )
           "
         >
@@ -126,7 +126,7 @@
           class="box"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemOneList.nodeCode}&nodeName=${courseSystemOneList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${courseSystemOneList.nodeCode}&nodeName=${courseSystemOneList.nodeName}&clickIndex=2`
             )
           "
         >
@@ -139,7 +139,7 @@
           class="box"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemOneList.nodeCode}&nodeName=${courseSystemOneList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${courseSystemOneList.nodeCode}&nodeName=${courseSystemOneList.nodeName}&clickIndex=3`
             )
           "
         >
@@ -162,7 +162,7 @@
           class="box"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemTwoList.nodeCode}&nodeName=${courseSystemTwoList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${courseSystemTwoList.nodeCode}&nodeName=${courseSystemTwoList.nodeName}&clickIndex=0`
             )
           "
         >
@@ -175,7 +175,7 @@
           class="box"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemTwoList.nodeCode}&nodeName=${courseSystemTwoList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${courseSystemTwoList.nodeCode}&nodeName=${courseSystemTwoList.nodeName}&clickIndex=1`
             )
           "
         >
@@ -190,7 +190,7 @@
           class="box"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemTwoList.nodeCode}&nodeName=${courseSystemTwoList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${courseSystemTwoList.nodeCode}&nodeName=${courseSystemTwoList.nodeName}&clickIndex=2`
             )
           "
         >
@@ -203,7 +203,7 @@
           class="box"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemTwoList.nodeCode}&nodeName=${courseSystemTwoList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${courseSystemTwoList.nodeCode}&nodeName=${courseSystemTwoList.nodeName}&clickIndex=3`
             )
           "
         >
@@ -226,7 +226,7 @@
           class="box"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemThrList.nodeCode}&nodeName=${courseSystemThrList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${courseSystemThrList.nodeCode}&nodeName=${courseSystemThrList.nodeName}&clickIndex=0`
             )
           "
         >
@@ -239,7 +239,7 @@
           class="box"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemThrList.nodeCode}&nodeName=${courseSystemThrList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${courseSystemThrList.nodeCode}&nodeName=${courseSystemThrList.nodeName}&clickIndex=1`
             )
           "
         >
@@ -254,7 +254,7 @@
           class="box"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemThrList.nodeCode}&nodeName=${courseSystemThrList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${courseSystemThrList.nodeCode}&nodeName=${courseSystemThrList.nodeName}&clickIndex=2`
             )
           "
         >
@@ -267,7 +267,7 @@
           class="box"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemThrList.nodeCode}&nodeName=${courseSystemThrList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${courseSystemThrList.nodeCode}&nodeName=${courseSystemThrList.nodeName}&clickIndex=3`
             )
           "
         >
@@ -279,7 +279,7 @@
       </view>
     </view>
     <!-- 秘籍课程 -->
-    <view class="bag_box">
+    <!-- <view class="bag_box">
       <view class="mb_title">
         <view class="bu"></view>
         <text class="text">{{ secretCourseBagList.nodeName }}</text>
@@ -289,7 +289,7 @@
           class="box"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${secretCourseBagList.nodeCode}&nodeName=${secretCourseBagList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${secretCourseBagList.nodeCode}&nodeName=${secretCourseBagList.nodeName}&clickIndex=0`
             )
           "
         >
@@ -299,7 +299,7 @@
           class="box"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${secretCourseBagList.nodeCode}&nodeName=${secretCourseBagList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${secretCourseBagList.nodeCode}&nodeName=${secretCourseBagList.nodeName}&clickIndex=1`
             )
           "
         >
@@ -309,7 +309,7 @@
           class="box"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${secretCourseBagList.nodeCode}&nodeName=${secretCourseBagList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${secretCourseBagList.nodeCode}&nodeName=${secretCourseBagList.nodeName}&clickIndex=2`
             )
           "
         >
@@ -321,7 +321,7 @@
           class="box"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${secretCourseBagList.nodeCode}&nodeName=${secretCourseBagList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${secretCourseBagList.nodeCode}&nodeName=${secretCourseBagList.nodeName}&clickIndex=3`
             )
           "
         >
@@ -331,7 +331,7 @@
           class="box"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${secretCourseBagList.nodeCode}&nodeName=${secretCourseBagList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${secretCourseBagList.nodeCode}&nodeName=${secretCourseBagList.nodeName}&clickIndex=4`
             )
           "
         >
@@ -341,16 +341,16 @@
           class="box"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${secretCourseBagList.nodeCode}&nodeName=${secretCourseBagList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${secretCourseBagList.nodeCode}&nodeName=${secretCourseBagList.nodeName}&clickIndex=5`
             )
           "
         >
           <image :src="imageBaseUrl + '/frank/8-7-14.png'" mode=""></image>
         </view>
       </view>
-    </view>
+    </view> -->
     <!-- 学段提分 -->
-    <view class="bag_box">
+    <!-- <view class="bag_box">
       <view class="mb_title">
         <view class="bu"></view>
         <text class="text">{{ leaningIncreaseList.nodeName }}</text>
@@ -360,7 +360,7 @@
           class="box1"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${leaningIncreaseList.nodeCode}&nodeName=${introduceCirList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${leaningIncreaseList.nodeCode}&nodeName=${introduceCirList.nodeName}&clickIndex=0`
             )
           "
         >
@@ -371,7 +371,7 @@
           class="box2"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${leaningIncreaseList.nodeCode}&nodeName=${introduceCirList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${leaningIncreaseList.nodeCode}&nodeName=${introduceCirList.nodeName}&clickIndex=1`
             )
           "
         >
@@ -382,7 +382,7 @@
           class="box3"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${leaningIncreaseList.nodeCode}&nodeName=${introduceCirList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${leaningIncreaseList.nodeCode}&nodeName=${introduceCirList.nodeName}&clickIndex=2`
             )
           "
         >
@@ -395,7 +395,7 @@
           class="box4"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${leaningIncreaseList.nodeCode}&nodeName=${introduceCirList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${leaningIncreaseList.nodeCode}&nodeName=${introduceCirList.nodeName}&clickIndex=3`
             )
           "
         >
@@ -406,7 +406,7 @@
           class="box5"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${leaningIncreaseList.nodeCode}&nodeName=${introduceCirList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${leaningIncreaseList.nodeCode}&nodeName=${introduceCirList.nodeName}&clickIndex=4`
             )
           "
         >
@@ -417,7 +417,7 @@
           class="box6"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${leaningIncreaseList.nodeCode}&nodeName=${introduceCirList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${leaningIncreaseList.nodeCode}&nodeName=${introduceCirList.nodeName}&clickIndex=5`
             )
           "
         >
@@ -430,7 +430,7 @@
           class="box7"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${leaningIncreaseList.nodeCode}&nodeName=${introduceCirList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${leaningIncreaseList.nodeCode}&nodeName=${introduceCirList.nodeName}&clickIndex=6`
             )
           "
         >
@@ -441,7 +441,7 @@
           class="box8"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${leaningIncreaseList.nodeCode}&nodeName=${introduceCirList.nodeName}`
+              `/pages/frank/components/courseOutline?nodeCode=${leaningIncreaseList.nodeCode}&nodeName=${introduceCirList.nodeName}&clickIndex=7`
             )
           "
         >
@@ -450,7 +450,7 @@
         </view>
         <view class="box9"> </view>
       </view>
-    </view>
+    </view> -->
     <!-- 学习足迹 -->
     <view @click="toNav('/pages/frank/leaningFoot')" class="imgs">
       <image :src="imageBaseUrl + '/frank/8-7-21.png'" mode=""></image>
@@ -497,11 +497,11 @@ export default {
     async getCourseSystem() {
       const res = await getCourseSystem(this.rootNodeCode);
       this.introduceCirList = res.data.result[0].children[0];
-      this.courseSystemOneList = res.data.result[0].children[1];
-      this.courseSystemTwoList = res.data.result[0].children[2];
-      this.courseSystemThrList = res.data.result[0].children[3];
-      this.secretCourseBagList = res.data.result[0].children[4];
-      this.leaningIncreaseList = res.data.result[0].children[5];
+      this.courseSystemOneList = res.data.result[0].children[1].children[0];
+      this.courseSystemTwoList = res.data.result[0].children[1].children[1];
+      this.courseSystemThrList = res.data.result[0].children[1].children[2];
+      // this.secretCourseBagList = res.data.result[0].children[4];
+      // this.leaningIncreaseList = res.data.result[0].children[5];
       console.log("000", res.data.result[0]);
     },
   },
@@ -539,10 +539,10 @@ export default {
         display: flex;
         justify-content: center;
         width: 230rpx;
-        height: 46rpx;
-        line-height: 46rpx;
+        height: 50rpx;
+        line-height: 50rpx;
         text-align: center;
-        font-size: 20rpx;
+        font-size: 23rpx;
         color: #fff;
         border-radius: 163rpx;
         background: linear-gradient(180deg, #5a95fb 0%, #1258d0 100%);

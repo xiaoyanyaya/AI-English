@@ -24,9 +24,7 @@
       <!-- 单词列表 -->
       <view class="list">
         <view v-if="id == 3" class="noforget_box">
-          <view class="left">
-            {{ getNameWithEllipsis(allData.lessonName, 14) }}
-          </view>
+          <view class="left">{{ allData.lessonName }}</view>
           <view class="right">
             <view class="r_top">
               {{ allData.createTime }}
@@ -259,7 +257,9 @@ export default {
         (this.pageType ? this.pageType : "") +
         "&bookId=" +
         (this.id == 1 ? this.lessonId : this.allData.id);
-      this.toNav(urls);
+      uni.redirectTo({
+        url: urls,
+      });
     },
     async getWord() {
       uni.setStorageSync("nowUnitId", this.query.unitId);
@@ -400,6 +400,10 @@ export default {
       .left {
         font-size: 40rpx;
         color: #1863e5;
+        width: 295rpx;
+        overflow: hidden; /* 溢出部分隐藏 */
+        text-overflow: ellipsis; /* 超出部分用省略号代替 */
+        white-space: nowrap; /* 禁止换行 */
       }
       .right {
         display: flex;

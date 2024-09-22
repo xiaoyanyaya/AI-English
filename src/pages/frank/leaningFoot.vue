@@ -29,12 +29,19 @@
     <scroll-view @scrolltolower="onScrolltolower" scroll-y>
       <view class="v_list">
         <view v-for="(item, index) in videoList" :key="item.id" class="v_item">
-          <view class="image">
+          <view
+            @click="
+              toNav(
+                `/pages/frank/webview?videoId=${item.vodVideoId}&id=${item.id}&vName=${item.videoFullName}&pTime=${item.publishTime}&cover=${item.videoImageUrl}&playTimes=${item.playTimes}&currTime=${item.currTime}`
+              )
+            "
+            class="image"
+          >
             <image :src="item.videoImageUrl" mode=""></image>
           </view>
           <view class="r_content">
             <view class="flex mt-2">
-              {{ item.videoFullName }}
+              <text>{{ item.videoFullName }}</text>
               <image
                 class="ml-1"
                 v-if="index == 0 || index == 1"
@@ -109,6 +116,9 @@ export default {
       this.pagingParams.pageNo++;
       this.getUserPayList();
     },
+    toNav(url) {
+      uni.navigateTo({ url });
+    },
   },
 };
 </script>
@@ -166,7 +176,6 @@ export default {
     .v_item {
       display: flex;
       width: 710rpx;
-      height: 228rpx;
       border-radius: 10rpx;
       background: #ffffff;
       margin-bottom: 20rpx;
@@ -180,8 +189,15 @@ export default {
         }
       }
       .r_content {
+        width: 300rpx;
+        position: relative;
         margin-left: 40rpx;
+        text {
+          width: 275rpx;
+        }
         image {
+          position: absolute;
+          right: 5rpx;
           width: 24rpx;
           height: 33rpx;
         }

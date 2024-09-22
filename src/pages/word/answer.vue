@@ -1,10 +1,9 @@
 <template>
   <view class="main">
     <cy-navbar
-      @customBack="returnCustom"
-      customBack
       :showBack="true"
       :bgColor="backColor"
+      :isReturnHome="isReturnHome"
       textColor="#3D3D3D"
     >
       <view class="t-size-30">答题结果</view>
@@ -24,13 +23,13 @@
     </view>
     <view class="head mt-1">
       <image
-        v-if="data.reviewResult == 0 || data.challengeResult == 0"
+        v-if="data.scoreLevel == 0"
         :src="imageBaseUrl + '/word/5-22-02.png'"
         mode="widthFix"
         :style="{ top: systemInfo.statusBarHeight + 'px' }"
       ></image>
       <image
-        v-if="data.reviewResult == 1 || data.challengeResult == 1"
+        v-if="data.scoreLevel == 1"
         :src="imageBaseUrl + '/word/5-22-03.png'"
         mode="widthFix"
         :style="{ top: systemInfo.statusBarHeight + 'px' }"
@@ -159,15 +158,18 @@
       <qiun type="column" :opts="opts" :chartData="chartData" />
     </view>
     <view class="button">
-      <view class="buttonLeft" @click="clickBtn(0)">
+      <view v-if="!isReturnHome" class="buttonLeft" @click="clickBtn(0)">
         <image :src="imageBaseUrl + '/word/5-21-26.png'" mode=""></image>
         {{ pageType === "chanllenge" ? "继续挑战" : "重新答题" }}
       </view>
-      <view class="buttonLeft" @click="clickBtn(1)">
+      <view v-if="!isReturnHome" class="buttonLeft" @click="clickBtn(1)">
         <u-icon name="home" size="32"></u-icon>
         <text style="margin-left: 10rpx">{{
           pageType === "chanllenge" ? "挑战列表" : "复习列表"
         }}</text>
+      </view>
+      <view @click="goTry" v-if="isReturnHome" class="share_try">
+        马上尝试！
       </view>
       <!-- <view v-if="pageType !== 'chanllenge'"
             class="buttonRight" @click="toNav('/pages/word/textbook?id='+wordType+'&bookId='+bookData.id)">
@@ -191,6 +193,7 @@ export default {
   },
   data() {
     return {
+      isReturnHome: 0,
       backColor: "transparent",
       tab: 0,
       chartData: {},
@@ -339,6 +342,7 @@ export default {
       bookId: "",
       unitOrLesson: "",
       nowUnitId: "",
+      sharePath: "",
     };
   },
   onReady() {
@@ -373,33 +377,55 @@ export default {
     }
     // 获取userInfo
     const userInfo = this.$store.state.userInfo;
+    const fromType = uni.getStorageSync("answerFromType");
     if (res.from === "button") {
       // 来自页面内分享按钮
       console.log(res.target);
       return {
         title: `${userInfo.nickName}的听写榜，快来试试吧`,
-        path,
+        path: `pages/word/answer?id=${this.id}&bookId=${this.bookId}&pageType=${this.pageType}&isReturnHome=1&fromType=${fromType}`,
       };
     }
   },
-  onLoad({ id, pageType, bookId }) {
-    console.log("id", id, "pageType", pageType, "bookId", bookId);
-    this.id = id;
-    this.pageType = pageType;
-    this.bookId = bookId;
-
+  onLoad(e) {
+    if (e.isReturnHome) {
+      this.isReturnHome = 1;
+      let bookId = "";
+      if (e.fromType == 0) {
+        bookId = uni.getStorageSync("basicData").currWordConfig.textBook.id; //教材单元列表
+        this.sharePath = `/pages/word/textbook?id=${e.fromType}&bookId=${bookId}&btnTitle=重新答题&isReturnHome=1`;
+      } else if (e.fromType == 1) {
+        bookId = uni.getStorageSync("basicData").currWordConfig.dictBook.id; //考纲单元列表
+        this.sharePath = `/pages/word/textbook?id=${e.fromType}&bookId=${bookId}&btnTitle=重新答题&isReturnHome=1`;
+      } else if (e.fromType == 2) {
+        bookId = uni.getStorageSync("basicData").currWordConfig.textBook.id; ////专题单元列表
+        this.sharePath = `/pages/word/textbook?id=${e.fromType}&bookId=${bookId}&btnTitle=重新答题&isReturnHome=1`;
+      } else if (e.fromType.split(",")[1] == 0) {
+        bookId = uni.getStorageSync("basicData").currWordConfig.textBook.id; //-->单词挑战赛页-教材挑战
+        this.sharePath = `/pages/word/chanllenge/wordList?bookId=${bookId}&isReturnHome=1`;
+      } else if (e.fromType.split(",")[1] == 1) {
+        bookId = uni.getStorageSync("basicData").currWordConfig.dictBook.id; //-->单词挑战赛页-考纲挑战
+        this.sharePath = `/pages/word/chanllenge/wordList?bookId=${bookId}&isReturnHome=1`;
+      }
+    }
+    this.id = e.id;
+    this.pageType = e.pageType;
+    this.bookId = e.bookId;
     this.getData();
     this.bookData = uni.getStorageSync("bookData");
     this.wordList = uni.getStorageSync("wordList");
     this.wordType = uni.getStorageSync("wordType");
     this.unitOrLesson = uni.getStorageSync("nowUnitOrLesson");
     this.nowUnitId = uni.getStorageSync("nowUnitId");
+    //判断用户是否关注公众号
+    // const ifWxmpUser = uni.getStorageSync("vuex").ifWxmpUser;
+    // console.log("ifWxmpUser000", ifWxmpUser);
+    // if (ifWxmpUser) return;
+    // this.toNav("/pages/word/webview");
   },
   methods: {
-    returnCustom() {
-      uni.navigateBack({
-        delta: 3,
-      });
+    goTry() {
+      uni.redirectTo({ url: this.sharePath });
     },
     clickBtn(type) {
       switch (type) {
@@ -420,13 +446,15 @@ export default {
         case 1:
           if (this.pageType !== "chanllenge") {
             // this.toNav('/pages/word/textbook?id=' + this.wordType + '&bookId=' + this.bookData.id)
-            uni.redirectTo({
-              url: "/pages/word/reverseForgetting/index",
-            });
+            // uni.redirectTo({
+            //   url: "/pages/word/reverseForgetting/index",
+            // });
+            this.toNav("/pages/word/reverseForgetting/index");
           } else {
-            uni.redirectTo({
-              url: "/pages/word/chanllenge/index",
-            });
+            // uni.redirectTo({
+            //   url: "/pages/word/chanllenge/index",
+            // });
+            this.toNav("/pages/word/chanllenge/index");
           }
           break;
       }
@@ -664,6 +692,18 @@ button::after {
   display: flex;
   justify-content: space-around;
   margin-top: 50rpx;
+}
+
+.share_try {
+  width: 200rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  border-radius: 80rpx;
+  text-align: center;
+  background-color: #659cfa;
+  color: #fff;
+  font-size: 26rpx;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 .buttonLeft {

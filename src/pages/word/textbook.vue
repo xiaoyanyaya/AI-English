@@ -392,6 +392,7 @@ export default {
     }
   },
   onShow() {
+    this.show = false;
     // 监听切换教材
     uni.$on("switchTextbook", ({ textBookId }) => {
       this.unitIndex = 0;
@@ -861,6 +862,7 @@ export default {
     @extend .box;
     width: 172rpx;
     border: 1rpx solid #1863e5;
+    margin-right: 30rpx;
 
     .image {
       width: 26rpx;
@@ -879,7 +881,6 @@ export default {
     border: 1rpx solid #1863e5 !important;
     background-color: #fff;
     padding: 0;
-    margin-left: 30rpx;
 
     .image {
       width: 30rpx;

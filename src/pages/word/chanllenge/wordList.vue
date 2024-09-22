@@ -169,11 +169,6 @@ export default {
         bookFullName: data.data.result.bookFullName,
       };
       uni.setStorageSync("wordList", result);
-      console.log(
-        "uni.getStorageSync('wordList')",
-        uni.getStorageSync("wordList")
-      );
-
       var urls =
         "/pages/word/dictation?id=" +
         data.data.result.id +
@@ -181,7 +176,7 @@ export default {
         data.data.result.lessonId +
         "&pageType=chanllenge&bookId=" +
         this.bookId;
-      this.toNav(urls);
+      uni.redirectTo({ url: urls });
     },
     toDefined(item) {
       this.setWordLessonDictList();

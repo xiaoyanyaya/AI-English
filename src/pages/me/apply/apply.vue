@@ -8,7 +8,7 @@
     </cy-navbar>
 
     <view class="flex align-item-center justify-content-center flex-direction-column">
-      <image :src="`${imageBaseUrl}/8-13-05.png`" mode="widthFix" class="main-image mb-5"></image>
+      <image :src="`${imageBaseUrl}/9-23-01.png`" mode="widthFix" class="main-image mb-5 ml-2"></image>
 
       <view class="t-color-3D3D3D t-size-36">会员已过期！</view>
       <view class="t-color-8A8A8A t-size-26 mt-2"></view>
@@ -58,7 +58,7 @@ export default {
 }
 
 .main-image {
-  width: 25%;
+  width: 30%;
   margin-top: 200rpx;
   margin-right: 50rpx;
 }

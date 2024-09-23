@@ -27,11 +27,12 @@
 
     <!-- 课程大纲内容 -->
     <view v-else>
-      <view v-for="item in videoList" :key="item.id" class="box_tree">
-        <tree-view
+      <view v-for="(item, index) in videoList" :key="item.id" class="box_tree">
+        <!-- <tree-view
           :node="item"
           @updateVideoList="handeleUpdateVideoList"
-        ></tree-view>
+        ></tree-view> -->
+        <tree-view :node="item" :index="index"></tree-view>
       </view>
     </view>
 
@@ -79,37 +80,47 @@ export default {
     this.navbarTitle = e.nodeName;
     await this.getCourseOutline();
     // this.getInitNodeVideo();
-  },
-  onShow() {
-    // 刷新刚学习的视频状态
-    // this.videoList.forEach((item) => {
-    //   if (!item.isOpen) return;
-    //   item.children.forEach(async (item2) => {
-    //     if (item2.id == this.studyVideoPid) {
-    //       const res = await getNodeVideo({ nodeId: item2.id });
-    //       item2.children = res.data.result;
-    //     }
-    //   });
-    // });
-    this.videoList.forEach(async (item, index) => {
-      if (index == this.studyVideoIndex && item.isLeafNode) {
-        const vData = await getNodeVideo({ nodeId: item.id });
-        console.log("刷新vData00000", vData);
-        this.videoList[index].vList = vData.data.result;
-      }
+    uni.$on("uniUpdateVideoList", (vData, nodeId) => {
+      console.log("监听收到的vdata nodeId", vData, nodeId);
+      this.studyVideoPid = nodeId;
+      this.addVListToNode(this.videoList, nodeId, vData.data?.result, 1);
+      this.videoList = [...this.videoList];
+      console.log("监听修改后的videoList", this.videoList);
     });
+    uni.$on("uniUpdateTopOpen", (index, flag) => {
+      console.log("监听到的index, flag", index, flag);
+      this.updataTopIsOpen([this.videoList[index]], flag);
+      this.videoList = [...this.videoList];
+      console.log("2监听修改后的videoList", this.videoList);
+    });
+  },
+  async onShow() {
+    // 刷新刚学习的视频状态
+    const vData = await getNodeVideo({ nodeId: this.studyVideoPid });
+    this.addVListToNode(
+      this.videoList,
+      this.studyVideoPid,
+      vData.data.result,
+      0
+    );
     this.videoList = [...this.videoList];
   },
   methods: {
     //递归找到需要添加视频列表的节点
-    addVListToNode(tree, targetId, vList) {
+    addVListToNode(tree, targetId, vList, onshow) {
       for (const node of tree) {
         if (node.id === targetId) {
-          node.vList = vList; //添加视频列表
+          if (vList) node.vList = vList; //添加视频列表
+          if (onshow) node.isOpen = !node.isOpen; //展开收起
           return true;
         }
         if (node.children && node.children.length > 0) {
-          const found = this.addVListToNode(node.children, targetId, vList);
+          const found = this.addVListToNode(
+            node.children,
+            targetId,
+            vList,
+            onshow
+          );
           if (found) return true;
         }
       }
@@ -120,7 +131,18 @@ export default {
       console.log("父组件收到的vdata nodeId", vData, nodeId);
       this.addVListToNode(this.videoList, nodeId, vData.data.result);
       console.log("list111111", this.videoList);
-      this.videoList = [...this.videoList];
+    },
+    updataTopIsOpen(items, flag) {
+      items.forEach(async (item) => {
+        item.isOpen = flag; // 设置当前项目的 isOpen 属性为 false
+        if (item.isLeafNode && !item.vList) {
+          const vData = await getNodeVideo({ nodeId: item.id });
+          item.vList = vData.data.result;
+        }
+        if (item.children && item.children.length > 0) {
+          this.updataTopIsOpen(item.children, flag); // 递归调用处理子项目
+        }
+      });
     },
 
     //更新isopen + vList
@@ -154,30 +176,18 @@ export default {
       this.videoList = [...this.videoList];
       console.log("父组件修改this.videoList", this.videoList);
     },
-    // 处理点击的open
-    handleClickOpenItem(node, index, totalNum) {
-      if (num === totalNum - 1) {
-      } else {
-        this.handleClickOpenItem(node);
-      }
-    },
-    handeleUpdateClickInfo(vPid, index) {
-      this.studyVideoPid = vPid;
-      this.studyVideoIndex = index;
-    },
     toNav(url) {
       uni.navigateTo({ url });
     },
     assignParentIndex(nodes, parentIndex = []) {
       nodes.forEach((node, index) => {
         node.parentIndex = [...parentIndex, index];
+        node.isOpen = false;
 
         if (node.children && node.children.length > 0) {
           this.assignParentIndex(node.children, node.parentIndex);
         }
       });
-
-      console.log("格式化数据", this.videoList);
     },
     async getCourseOutline() {
       const res = await getCourseOutline({ rootNodeCode: this.query.nodeCode });
@@ -185,85 +195,12 @@ export default {
       this.videoList = res.data.result[0].children;
       // 格式化
       this.assignParentIndex(this.videoList);
-
-      // this.videoList.forEach((item, index) => {
-      //   if (index == this.query.clickIndex) {
-      //     item.isOpen = true;
-      //     item.children.forEach((item2, index2) => {
-      //       if (index2 == 0) {
-      //         item2.isOpen = true;
-      //       } else {
-      //         item2.isOpen = false;
-      //       }
-      //     });
-      //   } else {
-      //     item.isOpen = false;
-      //     item.topIsOpen = true;
-      //     item.children.forEach((item2) => {
-      //       item2.isOpen = false;
-      //     });
-      //   }
-      // });
-      // this.videoPId = this.videoList[this.query.clickIndex].children[0].id;///
+      console.log("格式化数据", this.videoList);
     },
     async getInitNodeVideo() {
       const res = await getNodeVideo({ nodeId: this.videoPId });
       this.videoList[this.query.clickIndex].children[0].children =
         res.data.result;
-    },
-    goStudy(item2, item3) {
-      this.studyVideoPid = item2.id;
-      this.toNav(
-        `/pages/frank/webview?videoId=${item3.vodVideoId}&id=${item3.id}&vName=${item3.videoFullName}&pTime=${item3.publishTime}&cover=${item3.videoImageUrl}&playTimes=${item3.playTimes}&currTime=${item3.currTime}`
-      );
-    },
-    toggleTopOpen(index) {
-      this.$set(this.videoList[index], "topIsOpen", false);
-      this.$set(this.videoList[index], "isOpen", false);
-      this.videoList[index].children.forEach(async (item) => {
-        if (item.children?.length == 0) {
-          const res = await getNodeVideo({ nodeId: item.id });
-          item.children = res.data.result;
-        }
-        item.isOpen = true;
-        console.log("item.isopem", item.isOpen);
-      });
-      this.videoList = [...this.videoList];
-    },
-    toggleTopClose(index) {
-      this.$set(this.videoList[index], "topIsOpen", true);
-      this.$set(this.videoList[index], "isOpen", true);
-      this.videoList[index].children.forEach(async (item) => {
-        item.isOpen = false;
-        console.log("item.isopem", item.isOpen);
-      });
-      this.videoList = [...this.videoList];
-    },
-    toggleTileOpen(index) {
-      // this.videoList[index].isOpen = !this.videoList[index].isOpen;
-      // 使用 $set 更新
-      this.$set(this.videoList, index, {
-        ...this.videoList[index],
-        isOpen: !this.videoList[index].isOpen,
-      });
-      if (this.videoList[index].isOpen) {
-        this.videoList[index].topIsOpen = false;
-      } else {
-        this.videoList[index].topIsOpen = true;
-      }
-      this.videoList = [...this.videoList];
-    },
-    async toggleContOpen(index, index2) {
-      const target = this.videoList[index].children[index2];
-      this.$set(this.videoList[index].children, index2, {
-        ...target,
-        isOpen: !target.isOpen,
-      });
-      if (target.children?.length == 0) {
-        this.videoPId = target.id;
-        const res = await getNodeVideo({ nodeId: this.videoPId });
-        this.videoList[index].children[index2].children = res.data.result;
-      }
     },
   },
 };

@@ -3,9 +3,10 @@
     <!-- <view v-for="(node, index) in videoList" :key="node.id" class="box_tree"> -->
     <view class="title">
       <view class="t_left" @click="toggleChildren(node)">
-        <view>
+        <view :style="{ paddingLeft: node.parentIndex.length * 20 + 'rpx' }">
+          <!-- <view> -->
           <image
-            v-if="isOpen"
+            v-if="node.isOpen"
             :src="imageBaseUrl + '/frank/8-7-25.png'"
             mode=""
           ></image>
@@ -14,53 +15,58 @@
             :src="imageBaseUrl + '/frank/8-7-26.png'"
             mode=""
           ></image>
-          <text class="t-color-2A67D2 t-size-3">{{ node.nodeName }}</text>
+          <text class="t-color-2A67D2 t-size-30">{{ node.nodeName }}</text>
         </view>
-        <!-- <view class="topOpen">
-          <view
-            @click="toggleTopOpen(index)"
-            class="button3"
-            v-if="node.topIsOpen"
-          >
+        <view
+          v-if="node.parentIndex.length == 1"
+          @click.stop="toggleTopIsOpen(index)"
+          class="topOpen"
+        >
+          <view class="button3" v-if="node.isOpen">
             <image :src="imageBaseUrl + '/frank/8-7-29.png'" mode=""></image>
             <text> 展开 </text>
           </view>
-          <view @click="toggleTopClose(index)" class="button3" v-else>
+          <view class="button3" v-else>
             <image :src="imageBaseUrl + '/frank/8-7-28.png'" mode=""></image>
             <text> 收起 </text>
           </view>
-        </view> -->
+        </view>
       </view>
       <view class="t_right"> </view>
     </view>
     <!-- 组件递归 -->
-    <view v-if="isOpen && node.children.length">
-      <cube-node
+    <view v-if="node.isOpen && node.children.length">
+      <!-- <cube-node
         v-for="child in node.children"
         :key="child.id"
         :node="child"
         @updateVideoList="emitUpdateVideoList(child)"
+      ></cube-node> -->
+      <cube-node
+        v-for="child in node.children"
+        :key="child.id"
+        :node="child"
       ></cube-node>
     </view>
     <!-- 视屏列表 -->
-    <view v-if="isOpen && !node.children.length">
+    <view v-if="node.isOpen && !node.children.length">
       <view v-for="item in node.vList" :key="item.id" class="box_video">
-        <view @click="goStudy(node, item, index)" class="video_title">
+        <view @click="goStudy(item)" class="video_title">
           <view class="flex align-item-center">
             <image :src="imageBaseUrl + '/frank/8-7-27.png'"></image>
-            <view class="font-w-500 t-size-30 w-395">{{ item.videoName }}</view>
+            <view class="font-w-500 t-size-28 w-400">{{ item.videoName }}</view>
           </view>
           <text
             v-if="item.studyStatusText == '已学'"
-            class="t-color-43A71C t-size-26 font-w-5"
+            class="t-color-43A71C t-size-24 font-w-5"
             >·{{ item.studyStatusText }}</text
           >
           <text
             v-else-if="item.studyStatusText == '学习中'"
-            class="t-color-FFAB2D t-size-26 font-w-5"
+            class="t-color-FFAB2D t-size-24 font-w-5"
             >·{{ item.studyStatusText }}</text
           >
-          <text v-else class="t-color-636363 t-size-26 font-w-5"
+          <text v-else class="t-color-636363 t-size-24 font-w-5"
             >·{{ item.studyStatusText }}</text
           >
         </view>
@@ -87,6 +93,10 @@ export default {
       type: Object,
       required: true,
     },
+    index: {
+      type: String,
+      required: true,
+    },
     videoList: {
       type: Array,
       require: true,
@@ -94,25 +104,36 @@ export default {
   },
   data() {
     return {
-      isOpen: false, // 控制子节点的展开和收起
+      // isOpen: false, // 控制子节点的展开和收起-通过循环遍历模板生成每个节点也就是每个模板的isOpen 这样只能一层一层的展开收起
       // vData: [], //视频列表
       // nodeId: null, //点击的叶子节点id
+      topIsOpen: false,
     };
   },
   methods: {
     async toggleChildren(node) {
-      this.isOpen = !this.isOpen; // 切换展开状态
-      //如果是叶子节点且children是空 就请求该节点下的视频列表vList
-      console.log("toggleChildren111", node);
-      if (node.isLeafNode && !node.children?.length) {
+      // this.isOpen = !this.isOpen; // 切换展开状态
+      //设置对应节点的isOpen
+      //如果是叶子节点且vList是空 就请求该节点下的视频列表vList
+      if (node.isLeafNode && !node.vList) {
         console.log("toggleChildren222", node);
-
-        // const vData = await getNodeVideo({ nodeId: node.id });
-        // console.log("vData", vData);
+        const vData = await getNodeVideo({ nodeId: node.id });
+        console.log("vData", vData);
         // this.$emit("updateVideoList", vData, node.id); //只有根节点才会执行这一步
-        this.emitUpdateVideoList(node);
+        // this.emitUpdateVideoList(node);
+        //uni.$emit("uniUpdateVideoList", 视频列表, 点击节点id, 根节点索引, 展开或收起该根节点及其全部子节点);
+        uni.$emit("uniUpdateVideoList", vData, node.id);
+      } else {
+        uni.$emit("uniUpdateVideoList", "0", node.id);
       }
     },
+    toggleTopIsOpen(index) {
+      console.log("index", index);
+      //递归将根节点及其全部子节点取反
+      this.topIsOpen = !this.topIsOpen;
+      uni.$emit("uniUpdateTopOpen", index, this.topIsOpen);
+    },
+
     async emitUpdateVideoList(node) {
       console.log("emitUpdateVideoList333", node);
       if (node.isLeafNode && !node.children?.length) {
@@ -121,8 +142,7 @@ export default {
         this.$emit("updateVideoList", vData, node.id);
       }
     },
-    goStudy(node, item, index) {
-      this.$emit("updateClickInfo", node.id, index);
+    goStudy(item) {
       this.toNav(
         `/pages/frank/webview?videoId=${item.vodVideoId}&id=${item.id}&vName=${item.videoFullName}&pTime=${item.publishTime}&cover=${item.videoImageUrl}&playTimes=${item.playTimes}&currTime=${item.currTime}`
       );

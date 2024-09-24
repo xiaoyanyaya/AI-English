@@ -396,11 +396,13 @@ export default {
     this.wordType = uni.getStorageSync("wordType");
     this.unitOrLesson = uni.getStorageSync("nowUnitOrLesson");
     this.nowUnitId = uni.getStorageSync("nowUnitId");
+
     //判断用户是否关注公众号
-    // const ifWxmpUser = uni.getStorageSync("vuex").ifWxmpUser;
-    // console.log("ifWxmpUser000", ifWxmpUser);
-    // if (ifWxmpUser) return;
-    // this.toNav("/pages/word/webview");
+    this.getUserInfo().then((data) => {
+      const ifWxmpUser = data.ifWxmpUser;
+      if (ifWxmpUser) return;
+      this.toNav("/pages/word/authorization");
+    });
   },
   methods: {
     goTry() {

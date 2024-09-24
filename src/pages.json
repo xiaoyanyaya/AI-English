@@ -176,6 +176,9 @@
         },
         {
           "path": "webview"
+        },
+        {
+          "path": "authorization"
         }
       ]
     },
@@ -269,8 +272,7 @@
   },
   "globalStyle": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "小礼学霸",
-    "navigationBarBackgroundColor": "#F8F8F8",
+    "navigationBarBackgroundColor": "#fff",
     "backgroundColor": "#F8F8F8",
     "navigationStyle": "custom"
   }

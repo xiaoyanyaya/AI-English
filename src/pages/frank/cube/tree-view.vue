@@ -3,19 +3,32 @@
     <!-- <view v-for="(node, index) in videoList" :key="node.id" class="box_tree"> -->
     <view class="title">
       <view class="t_left" @click="toggleChildren(node)">
-        <view :style="{ paddingLeft: node.parentIndex.length * 20 + 'rpx' }">
+        <view
+          class="left"
+          :style="{ paddingLeft: node.parentIndex.length * 20 + 'rpx' }"
+        >
           <!-- <view> -->
-          <image
-            v-if="node.isOpen"
-            :src="imageBaseUrl + '/frank/8-7-25.png'"
-            mode=""
-          ></image>
-          <image
-            v-else
-            :src="imageBaseUrl + '/frank/8-7-26.png'"
-            mode=""
-          ></image>
-          <text class="t-color-2A67D2 t-size-30">{{ node.nodeName }}</text>
+          <view class="f_image">
+            <image
+              v-if="node.isOpen"
+              :src="imageBaseUrl + '/frank/8-7-25.png'"
+              mode=""
+            ></image>
+            <image
+              v-else
+              :src="imageBaseUrl + '/frank/8-7-26.png'"
+              mode=""
+            ></image>
+          </view>
+          <view class="flex-1">
+            <text class="t-color-2A67D2 t-size-28">{{ node.nodeName }}</text>
+            <span
+              v-if="node.isLeafNode == 1"
+              class="t-color-666 t-size-26 font-w-5"
+              >（已学：<span class="t-color-FFAB2D">{{ node.studyNum }}</span
+              >/{{ node.videoNum }}）</span
+            >
+          </view>
         </view>
         <view
           v-if="node.parentIndex.length == 1"
@@ -199,8 +212,7 @@ export default {
   display: flex;
   justify-content: space-between;
   width: 670rpx;
-  height: 98rpx;
-  line-height: 98rpx;
+  padding: 20rpx 0;
   margin-bottom: 20rpx;
   border-top-left-radius: 10rpx; /* 左上角圆角，以10rpx为单位 */
   border-top-right-radius: 10rpx; /* 右上角圆角，以10rpx为单位 */
@@ -210,10 +222,17 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    .left {
+      display: flex;
+    }
+    .f_image {
+      width: 33rpx;
+      height: 100%;
+      margin: 0 20rpx;
+    }
     image {
       width: 33rpx;
       height: 33rpx;
-      margin: 0 20rpx 0 30rpx;
     }
     .topOpen {
       .button3 {

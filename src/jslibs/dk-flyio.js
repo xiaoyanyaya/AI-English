@@ -32,6 +32,17 @@ fly.interceptors.response.use(
 		}
 		const {data} = response;
 
+		// 会员过期
+		if (data.code === 10500) {
+			uni.hideLoading();
+			uni.showToast({title: data.message, icon: 'none', duration: 3000});
+			setTimeout(() => {
+				uni.reLaunch({
+					url: '/pages/me/apply/apply'
+				})
+			}, 2000)
+			return Promise.resolve(data);
+		}
 		if (data.code !== 200) {
 			uni.showToast({title: data.message, icon: 'none', duration: 3000});
 			return Promise.resolve(data);

@@ -118,7 +118,7 @@ export default {
     return {
       title: "小礼AI极简英语",
       path: `${SRC}${path}`,
-      // imageUrl: `${this.imgDomain}wxapp/icon1.1/pic_visit.png`,
+      imageUrl: `${this.imageBaseUrl}/9-07-01.png`,
     };
   },
   onLoad() {

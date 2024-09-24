@@ -1,6 +1,9 @@
 <template>
   <view class="">
-    <cy-navbar show-back>
+    <cy-navbar
+      @customBack="returnCustom"
+      customBack
+      show-back>
       <view class="t-size-30">会员中心</view>
     </cy-navbar>
 
@@ -174,13 +177,26 @@ export default {
         amount: 0,
         description: '',
         orderType: 'vip_order_applet'
-      }
+      },
+      type: ''
     };
   },
-  onLoad() {
+  onLoad({ type }) {
+    if (type) {
+      this.type = type;
+    }
     this.vipPackage();
   },
   methods: {
+    returnCustom() {
+      if (this.type) {
+        uni.switchTab({
+          url: '/pages/me/index'
+        })
+      } else {
+        uni.navigateBack(1)
+      }
+    },
     toPage(type, title) {
       this.$navigateTo(`/pages/me/content?type=${type}&title=${title}`);
     },

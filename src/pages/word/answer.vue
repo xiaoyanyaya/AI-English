@@ -356,12 +356,33 @@ export default {
     }
   },
   onShareAppMessage(res) {
+    const id = uni.getStorageSync("answerFromType");
+    let bookId = "";
+    let path = "";
+    if (id == 0) {
+      bookId = uni.getStorageSync("basicData").currWordConfig.textBook.id; //教材单元列表
+      path = `/pages/word/textbook?id=${id}&bookId=${bookId}&btnTitle=重新答题&isReturnHome=1`;
+    } else if (id == 1) {
+      bookId = uni.getStorageSync("basicData").currWordConfig.dictBook.id; //考纲单元列表
+      path = `/pages/word/textbook?id=${id}&bookId=${bookId}&btnTitle=重新答题&isReturnHome=1`;
+    } else if (id == 2) {
+      bookId = uni.getStorageSync("basicData").currWordConfig.textBook.id; ////专题单元列表
+      path = `/pages/word/textbook?id=${id}&bookId=${bookId}&btnTitle=重新答题&isReturnHome=1`;
+    } else if (id[1] == 0) {
+      bookId = uni.getStorageSync("basicData").currWordConfig.textBook.id; //-->单词挑战赛页-教材挑战
+      path = `/pages/word/chanllenge/wordList?bookId=${bookId}&isReturnHome=1`;
+    } else if (id[1] == 1) {
+      bookId = uni.getStorageSync("basicData").currWordConfig.dictBook.id; //-->单词挑战赛页-考纲挑战
+      path = `/pages/word/chanllenge/wordList?bookId=${bookId}&isReturnHome=1`;
+    }
+    // 获取userInfo
+    const userInfo = this.$store.state.userInfo;
     const fromType = uni.getStorageSync("answerFromType");
     if (res.from === "button") {
       // 来自页面内分享按钮
       console.log(res.target);
       return {
-        title: "单词列表",
+        title: `${userInfo.nickName}的听写榜，快来试试吧`,
         path: `pages/word/answer?id=${this.id}&bookId=${this.bookId}&pageType=${this.pageType}&isReturnHome=1&fromType=${fromType}`,
       };
     }

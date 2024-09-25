@@ -32,6 +32,7 @@ export default {
   data() {
     return {
       videoId: null,
+      vodVideoId: null,
       playauth: null,
       source: null,
       token: null,
@@ -47,6 +48,7 @@ export default {
   async onLoad(e) {
     console.log("webviw eeeeeeeeeeeee", e);
     this.videoId = e.videoId;
+    this.vodVideoId = e.vodVideoId;
     this.id = e.id;
     this.vName = e.vName;
     this.pTime = e.pTime;
@@ -58,10 +60,10 @@ export default {
   },
   methods: {
     async getLive() {
-      const res = await getPlayAuth(this.videoId);
-      this.playauth = res.data.result;
+      // const res = await getPlayAuth(this.videoId);
+      // this.playauth = res.data.result;
       // console.log("播放凭证res0000001", res.data.result);
-      const res2 = await getPlayUrl(this.videoId);
+      const res2 = await getPlayUrl(this.vodVideoId, this.videoId);
       this.source = res2.data.result;
       console.log("播放地址res0000001", res2.data.result);
       this.isLoad = true;

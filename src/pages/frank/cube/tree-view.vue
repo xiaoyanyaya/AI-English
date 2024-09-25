@@ -22,11 +22,11 @@
           </view>
           <view class="flex-1">
             <text class="t-color-2A67D2 t-size-28">{{ node.nodeName }}</text>
-            <span
+            <text
               v-if="node.isLeafNode == 1"
               class="t-color-666 t-size-26 font-w-5"
-              >（已学：<span class="t-color-FFAB2D">{{ node.studyNum }}</span
-              >/{{ node.videoNum }}）</span
+              >(已学:<text class="t-color-FFAB2D">{{ node.studyNum }}</text
+              >/{{ node.videoNum }})</text
             >
           </view>
         </view>
@@ -157,7 +157,7 @@ export default {
     },
     goStudy(item) {
       this.toNav(
-        `/pages/frank/webview?videoId=${item.vodVideoId}&id=${item.id}&vName=${item.videoFullName}&pTime=${item.publishTime}&cover=${item.videoImageUrl}&playTimes=${item.playTimes}&currTime=${item.currTime}`
+        `/pages/frank/webview?vodVideoId=${item.vodVideoId}&videoId=${item.id}&id=${item.id}&vName=${item.videoFullName}&pTime=${item.publishTime}&cover=${item.videoImageUrl}&playTimes=${item.playTimes}&currTime=${item.currTime}`
       );
     },
     toNav(url) {
@@ -212,7 +212,7 @@ export default {
   display: flex;
   justify-content: space-between;
   width: 670rpx;
-  padding: 20rpx 0;
+  padding: 30rpx 0;
   margin-bottom: 20rpx;
   border-top-left-radius: 10rpx; /* 左上角圆角，以10rpx为单位 */
   border-top-right-radius: 10rpx; /* 右上角圆角，以10rpx为单位 */
@@ -235,11 +235,11 @@ export default {
       height: 33rpx;
     }
     .topOpen {
+      padding-left: 8rpx;
       .button3 {
         display: flex;
         align-items: center;
-        height: 80rpx;
-        line-height: 80rpx;
+        width: 90rpx;
         image {
           margin-right: 10rpx;
           width: 25rpx;
@@ -253,7 +253,7 @@ export default {
     }
   }
   .t_right {
-    margin-right: 60rpx;
+    margin-right: 20rpx;
     font-size: 24rpx;
     font-weight: 500;
   }
@@ -265,7 +265,7 @@ export default {
     display: flex;
     justify-content: space-between;
     padding: 0 5rpx;
-    padding-left: 60rpx;
+    padding-left: 80rpx;
     image {
       width: 33rpx;
       height: 30rpx;

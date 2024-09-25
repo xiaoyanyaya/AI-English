@@ -6,6 +6,9 @@
   "pages": [
     //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
     {
+      "path": "pages/frank/index"
+    },
+    {
       "path": "pages/index/index"
     },
     {
@@ -23,9 +26,7 @@
     {
       "path": "pages/index/generateResult"
     },
-    {
-      "path": "pages/frank/index"
-    },
+
     {
       "path": "pages/frank/components/courseOutline"
     },
@@ -252,7 +253,7 @@
     "list": [
       {
         "pagePath": "pages/frank/index",
-        "text": "Frank英语",
+        "text": "Frank",
         "iconPath": "/static/frank_inactive.png",
         "selectedIconPath": "/static/frank_active.png"
       },

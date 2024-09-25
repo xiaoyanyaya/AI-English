@@ -9,7 +9,7 @@
         <image :src="imageBaseUrl + '/frank/8-28-02.png'" mode=""></image>
       </view>
       <view class="frank_right">
-        <view class="t-color-1863E5 t-size-30">Frank英语介绍</view>
+        <view class="t-color-1863E5 t-size-30">Frank课程理念</view>
         <view class="t-size-22 f-w-5">
           <view>· 一朝掌握方法</view>
           <view class="mt-1">· 一生远离补习</view>

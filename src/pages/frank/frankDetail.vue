@@ -1,7 +1,7 @@
 <template>
   <view class="main">
     <cy-navbar :showBack="true" :bgColor="backColor" textColor="#3D3D3D">
-      <view class="t-size-30">Frank英语介绍</view>
+      <view class="t-size-30">Frank介绍</view>
     </cy-navbar>
 
     <view class="tabs">
@@ -25,7 +25,7 @@
         <image :src="imageBaseUrl + '/frank/9-2-01.png'"></image>
       </view>
       <view class="box">
-        <view class="title">弗兰克英语：陈东Frank</view>
+        <view class="title">弗兰克：陈东Frank</view>
         <view class="blue"></view>
         <view class="text">北京大学百年讲堂专题讲座特邀专家</view>
         <view class="text">CCTV-影响力对话栏目专访人物</view>
@@ -35,7 +35,7 @@
         <view class="text">全国总工会中国职工技协英语名师工作室首席教研员</view>
       </view>
       <view class="box">
-        <view class="title">弗兰克英语课程研发团队</view>
+        <view class="title">弗兰克课程研发团队</view>
         <view class="blue"></view>
         <view class="text">在陈东老师带领下，</view>
         <view class="text">钻研和开发教材，完善课程体系，</view>

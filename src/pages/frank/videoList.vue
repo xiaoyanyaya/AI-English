@@ -88,7 +88,7 @@
           <view
             @click="
               toNav(
-                `/pages/frank/webview?videoId=${item.vodVideoId}&id=${item.id}&vName=${item.videoFullName}&pTime=${item.publishTime}&cover=${item.videoImageUrl}&playTimes=${item.playTimes}&currTime=${item.currTime}`
+                `/pages/frank/webview?vodVideoId=${item.vodVideoId}&videoId=${item.id}&vName=${item.videoFullName}&pTime=${item.publishTime}&cover=${item.videoImageUrl}&playTimes=${item.playTimes}&currTime=${item.currTime}`
               )
             "
             class="image"
@@ -96,15 +96,15 @@
             <image :src="item.videoImageUrl" mode=""></image>
           </view>
           <view class="r_content">
-            <view class="flex mt-2">
-              <text>{{ item.videoFullName }}</text>
+            <view class="flex">
+              <text>{{ item.videoName }}</text>
               <image
                 v-if="index == 0 || index == 1"
                 :src="imageBaseUrl + '/frank/路径.png'"
               ></image>
             </view>
             <view class="t-color-8A8A8A t-size-20 mt-1 mb-1">{{
-              item.videoName
+              item.videoFullName
             }}</view>
             <view v-if="item.publishTime" class="t-color-8A8A8A t-size-20">
               发布时间： {{ item.publishTime.slice(0, 10) }}
@@ -297,7 +297,7 @@ export default {
     padding: 25rpx 36rpx 25rpx 20rpx;
     .image {
       width: 317rpx;
-      height: 178rpx;
+      height: 190rpx;
       image {
         width: 100%;
         height: 100%;

@@ -489,6 +489,9 @@ export default {
   onLoad() {
     this.getCourseSystem();
   },
+  onShow() {
+    this.serchValue = "";
+  },
   methods: {
     toNav(url) {
       uni.navigateTo({ url });

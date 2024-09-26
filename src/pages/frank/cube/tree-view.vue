@@ -20,14 +20,20 @@
               mode=""
             ></image>
           </view>
-          <view class="flex-1">
-            <text class="t-color-2A67D2 t-size-28">{{ node.nodeName }}</text>
-            <text
-              v-if="node.isLeafNode == 1"
-              class="t-color-666 t-size-26 font-w-5"
-              >(已学:<text class="t-color-FFAB2D">{{ node.studyNum }}</text
-              >/{{ node.videoNum }})</text
-            >
+          <view class="flex">
+            <text class="t-color-2A67D2 t-size-28 mr-1"
+              >{{ node.nodeName }}
+            </text>
+            <!-- <text class="t-color-666 t-size-26 font-w-5"
+              >(已学:
+              <text class="t-color-FFAB2D">{{ node.studyNum }}</text>
+              /{{ node.videoNum }})
+            </text> -->
+            <u-line-progress
+              active-color="#2979ff"
+              :percent="((node.studyNum / node.videoNum) * 100).toFixed(2)"
+              style="width: 100rpx"
+            ></u-line-progress>
           </view>
         </view>
         <view
@@ -157,7 +163,7 @@ export default {
     },
     goStudy(item) {
       this.toNav(
-        `/pages/frank/webview?vodVideoId=${item.vodVideoId}&videoId=${item.id}&id=${item.id}&vName=${item.videoFullName}&pTime=${item.publishTime}&cover=${item.videoImageUrl}&playTimes=${item.playTimes}&currTime=${item.currTime}`
+        `/pages/frank/webview?vodVideoId=${item.vodVideoId}&videoId=${item.id}&vName=${item.videoFullName}&pTime=${item.publishTime}&cover=${item.videoImageUrl}&playTimes=${item.playTimes}&currTime=${item.currTime}`
       );
     },
     toNav(url) {
@@ -208,6 +214,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.u-progress {
+  width: 200rpx;
+  height: 20rpx;
+}
 .title {
   display: flex;
   justify-content: space-between;

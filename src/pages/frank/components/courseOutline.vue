@@ -65,7 +65,6 @@ export default {
       videoList: [],
       videoPId: null, //获取视频
       studyVideoPid: null, //被点击的视频节点id
-      studyVideoIndex: null, //被点击视频的根索引
     };
   },
   onPageScroll(e) {
@@ -76,22 +75,22 @@ export default {
     }
   },
   async onLoad(e) {
+    console.log("eeeeeeeeeeeeeee", e);
+
     this.query = e;
     this.navbarTitle = e.nodeName;
     await this.getCourseOutline();
-    // this.getInitNodeVideo();
+    this.initOpenNode();
     uni.$on("uniUpdateVideoList", (vData, nodeId) => {
       console.log("监听收到的vdata nodeId", vData, nodeId);
       this.studyVideoPid = nodeId;
       this.addVListToNode(this.videoList, nodeId, vData.data?.result, 1);
       this.videoList = [...this.videoList];
-      console.log("监听修改后的videoList", this.videoList);
     });
     uni.$on("uniUpdateTopOpen", (index, flag) => {
       console.log("监听到的index, flag", index, flag);
       this.updataTopIsOpen([this.videoList[index]], flag);
       this.videoList = [...this.videoList];
-      console.log("2监听修改后的videoList", this.videoList);
     });
   },
   async onShow() {
@@ -197,10 +196,14 @@ export default {
       this.assignParentIndex(this.videoList);
       console.log("格式化数据", this.videoList);
     },
-    async getInitNodeVideo() {
-      const res = await getNodeVideo({ nodeId: this.videoPId });
-      this.videoList[this.query.clickIndex].children[0].children =
-        res.data.result;
+    async initOpenNode() {
+      this.videoList[this.query.clickIndex].isOpen = true;
+      if (this.videoList[this.query.clickIndex].isLeafNode == 1) {
+        const vData = await getNodeVideo({
+          nodeId: this.videoList[this.query.clickIndex].id,
+        });
+        this.videoList[this.query.clickIndex].vList = vData.data.result;
+      }
     },
   },
 };

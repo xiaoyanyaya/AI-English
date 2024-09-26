@@ -32,7 +32,7 @@
           <view
             @click="
               toNav(
-                `/pages/frank/webview?videoId=${item.vodVideoId}&id=${item.id}&vName=${item.videoFullName}&pTime=${item.publishTime}&cover=${item.videoImageUrl}&playTimes=${item.playTimes}&currTime=${item.currTime}`
+                `/pages/frank/webview?vodVideoId=${item.vodVideoId}&videoId=${item.videoId}&vName=${item.videoFullName}&pTime=${item.publishTime}&cover=${item.videoImageUrl}&playTimes=${item.playTimes}&currTime=${item.currTime}`
               )
             "
             class="image"
@@ -40,8 +40,8 @@
             <image :src="item.videoImageUrl" mode=""></image>
           </view>
           <view class="r_content">
-            <view class="flex mt-2">
-              <text>{{ item.videoFullName }}</text>
+            <view class="flex">
+              <text>{{ item.videoName }}</text>
               <image
                 class="ml-1"
                 v-if="index == 0 || index == 1"
@@ -49,7 +49,7 @@
               ></image>
             </view>
             <view class="t-color-8A8A8A t-size-20 mt-1 mb-1">{{
-              item.videoName
+              item.videoFullName
             }}</view>
             <view v-if="item.updateTime" class="t-color-8A8A8A t-size-20">
               播放时间： {{ item.updateTime.slice(0, 10) }}
@@ -182,7 +182,7 @@ export default {
       padding: 25rpx 36rpx 25rpx 20rpx;
       .image {
         width: 317rpx;
-        height: 178rpx;
+        height: 200rpx;
         image {
           width: 100%;
           height: 100%;
@@ -194,6 +194,7 @@ export default {
         margin-left: 40rpx;
         text {
           width: 275rpx;
+          margin-right: 8rpx;
         }
         image {
           position: absolute;

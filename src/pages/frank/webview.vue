@@ -8,7 +8,7 @@
         '&token=' +
         token +
         '&id=' +
-        id +
+        videoId +
         '&vName=' +
         vName +
         '&pTime=' +
@@ -36,7 +36,6 @@ export default {
       playauth: null,
       source: null,
       token: null,
-      id: null,
       vName: "",
       pTime: "",
       cover: "",
@@ -49,7 +48,6 @@ export default {
     console.log("webviw eeeeeeeeeeeee", e);
     this.videoId = e.videoId;
     this.vodVideoId = e.vodVideoId;
-    this.id = e.id;
     this.vName = e.vName;
     this.pTime = e.pTime;
     this.cover = e.cover;

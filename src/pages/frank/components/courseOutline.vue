@@ -32,7 +32,11 @@
           :node="item"
           @updateVideoList="handeleUpdateVideoList"
         ></tree-view> -->
-        <tree-view :node="item" :index="index"></tree-view>
+        <tree-view
+          :node="item"
+          :index="index"
+          :topIsOpen="item.topIsOpen"
+        ></tree-view>
       </view>
     </view>
 
@@ -82,15 +86,14 @@ export default {
     await this.getCourseOutline();
     this.initOpenNode();
     uni.$on("uniUpdateVideoList", (vData, nodeId) => {
-      console.log("监听收到的vdata nodeId", vData, nodeId);
-      this.studyVideoPid = nodeId;
       this.addVListToNode(this.videoList, nodeId, vData.data?.result, 1);
       this.videoList = [...this.videoList];
     });
     uni.$on("uniUpdateTopOpen", (index, flag) => {
-      console.log("监听到的index, flag", index, flag);
       this.updataTopIsOpen([this.videoList[index]], flag);
-      this.videoList = [...this.videoList];
+    });
+    uni.$on("uniUpdateStudyVideoPid", (studyVideoPid) => {
+      this.studyVideoPid = studyVideoPid;
     });
   },
   async onShow() {
@@ -142,6 +145,7 @@ export default {
           this.updataTopIsOpen(item.children, flag); // 递归调用处理子项目
         }
       });
+      this.videoList = [...this.videoList];
     },
 
     //更新isopen + vList
@@ -198,12 +202,15 @@ export default {
     },
     async initOpenNode() {
       this.videoList[this.query.clickIndex].isOpen = true;
+      this.videoList.forEach((item) => (item.topIsOpen = false));
+      this.videoList[this.query.clickIndex].topIsOpen = true;
       if (this.videoList[this.query.clickIndex].isLeafNode == 1) {
         const vData = await getNodeVideo({
           nodeId: this.videoList[this.query.clickIndex].id,
         });
         this.videoList[this.query.clickIndex].vList = vData.data.result;
       }
+      this.videoList = [...this.videoList];
     },
   },
 };

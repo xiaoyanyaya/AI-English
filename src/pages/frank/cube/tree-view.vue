@@ -20,20 +20,48 @@
               mode=""
             ></image>
           </view>
-          <view class="flex">
+          <view class="flex align-item-center">
             <text class="t-color-2A67D2 t-size-28 mr-1"
               >{{ node.nodeName }}
             </text>
-            <!-- <text class="t-color-666 t-size-26 font-w-5"
-              >(已学:
-              <text class="t-color-FFAB2D">{{ node.studyNum }}</text>
-              /{{ node.videoNum }})
-            </text> -->
-            <u-line-progress
-              active-color="#2979ff"
-              :percent="((node.studyNum / node.videoNum) * 100).toFixed(2)"
-              style="width: 100rpx"
-            ></u-line-progress>
+            <view v-if="node.videoNum != 0" class="flex align-item-center">
+              <u-line-progress
+                v-if="((node.studyNum / node.videoNum) * 100).toFixed(2) == 100"
+                active-color="#52c41a"
+                inactive-color="#c8c8c8"
+                :show-percent="false"
+                :percent="((node.studyNum / node.videoNum) * 100).toFixed(2)"
+                style="width: 90rpx; margin-bottom: 8rpx"
+                height="12"
+              >
+              </u-line-progress>
+              <u-line-progress
+                v-else
+                active-color="#2979ff"
+                inactive-color="#c8c8c8"
+                :show-percent="false"
+                :percent="((node.studyNum / node.videoNum) * 100).toFixed(2)"
+                style="width: 90rpx; margin-bottom: 8rpx"
+                height="12"
+              >
+              </u-line-progress>
+              <view class="line_right">
+                <view
+                  v-if="
+                    ((node.studyNum / node.videoNum) * 100).toFixed(0) == 100
+                  "
+                >
+                  <view class="circle">
+                    <u-icon name="checkmark" color="#fff" size="18"></u-icon>
+                  </view>
+                </view>
+                <text v-else
+                  >{{
+                    ((node.studyNum / node.videoNum) * 100).toFixed(0)
+                  }}%</text
+                >
+              </view>
+            </view>
           </view>
         </view>
         <view
@@ -70,10 +98,10 @@
     <!-- 视屏列表 -->
     <view v-if="node.isOpen && !node.children.length">
       <view v-for="item in node.vList" :key="item.id" class="box_video">
-        <view @click="goStudy(item)" class="video_title">
+        <view @click="goStudy(item, node)" class="video_title">
           <view class="flex align-item-center">
             <image :src="imageBaseUrl + '/frank/8-7-27.png'"></image>
-            <view class="font-w-500 t-size-28 w-400">{{ item.videoName }}</view>
+            <view class="vName">{{ item.videoName }}</view>
           </view>
           <text
             v-if="item.studyStatusText == '已学'"
@@ -120,13 +148,16 @@ export default {
       type: Array,
       require: true,
     },
+    topIsOpen: {
+      type: Boolean,
+      required: true,
+    },
   },
   data() {
     return {
       // isOpen: false, // 控制子节点的展开和收起-通过循环遍历模板生成每个节点也就是每个模板的isOpen 这样只能一层一层的展开收起
       // vData: [], //视频列表
       // nodeId: null, //点击的叶子节点id
-      topIsOpen: false,
     };
   },
   methods: {
@@ -148,7 +179,7 @@ export default {
     },
     toggleTopIsOpen(index) {
       console.log("index", index);
-      //递归将根节点及其全部子节点取反
+      //递归修改根节点及其全部子节点的isopen统一
       this.topIsOpen = !this.topIsOpen;
       uni.$emit("uniUpdateTopOpen", index, this.topIsOpen);
     },
@@ -161,7 +192,8 @@ export default {
         this.$emit("updateVideoList", vData, node.id);
       }
     },
-    goStudy(item) {
+    goStudy(item, node) {
+      uni.$emit("uniUpdateStudyVideoPid", node.id);
       this.toNav(
         `/pages/frank/webview?vodVideoId=${item.vodVideoId}&videoId=${item.id}&vName=${item.videoFullName}&pTime=${item.publishTime}&cover=${item.videoImageUrl}&playTimes=${item.playTimes}&currTime=${item.currTime}`
       );
@@ -214,13 +246,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.u-progress {
-  width: 200rpx;
-  height: 20rpx;
-}
 .title {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 670rpx;
   padding: 30rpx 0;
   margin-bottom: 20rpx;
@@ -234,8 +263,30 @@ export default {
     justify-content: space-between;
     .left {
       display: flex;
+      align-items: center;
+      .line_right {
+        margin-left: 8rpx;
+        font-size: 22rpx;
+        color: #8a8a8a;
+        .circle {
+          position: relative;
+          width: 25rpx;
+          height: 24rpx;
+          background-color: #52c41a;
+          border-radius: 50%;
+          margin-top: 7rpx;
+          u-icon {
+            z-index: 999;
+            position: absolute;
+            right: 4rpx;
+            top: 6rpx;
+          }
+        }
+      }
     }
     .f_image {
+      display: flex;
+      align-items: center;
       width: 33rpx;
       height: 100%;
       margin: 0 20rpx;
@@ -274,12 +325,21 @@ export default {
   .video_title {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 0 5rpx;
     padding-left: 80rpx;
     image {
       width: 33rpx;
       height: 30rpx;
       padding-right: 10rpx;
+    }
+    .vName {
+      font-weight: 500;
+      font-size: 28rpx;
+      width: 400rpx; /* 设置宽度 */
+      overflow-wrap: break-word; /* 允许长单词换行 */
+      word-wrap: break-word; /* 兼容性 */
+      white-space: normal; /* 确保文本正常换行 */
     }
   }
   .border {

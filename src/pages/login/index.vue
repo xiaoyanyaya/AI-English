@@ -101,6 +101,7 @@ export default {
       }, 1000);
     },
     async getPhoneNumberWx(res) {
+      console.log("获取手机号登陆")
       if (!this.isAuthorize) {
         return this.showModel = true;
       }
@@ -110,6 +111,7 @@ export default {
       if (loginRes.data.code === 200) {
         this.utils().$toast('登录成功', 'success');
         this.getPhone(res, 'back').then((res) => {
+          console.log("获取手机号登陆成功1")
           this.toPage();
         });
       }

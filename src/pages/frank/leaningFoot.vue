@@ -40,21 +40,18 @@
             <image :src="item.videoImageUrl" mode=""></image>
           </view>
           <view class="r_content">
-            <view class="flex">
-              <text>{{ item.videoName }}</text>
-              <image
-                class="ml-1"
-                v-if="index == 0 || index == 1"
-                :src="imageBaseUrl + '/frank/路径.png'"
-              ></image>
-            </view>
-            <view class="t-color-8A8A8A t-size-20 mt-1 mb-1">{{
+            <text>{{ item.videoName }}</text>
+            <image
+              v-if="index == 0 || index == 1"
+              :src="imageBaseUrl + '/frank/路径.png'"
+            ></image>
+            <view class="t-color-8A8A8A t-size-22 mt-1 mb-1">{{
               item.videoFullName
             }}</view>
             <view v-if="item.updateTime" class="t-color-8A8A8A t-size-20">
               播放时间： {{ item.updateTime.slice(0, 10) }}
             </view>
-            <view v-else class="t-color-8A8A8A t-size-20">
+            <view v-else class="t-color-8A8A8A t-size-22">
               播放时间： {{ item.finishTime.slice(0, 10) }}
             </view>
           </view>
@@ -189,16 +186,13 @@ export default {
         }
       }
       .r_content {
-        width: 300rpx;
-        position: relative;
-        margin-left: 40rpx;
+        width: 340rpx;
+        margin-left: 35rpx;
         text {
           width: 275rpx;
           margin-right: 8rpx;
         }
         image {
-          position: absolute;
-          right: 5rpx;
           width: 24rpx;
           height: 33rpx;
         }

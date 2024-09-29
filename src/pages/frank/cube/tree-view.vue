@@ -274,7 +274,7 @@ export default {
           height: 24rpx;
           background-color: #52c41a;
           border-radius: 50%;
-          margin-top: 7rpx;
+          margin-top: 5rpx;
           u-icon {
             z-index: 999;
             position: absolute;

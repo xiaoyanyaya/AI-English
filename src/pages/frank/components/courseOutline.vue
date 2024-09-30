@@ -63,7 +63,7 @@ export default {
     return {
       backColor: "transparent",
       navbarTitle: "了解Frank英语",
-      activeIndex: "1", ///
+      activeIndex: "0",
       introduce: "",
       query: {},
       videoList: [],

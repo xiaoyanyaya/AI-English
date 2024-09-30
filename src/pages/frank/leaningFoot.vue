@@ -41,10 +41,6 @@
           </view>
           <view class="r_content">
             <text>{{ item.videoName }}</text>
-            <image
-              v-if="index == 0 || index == 1"
-              :src="imageBaseUrl + '/frank/路径.png'"
-            ></image>
             <view class="t-color-8A8A8A t-size-22 mt-1 mb-1">{{
               item.videoFullName
             }}</view>
@@ -191,10 +187,6 @@ export default {
         text {
           width: 275rpx;
           margin-right: 8rpx;
-        }
-        image {
-          width: 24rpx;
-          height: 33rpx;
         }
       }
     }

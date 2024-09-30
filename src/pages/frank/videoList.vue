@@ -304,15 +304,13 @@ export default {
       }
     }
     .r_content {
-      width: 300rpx;
-      position: relative;
-      margin-left: 40rpx;
+      width: 340rpx;
+      margin-left: 35rpx;
       text {
         width: 275rpx;
+        margin-right: 8rpx;
       }
       image {
-        position: absolute;
-        right: 5rpx;
         width: 24rpx;
         height: 33rpx;
       }

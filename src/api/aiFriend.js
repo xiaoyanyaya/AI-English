@@ -23,3 +23,10 @@ export const randomSceneName = params => fly.get('/digitalhuman/scene/randomScen
 
 // 自定义场景-确定随机话题 /digitalhuman/scene/customScene
 export const customScene = params => fly.post('/digitalhuman/scene/customScene', params)
+
+
+// 定时心跳验证 https://dev-wapi.aien.xiaolixb.com/v1/socket/connect/verify/{sessionId}
+export const connectVerify = params => fly.get(`/socket/connect/verify/${params.sessionId}`)
+
+// 手动清除socket连接 https://dev-wapi.aien.xiaolixb.com/v1/socket/connect/closeSocket/{socketId}
+export const closeSocket = params => fly.get(`/socket/connect/closeSocket/${params.socketId}`)

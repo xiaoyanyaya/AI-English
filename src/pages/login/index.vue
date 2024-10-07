@@ -82,23 +82,33 @@ export default {
       })
     },
     toPage() {
-      setTimeout(() => {
-        if (this.pagePath) {
-          if (this.pagePath === '/pages/index/index') {
-            uni.switchTab({
-              url: '/pages/index/index'
-            })
-          } else {
-            uni.redirectTo({
-              url: this.pagePath
-            })
-          }
-        } else {
+      console.log("跳转嗷嗷", this.pagePath)
+      if (this.pagePath) {
+        // 特殊处理
+        if (this.pagePath === '/pages/index/index') {
           uni.switchTab({
             url: '/pages/index/index'
           })
+        } else if (this.pagePath === '/pages/me/index') {
+          uni.switchTab({
+            url: '/pages/me/index'
+          })
+        } else if (this.pagePath === '/pages/frank/index') {
+          uni.switchTab({
+            url: '/pages/frank/index'
+          })
+        } else {
+          uni.redirectTo({
+            url: this.pagePath
+          })
         }
-      }, 1000);
+      } else {
+        uni.switchTab({
+          url: '/pages/frank/index'
+        })
+      }
+
+      console.log("跳转执行")
     },
     async getPhoneNumberWx(res) {
       console.log("获取手机号登陆")

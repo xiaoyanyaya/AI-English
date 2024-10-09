@@ -294,6 +294,13 @@
             >{{ item.value10.value }}</view
           > -->
         </view>
+        <view>
+          <image
+            v-if="currentOptions == 0 && tableData.length == 1"
+            :src="`${imageBaseUrl}/nodata.png`"
+            style="width: 400rpx; height: 400rpx"
+          ></image>
+        </view>
       </scroll-view>
     </view>
     <wordTab :type="2"></wordTab>

@@ -4,7 +4,11 @@
       <view class="t-size-30">学习报告</view>
     </cy-navbar>
 
-    <scroll-view @scrolltolower="onScrolltolower" scroll-y>
+    <scroll-view
+      v-if="reportList.length"
+      @scrolltolower="onScrolltolower"
+      scroll-y
+    >
       <view class="list">
         <view
           v-for="item in reportList"
@@ -45,6 +49,12 @@
         </view>
       </view>
     </scroll-view>
+    <image
+      v-else
+      :src="`${imageBaseUrl}/nodata.png`"
+      style="width: 400rpx; height: 400rpx"
+      class="nodataClass"
+    ></image>
   </view>
 </template>
   
@@ -96,7 +106,14 @@ export default {
   
   <style lang="scss" scoped>
 .main {
+  min-height: 100vh;
   background: linear-gradient(180deg, #d1eaff 0%, #f8fdff 14%) !important;
+  .nodataClass {
+    position: absolute;
+    left: 50%;
+    height: 50%;
+    transform: translateX(-50%);
+  }
 }
 
 .list {

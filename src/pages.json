@@ -11,7 +11,9 @@
     {
       "path": "pages/index/index"
     },
-
+    {
+      "path": "pages/index/index-bavk"
+    },
     {
       "path": "pages/index/product"
     },
@@ -259,7 +261,7 @@
         "selectedIconPath": "/static/frank_active.png"
       },
       {
-        "pagePath": "pages/index/index",
+        "pagePath": "pages/index/index-bavk",
         "text": "Aime",
         "iconPath": "/static/icon_4.png",
         "selectedIconPath": "/static/icon_2.png"

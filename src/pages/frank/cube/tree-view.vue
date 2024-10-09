@@ -201,46 +201,6 @@ export default {
     toNav(url) {
       uni.navigateTo({ url });
     },
-
-    // //根节点收缩、展开
-    // async toggleTitleOpen(node, index) {
-    //   console.log("toggleTitleOpen", node, index);
-    //   if (node.isLeafNode == 1) {
-    //     //如果是叶子节点 就去请求节点下的视频-更新isopen + vList
-    //     console.log("叶子节点 请求节点下的视频");
-    //     const vData = await getNodeVideo({ nodeId: node.id });
-    //     this.$emit("updateVideoListOne", vData, index); //因为子节点没有触发emit
-    //   } else {
-    //     // 节点数组-更新isopen
-    //     this.$emit("updateVideoListTwo", index); //因为子节点没有触发emit
-    //   }
-    // },
-    // //所以子节点收缩、展开
-    // async emitVideoListOne(node, index) {
-    //   console.log("emitVideoListOne", node, index);
-    //   if (node.isLeafNode == 1) {
-    //     //如果是叶子节点 就去请求节点下的视频-更新isopen + vList
-    //     console.log("叶子节点 请求节点下的视频");
-    //     const vData = await getNodeVideo({ nodeId: node.id });
-    //     this.$emit("updateVideoListOne", vData, index, node);
-    //   } else {
-    //     // 节点数组-更新isopen
-    //     this.$emit("updateVideoListTwo", index, node);
-    //   }
-    // },
-    // //所以子节点收缩、展开
-    // async emitVideoListTwo(node, index) {
-    //   console.log("emitVideoListTwo", node, index);
-    //   if (node.isLeafNode == 1) {
-    //     //如果是叶子节点 就去请求节点下的视频-更新isopen + vData
-    //     console.log("叶子节点 请求节点下的视频");
-    //     const vData = await getNodeVideo({ nodeId: node.id });
-    //     this.$emit("updateVideoListOne", vData, index, node);
-    //   } else {
-    //     // 节点数组-更新isopen
-    //     this.$emit("updateVideoListTwo", index, node);
-    //   }
-    // },
   },
 };
 </script>

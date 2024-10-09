@@ -28,10 +28,6 @@
     <!-- 课程大纲内容 -->
     <view v-else>
       <view v-for="(item, index) in videoList" :key="item.id" class="box_tree">
-        <!-- <tree-view
-          :node="item"
-          @updateVideoList="handeleUpdateVideoList"
-        ></tree-view> -->
         <tree-view
           :node="item"
           :index="index"
@@ -39,13 +35,6 @@
         ></tree-view>
       </view>
     </view>
-
-    <!-- <tree-view
-      :videoList="videoList"
-      @updateVideoListOne="handleUpdateVideoListOne"
-      @updateVideoListTwo="handleUpdateVideoListTwo"
-      @updateClickInfo="handeleUpdateClickInfo"
-    ></tree-view> -->
   </view>
 </template>
 
@@ -80,7 +69,6 @@ export default {
   },
   async onLoad(e) {
     console.log("eeeeeeeeeeeeeee", e);
-
     this.query = e;
     this.navbarTitle = e.nodeName;
     await this.getCourseOutline();
@@ -128,12 +116,6 @@ export default {
       }
       return false;
     },
-    //刷新videoList的视频列表
-    handeleUpdateVideoList(vData, nodeId) {
-      console.log("父组件收到的vdata nodeId", vData, nodeId);
-      this.addVListToNode(this.videoList, nodeId, vData.data.result);
-      console.log("list111111", this.videoList);
-    },
     updataTopIsOpen(items, flag) {
       items.forEach(async (item) => {
         item.isOpen = flag; // 设置当前项目的 isOpen 属性为 false
@@ -146,38 +128,6 @@ export default {
         }
       });
       this.videoList = [...this.videoList];
-    },
-
-    //更新isopen + vList
-    async handleUpdateVideoListOne(vData, index) {
-      // console.log("handleUpdateVideoListOne", vData, index);
-      this.$set(this.videoList, index, {
-        ...this.videoList[index],
-        isOpen: !this.videoList[index].isOpen,
-        vList: vData.data.result,
-      });
-      if (this.videoList[index].isOpen) {
-        this.videoList[index].topIsOpen = false;
-      } else {
-        this.videoList[index].topIsOpen = true;
-      }
-      this.videoList = [...this.videoList];
-      console.log("父组件修改this.videoList", this.videoList);
-    },
-    //更新isopen
-    handleUpdateVideoListTwo(index) {
-      // console.log("handleUpdateVideoListTwo", index);
-      this.$set(this.videoList, index, {
-        ...this.videoList[index],
-        isOpen: !this.videoList[index].isOpen,
-      });
-      if (this.videoList[index].isOpen) {
-        this.videoList[index].topIsOpen = false;
-      } else {
-        this.videoList[index].topIsOpen = true;
-      }
-      this.videoList = [...this.videoList];
-      console.log("父组件修改this.videoList", this.videoList);
     },
     toNav(url) {
       uni.navigateTo({ url });

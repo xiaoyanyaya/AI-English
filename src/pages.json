@@ -261,7 +261,7 @@
         "selectedIconPath": "/static/frank_active.png"
       },
       {
-        "pagePath": "pages/index/index-bavk",
+        "pagePath": "pages/index/index",
         "text": "Aime",
         "iconPath": "/static/icon_4.png",
         "selectedIconPath": "/static/icon_2.png"

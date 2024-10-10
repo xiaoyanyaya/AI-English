@@ -491,6 +491,7 @@ export default {
   },
   onShow() {
     this.serchValue = "";
+    this.getBasicData(false);
   },
   methods: {
     toNav(url) {

@@ -3,62 +3,131 @@
     <cy-navbar>
       <view class="t-size-30">小礼AI极简英语</view>
     </cy-navbar>
-    <!--    <button @click="test">测试</button>-->
     <view class="px-4 mt-5">
-      <view class="user-box flex align-item-center justify-content-between border-box px-3">
+      <!-- 会员信息 -->
+      <view
+        class="user-box flex align-item-center justify-content-between border-box px-3"
+      >
         <view class="flex align-item-center">
-          <viwe class="mr-2 user-img-box flex align-item-center justify-content-center">
-            <u-icon size="40" color="#8a8a8a" v-if="!userInfo.memberNo" name="account"></u-icon>
-            <image v-else :src="userInfo.avatar" mode="widthFix" class="user-img"></image>
+          <viwe
+            class="mr-2 user-img-box flex align-item-center justify-content-center"
+          >
+            <u-icon
+              size="40"
+              color="#8a8a8a"
+              v-if="!userInfo.memberNo"
+              name="account"
+            ></u-icon>
+            <image
+              v-else
+              :src="userInfo.avatar"
+              mode="widthFix"
+              class="user-img"
+            ></image>
           </viwe>
-          <view v-if="!userInfo.memberNo" class="t-color-3D3D3D" @click="loginInfo">点击登录</view>
-          <view v-else class="ml-3" @click="$navigateTo('/pages/me/personInfo')">
+          <view
+            v-if="!userInfo.memberNo"
+            class="t-color-3D3D3D"
+            @click="loginInfo"
+            >点击登录</view
+          >
+          <view
+            v-else
+            class="ml-3"
+            @click="$navigateTo('/pages/me/personInfo')"
+          >
             <view class="t-size-32 t-color-3D3D3D flex align-item-center">
               <view>{{ userInfo.nickName || "小礼AI" }}</view>
-              <image :src="`${imageBaseUrl}/icon_6.png`" mode="widthFix" class="user-write mt-1 ml-1"></image>
+              <image
+                :src="`${imageBaseUrl}/icon_6.png`"
+                mode="widthFix"
+                class="user-write mt-1 ml-1"
+              ></image>
             </view>
-            <view class="t-size-24 t-color-8A8A8A mt-1">会员ID: {{ userInfo.memberNo || "" }}</view>
+            <view class="t-size-24 t-color-8A8A8A mt-1"
+              >会员ID: {{ userInfo.memberNo || "" }}</view
+            >
             <view v-if="isVipExpired != -1">
-              <view class="t-size-24 t-color-8A8A8A mt-05 flex align-item-center">
-                <image :src="`${imageBaseUrl}/${isVipExpired === 0 ? '8-19-01.png' : '8-19-02.png'}`" mode="widthFix"
-                       class="vipExpired mr-1"></image>
-                <span v-if="isVipExpired === 0" class="t-color-ED7E1F">会员有效期至{{ userInfo.vipExpireDate }}</span>
+              <view
+                class="t-size-24 t-color-8A8A8A mt-05 flex align-item-center"
+              >
+                <image
+                  :src="`${imageBaseUrl}/${
+                    isVipExpired === 0 ? '8-19-01.png' : '8-19-02.png'
+                  }`"
+                  mode="widthFix"
+                  class="vipExpired mr-1"
+                ></image>
+                <span v-if="isVipExpired === 0" class="t-color-ED7E1F"
+                  >会员有效期至{{ userInfo.vipExpireDate }}</span
+                >
                 <span v-else>会员已过期</span>
               </view>
             </view>
           </view>
         </view>
         <view @click="$navigateTo('/pages/me/setting')">
-          <image :src="`${imageBaseUrl}/new_icon5.png`" mode="widthFix" class="setting-img"></image>
+          <image
+            :src="`${imageBaseUrl}/new_icon5.png`"
+            mode="widthFix"
+            class="setting-img"
+          ></image>
         </view>
       </view>
 
-      <view v-if="isShowPayCenter"
-            :style="userCenterBoxStyle"
-            class="user-center-box flex align-item-center justify-content-between border-box">
+      <!-- 会员中心框 -->
+      <view
+        v-if="isShowPayCenter"
+        :style="userCenterBoxStyle"
+        class="user-center-box flex align-item-center justify-content-between border-box"
+      >
         <view class="">
           <view class="flex align-item-center">
-            <image :src="`${imageBaseUrl}/icon_11.png`" mode="widthFix" class="user-center-img"></image>
+            <image
+              :src="`${imageBaseUrl}/icon_11.png`"
+              mode="widthFix"
+              class="user-center-img"
+            ></image>
             <view class="user-center-text ml-2">会员中心</view>
           </view>
           <view class="mt-2 t-size-24 user-center-desc">
             开通VIP立享所有权益
           </view>
         </view>
-        <view class="user-center-btn t-color-fff flex align-item-center justify-content-center t-size-24"
-              @click="$navigateTo('/pages/me/userCenter')">
+        <view
+          v-if="osName === 'android'"
+          class="user-center-btn t-color-fff flex align-item-center justify-content-center t-size-24"
+          @click="$navigateTo('/pages/me/userCenter')"
+        >
           立享优惠
+        </view>
+        <view
+          v-else
+          class="user-center-btn t-color-fff flex align-item-center justify-content-center t-size-24 position-relative"
+        >
+          立享优惠
+          <view class="share-btn">
+            <button open-type="contact">优惠</button>
+          </view>
         </view>
       </view>
 
+      <!-- 操作列表框 -->
       <view v-if="isShowOther" class="person-info-box pb-4 mt-4">
-        <view class="flex align-item-center justify-content-between pt-3 mt-1 position-relative px-4"
-              :class="item.noPartner ? 'person-item pb-4 18' : 'person-border pb-4'"
-              v-for="(item, index) in menuList" :key="index"
-              @click="toPage(index)">
+        <view
+          class="flex align-item-center justify-content-between pt-3 mt-1 position-relative px-4"
+          :class="item.noPartner ? 'person-item pb-4 18' : 'person-border pb-4'"
+          v-for="(item, index) in menuList"
+          :key="index"
+          @click="toPage(index)"
+        >
           <view v-if="index === 0 && item.noPartner" class="share-btn">
-            <button open-type="getPhoneNumber"
-                    @getphonenumber="getPhone($event, '/pages/me/apply/cooperative')">>客服</button>
+            <button
+              open-type="getPhoneNumber"
+              @getphonenumber="getPhone($event, '/pages/me/apply/cooperative')"
+            >
+              >客服
+            </button>
           </view>
           <view v-if="index === 2" class="share-btn">
             <button open-type="contact">客服</button>
@@ -67,11 +136,19 @@
             <button open-type="share">分享</button>
           </view>
           <view class="flex align-item-center" v-if="item.noPartner">
-            <image :src="`${imageBaseUrl}/${item.image}`" class="ml-1" mode="widthFix"></image>
+            <image
+              :src="`${imageBaseUrl}/${item.image}`"
+              class="ml-1"
+              mode="widthFix"
+            ></image>
             <view class="ml-5 noPartner-title">{{ item.title }}</view>
           </view>
           <view class="flex align-item-center" v-else>
-            <image :src="`${imageBaseUrl}/${item.image}`" class="ml-1" mode="widthFix"></image>
+            <image
+              :src="`${imageBaseUrl}/${item.image}`"
+              class="ml-1"
+              mode="widthFix"
+            ></image>
             <view class="ml-6">{{ item.title }}</view>
           </view>
           <view class="flex align-item-center">
@@ -84,7 +161,11 @@
     </view>
 
     <view class="flex align-item-center justify-content-center">
-      <image :src="`${imageBaseUrl}/8-21-01.png`" mode="widthFix" class=" notes"></image>
+      <image
+        :src="`${imageBaseUrl}/8-21-01.png`"
+        mode="widthFix"
+        class="notes"
+      ></image>
     </view>
 
     <view class="version-box flex align-item-center justify-content-center">
@@ -96,9 +177,8 @@
 </template>
 
 <script>
-
-import MyMixin from '@/utils/MyMixin.js'
-import store from '@/store/';
+import MyMixin from "@/utils/MyMixin.js";
+import store from "@/store/";
 
 export default {
   mixins: [MyMixin],
@@ -107,18 +187,19 @@ export default {
       currentPage: 1,
 
       menuList: [
-        {title: '申请成为合作商', image: '8-13-04.png', noPartner: true},
+        { title: "申请成为合作商", image: "8-13-04.png", noPartner: true },
         // { title: '分销中心', image: 'icon_7.png' },
-        {title: '卡密激活', image: 'icon_8.png'},
-        {title: '联系客服', image: 'icon_9.png'},
-        {title: '邀请好友', image: 'icon_10.png'}
+        { title: "卡密激活", image: "icon_8.png" },
+        { title: "联系客服", image: "icon_9.png" },
+        { title: "邀请好友", image: "icon_10.png" },
       ],
 
       userInfo: {},
-      deviceBrand: 'android',
+      deviceBrand: "android",
+      osName: "android",
       isShowPayCenter: false,
       isShowOther: false,
-      version: ''
+      version: "",
     };
   },
   // 深度监听userInfo
@@ -128,57 +209,57 @@ export default {
         if (val) {
           if (val.distributionType) {
             this.menuList[0] = {
-              title: '分销中心',
-              image: 'icon_7.png'
-            }
+              title: "分销中心",
+              image: "icon_7.png",
+            };
           } else {
             this.menuList[0] = {
-              title: '申请成为合作商',
-              image: '8-13-04.png',
-              noPartner: true
-            }
+              title: "申请成为合作商",
+              image: "8-13-04.png",
+              noPartner: true,
+            };
           }
         }
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   computed: {
     userCenterBoxStyle() {
-      return `background: url(${this.imageBaseUrl}/img_17.png) no-repeat center center; background-size: cover;`
+      return `background: url(${this.imageBaseUrl}/img_17.png) no-repeat center center; background-size: cover;`;
     },
     // 会员是否过期
     isVipExpired() {
       // 0: 未过期 1: 已过期 -1: 未开通
       // 时间格式 vipExpireDate: "2028-04-29"
       if (this.userInfo.vipExpireDate) {
-        var vipExpireDate = new Date(this.userInfo.vipExpireDate).getTime()
-        var now = new Date().getTime()
+        var vipExpireDate = new Date(this.userInfo.vipExpireDate).getTime();
+        var now = new Date().getTime();
         if (vipExpireDate < now) {
-          return 1
+          return 1;
         } else {
-          return 0
+          return 0;
         }
       } else {
-        return -1
+        return -1;
       }
-    }
+    },
   },
-  onLoad({promoCode}) {
+  onLoad({ promoCode }) {
     if (promoCode) {
-      uni.setStorageSync('promoCode', promoCode)
+      uni.setStorageSync("promoCode", promoCode);
     }
-    this.getSystemInfo()
+    this.getSystemInfo();
   },
   onShow() {
     // 如果token存在，就获取用户信息
-    var isAuthPhone = uni.getStorageSync('isAuthPhone')
+    var isAuthPhone = uni.getStorageSync("isAuthPhone");
     if (store.state.token && isAuthPhone) {
-      this.getUserInfo().then(data => {
-        this.userInfo = data
-      })
+      this.getUserInfo().then((data) => {
+        this.userInfo = data;
+      });
     }
-    this.initData()
+    this.initData();
   },
   onShareAppMessage() {
     const SRC = `pages/index/index?promoCode=${this.userInfo.promoCode}`;
@@ -194,33 +275,45 @@ export default {
     getSystemInfo() {
       uni.getSystemInfo({
         success: (res) => {
-          this.deviceBrand = res.platform;
-        }
+          // this.deviceBrand = res.platform;
+          this.osName = res.osName;
+        },
       });
     },
     loginInfo() {
       uni.navigateTo({
-        url: '/pages/login/index'
-      })
-    },
-    test() {
-      this.$store.dispatch('setToken', "123")
+        url: "/pages/login/index",
+      });
     },
     initData() {
-      this.userInfo = store.state.userInfo
+      this.userInfo = store.state.userInfo;
 
       var basicData = uni.getStorageSync("basicData");
       if (basicData) {
-        this.version = basicData.version
+        this.version = basicData.version;
+        var iosPay = basicData.iosPay;
+        var wxappCheck = basicData.wxappCheck;
+        // this.isShowOther = !wxappCheck;
+        // if (this.deviceBrand === "android") {
+        //   this.isShowPayCenter = !wxappCheck;
+        // } else {
+        //   if (!wxappCheck) this.isShowPayCenter = iosPay;
+        // }
 
-        var iosPay = basicData.iosPay
-        var wxappCheck = basicData.wxappCheck
-
-        this.isShowOther = !wxappCheck
-        if (this.deviceBrand === 'android') {
-          this.isShowPayCenter = !wxappCheck
+        if (!iosPay) {
+          if (this.osName === "ios") {
+            this.isShowPayCenter = false;
+          } else {
+            if (wxappCheck) this.isShowPayCenter = true;
+            else this.isShowPayCenter = false;
+          }
+        }
+        if (wxappCheck) {
+          this.isShowPayCenter = false;
+          this.isShowOther = false;
         } else {
-          if (!wxappCheck) this.isShowPayCenter = iosPay
+          this.isShowPayCenter = true;
+          this.isShowOther = true;
         }
       }
     },
@@ -228,28 +321,28 @@ export default {
       if (index == 0) {
         if (this.menuList[index].noPartner) {
         } else {
-          this.$navigateTo('/pages/me/distribution')
+          this.$navigateTo("/pages/me/distribution");
         }
       }
-      if (index == 1) this.$navigateTo('/pages/me/cardConversion')
+      if (index == 1) this.$navigateTo("/pages/me/cardConversion");
     },
     network() {
-      return {}
-    }
+      return {};
+    },
   },
-}
+};
 </script>
 
 <style lang="scss">
 page {
-  background: #F5F9FF;
+  background: #f5f9ff;
 }
 
 .user-box {
   height: 152rpx;
   border-radius: 10rpx;
-  background: #FFFFFF;
-  box-shadow: 0px 0px 10rpx 0px #D8D8D8;
+  background: #ffffff;
+  box-shadow: 0px 0px 10rpx 0px #d8d8d8;
 
   .user-write {
     width: 34rpx;
@@ -257,7 +350,7 @@ page {
   }
 
   .user-img-box {
-    background: #D8D8D8;
+    background: #d8d8d8;
     width: 80rpx;
     height: 80rpx;
     border-radius: 50%;
@@ -295,7 +388,7 @@ page {
     letter-spacing: 0em;
     font-variation-settings: "opsz" auto;
     font-feature-settings: "kern" on;
-    background: linear-gradient(106deg, #E99544 14%, #592B00 79%);
+    background: linear-gradient(106deg, #e99544 14%, #592b00 79%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -303,14 +396,14 @@ page {
   }
 
   .user-center-desc {
-    color: #A59789;
+    color: #a59789;
   }
 
   .user-center-btn {
     width: 210rpx;
     height: 60rpx;
     border-radius: 156rpx;
-    background: #DB7716;
+    background: #db7716;
   }
 }
 
@@ -319,9 +412,13 @@ page {
   font-size: 30rpx;
 
   .person-item {
-    background: linear-gradient(90deg, #FFFFFF 56%, rgba(255, 255, 255, 0) 100%);
+    background: linear-gradient(
+      90deg,
+      #ffffff 56%,
+      rgba(255, 255, 255, 0) 100%
+    );
     position: relative;
-    color: #1863E5;
+    color: #1863e5;
 
     image {
       position: absolute;

@@ -60,6 +60,7 @@
 
       </view>
     </view>
+
     <view v-if="isShowPopup">
       <view class="popup-mask" @click="isShowPopup = false"></view>
       <view class="popup-content flex flex-direction-column justify-content-around align-item-center">
@@ -93,8 +94,6 @@ import {defaultVirtual} from "@/api/aiFriend";
 import MyMixin from "@/utils/MyMixin";
 
 const recorderManager = uni.getRecorderManager();
-const innerAudioContext = uni.createInnerAudioContext();
-innerAudioContext.autoplay = true;
 
 var plugin = requirePlugin("WechatSI")
 let manager = plugin.getRecordRecognitionManager()
@@ -131,13 +130,16 @@ export default {
       chatInit: {},
       deviceBrand: 'android',
       palyIndex: 0,
+      innerAudioContext: {},
     }
   },
   // 页面销毁
   onUnload() {
-    innerAudioContext.stop()
+    this.innerAudioContext.stop()
   },
   onLoad(res) {
+    this.innerAudioContext = uni.createInnerAudioContext();
+    this.innerAudioContext.autoplay = true;
     this.network().defaultVirtual();
     this.initRecord()
     this.network().getChatInit(res.sceneId);
@@ -161,13 +163,13 @@ export default {
       self.voicePath = res.tempFilePath;
       const tempFilePath = res.tempFilePath;
 
-      uni.getFileSystemManager().getFileInfo({
+      /*uni.getFileSystemManager().getFileInfo({
         filePath: tempFilePath,
         success: (res) => {
         }
-      })
+      })*/
     });
-    innerAudioContext.onEnded((res) => {
+    this.innerAudioContext.onEnded((res) => {
       this.dialogueContent.forEach(d => d.isPlay = false)
     })
   },
@@ -178,27 +180,15 @@ export default {
   },
   methods: {
     test() {
-      this.dialogueContent = [{
-        content: "Hey,how are you doing?",
-        icon: "",
-        isSelf: false,
-        isPlay: false,
-        translate: "嗨，你好吗？"
-      }, {
+      this.dialogueContent.push({
         content: "Hello, where are you from?",
         icon: "",
         isSelf: true,
         isPlay: false,
         mp3Url: "https://wapi-dev.aien.xiaolixb.com/v1/sys/common/static/digitalhuman/voice/tmp_1236bf6ffc82f634cfbf88a88d4de5197b759db275700abf_1716113891940.mp3",
         translate: "你好，你是哪里你是哪里人你是哪里人你是哪里人你是哪里人人"
-      }, {
-        content: "Your sentence is correct. Great job! Now, it's my turn to ask: What's your favorite subject in school and why?",
-        icon: "",
-        isSelf: false,
-        isPlay: false,
-        mp3Url: "https://wapi-dev.aien.xiaolixb.com/v1/sys/common/static/digitalhuman/voice/tmp_1236bf6ffc82f634cfbf88a88d4de5197b759db275700abf_1716113891940.mp3",
-        translate: ""
-      }]
+      })
+      this.toScrollerViewBottom()
     },
     initRecord: function(){
       manager.onRecognize = (res) => {
@@ -222,17 +212,19 @@ export default {
         if (data && data.length) {
           let height = 0;
           data.forEach(rect => {
-            height += rect.height;
+            height += rect.height + 20;
           });
-          this.scrollTop = height + 10;
+          this.scrollTop = height;
         }
       }).exec();
     },
     scroll(e) {
     },
     scrollToUpper(e) {
+      console.log('顶部', e)
     },
     scrollToLower(e) {
+      console.log('底部', e)
     },
     // 保存发送的数据
     translateUsToCn(res, text) {
@@ -281,7 +273,7 @@ export default {
     },
     onLongPress() {
       this.isTlaking = true
-      innerAudioContext.stop()
+      this.innerAudioContext.stop()
       uni.vibrateShort({
         success: function () {
         }
@@ -307,30 +299,31 @@ export default {
         this.isShowPopup = true;
       }
     },
-    playVoice(voicePath, index, item) {
+    playVoice(voicePath, index = 0, item) {
       if (item && item.isPlay) {
         return
       }
+      this.innerAudioContext.stop()
+
+      this.innerAudioContext = uni.createInnerAudioContext();
+      this.innerAudioContext.autoplay = true;
 
       // 判断当前设备
       this.dialogueContent.forEach(d => d.isPlay = false)
-      if (index !== undefined) {
-        this.$set(this.dialogueContent[index], 'isPlay', true)
-        this.palyIndex = index
-      }
+      console.log("this.dialogueContent", this.dialogueContent)
+      this.$set(this.dialogueContent[index], 'isPlay', true)
+      this.palyIndex = index
 
       if (this.deviceBrand === 'android') {
         uni.downloadFile({
           url: voicePath,
           timeout: 6000000,
           success: (res) => {
-            console.log(res, '下载内容')
             if (res.statusCode === 200) {
-              console.log(res.tempFilePath, 'res.tempFilePath')
-              innerAudioContext.src = res.tempFilePath;
-              innerAudioContext.onCanplay(() => {
-                console.log(innerAudioContext, "音频信息")
-                innerAudioContext.play();
+              this.innerAudioContext.src = res.tempFilePath;
+              this.innerAudioContext.onCanplay(() => {
+                console.log(this.innerAudioContext, "音频信息显示")
+                this.innerAudioContext.play();
               })
             }
           },
@@ -340,11 +333,16 @@ export default {
         })
       } else {
         console.log("苹果播放文件")
-        innerAudioContext.src = voicePath;
-        innerAudioContext.obeyMuteSwitch = false;
-        innerAudioContext.play();
+        this.innerAudioContext.src = voicePath;
+        this.innerAudioContext.obeyMuteSwitch = false;
+        this.innerAudioContext.play();
       }
 
+      // 播放结束
+      this.innerAudioContext.onEnded(() => {
+        console.log("播放结束")
+        this.dialogueContent[this.palyIndex].isPlay = false
+      })
     },
     getSystemInfo() {
       uni.getSystemInfo({
@@ -369,6 +367,10 @@ export default {
     network() {
       return {
         getChatInit: async (sceneId) => {
+          uni.showLoading({
+            title: '正在连接...'
+          })
+
           let res;
           if (sceneId) {
             res = await getChatInit({
@@ -377,9 +379,14 @@ export default {
           } else {
             res = await getChatInit();
           }
+          if (res.data.code === 200) {
+            uni.hideLoading()
+          }
           this.chatInit = res.data.result
-          this.playVoice(this.chatInit.welcome_speech_voice_file)
           this.pushAiDialog(this.chatInit.welcome_speech_en, this.chatInit.welcome_speech_cn, this.chatInit.welcome_speech_voice_file)
+          this.$nextTick(() => {
+            this.playVoice(this.chatInit.welcome_speech_voice_file)
+          })
         },
         getAiVoiceResult: async () => {
           const res = await getAiVoiceResult({
@@ -393,7 +400,7 @@ export default {
           }, 300)
 
           setTimeout(() => {
-            this.playVoice(res.data.result.voiceFile)
+            this.playVoice(res.data.result.voiceFile, this.dialogueContent.length - 1, this.dialogueContent[this.dialogueContent.length - 1])
           }, 2000)
         },
         sseRequestTask: async ({url, data, method = 'POST', type}) => {
@@ -653,5 +660,13 @@ export default {
     width: 40rpx;
     height: 30rpx;
   }
+}
+
+.init-box {
+  position: absolute;
+  z-index: 9999;
+  text-align: center;
+  width: 750rpx;
+  bottom: 500rpx;
 }
 </style>

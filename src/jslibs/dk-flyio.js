@@ -35,6 +35,8 @@ fly.interceptors.response.use(
 		// 会员过期
 		if (data.code === 10500) {
 			uni.hideLoading();
+			// 过期描述
+			uni.setStorageSync("expireDesc", data.message);
 			uni.showToast({title: data.message, icon: 'none', duration: 3000});
 			setTimeout(() => {
 				uni.reLaunch({

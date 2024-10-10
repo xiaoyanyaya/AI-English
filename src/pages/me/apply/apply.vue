@@ -8,10 +8,10 @@
     </cy-navbar>
 
     <view class="flex align-item-center justify-content-center flex-direction-column">
-      <image :src="`${imageBaseUrl}/9-23-01.png`" mode="widthFix" class="main-image mb-5 ml-2"></image>
+      <image :src="`${imageBaseUrl}/9-23-01.png`" mode="widthFix" class="main-image mb-5 ml-5"></image>
 
       <view class="t-color-3D3D3D t-size-36">会员已过期！</view>
-      <view class="t-color-8A8A8A t-size-26 mt-2"></view>
+      <view class="t-color-8A8A8A t-size-26 mt-2">{{ message }}</view>
 
       <view class="flex align-item-center justify-content-center">
         <view @click="$navigateTo('/pages/me/userCenter?type=1')"
@@ -30,7 +30,7 @@ export default {
   mixins: [MyMixin],
   data() {
     return {
-      message: "审核中，请耐心等待~"
+      message: ""
     }
   },
   computed: {
@@ -39,10 +39,9 @@ export default {
               background-size: 100% 100%;`
     }
   },
-  onLoad({message}) {
-    if (message) {
-      this.message = message;
-    }
+  onLoad() {
+    var expireDesc = uni.getStorageSync("expireDesc")
+    if (expireDesc) this.message = expireDesc
   },
   methods: {
     returnCustom() {

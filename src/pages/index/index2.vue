@@ -13,22 +13,43 @@
 </template>
 
 <script>
+import store from '@/store/';
+import {closeSocket, connectVerify} from "../../api/aiFriend";
+import {initWebsocket, createWebsocket} from "../../api/socket";
+
 export default {
   data() {
     return {
       webSocketConnected: false,
       webSocketInstance: null,
-      message: ''
+      message: '',
+      sessionId: ''
     }
   },
   methods: {
+    // 初始化
     connectWebSocket() {
+      // 请求接口
+      var memberNo = store.state.userInfo.memberNo
       this.webSocketInstance = uni.connectSocket({
-        // url: 'ws://124.222.224.186:8800',
-        url: 'wss://demoapi.xiaolixb.com/api/socket/user/1731834944937824257',
+        url: initWebsocket + memberNo,
         success: () => {
-          console.log('WebSocket connected success')
+          this.createSocketTask()
+        },
+        fail: (err) => {
+          console.log("WebSocket连接失败")
+          console.log('Error connecting to WebSocket:', err)
+        }
+      })
+    },
+    // 创建socket连接
+    createSocketTask() {
+      this.webSocketInstance = uni.connectSocket({
+        url: createWebsocket,
+        success: (res) => {
+          console.log("创建WebSocket连接成功", res)
           this.webSocketConnected = true
+          this.heartCheck()
         },
         fail: (err) => {
           console.log("WebSocket连接失败")
@@ -37,7 +58,8 @@ export default {
       })
 
       this.webSocketInstance.onMessage((res) => {
-        console.log('Received WebSocket message:', res.data)
+        console.log("res")
+        this.sessionId = res.data
       })
 
       this.webSocketInstance.onClose((res) => {
@@ -45,11 +67,26 @@ export default {
         this.webSocketConnected = false
       })
     },
+    // 发送消息
     sendMessage() {
       this.webSocketInstance.send({
         data: this.message
       })
       this.message = ''
+    },
+    // 定时心跳验证
+    heartCheck() {
+      // 每60s发送一次心跳验证
+      setInterval(() => {
+        connectVerify({sessionId: this.sessionId}).then(res => {
+          console.log(res, "心跳验证")
+        })
+      }, 6000)
+    },
+    closeSocket() {
+      closeSocket().then(res => {
+        console.log(res, "关闭socket")
+      })
     }
   }
 }

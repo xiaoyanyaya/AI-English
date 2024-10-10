@@ -3,7 +3,7 @@
     <cy-navbar showBack isAbsolute>
       <view class="t-size-30">虚拟人对练</view>
     </cy-navbar>
-<!--    <button @click.stop="test" style="position: absolute; top: 200rpx;z-index: 10001">test</button>-->
+    <!--    <button @click.stop="test" style="position: absolute; top: 200rpx;z-index: 10001">test</button>-->
     <view class="content-box" :style="contentBoxStyle">
       <view class="mark-bg"></view>
       <view class="flex align-item-center justify-content-center">
@@ -11,7 +11,7 @@
       </view>
 
       <view class="translate-btn pl-4">
-<!--        <image :src="`${imageBaseUrl}/s1.png`"/>-->
+        <!--        <image :src="`${imageBaseUrl}/s1.png`"/>-->
       </view>
 
       <view class="dialogue-content flex flex-direction-column pl-4">
@@ -67,7 +67,8 @@
         <view>
           <text class="font-weight-bold">是否确认结束当前对话？</text>
         </view>
-        <view class="flex align-item-center justify-content-center end-view-report"  @click="$navigateTo('/pages/virtualCharacter/resultReport')">
+        <view class="flex align-item-center justify-content-center end-view-report"
+              @click="$navigateTo('/pages/virtualCharacter/resultReport')">
           <view class="mr-2 iconfont">&#xe63e;</view>
           <view>
             <text>结束并查看对话报告</text>
@@ -92,6 +93,9 @@ import {apiDomain} from "@/configs/env";
 import store from '@/store/';
 import {defaultVirtual} from "@/api/aiFriend";
 import MyMixin from "@/utils/MyMixin";
+import {createSseConnect, sendChat} from "../../api/aiDialogue";
+import {createWebsocket} from "../../api/socket";
+import {closeSocket} from "../../api/aiFriend";
 
 const recorderManager = uni.getRecorderManager();
 
@@ -115,7 +119,7 @@ export default {
 
       isShowPopup: false,
       isStartRecord: false,
-      currentText:"",
+      currentText: "",
       sendData: {
         voiceDuration: 0,
         voiceFormat: 'mp3',
@@ -131,18 +135,42 @@ export default {
       deviceBrand: 'android',
       palyIndex: 0,
       innerAudioContext: {},
+
+      streamResponseType: '',
+      /**  scoket */
+      socket: {
+        webSocketConnected: false,
+        webSocketInstance: null,
+        message: '',
+        sessionId: '',
+        connectId: '',
+        socketTaskId: '',
+        heartCheckInterval: null,
+      }
     }
   },
   // 页面销毁
   onUnload() {
     this.innerAudioContext.stop()
+
+    if (!this.socket.socketTaskId) return;
+    closeSocket({socketId: this.socket.socketTaskId}).then(res => {
+      console.log(res, "关闭socket")
+    })
   },
   onLoad(res) {
+    this.streamResponseType = uni.getStorageSync("basicData").resourceMain.streamResponseType
+
     this.innerAudioContext = uni.createInnerAudioContext();
     this.innerAudioContext.autoplay = true;
     this.network().defaultVirtual();
     this.initRecord()
-    this.network().getChatInit(res.sceneId);
+    if (this.streamResponseType === 'Websocket') {
+      this.network().createSocketTask()
+    } else {
+      this.network().createSseConnect(res.sceneId);
+      // this.network().getChatInit(res.sceneId);
+    }
     // this.test()
 
     this.getSystemInfo();
@@ -190,13 +218,14 @@ export default {
       })
       this.toScrollerViewBottom()
     },
-    initRecord: function(){
+    initRecord: function () {
       manager.onRecognize = (res) => {
       }
       // 识别结束事件
       manager.onStop = (res) => {
+        console.log('record file path', res)
         let text = res.result
-        if(text == '') {
+        if (text == '') {
           return
         }
         this.currentText = text
@@ -233,6 +262,7 @@ export default {
         lto: 'zh_CN',
         content: text,
         success: (result) => {
+          console.log("语音转译文字", result)
           this.sendData.voiceDuration = parseInt(res.duration)
           this.sendData.voiceFile = res.tempFilePath;
           this.sendData.voiceDataLen = res.fileSize;
@@ -247,7 +277,6 @@ export default {
             isSelf: true
           })
           this.toScrollerViewBottom()
-          this.network().saveVoiceText(this.dialogueContent.length - 1)
 
           // 初始化
           this.dialogueContent.push({
@@ -257,18 +286,38 @@ export default {
             isPlay: false,
             isSelf: false
           })
-          this.network().sseRequestTask({
-            url: '/digitalhuman/chat/streamSessionChat',
-            method: 'post',
-            data: {
-              sessionId: this.chatInit.session_id,
-              sseEmitterId: this.chatInit.sse_emitter_id,
-              message: this.sendData.voiceResultText
-            }
-          })
+          console.log("获取说话内容")
+          if (this.streamResponseType === 'Websocket') {
+            this.socketSend()
+          } else {
+            this.network().saveVoiceText(this.dialogueContent.length - 1)
+            this.sseSend()
+          }
         },
         fail: (err) => {
         }
+      })
+    },
+    sseSend() {
+      this.network().sseRequestTask({
+        url: '/digitalhuman/v2/chat/send',
+        method: 'post',
+        data: {
+          sessionId: this.chatInit.session_id,
+          sseEmitterId: this.chatInit.sse_emitter_id,
+          message: this.sendData.voiceResultText
+        }
+      })
+    },
+    socketSend() {
+      let data = {
+        sessionType: "CHAT",
+        sessionId: this.socket.connectId,
+        connectId: this.socket.connectId,
+        content: this.sendData.voiceResultText
+      }
+      sendChat(data).then(res => {
+        console.log(res, "发送消息")
       })
     },
     onLongPress() {
@@ -366,6 +415,12 @@ export default {
     },
     network() {
       return {
+        createSseConnect: async (sceneId) => {
+          this.network().sseRequestTask({
+            url: '/digitalhuman/v2/chat/sse/connect',
+            method: 'get'
+          })
+        },
         getChatInit: async (sceneId) => {
           uni.showLoading({
             title: '正在连接...'
@@ -427,6 +482,8 @@ export default {
               const uint8Array = new Uint8Array(res.data);
               let text = String.fromCharCode.apply(null, uint8Array);
               text = decodeURIComponent(escape(text));
+
+              console.log("text", text)
               if (!text.startsWith('data:')) {
                 text = 'data:' + text
               }
@@ -488,7 +545,52 @@ export default {
             fail: (error) => {
             }
           })
+        },
+        /**             socket         */
+        // 创建socket连接
+        createSocketTask: async () => {
+          console.log(this.socket)
 
+          this.socket.webSocketInstance = uni.connectSocket({
+            url: createWebsocket,
+            success: (res) => {
+              console.log("创建WebSocket连接成功", res)
+              this.socket.webSocketConnected = true
+              this.socket.socketTaskId = res.socketTaskId
+              // this.heartCheck()
+            },
+            fail: (err) => {
+              console.log("WebSocket连接失败")
+              console.log('Error connecting to WebSocket:', err)
+            }
+          })
+
+          this.socket.webSocketInstance.onMessage((res) => {
+            console.log("创建socket连接 onMessage res", res)
+            if (!this.socket.connectId) {
+              this.socket.connectId = res.data
+            } else {
+              console.log("接收到消息", res.data)
+              this.dialogueContent[this.dialogueContent.length - 1].content += res.data
+              this.toScrollerViewBottom()
+            }
+          })
+
+          this.socket.webSocketInstance.onClose((res) => {
+            console.log('WebSocket connection closed:', res)
+            this.socket.webSocketConnected = false
+            this.socket = {
+              webSocketConnected: false,
+              webSocketInstance: null,
+              message: '',
+              sessionId: '',
+              connectId: '',
+              socketTaskId: '',
+              heartCheckInterval: null,
+            }
+            // 重新建立连接
+            this.network().createSocketTask()
+          })
         },
       }
     }
@@ -496,7 +598,7 @@ export default {
 }
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 .content-box {
   width: 100vw;
   overflow: hidden;
@@ -508,6 +610,7 @@ export default {
   top: 560rpx;
   z-index: 100;
 }
+
 .translate-btn image {
   width: 70rpx;
   height: 70rpx;
@@ -529,6 +632,7 @@ export default {
     height: 560rpx;
   }
 }
+
 .self-icon, .no-self-icon {
   width: 20rpx;
   height: 20rpx;
@@ -536,9 +640,11 @@ export default {
   margin-right: 15rpx;
   margin-top: 12rpx;
 }
+
 .self-icon {
   background: #11D051;
 }
+
 .no-self-icon {
   background: #3a73d9;
 }
@@ -555,6 +661,7 @@ export default {
   padding: 0 20rpx;
   box-sizing: border-box;
 }
+
 .btn-icon {
   color: #ffffff;
   font-size: 46rpx;
@@ -568,6 +675,7 @@ export default {
   right: 0;
   background: rgba(0, 0, 0, 0.5);
 }
+
 .popup-content {
   position: absolute;
   width: 750rpx;
@@ -579,6 +687,7 @@ export default {
   box-sizing: border-box;
   padding: 50rpx 0;
 }
+
 .end-view-report {
   width: 670rpx;
   height: 100rpx;
@@ -586,13 +695,16 @@ export default {
   background: linear-gradient(180deg, #5D97FD 0%, #1157D0 100%);
   color: #ffffff;
 }
+
 .end-view-report .iconfont {
   font-size: 40rpx;
 }
+
 .end-report {
   font-size: 28rpx;
   color: #1863E5;
 }
+
 .end-report .iconfont {
   font-size: 30rpx;
 }

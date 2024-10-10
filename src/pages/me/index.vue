@@ -103,6 +103,7 @@
         </view>
         <view
           v-else
+          @click="senMSG"
           class="user-center-btn t-color-fff flex align-item-center justify-content-center t-size-24 position-relative"
         >
           立享优惠
@@ -179,6 +180,7 @@
 <script>
 import MyMixin from "@/utils/MyMixin.js";
 import store from "@/store/";
+import { getSendMsg } from "@/api/me";
 
 export default {
   mixins: [MyMixin],
@@ -272,6 +274,11 @@ export default {
     };
   },
   methods: {
+    async senMSG() {
+      console.log("senMSG1111");
+      const res = await getSendMsg();
+      console.log("senMSG1111", res);
+    },
     getSystemInfo() {
       uni.getSystemInfo({
         success: (res) => {

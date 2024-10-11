@@ -85,5 +85,4 @@ export const partnerApply = (params) =>
   fly.post("/distribution/promotion/partner/apply", params);
 
 //小程序客服接入消息
-export const getSendMsg = () =>
-  fly.post("/distribution/promotion/partner/apply");
+export const getSendMsg = () => fly.get("/weixin/sendCustomMessage");

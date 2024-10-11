@@ -94,7 +94,7 @@
             开通VIP立享所有权益
           </view>
         </view>
-        <view
+        <!-- <view
           v-if="osName === 'android'"
           class="user-center-btn t-color-fff flex align-item-center justify-content-center t-size-24"
           @click="$navigateTo('/pages/me/userCenter')"
@@ -110,6 +110,12 @@
           <view class="share-btn">
             <button open-type="contact">优惠</button>
           </view>
+        </view> -->
+        <view
+          class="user-center-btn t-color-fff flex align-item-center justify-content-center t-size-24"
+          @click="$navigateTo('/pages/me/userCenter')"
+        >
+          立享优惠
         </view>
       </view>
 
@@ -275,9 +281,7 @@ export default {
   },
   methods: {
     async senMSG() {
-      console.log("senMSG1111");
       const res = await getSendMsg();
-      console.log("senMSG1111", res);
     },
     getSystemInfo() {
       uni.getSystemInfo({

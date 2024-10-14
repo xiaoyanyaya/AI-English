@@ -73,7 +73,7 @@ export default {
       },
     };
   },
-  onShow() {
+  onLoad() {
     this.getData();
   },
   methods: {

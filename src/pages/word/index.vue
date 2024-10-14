@@ -265,6 +265,7 @@
 import wordTab from "@/pages/word/components/word-tabbar/index.vue";
 import MyMixin from "@/utils/MyMixin";
 import { listByBookType } from "@/api/word";
+import { getSourceCB } from "@/api/user";
 
 export default {
   mixins: [MyMixin],
@@ -299,6 +300,7 @@ export default {
     if (e.isReturnHome) {
       this.isReturnHome = 1;
     }
+    if (e.code) this.getSourceCB(e.code);
   },
   onShareAppMessage(res) {
     if (res.from === "button") {
@@ -349,6 +351,13 @@ export default {
         console.log(this.getData.pageNo--);
         this.getList();
       }
+    },
+    async getSourceCB(code) {
+      const res = await getSourceCB({ code });
+      uni.showToast({
+        title: res.data.message,
+        icon: "none",
+      });
     },
   },
 };

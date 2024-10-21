@@ -8,28 +8,45 @@
     <div class="authorize-get">
       <div class="authorize-get-til">申请获取以下授权：</div>
       <div class="authorize-get-ul">
-        <div class="authorize-get-li"><text>获得你的公开信息（昵称、头像等）</text></div>
+        <div class="authorize-get-li">
+          <text>获得你的公开信息（昵称、头像等）</text>
+        </div>
         <div class="authorize-get-li"><text>获得你的联系方式</text></div>
       </div>
     </div>
 
     <div class="authorize-sub">
       <!-- @click="bindGetUserInfoTest" -->
-      <button v-if="!isAuthPhone" class="btn-login bt" open-type="getPhoneNumber"
-        @getphonenumber="getPhoneNumberWx">授权登录</button>
+      <button
+        v-if="!isAuthPhone"
+        class="btn-login bt"
+        open-type="getPhoneNumber"
+        @getphonenumber="getPhoneNumberWx"
+      >
+        授权登录
+      </button>
       <button v-else class="btn-login bt" @click="loginInfo">授权登录</button>
       <button class="btn-nologin bt" @click="notLogin">暂不登录</button>
     </div>
     <div class="footer">
       <div class="select">
-        <view  @click="isAuthorize = !isAuthorize"
+        <view
+          @click="isAuthorize = !isAuthorize"
           class="circle flex align-item-center justify-content-center"
-        :class="isAuthorize ? 'c-active' : ''">
-          <u-icon v-if="isAuthorize" name="checkbox-mark" size="20" color="#FFFFFF"></u-icon>
+          :class="isAuthorize ? 'c-active' : ''"
+        >
+          <u-icon
+            v-if="isAuthorize"
+            name="checkbox-mark"
+            size="20"
+            color="#FFFFFF"
+          ></u-icon>
         </view>
       </div>
       <p>登录代表同意</p>
-      <span class="text" @click="toUserPage(0, '用户协议')">《用户注册协议》</span>
+      <span class="text" @click="toUserPage(0, '用户协议')"
+        >《用户注册协议》</span
+      >
       <p>&</p>
       <span class="text" @click="toUserPage(1, '隐私政策')">《隐私政策》</span>
     </div>
@@ -39,19 +56,25 @@
       :mask-close-able="true"
       :show-confirm-button="false"
       :show-title="false"
-      v-model="showModel">
+      v-model="showModel"
+    >
       <view class="slot-content">
-        <view class="t-color-8A8A8A t-size-30 review">已阅读并同意《用户注册协议》《隐私政策》</view>
-        <view class="flex align-item-center justify-content-around t-size-24 font-weight-bold mt-4">
+        <view class="t-color-8A8A8A t-size-30 review"
+          >已阅读并同意《用户注册协议》《隐私政策》</view
+        >
+        <view
+          class="flex align-item-center justify-content-around t-size-24 font-weight-bold mt-4"
+        >
           <view class="t-color-8A8A8A" @click="showModel = false">不同意</view>
-          <view @click="clickAllow"
-            class="t-color-fff allow flex align-item-center justify-content-center">
+          <view
+            @click="clickAllow"
+            class="t-color-fff allow flex align-item-center justify-content-center"
+          >
             同意并登录
           </view>
         </view>
       </view>
     </u-modal>
-
   </div>
 </template>
 
@@ -63,11 +86,11 @@ export default {
   data() {
     return {
       isAuthorize: false,
-      pagePath: '',
-      showModel: false
+      pagePath: "",
+      showModel: false,
     };
   },
-  onLoad({pagePath}) {
+  onLoad({ pagePath }) {
     this.pagePath = pagePath;
   },
   methods: {
@@ -78,80 +101,85 @@ export default {
     },
     toUserPage(type, title) {
       uni.navigateTo({
-        url: `/pages/me/content?type=${type}&title=${title}`
-      })
+        url: `/pages/me/content?type=${type}&title=${title}`,
+      });
     },
     toPage() {
-      console.log("跳转嗷嗷", this.pagePath)
+      console.log("跳转嗷嗷", this.pagePath);
       if (this.pagePath) {
         // 特殊处理
-        if (this.pagePath === '/pages/index/index') {
+        if (this.pagePath === "/pages/index/index") {
           uni.switchTab({
-            url: '/pages/index/index'
-          })
-        } else if (this.pagePath === '/pages/me/index') {
+            url: "/pages/index/index",
+          });
+        } else if (this.pagePath === "/pages/me/index") {
           uni.switchTab({
-            url: '/pages/me/index'
-          })
-        } else if (this.pagePath === '/pages/frank/index') {
+            url: "/pages/me/index",
+          });
+        } else if (this.pagePath === "/pages/frank/index") {
           uni.switchTab({
-            url: '/pages/frank/index'
-          })
+            url: "/pages/frank/index",
+          });
+        } else if (this.pagePath === "/pages/login/index") {
+          //小手机跳转嗷嗷打印的是/pages/login/index
+          uni.switchTab({
+            url: "/pages/word/index",
+          });
         } else {
           uni.redirectTo({
-            url: this.pagePath
-          })
+            url: this.pagePath,
+          });
         }
       } else {
         uni.switchTab({
-          url: '/pages/frank/index'
-        })
+          url: "/pages/frank/index",
+        });
       }
 
-      console.log("跳转执行")
+      console.log("跳转执行");
     },
     async getPhoneNumberWx(res) {
-      console.log("获取手机号登陆")
+      console.log("获取手机号登陆");
       if (!this.isAuthorize) {
-        return this.showModel = true;
+        return (this.showModel = true);
       }
-      this.utils().$toast('登录中...', 'loading');
+      this.utils().$toast("登录中...", "loading");
 
       const loginRes = await this.login();
       if (loginRes.data.code === 200) {
-        this.utils().$toast('登录成功', 'success');
-        this.getPhone(res, 'back').then((res) => {
-          console.log("获取手机号登陆成功1")
+        this.utils().$toast("登录成功", "success");
+        this.getPhone(res, "back").then((res) => {
+          console.log("获取手机号登陆成功1");
           this.toPage();
         });
       }
     },
     async loginInfo() {
       if (!this.isAuthorize) {
-        return this.showModel = true;
+        return (this.showModel = true);
       }
-      this.utils().$toast('登录中...', 'loading');
+      this.utils().$toast("登录中...", "loading");
 
       const loginRes = await this.login();
       if (loginRes.data.code === 200) {
-        this.utils().$toast('登录成功', 'success');
+        this.utils().$toast("登录成功", "success");
         this.toPage();
       }
     },
     notLogin() {
       // uni.navigateBack();
       uni.switchTab({
-        url: '/pages/index/index'
-      })
-    }
+        url: "/pages/index/index",
+      });
+    },
   },
-}
+};
 </script>
 
 
 <style lang="scss" scoped>
 .authorize {
-  background-image: url('https://aien.xiaolixb.com/assets/s2.jpg');
+  background-image: url("https://aien.xiaolixb.com/assets/s2.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   min-height: 100vh;
@@ -200,7 +228,7 @@ export default {
   }
 
   .text {
-    color: #3A73D9;
+    color: #3a73d9;
     font-size: 24rpx;
   }
 }
@@ -213,7 +241,6 @@ export default {
   font-size: 32rpx;
   color: #0d0d0d;
 }
-
 
 .authorize-get-li {
   font-size: 24rpx;
@@ -228,21 +255,22 @@ export default {
   bottom: 180rpx;
   left: 60rpx;
 
-  .btn-login  {
+  .btn-login {
     margin-bottom: 32rpx;
-    background: #3A73D9;
+    background: #3a73d9;
     color: #ffffff;
   }
 
   .btn-nologin {
     margin-bottom: 32rpx;
     // background: #333333;
-    color: #3A73D9!important;
-    border: 1rpx solid #3A73D9;
+    color: #3a73d9 !important;
+    border: 1rpx solid #3a73d9;
     color: #ffffff;
   }
 
-  .btn-nologin, .btn-login {
+  .btn-nologin,
+  .btn-login {
     border-radius: 40rpx !important;
     height: 80rpx !important;
     font-size: 32rpx;
@@ -323,12 +351,12 @@ export default {
   width: 32rpx;
   height: 32rpx;
   border-radius: 50%;
-  border: 1rpx solid #8A8A8A;
+  border: 1rpx solid #8a8a8a;
   margin-top: 4rpx;
 }
 .c-active {
-  background: #3A73D9;
-  border: 1rpx solid #3A73D9;
+  background: #3a73d9;
+  border: 1rpx solid #3a73d9;
 }
 
 .slot-content {

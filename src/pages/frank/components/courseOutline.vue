@@ -14,6 +14,14 @@
       <view @click="activeIndex = 1" :class="{ active_bu: activeIndex == 1 }">
         课程大纲
       </view>
+      <view @click="updateTopIsOpen(videoList)" class="ml-18"
+        >展开收起
+        <image
+          v-if="topIsOpen"
+          :src="imageBaseUrl + '/frank/8-7-28.png'"
+        ></image>
+        <image v-else :src="imageBaseUrl + '/frank/8-7-29.png'"></image>
+      </view>
     </view>
 
     <!-- 课程介绍内容 -->
@@ -52,8 +60,9 @@ export default {
     return {
       backColor: "transparent",
       navbarTitle: "了解Frank英语",
-      activeIndex: "0",
+      activeIndex: "1", ////
       introduce: "",
+      topIsOpen: false, //顶部展开收起按钮
       query: {},
       videoList: [],
       videoPId: null, //获取视频
@@ -72,13 +81,12 @@ export default {
     this.query = e;
     this.navbarTitle = e.nodeName;
     await this.getCourseOutline();
-    this.initOpenNode();
     uni.$on("uniUpdateVideoList", (vData, nodeId) => {
       this.addVListToNode(this.videoList, nodeId, vData.data?.result, 1);
       this.videoList = [...this.videoList];
     });
     uni.$on("uniUpdateTopOpen", (index, flag) => {
-      this.updataTopIsOpen([this.videoList[index]], flag);
+      this.updateTopIsOpen([this.videoList[index]], flag);
     });
     uni.$on("uniUpdateStudyVideoPid", (studyVideoPid) => {
       this.studyVideoPid = studyVideoPid;
@@ -116,18 +124,21 @@ export default {
       }
       return false;
     },
-    updataTopIsOpen(items, flag) {
-      items.forEach(async (item) => {
-        item.isOpen = flag; // 设置当前项目的 isOpen 属性为 false
-        if (item.isLeafNode && !item.vList) {
-          const vData = await getNodeVideo({ nodeId: item.id });
-          item.vList = vData.data.result;
-        }
-        if (item.children && item.children.length > 0) {
-          this.updataTopIsOpen(item.children, flag); // 递归调用处理子项目
-        }
-      });
+    updateTopIsOpen(items) {
+      this.topIsOpen = !this.topIsOpen;
+      const toggleOpenState = (items) => {
+        items.forEach((item) => {
+          if (item.isLeafNode == "0") {
+            item.isOpen = this.topIsOpen; // 更新非叶子节点的展开状态
+          }
+          if (item.children && item.children.length > 0) {
+            toggleOpenState(item.children); // 递归调用处理子项目
+          }
+        });
+      };
+      toggleOpenState(items);
       this.videoList = [...this.videoList];
+      console.log("展开收起", this.videoList);
     },
     toNav(url) {
       uni.navigateTo({ url });
@@ -136,7 +147,6 @@ export default {
       nodes.forEach((node, index) => {
         node.parentIndex = [...parentIndex, index];
         node.isOpen = false;
-
         if (node.children && node.children.length > 0) {
           this.assignParentIndex(node.children, node.parentIndex);
         }
@@ -148,20 +158,22 @@ export default {
       this.videoList = res.data.result[0].children;
       // 格式化
       this.assignParentIndex(this.videoList);
-      console.log("格式化数据", this.videoList);
+      console.log("格式化数据this.videoList", this.videoList);
     },
-    async initOpenNode() {
-      this.videoList[this.query.clickIndex].isOpen = true;
-      this.videoList.forEach((item) => (item.topIsOpen = false));
-      this.videoList[this.query.clickIndex].topIsOpen = true;
-      if (this.videoList[this.query.clickIndex].isLeafNode == 1) {
-        const vData = await getNodeVideo({
-          nodeId: this.videoList[this.query.clickIndex].id,
-        });
-        this.videoList[this.query.clickIndex].vList = vData.data.result;
-      }
-      this.videoList = [...this.videoList];
-    },
+
+    // updateTopIsOpen(items, flag) {
+    //   items.forEach(async (item) => {
+    //     item.isOpen = flag; // 设置当前项目的 isOpen 属性为 false
+    //     if (item.isLeafNode && !item.vList) {
+    //       const vData = await getNodeVideo({ nodeId: item.id });
+    //       item.vList = vData.data.result;
+    //     }
+    //     if (item.children && item.children.length > 0) {
+    //       this.updateTopIsOpen(item.children, flag); // 递归调用处理子项目
+    //     }
+    //   });
+    //   this.videoList = [...this.videoList];
+    // },
   },
 };
 </script>
@@ -174,33 +186,32 @@ export default {
 
   .top_button {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     height: 80rpx;
     line-height: 80rpx;
-    margin: 20rpx 100rpx 0 100rpx;
+    margin: 20rpx 80rpx 0 80rpx;
     font-size: 26rpx;
     .active_bu {
       color: #1863e5;
       padding-bottom: 10rpx;
       border-bottom: 7rpx solid #1863e5;
-      // width: 172rpx;
-      // text-align: center;
-      // font-size: 32rpx;
-      // font-weight: bold;
-      // color: #fff;
-      // border-radius: 163rpx;
-      // background: linear-gradient(180deg, #5a95fb 0%, #1258d0 100%);
     }
     .text {
       margin-right: 21rpx;
     }
+    image {
+      width: 23rpx;
+      height: 23rpx;
+      margin-left: 5rpx;
+    }
   }
 
   .box_tree {
-    margin-left: 40rpx;
+    margin-left: 35rpx;
     margin-top: 35rpx;
-    width: 670rpx;
+    width: 680rpx;
     border-radius: 10rpx;
+    padding: 0 25rpx 0 10rpx;
     background: #ffffff;
     .title {
       display: flex;

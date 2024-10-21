@@ -52,6 +52,10 @@
   margin-left: 100rpx;
 }
 
+.ml-18 {
+  margin-left: 180rpx;
+}
+
 .mr-1 {
   margin-right: 10rpx;
 }
@@ -564,6 +568,18 @@
 
 .bg-white {
   background-color: #ffffff;
+}
+
+.bg-gray {
+  background-color: #d8d8d8;
+}
+
+.bg-orange {
+  background-color: #ffb443;
+}
+
+.bg-blue {
+  background-color: #1863e5;
 }
 
 .radio-5 {

@@ -5,69 +5,77 @@
     </cy-navbar>
 
     <view class="frank_en">
-      <view class="frank_left">
+      <view class="frank_left" @click="toNav('/pages/frank/frankDetail')">
         <image :src="imageBaseUrl + '/frank/8-28-02.png'" mode=""></image>
+        <view class="frank_buton">
+          <text class="mr-1">查看Frank介绍</text>
+          <uni-icons type="arrow-right" size="19" color="#fff"></uni-icons>
+        </view>
       </view>
       <view class="frank_right">
-        <view class="t-color-1863E5 t-size-30">Frank课程理念</view>
-        <view class="t-size-22 f-w-5">
-          <view>· 一朝掌握方法</view>
-          <view class="mt-1">· 一生远离补习</view>
+        <view class="flex justify-content-between">
+          <view class="border_r">
+            <view class="text_bu">一朝<text>掌握</text>方法</view>
+          </view>
+          <view class="border_r">
+            <view class="text_bu">一生<text>远离</text>补习</view>
+          </view>
         </view>
-        <view @click="toNav('/pages/frank/frankDetail')" class="frank_buton">
-          <text class="mr-1">点击查看详情</text>
-          <uni-icons type="arrow-right" size="20" color="#fff"></uni-icons>
+        <view class="introduce_cir">
+          <view class="flex flex-direction-column align-item-center">
+            <view
+              class="circle"
+              @click="
+                toNav(
+                  `/pages/frank/components/courseOutline?nodeCode=${introduceCirList.nodeCode}&nodeName=${introduceCirList.nodeName}&clickIndex=0`
+                )
+              "
+            >
+              <image :src="imageBaseUrl + '/frank/8-7-02.png'" mode=""></image>
+            </view>
+            <text class="text">{{
+              introduceCirList.children[0].nodeName
+            }}</text>
+          </view>
+          <view class="flex flex-direction-column align-item-center">
+            <view
+              class="circle"
+              @click="
+                toNav(
+                  `/pages/frank/components/courseOutline?nodeCode=${introduceCirList.nodeCode}&nodeName=${introduceCirList.nodeName}&clickIndex=1`
+                )
+              "
+            >
+              <image :src="imageBaseUrl + '/frank/8-7-03.png'" mode=""></image>
+            </view>
+            <text class="text">{{
+              introduceCirList.children[1].nodeName
+            }}</text>
+          </view>
+          <view class="flex flex-direction-column align-item-center">
+            <view
+              class="circle"
+              @click="
+                toNav(
+                  `/pages/frank/components/courseOutline?nodeCode=${introduceCirList.nodeCode}&nodeName=${introduceCirList.nodeName}&clickIndex=2`
+                )
+              "
+            >
+              <image :src="imageBaseUrl + '/frank/8-7-04.png'" mode=""></image>
+            </view>
+            <text class="text">{{
+              introduceCirList.children[2].nodeName
+            }}</text>
+          </view>
         </view>
       </view>
     </view>
-    <!-- 介绍 理念 案例 -->
-    <view class="introduce_cir">
-      <view class="flex flex-direction-column align-item-center">
-        <view
-          class="circle"
-          @click="
-            toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${introduceCirList.nodeCode}&nodeName=${introduceCirList.nodeName}&clickIndex=0`
-            )
-          "
-        >
-          <image :src="imageBaseUrl + '/frank/8-7-02.png'" mode=""></image>
-        </view>
-        <text class="t-size-24 mt-2">{{
-          introduceCirList.children[0].nodeName
-        }}</text>
-      </view>
-      <view class="flex flex-direction-column align-item-center">
-        <view
-          class="circle"
-          @click="
-            toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${introduceCirList.nodeCode}&nodeName=${introduceCirList.nodeName}&clickIndex=1`
-            )
-          "
-        >
-          <image :src="imageBaseUrl + '/frank/8-7-03.png'" mode=""></image>
-        </view>
-        <text class="t-size-24 mt-2">{{
-          introduceCirList.children[1].nodeName
-        }}</text>
-      </view>
-      <view class="flex flex-direction-column align-item-center">
-        <view
-          class="circle"
-          @click="
-            toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${introduceCirList.nodeCode}&nodeName=${introduceCirList.nodeName}&clickIndex=2`
-            )
-          "
-        >
-          <image :src="imageBaseUrl + '/frank/8-7-04.png'" mode=""></image>
-        </view>
-        <text class="t-size-24 mt-2">{{
-          introduceCirList.children[2].nodeName
-        }}</text>
-      </view>
+
+    <!-- 广告图 -->
+    <view class="infomercial">
+      <image :src="imageBaseUrl + '/frank/10-16-05.png'"></image>
     </view>
+
     <!-- 查询 -->
     <view class="search-box">
       <image :src="imageBaseUrl + '/word/icon3.png'" mode=""></image>
@@ -86,198 +94,72 @@
         >搜索</view
       >
     </view>
-    <!-- 自学 初级 -->
-    <view class="middle_box">
+
+    <!-- 课程体系 -->
+    <view class="middle_box" v-for="item in courseSystemList" :key="item.id">
       <view class="mb_title">
         <view class="bu"></view>
-        <text class="text">{{ courseSystemOneList.nodeName }}</text>
-        <!-- <text class="text2">（初级）</text> -->
+        <text class="text">{{ item.nodeName }}</text>
       </view>
-      <view class="click_box">
+      <view class="mb_box" v-for="item2 in item.children" :key="item2.id">
         <view
-          class="box"
+          class="box_img"
           @click="
             toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemOneList.nodeCode}&nodeName=${courseSystemOneList.nodeName}&clickIndex=0`
+              `/pages/frank/components/courseOutline?nodeCode=${item2.nodeCode}&nodeName=${item2.nodeName}`
             )
           "
         >
           <image :src="imageBaseUrl + '/frank/8-7-05.png'" mode=""></image>
-          <text class="text1">{{
-            courseSystemOneList.children[0].nodeName
-          }}</text>
         </view>
-        <view
-          class="box"
-          @click="
-            toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemOneList.nodeCode}&nodeName=${courseSystemOneList.nodeName}&clickIndex=1`
-            )
-          "
-        >
-          <image :src="imageBaseUrl + '/frank/8-7-06.png'" mode=""></image>
-          <text class="text2">{{
-            courseSystemOneList.children[1].nodeName
-          }}</text>
-        </view>
-      </view>
-      <view class="click_box">
-        <view
-          class="box"
-          @click="
-            toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemOneList.nodeCode}&nodeName=${courseSystemOneList.nodeName}&clickIndex=2`
-            )
-          "
-        >
-          <image :src="imageBaseUrl + '/frank/8-7-07.png'" mode=""></image>
-          <text class="text3">{{
-            courseSystemOneList.children[2].nodeName
-          }}</text>
-        </view>
-        <view
-          class="box"
-          @click="
-            toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemOneList.nodeCode}&nodeName=${courseSystemOneList.nodeName}&clickIndex=3`
-            )
-          "
-        >
-          <image :src="imageBaseUrl + '/frank/8-7-08.png'" mode=""></image>
-          <text class="text4">{{
-            courseSystemOneList.children[3].nodeName
-          }}</text>
-        </view>
-      </view>
-    </view>
-    <!-- 自学 中级 -->
-    <view class="middle_box">
-      <view class="mb_title">
-        <view class="bu"></view>
-        <text class="text">{{ courseSystemTwoList.nodeName }}</text>
-        <!-- <text class="text2">（初级）</text> -->
-      </view>
-      <view class="click_box">
-        <view
-          class="box"
-          @click="
-            toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemTwoList.nodeCode}&nodeName=${courseSystemTwoList.nodeName}&clickIndex=0`
-            )
-          "
-        >
-          <image :src="imageBaseUrl + '/frank/8-7-05.png'" mode=""></image>
-          <text class="text1">{{
-            courseSystemTwoList.children[0].nodeName
-          }}</text>
-        </view>
-        <view
-          class="box"
-          @click="
-            toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemTwoList.nodeCode}&nodeName=${courseSystemTwoList.nodeName}&clickIndex=1`
-            )
-          "
-        >
-          <image :src="imageBaseUrl + '/frank/8-7-06.png'" mode=""></image>
-          <text class="text2">{{
-            courseSystemTwoList.children[1].nodeName
-          }}</text>
-        </view>
-      </view>
-      <view class="click_box">
-        <view
-          class="box"
-          @click="
-            toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemTwoList.nodeCode}&nodeName=${courseSystemTwoList.nodeName}&clickIndex=2`
-            )
-          "
-        >
-          <image :src="imageBaseUrl + '/frank/8-7-07.png'" mode=""></image>
-          <text class="text3">{{
-            courseSystemTwoList.children[2].nodeName
-          }}</text>
-        </view>
-        <view
-          class="box"
-          @click="
-            toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemTwoList.nodeCode}&nodeName=${courseSystemTwoList.nodeName}&clickIndex=3`
-            )
-          "
-        >
-          <image :src="imageBaseUrl + '/frank/8-7-08.png'" mode=""></image>
-          <text class="text4">{{
-            courseSystemTwoList.children[3].nodeName
-          }}</text>
+        <view class="box_cont">
+          <view class="t-size-26">{{ item2.nodeName }}</view>
+          <view class="t-size-22 t-color-666 mt-1 mb-1"
+            >共{{ item2.videoNum }}个视频</view
+          >
+          <view class="flex justify-content-between">
+            <view v-if="item2.videoNum == 0" class="t-size-22 t-color-666">
+              暂无视频
+            </view>
+            <view class="progress" v-else>
+              <u-line-progress
+                active-color="#1863e5"
+                inactive-color="#d8d8d8"
+                :show-percent="false"
+                :percent="((item2.studyNum / item2.videoNum) * 100).toFixed(2)"
+                style="width: 200rpx; margin-bottom: 8rpx"
+                height="16"
+              >
+              </u-line-progress>
+              <text
+                >{{
+                  ((item2.studyNum / item2.videoNum) * 100).toFixed(0)
+                }}%</text
+              >
+            </view>
+            <view
+              @click="
+                toNav(
+                  `/pages/frank/components/courseOutline?nodeCode=${item2.nodeCode}&nodeName=${item2.nodeName}`
+                )
+              "
+            >
+              <view v-if="item2.studyNum == 0" class="button bg-blue">
+                开始学习
+              </view>
+              <view
+                v-else-if="item2.studyNum / item2.videoNum == 1"
+                class="button bg-gray"
+              >
+                已学完
+              </view>
+              <view v-else class="button bg-orange">继续学习</view>
+            </view>
+          </view>
         </view>
       </view>
     </view>
-    <!-- 自学 高级 -->
-    <view class="middle_box">
-      <view class="mb_title">
-        <view class="bu"></view>
-        <text class="text">{{ courseSystemThrList.nodeName }}</text>
-        <!-- <text class="text2">（初级）</text> -->
-      </view>
-      <view class="click_box">
-        <view
-          class="box"
-          @click="
-            toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemThrList.nodeCode}&nodeName=${courseSystemThrList.nodeName}&clickIndex=0`
-            )
-          "
-        >
-          <image :src="imageBaseUrl + '/frank/8-7-05.png'" mode=""></image>
-          <text class="text1">{{
-            courseSystemThrList.children[0].nodeName
-          }}</text>
-        </view>
-        <view
-          class="box"
-          @click="
-            toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemThrList.nodeCode}&nodeName=${courseSystemThrList.nodeName}&clickIndex=1`
-            )
-          "
-        >
-          <image :src="imageBaseUrl + '/frank/8-7-06.png'" mode=""></image>
-          <text class="text2">{{
-            courseSystemThrList.children[1].nodeName
-          }}</text>
-        </view>
-      </view>
-      <view class="click_box">
-        <view
-          class="box"
-          @click="
-            toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemThrList.nodeCode}&nodeName=${courseSystemThrList.nodeName}&clickIndex=2`
-            )
-          "
-        >
-          <image :src="imageBaseUrl + '/frank/8-7-07.png'" mode=""></image>
-          <text class="text3">{{
-            courseSystemThrList.children[2].nodeName
-          }}</text>
-        </view>
-        <view
-          class="box"
-          @click="
-            toNav(
-              `/pages/frank/components/courseOutline?nodeCode=${courseSystemThrList.nodeCode}&nodeName=${courseSystemThrList.nodeName}&clickIndex=3`
-            )
-          "
-        >
-          <image :src="imageBaseUrl + '/frank/8-7-08.png'" mode=""></image>
-          <text class="text4">{{
-            courseSystemThrList.children[3].nodeName
-          }}</text>
-        </view>
-      </view>
-    </view>
+
     <!-- 秘籍课程 -->
     <!-- <view class="bag_box">
       <view class="mb_title">
@@ -452,9 +334,9 @@
       </view>
     </view> -->
     <!-- 学习足迹 -->
-    <view @click="toNav('/pages/frank/leaningFoot')" class="imgs">
+    <!-- <view @click="toNav('/pages/frank/leaningFoot')" class="imgs">
       <image :src="imageBaseUrl + '/frank/8-7-21.png'" mode=""></image>
-    </view>
+    </view> -->
   </view>
 </template>
 
@@ -472,9 +354,7 @@ export default {
         rootNodeCode: "",
       },
       introduceCirList: [], // 顶部三个
-      courseSystemOneList: [], //课程体系 初级
-      courseSystemTwoList: [], //课程体系 中级
-      courseSystemThrList: [], //课程体系 高级
+      courseSystemList: [], //课程体系
       secretCourseBagList: [], //秘籍课程加强包
       leaningIncreaseList: [], //学段提分加强包
     };
@@ -501,12 +381,10 @@ export default {
     async getCourseSystem() {
       const res = await getCourseSystem(this.rootNodeCode);
       this.introduceCirList = res.data.result[0].children[0];
-      this.courseSystemOneList = res.data.result[0].children[1].children[0];
-      this.courseSystemTwoList = res.data.result[0].children[1].children[1];
-      this.courseSystemThrList = res.data.result[0].children[1].children[2];
+      this.courseSystemList = res.data.result[0].children.slice(1);
+      console.log("this.courseSystemList", this.courseSystemList);
       // this.secretCourseBagList = res.data.result[0].children[4];
       // this.leaningIncreaseList = res.data.result[0].children[5];
-      console.log("000", res.data.result[0]);
     },
   },
 };
@@ -521,58 +399,104 @@ export default {
   .frank_en {
     display: flex;
     justify-content: space-between;
-    padding: 40rpx 80rpx 40rpx 50rpx;
-    margin: 40rpx 40rpx 0 40rpx;
-    width: 670rpx;
-    height: 323rpx;
-    border-radius: 10rpx;
-    background-color: #fff;
+    margin: 40rpx 55rpx;
     .frank_left {
-      width: 229rpx;
-      height: 250rpx;
+      position: relative;
+      width: 215rpx;
+      height: 270rpx;
+      background-color: #fff;
+      border-radius: 5%;
       image {
-        width: 100%;
-        height: 100%;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        width: 90%;
+        height: 88%;
+      }
+      .frank_buton {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 10rpx;
+        display: flex;
+        justify-content: center;
+        width: 90%;
+        height: 40rpx;
+        line-height: 50rpx;
+        text-align: center;
+        font-size: 22rpx;
+        color: #fff;
+        background: linear-gradient(180deg, #5a95fb 0%, #1258d0 100%);
       }
     }
     .frank_right {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-      .frank_buton {
-        display: flex;
-        justify-content: center;
-        width: 230rpx;
+      flex: 1;
+      padding-left: 40rpx;
+      .border_r {
+        position: relative;
+        width: 180rpx;
         height: 50rpx;
-        line-height: 50rpx;
-        text-align: center;
-        font-size: 23rpx;
-        color: #fff;
-        border-radius: 163rpx;
-        background: linear-gradient(180deg, #5a95fb 0%, #1258d0 100%);
+        border-radius: 10rpx;
+        box-sizing: border-box;
+        border: 1rpx solid #165bd2;
+        .text_bu {
+          position: absolute;
+          left: -8%;
+          top: 17%;
+          width: 180rpx;
+          height: 50rpx;
+          line-height: 50rpx;
+          text-align: center;
+          border-radius: 10rpx;
+          font-size: 24rpx;
+          font-weight: 400;
+          color: #1863e5;
+          background: #ffffff;
+          text {
+            margin: 0 3rpx;
+            font-size: 30rpx;
+            font-weight: normal;
+            color: #e76615;
+          }
+        }
+      }
+
+      .introduce_cir {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 40rpx;
+        padding: 0 10rpx;
+        .circle {
+          width: 80rpx;
+          height: 80rpx;
+          image {
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .text {
+          font-size: 24rpx;
+          margin-top: 10rpx;
+          width: 95rpx;
+        }
       }
     }
   }
 
-  .introduce_cir {
-    display: flex;
-    justify-content: space-between;
-    padding: 40rpx;
-    margin: 0 40rpx;
-    .circle {
-      width: 135rpx;
-      height: 136rpx;
-      image {
-        width: 100%;
-        height: 100%;
-      }
+  .infomercial {
+    width: 670rpx;
+    height: 150rpx;
+    margin: 0 40rpx 40rpx;
+    image {
+      width: 100%;
+      height: 100%;
     }
   }
 
   .search-boxIcon {
     position: absolute;
     right: 40rpx;
-
     background: #e9f5ff;
     width: 100rpx;
     height: 50rpx;
@@ -613,7 +537,6 @@ export default {
 
   .middle_box {
     width: 670rpx;
-    // height: 462rpx;
     padding: 37rpx 0 30rpx;
     margin: 0 40rpx;
     margin-bottom: 20rpx;
@@ -642,142 +565,40 @@ export default {
         color: #2a67d2;
       }
     }
-    .click_box {
+
+    .mb_box {
       display: flex;
       justify-content: space-between;
-      width: 100%;
-      padding: 0 40rpx;
-      .box {
-        position: relative;
-        width: 275rpx;
-        height: 155rpx;
-        margin-top: 25rpx;
-        image {
-          width: 100%;
-          height: 100%;
-        }
-        .text1 {
-          position: absolute;
-          bottom: 13rpx;
-          left: 12%;
-          font-weight: 500;
-          color: #0028aa;
-        }
-        .text2 {
-          @extend .text1;
-          color: #b85f00;
-        }
-        .text3 {
-          @extend .text1;
-          color: #8ed08e;
-        }
-        .text4 {
-          @extend .text1;
-          color: #7531ec;
-        }
-      }
-    }
-  }
-
-  .bag_box {
-    @extend .middle_box;
-    .line_box {
-      @extend .click_box;
-      .box1 {
-        position: relative;
-        width: 175rpx;
-        height: 96rpx;
-        border-radius: 10rpx;
-        margin-top: 73rpx;
-        background: #fffaf3;
-      }
-      .box2 {
-        @extend .box1;
-        background: #fffdf2;
-      }
-      .box3 {
-        @extend .box1;
-        background: #f6fcff;
-      }
-      .box4 {
-        @extend .box1;
-        background: #f7fff5;
-      }
-      .box5 {
-        @extend .box1;
-        background: #f7fcff;
-      }
-      .box6 {
-        @extend .box1;
-        background: #f4f9ff;
-      }
-      .box7 {
-        @extend .box1;
-        background: #fff8f8;
-      }
-      .box8 {
-        @extend .box1;
-        background: #fff9f3;
-      }
-      .box9 {
-        @extend .box1;
-        background: #fff;
-      }
-      image {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        top: -30%;
-        width: 60rpx;
-        height: 68rpx;
-      }
-      .text1 {
-        position: absolute;
-        white-space: nowrap;
-        font-size: 26rpx;
-        font-weight: 500;
-        bottom: 13rpx;
-        left: 50%;
-        transform: translateX(-50%);
-        color: #b85f00;
-      }
-      .text2 {
-        @extend .text1;
-        color: #aa7600;
-      }
-      .text3 {
-        @extend .text1;
-        color: #005eaa;
-      }
-      .text4 {
-        @extend .text1;
-        color: #114d00;
-      }
-      .text5 {
-        @extend .text1;
-        color: #0009aa;
-      }
-      .text6 {
-        @extend .text1;
-        color: #0028aa;
-      }
-      .text7 {
-        @extend .text1;
-        color: #b32218;
-      }
-      .text8 {
-        @extend .text1;
-        color: #b85300;
-      }
-    }
-    .s_box {
-      @extend .click_box;
-      .box {
+      padding: 35rpx 40rpx 0;
+      .box_img {
         width: 185rpx;
-        height: 130rpx;
+        height: 125rpx;
         image {
           width: 100%;
           height: 100%;
+        }
+      }
+      .box_cont {
+        flex: 1;
+        padding-left: 35rpx;
+        .progress {
+          display: flex;
+          align-items: center;
+          width: 55%;
+          text {
+            margin-left: 8rpx;
+            font-size: 22rpx;
+            color: #8a8a8a;
+          }
+        }
+        .button {
+          width: 150rpx;
+          height: 40rpx;
+          line-height: 40rpx;
+          border-radius: 125rpx;
+          text-align: center;
+          color: #fff;
+          font-size: 23rpx;
         }
       }
     }

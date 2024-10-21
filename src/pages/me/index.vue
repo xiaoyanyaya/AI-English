@@ -94,7 +94,7 @@
             开通VIP立享所有权益
           </view>
         </view>
-        <!-- <view
+        <view
           v-if="osName === 'android'"
           class="user-center-btn t-color-fff flex align-item-center justify-content-center t-size-24"
           @click="$navigateTo('/pages/me/userCenter')"
@@ -103,20 +103,20 @@
         </view>
         <view
           v-else
-          @click="senMSG"
+          @click="changeMpuser"
           class="user-center-btn t-color-fff flex align-item-center justify-content-center t-size-24 position-relative"
         >
           立享优惠
-          <view class="share-btn">
+          <view v-if="ifWxmpUser" class="share-btn">
             <button open-type="contact">优惠</button>
           </view>
-        </view> -->
-        <view
+        </view>
+        <!-- <view
           class="user-center-btn t-color-fff flex align-item-center justify-content-center t-size-24"
           @click="$navigateTo('/pages/me/userCenter')"
         >
           立享优惠
-        </view>
+        </view> -->
       </view>
 
       <!-- 操作列表框 -->
@@ -208,6 +208,7 @@ export default {
       isShowPayCenter: false,
       isShowOther: false,
       version: "",
+      ifWxmpUser: false,
     };
   },
   // 深度监听userInfo
@@ -265,6 +266,7 @@ export default {
     if (store.state.token && isAuthPhone) {
       this.getUserInfo().then((data) => {
         this.userInfo = data;
+        this.ifWxmpUser = data.ifWxmpUser;
       });
     }
     this.initData();
@@ -336,6 +338,10 @@ export default {
         }
       }
       if (index == 1) this.$navigateTo("/pages/me/cardConversion");
+    },
+    changeMpuser() {
+      if (this.ifWxmpUser) return;
+      uni.navigateTo({ url: "/pages/word/authorization?type=pay" });
     },
     network() {
       return {};

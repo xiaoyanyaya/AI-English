@@ -13,7 +13,7 @@
         class="main-image mb-5"
       ></image>
 
-      <view class="t-color-3D3D3D t-size-36">答题完成！</view>
+      <view class="t-color-3D3D3D t-size-36">{{ titlee }}！</view>
       <view class="t-color-8A8A8A t-size-26 mt-2"
         >授权关注公众号，获取您的日常学习通知</view
       >
@@ -43,6 +43,14 @@ export default {
       return `background-image: url(${this.imageBaseUrl}/8-13-03.png);
                 background-size: 100% 100%;`;
     },
+  },
+  data() {
+    return {
+      titlee: "答题完成！",
+    };
+  },
+  onLoad(e) {
+    if (e) this.titlee = "立享优惠";
   },
   methods: {
     toNav(urls) {

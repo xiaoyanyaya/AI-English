@@ -1,60 +1,26 @@
 <template>
   <view class="main">
-    <web-view
-      v-if="isLoad"
-      :src="
-        'https://wapi-dev.aien.xiaolixb.com/h5/index.html?source=' +
-        source +
-        '&token=' +
-        token +
-        '&id=' +
-        videoId +
-        '&vName=' +
-        vName +
-        '&pTime=' +
-        pTime +
-        '&cover=' +
-        cover +
-        '&playTimes=' +
-        playTimes +
-        '&currTime=' +
-        currTime
-      "
-    ></web-view>
+    <web-view v-if="isLoad" :src="src"></web-view>
   </view>
 </template>
 
 <script>
 import { getPlayAuth, getPlayUrl } from "@/api/frank";
 import store from "@/store/";
+import { h5Domain } from "@/configs/env";
 
 export default {
   data() {
     return {
-      videoId: null,
-      vodVideoId: null,
-      playauth: null,
-      source: null,
-      token: null,
-      vName: "",
-      pTime: "",
-      cover: "",
-      playTimes: "",
-      currTime: "",
       isLoad: false,
+      src: "",
     };
   },
   async onLoad(e) {
     console.log("webviw eeeeeeeeeeeee", e);
-    this.videoId = e.videoId;
-    this.vodVideoId = e.vodVideoId;
-    this.vName = e.vName;
-    this.pTime = e.pTime;
-    this.cover = e.cover;
-    this.playTimes = e.playTimes;
-    this.currTime = e.currTime;
-    this.token = store.state.token;
-    await this.getLive();
+    this.src = `${h5Domain}/index.html?videoId=${e.videoId}&token=${e.token}&pid=${e.pid}`;
+    // await this.getLive();
+    this.isLoad = true;
   },
   methods: {
     async getLive() {

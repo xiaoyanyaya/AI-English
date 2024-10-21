@@ -221,6 +221,7 @@ export default {
         amount: 0,
         description: "",
         orderType: "vip_order_applet",
+        clientSource: "wxapp",
       },
       type: "",
     };
@@ -288,6 +289,8 @@ export default {
 
       vipBuy({
         chargeVipId: data.id,
+        payWay: "wxpay",
+        clientSource: "wxapp",
       }).then((res) => {
         console.log(res);
         if (res.data.code !== 200) {
@@ -305,7 +308,7 @@ export default {
       });
     },
     getPrepayPaymentResponse() {
-      let url = "/weixin/getPrepayPaymentResponse";
+      let url = "/weixin/getH5PayNeedParam";
       requestApi({
         url,
         method: "post",
@@ -320,7 +323,7 @@ export default {
         console.log(res);
         if (res.code !== 200) {
           uni.showToast({
-            title: res.data.message,
+            title: res.message,
             icon: "none",
           });
         } else {

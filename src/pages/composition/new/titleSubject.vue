@@ -628,7 +628,7 @@ export default {
     ocrPhotos(tempFilePath, type) {
       var _this = this;
       uni.uploadFile({
-        url: `https://wapi-dev.aien.xiaolixb.com/v1/ocr/record/serviceByFile`,
+        url: `${apiDomain}/ocr/record/serviceByFile`,
         filePath: tempFilePath,
         name: 'imageFile',
         header: {

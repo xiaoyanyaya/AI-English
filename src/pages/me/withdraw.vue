@@ -183,7 +183,7 @@ export default {
             prams.account = this.inputList[1].value;
 
             uni.request({
-              url: 'https://wapi-dev.aien.xiaolixb.com/v1/distribution/commission/withdraw/apply',
+              url: `${apiDomain}/distribution/commission/withdraw/apply`,
               method: 'POST',
               header: {
                 'X-Access-Token': store.state.token,
@@ -208,7 +208,7 @@ export default {
             console.log("prams", prams)
 
             uni.uploadFile({
-              url: `https://wapi-dev.aien.xiaolixb.com/v1/distribution/commission/withdraw/apply`,
+              url: `${apiDomain}/distribution/commission/withdraw/apply`,
               filePath: this.inputList[1].value,
               name: 'qrCodePic',
               formData: prams,

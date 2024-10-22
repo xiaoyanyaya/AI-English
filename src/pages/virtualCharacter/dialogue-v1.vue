@@ -3,7 +3,6 @@
     <cy-navbar showBack isAbsolute>
       <view class="t-size-30">虚拟人对练</view>
     </cy-navbar>
-<!--    <button @click.stop="test" style="position: absolute; top: 200rpx;z-index: 10001">test</button>-->
     <view class="content-box" :style="contentBoxStyle">
       <view class="mark-bg"></view>
       <view class="flex align-item-center justify-content-center">
@@ -143,7 +142,6 @@ export default {
     this.network().defaultVirtual();
     this.initRecord()
     this.network().getChatInit(res.sceneId);
-    // this.test()
 
     this.getSystemInfo();
     let self = this;
@@ -179,17 +177,6 @@ export default {
     }
   },
   methods: {
-    test() {
-      this.dialogueContent.push({
-        content: "Hello, where are you from?",
-        icon: "",
-        isSelf: true,
-        isPlay: false,
-        mp3Url: "https://wapi-dev.aien.xiaolixb.com/v1/sys/common/static/digitalhuman/voice/tmp_1236bf6ffc82f634cfbf88a88d4de5197b759db275700abf_1716113891940.mp3",
-        translate: "你好，你是哪里你是哪里人你是哪里人你是哪里人你是哪里人人"
-      })
-      this.toScrollerViewBottom()
-    },
     initRecord: function(){
       manager.onRecognize = (res) => {
       }
@@ -472,7 +459,7 @@ export default {
         saveVoiceText: async (index) => {
           this.sendData.sessionId = this.chatInit.session_id;
           uni.uploadFile({
-            url: `https://wapi-dev.aien.xiaolixb.com/v1/digitalhuman/asr/saveVoiceText`,
+            url: `${apiDomain}/digitalhuman/asr/saveVoiceText`,
             filePath: this.sendData.voiceFile,
             name: 'file',
             formData: this.sendData,

@@ -110,7 +110,7 @@
             )
           "
         >
-          <image :src="imageBaseUrl + '/frank/8-7-05.png'" mode=""></image>
+          <image :src="item2.imageUrl" mode=""></image>
         </view>
         <view class="box_cont">
           <view class="t-size-26">{{ item2.nodeName }}</view>

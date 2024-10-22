@@ -18,7 +18,7 @@ export default {
   },
   async onLoad(e) {
     console.log("webviw eeeeeeeeeeeee", e);
-    this.src = `${h5Domain}/index.html?videoId=${e.videoId}&token=${e.token}&pid=${e.pid}`;
+    this.src = `${h5Domain}/index.html?videoId=${e.videoId}&token=${store.state.token}&pid=${e.pid}`;
     // await this.getLive();
     this.isLoad = true;
   },

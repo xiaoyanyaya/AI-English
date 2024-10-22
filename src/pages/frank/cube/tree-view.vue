@@ -4,7 +4,7 @@
     <view v-if="node.parentIndex.length == 1">
       <view class="top_title" @click="toggleChildren(node)">
         <view class="top_left">
-          <image :src="imageBaseUrl + '/frank/8-7-05.png'"></image>
+          <image :src="node.imageUrl"></image>
           <view class="text_cont">
             <view class="t-size-28 font-w-5">{{ node.nodeName }}</view>
             <view class="t-size-20 t-color-8A8A8A"
@@ -23,6 +23,7 @@
         </view>
         <view class="top_right">
           <u-circle-progress
+            v-if="node.videoNum != 0"
             active-color="#2979ff"
             :percent="((node.studyNum / node.videoNum) * 100).toFixed(0)"
             width="100"
@@ -33,6 +34,18 @@
               <text class="u-progress-info"
                 >{{ ((node.studyNum / node.videoNum) * 100).toFixed(0) }}%</text
               >
+            </view>
+          </u-circle-progress>
+          <u-circle-progress
+            v-else
+            active-color="#2979ff"
+            percent="0"
+            width="100"
+            border-width="8"
+            style="margin-right: 35rpx"
+          >
+            <view class="u-progress-content">
+              <text class="u-progress-info">0%</text>
             </view>
           </u-circle-progress>
           <view class="f_image">
@@ -263,7 +276,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 30rpx;
+  padding: 28rpx;
   .top_left {
     display: flex;
     image {

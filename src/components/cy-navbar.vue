@@ -14,7 +14,8 @@
           <!--          <image v-show="showBack" src="/static/logo.png" class="avatar-css"></image>-->
         </view>
         <view class="nav-slot mr-1" :style="{ color: textColor }">
-          <slot></slot>
+          <view class="t-size-30" v-if="titleStr">{{ titleStr }}</view>
+          <view v-else><slot></slot></view>
         </view>
         <view class="nav-btn"></view>
       </view>
@@ -26,6 +27,15 @@
 <script>
 export default {
   props: {
+    title: {
+      type: String,
+      default: "",
+    },
+    // 标题显示长度
+    titleLength: {
+      type: Number,
+      default: 10,
+    },
     // 是否显示返回键
     showBack: {
       type: Boolean,
@@ -64,6 +74,17 @@ export default {
     },
   },
   computed: {
+    /**
+     * 标题截断省略号
+     */
+    titleStr() {
+      if (!this.title) return "";
+
+      if (this.title.length > this.titleLength) {
+        return this.title.substring(0, this.titleLength) + "...";
+      }
+      return this.title;
+    },
     statusBarHeight() {
       var style = `padding-top: ${this.systemInfo.statusBarHeight}px;`;
       if (this.showBgColor && !this.allTrans) {

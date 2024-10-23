@@ -1,7 +1,11 @@
 <template>
   <view class="main">
-    <cy-navbar :showBack="true" :bgColor="backColor" textColor="#3D3D3D">
-      <view class="t-size-30">{{ navbarTitle }}</view>
+    <cy-navbar
+      :showBack="true"
+      :bgColor="backColor"
+      textColor="#3D3D3D"
+      :title="navbarTitle"
+    >
     </cy-navbar>
 
     <view class="top_button">

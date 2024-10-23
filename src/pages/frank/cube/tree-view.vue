@@ -3,62 +3,66 @@
     <!-- <view v-for="(node, index) in videoList" :key="node.id" class="box_tree"> -->
     <view v-if="node.parentIndex.length == 1">
       <view class="top_title" @click="toggleChildren(node)">
-        <view class="top_left">
-          <image :src="node.imageUrl"></image>
-          <view class="text_cont">
-            <view class="t-size-28 font-w-5">{{ node.nodeName }}</view>
-            <view class="t-size-20 t-color-8A8A8A"
-              >共{{ node.videoNum }}个视频</view
-            >
-            <view
-              v-if="node.studyNum == node.videoNum"
-              class="t-size-20 t-color-1863E5"
-            >
-              已完成
-            </view>
-            <view v-else class="t-size-20 t-color-1863E5">
-              {{ node.studyNum }}/{{ node.videoNum }}
-            </view>
-          </view>
-        </view>
+        <image :src="node.imageUrl"></image>
         <view class="top_right">
-          <u-circle-progress
-            v-if="node.videoNum != 0"
-            active-color="#2979ff"
-            :percent="((node.studyNum / node.videoNum) * 100).toFixed(0)"
-            width="100"
-            border-width="8"
-            style="margin-right: 35rpx"
-          >
-            <view class="u-progress-content">
-              <text class="u-progress-info"
-                >{{ ((node.studyNum / node.videoNum) * 100).toFixed(0) }}%</text
+          <view class="t-size-28 font-w-5">{{ node.nodeName }}</view>
+          <view class="flex mt-1">
+            <view class="text_cont">
+              <view class="t-size-20 t-color-8A8A8A mt-1 mb-1"
+                >共{{ node.videoNum }}个视频</view
               >
+              <view
+                v-if="node.studyNum == node.videoNum"
+                class="t-size-20 t-color-1863E5"
+              >
+                已完成
+              </view>
+              <view v-else class="t-size-20 t-color-1863E5">
+                {{ node.studyNum }}/{{ node.videoNum }}
+              </view>
             </view>
-          </u-circle-progress>
-          <u-circle-progress
-            v-else
-            active-color="#2979ff"
-            percent="0"
-            width="100"
-            border-width="8"
-            style="margin-right: 35rpx"
-          >
-            <view class="u-progress-content">
-              <text class="u-progress-info">0%</text>
+            <view class="img_cont">
+              <u-circle-progress
+                v-if="node.videoNum != 0"
+                active-color="#2979ff"
+                :percent="((node.studyNum / node.videoNum) * 100).toFixed(0)"
+                width="90"
+                border-width="7"
+                style="margin-right: 35rpx"
+              >
+                <view class="u-progress-content">
+                  <text class="u-progress-info"
+                    >{{
+                      ((node.studyNum / node.videoNum) * 100).toFixed(0)
+                    }}%</text
+                  >
+                </view>
+              </u-circle-progress>
+              <u-circle-progress
+                v-else
+                active-color="#2979ff"
+                percent="0"
+                width="100"
+                border-width="8"
+                style="margin-right: 35rpx"
+              >
+                <view class="u-progress-content">
+                  <text class="u-progress-info">0%</text>
+                </view>
+              </u-circle-progress>
+              <view class="f_image">
+                <image
+                  v-show="node.isOpen"
+                  :src="imageBaseUrl + '/frank/8-7-25.png'"
+                  mode=""
+                ></image>
+                <image
+                  v-show="!node.isOpen"
+                  :src="imageBaseUrl + '/frank/8-7-26.png'"
+                  mode=""
+                ></image>
+              </view>
             </view>
-          </u-circle-progress>
-          <view class="f_image">
-            <image
-              v-show="node.isOpen"
-              :src="imageBaseUrl + '/frank/8-7-25.png'"
-              mode=""
-            ></image>
-            <image
-              v-show="!node.isOpen"
-              :src="imageBaseUrl + '/frank/8-7-26.png'"
-              mode=""
-            ></image>
           </view>
         </view>
       </view>
@@ -70,7 +74,7 @@
         class="left"
         :style="{
           paddingLeft:
-            node.parentIndex.length == 3
+            node.parentIndex.length >= 3
               ? node.parentIndex.length * 15 + 'rpx'
               : '0rpx',
         }"
@@ -277,39 +281,38 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 28rpx;
-  .top_left {
-    display: flex;
-    image {
-      margin-right: 15rpx;
-      width: 190rpx;
-      height: 116rpx;
-    }
+
+  image {
+    width: 190rpx;
+    height: 116rpx;
+  }
+
+  .top_right {
+    flex: 1;
+    margin-left: 15rpx;
     .text_cont {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
       width: 200rpx;
     }
-  }
-  .top_right {
-    display: flex;
-    align-items: center;
-    .f_image {
+    .img_cont {
       display: flex;
       align-items: center;
-      width: 33rpx;
-      height: 33rpx;
-      image {
-        width: 100%;
-        height: 100%;
+      .f_image {
+        display: flex;
+        align-items: center;
+        width: 33rpx;
+        height: 33rpx;
+        image {
+          width: 100%;
+          height: 100%;
+        }
       }
-    }
-    .u-progress-content {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      .u-progress-info {
-        font-size: 22rpx;
+      .u-progress-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .u-progress-info {
+          font-size: 22rpx;
+        }
       }
     }
   }

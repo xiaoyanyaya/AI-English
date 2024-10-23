@@ -34,7 +34,7 @@ export default {
     // 标题显示长度
     titleLength: {
       type: Number,
-      default: 10,
+      default: 14,
     },
     // 是否显示返回键
     showBack: {

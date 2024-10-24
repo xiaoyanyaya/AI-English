@@ -93,7 +93,7 @@ import store from '@/store/';
 import {defaultVirtual} from "@/api/aiFriend";
 import MyMixin from "@/utils/MyMixin";
 import {createSseConnect, sendChat} from "../../api/aiDialogue";
-import {createWebsocket} from "../../api/socket";
+import {createWebsocket, getVoiceFile} from "../../api/socket";
 import {closeSocket} from "../../api/aiFriend";
 
 const recorderManager = uni.getRecorderManager();
@@ -136,12 +136,21 @@ export default {
       innerAudioContext: {},
 
       streamResponseType: '',
+      //初始sessionId
+      initSessionId: "",
       /**  scoket */
       socket: {
         webSocketConnected: false,
         webSocketInstance: null,
         message: '',
-        sessionId: '',
+        connectId: '',
+        socketTaskId: '',
+        heartCheckInterval: null,
+      },
+      socketFile: {
+        webSocketConnected: false,
+        webSocketInstance: null,
+        message: '',
         connectId: '',
         socketTaskId: '',
         heartCheckInterval: null,
@@ -299,7 +308,7 @@ export default {
     socketSend() {
       let data = {
         sessionType: "CHAT",
-        sessionId: this.socket.connectId,
+        sessionId: this.initSessionId,
         connectId: this.socket.connectId,
         content: this.sendData.voiceResultText
       }
@@ -540,6 +549,10 @@ export default {
 
           this.socket.webSocketInstance = uni.connectSocket({
             url: createWebsocket,
+            header: {
+              'content-type': 'application/json',
+              'X-Access-Token': store.state.token
+            },
             success: (res) => {
               console.log("创建WebSocket连接成功", res)
               this.socket.webSocketConnected = true
@@ -556,6 +569,9 @@ export default {
             console.log("创建socket连接 onMessage res", res)
             if (!this.socket.connectId) {
               this.socket.connectId = res.data
+              if (!this.initSessionId) {
+                this.initSessionId = res.data
+              }
             } else {
               console.log("接收到消息", res.data)
               this.dialogueContent[this.dialogueContent.length - 1].content += res.data
@@ -565,12 +581,12 @@ export default {
 
           this.socket.webSocketInstance.onClose((res) => {
             console.log('WebSocket connection closed:', res)
+            this.network().getVoiceFile()
             this.socket.webSocketConnected = false
             this.socket = {
               webSocketConnected: false,
               webSocketInstance: null,
               message: '',
-              sessionId: '',
               connectId: '',
               socketTaskId: '',
               heartCheckInterval: null,
@@ -579,6 +595,32 @@ export default {
             this.network().createSocketTask()
           })
         },
+        // 获取音频
+        getVoiceFile: async () => {
+          console.log("获取音频文件信息url", getVoiceFile + this.socket.connectId)
+          this.socketFile.webSocketInstance = uni.connectSocket({
+            url: getVoiceFile + this.socket.connectId,
+            header: {
+              'content-type': 'application/json',
+              'X-Access-Token': store.state.token
+            },
+            success: (res) => {
+              console.log("创建获取音频文件信息", res)
+              this.socketFile.webSocketConnected = true
+              this.socketFile.socketTaskId = res.socketTaskId
+              // this.heartCheck()
+            },
+            fail: (err) => {
+              console.log("WebSocket连接失败")
+              console.log('Error connecting to WebSocket:', err)
+            }
+          })
+
+          this.socketFile.webSocketInstance.onMessage((res) => {
+            console.log("获取音频文件信息 onMessage res", res)
+          })
+
+        }
       }
     }
   },

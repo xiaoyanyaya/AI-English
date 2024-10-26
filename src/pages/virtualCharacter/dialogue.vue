@@ -581,8 +581,9 @@ export default {
 
           this.socket.webSocketInstance.onClose((res) => {
             console.log('WebSocket connection closed:', res)
-            this.network().getVoiceFile()
             this.socket.webSocketConnected = false
+            // 建立音频文件通道
+            this.network().getVoiceFile()
             this.socket = {
               webSocketConnected: false,
               webSocketInstance: null,

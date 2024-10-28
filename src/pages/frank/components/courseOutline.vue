@@ -18,7 +18,7 @@
       <view @click="activeIndex = 1" :class="{ active_bu: activeIndex == 1 }">
         课程大纲
       </view>
-      <view @click="updateTopIsOpen(videoList)" class="ml-18"
+      <view v-if="!pId.length" @click="updateTopIsOpen(videoList)" class="ml-18"
         >展开收起
         <image
           v-if="topIsOpen"
@@ -26,6 +26,7 @@
         ></image>
         <image v-else :src="imageBaseUrl + '/frank/8-7-29.png'"></image>
       </view>
+      <view v-else class="ml-18"></view>
     </view>
 
     <!-- 课程介绍内容 -->
@@ -39,7 +40,13 @@
 
     <!-- 课程大纲内容 -->
     <view v-else>
-      <view v-for="(item, index) in videoList" :key="item.id" class="box_tree">
+      <tree-view v-if="pId.length" :vList="vList" :pId="pId"></tree-view>
+      <view
+        v-else
+        v-for="(item, index) in videoList"
+        :key="item.id"
+        class="box_tree"
+      >
         <tree-view
           :node="item"
           :index="index"
@@ -71,6 +78,8 @@ export default {
       videoList: [],
       videoPId: null, //获取视频
       studyVideoPid: null, //被点击的视频节点id
+      vList: [], //课程体系页面直接是视频列表的情况
+      pId: "", //课程体系页面直接是视频列表的情况
     };
   },
   onPageScroll(e) {
@@ -160,9 +169,16 @@ export default {
       const res = await getCourseOutline({ rootNodeCode: this.query.nodeCode });
       this.introduce = res.data.result[0].nodeContent;
       this.videoList = res.data.result[0].children;
-      // 格式化
-      this.assignParentIndex(this.videoList);
-      console.log("格式化数据this.videoList", this.videoList);
+      //如果课程体系页面没有层级分类，直接是视频列表的情况：
+      if (!this.videoList.length) {
+        const vData = await getNodeVideo({ nodeId: res.data.result[0].id });
+        this.vList = vData.data.result;
+        this.pId = res.data.result[0].id;
+      } else {
+        // 格式化
+        this.assignParentIndex(this.videoList);
+        console.log("格式化数据this.videoList", this.videoList);
+      }
     },
 
     // updateTopIsOpen(items, flag) {

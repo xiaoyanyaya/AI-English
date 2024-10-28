@@ -253,7 +253,7 @@
     "list": [
       {
         "pagePath": "pages/frank/index",
-        "text": "Frank",
+        "text": "弗兰克",
         "iconPath": "/static/frank_inactive.png",
         "selectedIconPath": "/static/frank_active.png"
       },

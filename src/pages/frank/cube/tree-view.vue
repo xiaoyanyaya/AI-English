@@ -1,172 +1,8 @@
 <template>
   <view>
-    <!-- <view v-for="(node, index) in videoList" :key="node.id" class="box_tree"> -->
-    <view v-if="node.parentIndex.length == 1">
-      <view class="top_title" @click="toggleChildren(node)">
-        <image :src="node.imageUrl"></image>
-        <view class="top_right">
-          <view class="t-size-28 font-w-5">{{ node.nodeName }}</view>
-          <view class="flex mt-1">
-            <view class="text_cont">
-              <view class="t-size-20 t-color-8A8A8A mt-1 mb-1"
-                >共{{ node.videoNum }}个视频</view
-              >
-              <view
-                v-if="node.studyNum == node.videoNum"
-                class="t-size-20 t-color-1863E5"
-              >
-                已完成
-              </view>
-              <view v-else class="t-size-20 t-color-1863E5">
-                {{ node.studyNum }}/{{ node.videoNum }}
-              </view>
-            </view>
-            <view class="img_cont">
-              <u-circle-progress
-                v-if="node.videoNum != 0"
-                active-color="#2979ff"
-                :percent="((node.studyNum / node.videoNum) * 100).toFixed(0)"
-                width="90"
-                border-width="7"
-                style="margin-right: 35rpx"
-              >
-                <view class="u-progress-content">
-                  <text class="u-progress-info"
-                    >{{
-                      ((node.studyNum / node.videoNum) * 100).toFixed(0)
-                    }}%</text
-                  >
-                </view>
-              </u-circle-progress>
-              <u-circle-progress
-                v-else
-                active-color="#2979ff"
-                percent="0"
-                width="100"
-                border-width="8"
-                style="margin-right: 35rpx"
-              >
-                <view class="u-progress-content">
-                  <text class="u-progress-info">0%</text>
-                </view>
-              </u-circle-progress>
-              <view class="f_image">
-                <image
-                  v-show="node.isOpen"
-                  :src="imageBaseUrl + '/frank/8-7-25.png'"
-                  mode=""
-                ></image>
-                <image
-                  v-show="!node.isOpen"
-                  :src="imageBaseUrl + '/frank/8-7-26.png'"
-                  mode=""
-                ></image>
-              </view>
-            </view>
-          </view>
-        </view>
-      </view>
-      <view v-show="node.isOpen" class="border_t"></view>
-    </view>
-
-    <view v-else class="box" @click="toggleChildren(node)">
-      <view
-        class="left"
-        :style="{
-          paddingLeft:
-            node.parentIndex.length >= 3
-              ? node.parentIndex.length * 15 + 'rpx'
-              : '0rpx',
-        }"
-      >
-        <view class="f_image">
-          <image
-            v-show="node.isOpen"
-            :src="imageBaseUrl + '/frank/8-7-25.png'"
-            mode=""
-          ></image>
-          <image
-            v-show="!node.isOpen"
-            :src="imageBaseUrl + '/frank/8-7-26.png'"
-            mode=""
-          ></image>
-        </view>
-        <view class="flex align-item-center">
-          <text class="t-color-2A67D2 t-size-28 mr-1"
-            >{{ node.nodeName }}
-          </text>
-          <view v-if="node.videoNum != 0" class="flex align-item-center">
-            <u-line-progress
-              v-if="((node.studyNum / node.videoNum) * 100).toFixed(2) == 100"
-              active-color="#52c41a"
-              inactive-color="#c8c8c8"
-              :show-percent="false"
-              :percent="((node.studyNum / node.videoNum) * 100).toFixed(2)"
-              style="width: 90rpx; margin-bottom: 8rpx"
-              height="12"
-            >
-            </u-line-progress>
-            <u-line-progress
-              v-else
-              active-color="#2979ff"
-              inactive-color="#c8c8c8"
-              :show-percent="false"
-              :percent="((node.studyNum / node.videoNum) * 100).toFixed(2)"
-              style="width: 90rpx; margin-bottom: 8rpx"
-              height="12"
-            >
-            </u-line-progress>
-            <view class="line_right">
-              <view
-                v-if="((node.studyNum / node.videoNum) * 100).toFixed(0) == 100"
-              >
-                <view class="circle">
-                  <u-icon name="checkmark" color="#fff" size="18"></u-icon>
-                </view>
-              </view>
-              <text v-else
-                >{{ ((node.studyNum / node.videoNum) * 100).toFixed(0) }}%</text
-              >
-            </view>
-          </view>
-        </view>
-      </view>
-      <view class="border_t"></view>
-      <!-- <view
-          v-if="node.parentIndex.length == 1"
-          @click.stop="toggleTopIsOpen(index)"
-          class="topOpen"
-        >
-          <view class="button3" v-if="node.isOpen">
-            <image :src="imageBaseUrl + '/frank/8-7-29.png'" mode=""></image>
-            <text> 展开 </text>
-          </view>
-          <view class="button3" v-else>
-            <image :src="imageBaseUrl + '/frank/8-7-28.png'" mode=""></image>
-            <text> 收起 </text>
-          </view>
-        </view> -->
-    </view>
-
-    <!-- 组件递归 -->
-    <view v-if="node.isOpen && node.children.length">
-      <!-- <cube-node
-        v-for="child in node.children"
-        :key="child.id"
-        :node="child"
-        @updateVideoList="emitUpdateVideoList(child)"
-      ></cube-node> -->
-      <cube-node
-        v-for="child in node.children"
-        :key="child.id"
-        :node="child"
-      ></cube-node>
-    </view>
-
-    <!-- 视屏列表 -->
-    <view v-if="node.isOpen && !node.children.length">
-      <view v-for="item in node.vList" :key="item.id" class="box_video">
-        <view @click="goStudy(item, node)" class="video_title">
+    <view v-if="pId.length" class="mt-2 ml-3 mr-3">
+      <view v-for="item in vList" :key="item.id" class="box_video">
+        <view @click="goStudy(item, { id: pId })" class="video_title">
           <view class="flex align-item-center">
             <image :src="imageBaseUrl + '/frank/8-7-27.png'"></image>
             <view class="vName">{{ item.videoName }}</view>
@@ -188,6 +24,200 @@
         <view class="border"></view>
       </view>
     </view>
+
+    <view v-else>
+      <view v-if="node.parentIndex.length == 1">
+        <view class="top_title" @click="toggleChildren(node)">
+          <image :src="node.imageUrl"></image>
+          <view class="top_right">
+            <view class="t-size-28 font-w-5">{{ node.nodeName }}</view>
+            <view class="flex mt-1">
+              <view class="text_cont">
+                <view class="t-size-20 t-color-8A8A8A mt-1 mb-1"
+                  >共{{ node.videoNum }}个视频</view
+                >
+                <view
+                  v-if="node.studyNum == node.videoNum"
+                  class="t-size-20 t-color-1863E5"
+                >
+                  已完成
+                </view>
+                <view v-else class="t-size-20 t-color-1863E5">
+                  {{ node.studyNum }}/{{ node.videoNum }}
+                </view>
+              </view>
+              <view class="img_cont">
+                <u-circle-progress
+                  v-if="node.videoNum != 0"
+                  active-color="#2979ff"
+                  :percent="((node.studyNum / node.videoNum) * 100).toFixed(0)"
+                  width="90"
+                  border-width="7"
+                  style="margin-right: 35rpx; z-index: 0"
+                >
+                  <view class="u-progress-content">
+                    <text class="u-progress-info"
+                      >{{
+                        ((node.studyNum / node.videoNum) * 100).toFixed(0)
+                      }}%</text
+                    >
+                  </view>
+                </u-circle-progress>
+                <u-circle-progress
+                  v-else
+                  active-color="#2979ff"
+                  percent="0"
+                  width="100"
+                  border-width="8"
+                  style="margin-right: 35rpx; z-index: 0"
+                >
+                  <view class="u-progress-content">
+                    <text class="u-progress-info">0%</text>
+                  </view>
+                </u-circle-progress>
+                <view class="f_image">
+                  <image
+                    v-show="node.isOpen"
+                    :src="imageBaseUrl + '/frank/8-7-25.png'"
+                    mode=""
+                  ></image>
+                  <image
+                    v-show="!node.isOpen"
+                    :src="imageBaseUrl + '/frank/8-7-26.png'"
+                    mode=""
+                  ></image>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view v-show="node.isOpen" class="border_t"></view>
+      </view>
+
+      <view v-else class="box" @click="toggleChildren(node)">
+        <view
+          class="left"
+          :style="{
+            paddingLeft:
+              node.parentIndex.length >= 3
+                ? node.parentIndex.length * 15 + 'rpx'
+                : '0rpx',
+          }"
+        >
+          <view class="f_image">
+            <image
+              v-show="node.isOpen"
+              :src="imageBaseUrl + '/frank/8-7-25.png'"
+              mode=""
+            ></image>
+            <image
+              v-show="!node.isOpen"
+              :src="imageBaseUrl + '/frank/8-7-26.png'"
+              mode=""
+            ></image>
+          </view>
+          <view class="flex align-item-center">
+            <text class="t-color-2A67D2 t-size-28 mr-1"
+              >{{ node.nodeName }}
+            </text>
+            <view v-if="node.videoNum != 0" class="flex align-item-center">
+              <u-line-progress
+                v-if="((node.studyNum / node.videoNum) * 100).toFixed(2) == 100"
+                active-color="#52c41a"
+                inactive-color="#c8c8c8"
+                :show-percent="false"
+                :percent="((node.studyNum / node.videoNum) * 100).toFixed(2)"
+                style="width: 90rpx; margin-bottom: 8rpx"
+                height="12"
+              >
+              </u-line-progress>
+              <u-line-progress
+                v-else
+                active-color="#2979ff"
+                inactive-color="#c8c8c8"
+                :show-percent="false"
+                :percent="((node.studyNum / node.videoNum) * 100).toFixed(2)"
+                style="width: 90rpx; margin-bottom: 8rpx"
+                height="12"
+              >
+              </u-line-progress>
+              <view class="line_right">
+                <view
+                  v-if="
+                    ((node.studyNum / node.videoNum) * 100).toFixed(0) == 100
+                  "
+                >
+                  <view class="circle">
+                    <u-icon name="checkmark" color="#fff" size="18"></u-icon>
+                  </view>
+                </view>
+                <text v-else
+                  >{{
+                    ((node.studyNum / node.videoNum) * 100).toFixed(0)
+                  }}%</text
+                >
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="border_t"></view>
+        <!-- <view
+          v-if="node.parentIndex.length == 1"
+          @click.stop="toggleTopIsOpen(index)"
+          class="topOpen"
+        >
+          <view class="button3" v-if="node.isOpen">
+            <image :src="imageBaseUrl + '/frank/8-7-29.png'" mode=""></image>
+            <text> 展开 </text>
+          </view>
+          <view class="button3" v-else>
+            <image :src="imageBaseUrl + '/frank/8-7-28.png'" mode=""></image>
+            <text> 收起 </text>
+          </view>
+        </view> -->
+      </view>
+
+      <!-- 组件递归 -->
+      <view v-if="node.isOpen && node.children.length">
+        <!-- <cube-node
+        v-for="child in node.children"
+        :key="child.id"
+        :node="child"
+        @updateVideoList="emitUpdateVideoList(child)"
+      ></cube-node> -->
+        <cube-node
+          v-for="child in node.children"
+          :key="child.id"
+          :node="child"
+        ></cube-node>
+      </view>
+
+      <!-- 视屏列表 -->
+      <view v-if="node.isOpen && !node.children.length">
+        <view v-for="item in node.vList" :key="item.id" class="box_video">
+          <view @click="goStudy(item, node)" class="video_title">
+            <view class="flex align-item-center">
+              <image :src="imageBaseUrl + '/frank/8-7-27.png'"></image>
+              <view class="vName">{{ item.videoName }}</view>
+            </view>
+            <text
+              v-if="item.studyStatusText == '已学'"
+              class="t-color-43A71C t-size-24 font-w-5"
+              >·{{ item.studyStatusText }}</text
+            >
+            <text
+              v-else-if="item.studyStatusText == '学习中'"
+              class="t-color-FFAB2D t-size-24 font-w-5"
+              >·{{ item.studyStatusText }}</text
+            >
+            <text v-else class="t-color-636363 t-size-24 font-w-5"
+              >·{{ item.studyStatusText }}</text
+            >
+          </view>
+          <view class="border"></view>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -205,15 +235,23 @@ export default {
   props: {
     node: {
       type: Object,
-      required: true,
+      required: false,
     },
     index: {
       type: String,
-      required: true,
+      required: false,
     },
     topIsOpen: {
       type: Boolean,
-      required: true,
+      required: false,
+    },
+    vList: {
+      type: Array,
+      required: false,
+    },
+    pId: {
+      type: String,
+      required: false,
     },
   },
   data() {
@@ -234,9 +272,6 @@ export default {
     },
     goStudy(item, node) {
       uni.$emit("uniUpdateStudyVideoPid", node.id);
-      // this.toNav(
-      //   `/pages/frank/webview?vodVideoId=${item.vodVideoId}&videoId=${item.id}&vName=${item.videoFullName}&pTime=${item.publishTime}&cover=${item.videoImageUrl}&playTimes=${item.playTimes}&currTime=${item.currTime}`
-      // );
       //携带点击视频的pId 在h5请求视频列表并播放当前点击视频
       this.toNav(`/pages/frank/webview?videoId=${item.id}&pid=${node.id}`);
     },

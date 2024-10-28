@@ -267,9 +267,13 @@ export default {
         let data = await wordList({ unitId: this.query.unitId });
         console.log("id=0单词列表res的data", data);
         this.allData = data.data.result;
-        this.allData.wordLessonDictList.forEach(
-          (item) => (item.wordCnList = item.wordCn.split("\n"))
-        );
+        this.allData.wordLessonDictList.forEach((item) => {
+          if (item.wordCn) {
+            item.wordCnList = item.wordCn.split("\n");
+          } else {
+            item.wordCnList = [];
+          }
+        });
         this.lessonId = this.allData.id; //教材页面的课时id:返回单词列表同时返回课时id
         uni.setStorageSync("lessonId", this.lessonId);
         uni.setStorageSync("wordList", data.data.result);
@@ -277,9 +281,13 @@ export default {
         let data = await lessonWordListByL({ lessonId: this.query.unitId });
         console.log("id=1单词列表res的data", data);
         this.allData = data.data.result;
-        this.allData.forEach(
-          (item) => (item.wordCnList = item.wordCn.split("\n"))
-        );
+        this.allData.forEach((item) => {
+          if (item.wordCn) {
+            item.wordCnList = item.wordCn.split("\n");
+          } else {
+            item.wordCnList = [];
+          }
+        });
         let result = {
           wordLessonDictList: data.data.result,
           bookFullName: this.dictBook.bookFullName,
@@ -290,9 +298,13 @@ export default {
         let data = await lessonWordList({ unitId: this.query.unitId });
         console.log("id=2单词列表res的data", data);
         this.allData = data.data.result;
-        this.allData.wordLessonDictList.forEach(
-          (item) => (item.wordCnList = item.wordCn.split("\n"))
-        );
+        this.allData.wordLessonDictList.forEach((item) => {
+          if (item.wordCn) {
+            item.wordCnList = item.wordCn.split("\n");
+          } else {
+            item.wordCnList = [];
+          }
+        });
         this.lessonId = this.allData.id; //专题页面的课时id:返回单词列表同时返回课时id
         uni.setStorageSync("lessonId", this.lessonId);
         uni.setStorageSync("wordList", data.data.result);
@@ -300,9 +312,13 @@ export default {
         let data = await queryById({ id: this.query.unitId });
         console.log("id=3单词列表res的data", data);
         this.allData = data.data.result;
-        this.allData.wordLessonDictList.forEach(
-          (item) => (item.wordCnList = item.wordCn.split("\n"))
-        );
+        this.allData.wordLessonDictList.forEach((item) => {
+          if (item.wordCn) {
+            item.wordCnList = item.wordCn.split("\n");
+          } else {
+            item.wordCnList = [];
+          }
+        });
         this.lessonId = this.allData.id; //抗遗忘复习的课时id:返回单词列表同时返回课时id
         uni.setStorageSync("lessonId", this.lessonId);
         uni.setStorageSync("wordList", data.data.result);

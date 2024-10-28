@@ -461,9 +461,13 @@ export default {
       this.pagingParams.bookId = this.data.bookId;
       let res = await dictBookList(this.pagingParams);
       this.openData.push(...(res.data.result.records || []));
-      this.openData.forEach(
-        (item) => (item.wordCnList = item.wordCn.split("\n"))
-      );
+      this.openData.forEach((item) => {
+        if (item.wordCn) {
+          item.wordCnList = item.wordCn.split("\n");
+        } else {
+          item.wordCnList = [];
+        }
+      });
       this.pagingParams.totalPage = res.data.result.pages;
       let result2 = {
         wordLessonDictList: this.openData,
@@ -486,9 +490,13 @@ export default {
             });
             console.log("change_data", data);
             this.openData = data.data.result;
-            this.openData.forEach(
-              (item) => (item.wordCnList = item.wordCn.split("\n"))
-            );
+            this.openData.forEach((item) => {
+              if (item.wordCn) {
+                item.wordCnList = item.wordCn.split("\n");
+              } else {
+                item.wordCnList = [];
+              }
+            });
           } else if (index == 1) {
             let data = await errOrOkListByUnitId({
               unitId: this.list[this.unitIndex]?.id,
@@ -496,18 +504,26 @@ export default {
             });
             console.log("change_data", data);
             this.openData = data.data.result;
-            this.openData.forEach(
-              (item) => (item.wordCnList = item.wordCn.split("\n"))
-            );
+            this.openData.forEach((item) => {
+              if (item.wordCn) {
+                item.wordCnList = item.wordCn.split("\n");
+              } else {
+                item.wordCnList = [];
+              }
+            });
           } else if (index == 2) {
             let data = await unLearnListByUnitId({
               unitId: this.list[this.unitIndex]?.id,
             });
             console.log("change_data", data);
             this.openData = data.data.result;
-            this.openData.forEach(
-              (item) => (item.wordCnList = item.wordCn.split("\n"))
-            );
+            this.openData.forEach((item) => {
+              if (item.wordCn) {
+                item.wordCnList = item.wordCn.split("\n");
+              } else {
+                item.wordCnList = [];
+              }
+            });
           } else {
             let data = await errOrOkListByUnitId({
               unitId: this.list[this.unitIndex]?.id,
@@ -515,9 +531,13 @@ export default {
             });
             console.log("change_data", data);
             this.openData = data.data.result;
-            this.openData.forEach(
-              (item) => (item.wordCnList = item.wordCn.split("\n"))
-            );
+            this.openData.forEach((item) => {
+              if (item.wordCn) {
+                item.wordCnList = item.wordCn.split("\n");
+              } else {
+                item.wordCnList = [];
+              }
+            });
           }
           let result1 = {
             wordLessonDictList: this.openData,
@@ -536,18 +556,26 @@ export default {
             });
             console.log("change_data", data);
             this.openData = data.data.result;
-            this.openData.forEach(
-              (item) => (item.wordCnList = item.wordCn.split("\n"))
-            );
+            this.openData.forEach((item) => {
+              if (item.wordCn) {
+                item.wordCnList = item.wordCn.split("\n");
+              } else {
+                item.wordCnList = [];
+              }
+            });
           } else if (index == 2) {
             let data = await unLearnDictBookList({
               lessonId: this.list[this.unitIndex]?.id,
             });
             console.log("change_data", data);
             this.openData = data.data.result;
-            this.openData.forEach(
-              (item) => (item.wordCnList = item.wordCn.split("\n"))
-            );
+            this.openData.forEach((item) => {
+              if (item.wordCn) {
+                item.wordCnList = item.wordCn.split("\n");
+              } else {
+                item.wordCnList = [];
+              }
+            });
           } else {
             let data = await learnDictBookList({
               lessonId: this.list[this.unitIndex]?.id,
@@ -555,9 +583,13 @@ export default {
             });
             console.log("change_data", data);
             this.openData = data.data.result;
-            this.openData.forEach(
-              (item) => (item.wordCnList = item.wordCn.split("\n"))
-            );
+            this.openData.forEach((item) => {
+              if (item.wordCn) {
+                item.wordCnList = item.wordCn.split("\n");
+              } else {
+                item.wordCnList = [];
+              }
+            });
           }
           let result2 = {
             wordLessonDictList: this.openData,
@@ -603,9 +635,13 @@ export default {
             });
             console.log("change_data", data);
             this.openData = data.data.result;
-            this.openData.forEach(
-              (item) => (item.wordCnList = item.wordCn.split("\n"))
-            );
+            this.openData.forEach((item) => {
+              if (item.wordCn) {
+                item.wordCnList = item.wordCn.split("\n");
+              } else {
+                item.wordCnList = [];
+              }
+            });
           } else if (this.currentOptions == 1) {
             let data = await errOrOkListByUnitId({
               unitId: this.list[index]?.id,
@@ -613,18 +649,26 @@ export default {
             });
             console.log("change_data", data);
             this.openData = data.data.result;
-            this.openData.forEach(
-              (item) => (item.wordCnList = item.wordCn.split("\n"))
-            );
+            this.openData.forEach((item) => {
+              if (item.wordCn) {
+                item.wordCnList = item.wordCn.split("\n");
+              } else {
+                item.wordCnList = [];
+              }
+            });
           } else if (this.currentOptions == 2) {
             let data = await unLearnListByUnitId({
               unitId: this.list[index]?.id,
             });
             console.log("change_data", data);
             this.openData = data.data.result;
-            this.openData.forEach(
-              (item) => (item.wordCnList = item.wordCn.split("\n"))
-            );
+            this.openData.forEach((item) => {
+              if (item.wordCn) {
+                item.wordCnList = item.wordCn.split("\n");
+              } else {
+                item.wordCnList = [];
+              }
+            });
           } else {
             let data = await errOrOkListByUnitId({
               unitId: this.list[index]?.id,
@@ -632,9 +676,13 @@ export default {
             });
             console.log("change_data", data);
             this.openData = data.data.result;
-            this.openData.forEach(
-              (item) => (item.wordCnList = item.wordCn.split("\n"))
-            );
+            this.openData.forEach((item) => {
+              if (item.wordCn) {
+                item.wordCnList = item.wordCn.split("\n");
+              } else {
+                item.wordCnList = [];
+              }
+            });
           }
           let result1 = {
             wordLessonDictList: this.openData,
@@ -654,18 +702,26 @@ export default {
             });
             console.log("change_data", data);
             this.openData = data.data.result;
-            this.openData.forEach(
-              (item) => (item.wordCnList = item.wordCn.split("\n"))
-            );
+            this.openData.forEach((item) => {
+              if (item.wordCn) {
+                item.wordCnList = item.wordCn.split("\n");
+              } else {
+                item.wordCnList = [];
+              }
+            });
           } else if (this.currentOptions == 2) {
             let data = await unLearnDictBookList({
               lessonId: this.list[index]?.id,
             });
             console.log("change_data", data);
             this.openData = data.data.result;
-            this.openData.forEach(
-              (item) => (item.wordCnList = item.wordCn.split("\n"))
-            );
+            this.openData.forEach((item) => {
+              if (item.wordCn) {
+                item.wordCnList = item.wordCn.split("\n");
+              } else {
+                item.wordCnList = [];
+              }
+            });
           } else {
             let data = await learnDictBookList({
               lessonId: this.list[index]?.id,
@@ -673,9 +729,13 @@ export default {
             });
             console.log("change_data", data);
             this.openData = data.data.result;
-            this.openData.forEach(
-              (item) => (item.wordCnList = item.wordCn.split("\n"))
-            );
+            this.openData.forEach((item) => {
+              if (item.wordCn) {
+                item.wordCnList = item.wordCn.split("\n");
+              } else {
+                item.wordCnList = [];
+              }
+            });
           }
           let result2 = {
             wordLessonDictList: this.openData,
@@ -695,9 +755,13 @@ export default {
           unitId: this.list[0]?.id,
         });
         this.openData = res1.data.result;
-        this.openData.forEach(
-          (item) => (item.wordCnList = item.wordCn.split("\n"))
-        );
+        this.openData.forEach((item) => {
+          if (item.wordCn) {
+            item.wordCnList = item.wordCn.split("\n");
+          } else {
+            item.wordCnList = [];
+          }
+        });
       } else if (this.id == 1) {
         let lesson = await lessonList(this.data);
         this.list = lesson.data.result;

@@ -99,6 +99,21 @@ export default {
       this.partnerApply();
     },
     partnerApply() {
+      if (!this.params.realname) {
+        return uni.showToast({
+          title: '请输入姓名',
+          icon: 'none',
+          duration: 1500
+        });
+      }
+      if (!this.params.phone) {
+        return uni.showToast({
+          title: '请输入手机号',
+          icon: 'none',
+          duration: 1500
+        });
+      }
+
       if (!this.isAuthorize) {
         return this.showModel = true;
       }

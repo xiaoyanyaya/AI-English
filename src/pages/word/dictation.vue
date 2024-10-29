@@ -177,7 +177,9 @@ export default {
       // 题目数据（缓存做过的题目）
       topicDataCache: [],
       // 当前题目数据
-      currentTopicData: {},
+      currentTopicData: {
+        wordFilling: [],
+      },
 
       // 条件模块
       setData: {},
@@ -242,7 +244,6 @@ export default {
       handler: function (val, oldVal) {
         // 防止undefined
         if (!val) return;
-
         // val 全部填写完毕
         if (
           val.every((item) => item.value) &&
@@ -286,7 +287,7 @@ export default {
       }
       if (this.currentTopic > 1) {
         // 从缓存中取出上一题数据
-        this.currentTopicData = this.topicDataCache.pop();
+        this.currentTopicData = this.topicDataCache[this.currentTopic - 2];
         this.currentTopicData.auditManager.playCount = 0;
         this.currentTopic--;
         this.playAudio();
@@ -309,7 +310,11 @@ export default {
       }
       if (this.currentTopic > 0) {
         // 记录当前题目的答题数据
-        this.topicDataCache.push(this.currentTopicData);
+        this.topicDataCache.splice(
+          this.currentTopic - 1,
+          1,
+          this.currentTopicData
+        );
       }
 
       if (this.currentTopic < this.totalTopic) {
@@ -348,21 +353,25 @@ export default {
     },
     // 单词填写格式化
     wordFormat() {
-      var index = 0;
-      this.currentTopicData.questionText.split("").forEach((item) => {
-        this.currentTopicData.wordFilling.push({
-          value: item === "_" ? "" : item,
-          isShow: item === "_",
-          index: item === "_" ? index : "",
+      if (this.topicDataCache[this.currentTopic - 1]) {
+        this.currentTopicData.wordFilling = this.currentTopicData.wordFilling;
+      } else {
+        var index = 0;
+        this.currentTopicData.questionText.split("").forEach((item) => {
+          this.currentTopicData.wordFilling.push({
+            value: item === "_" ? "" : item,
+            isShow: item === "_",
+            index: item === "_" ? index : "",
+          });
+          if (item === "_") {
+            index += 1;
+          }
         });
-        if (item === "_") {
-          index += 1;
-        }
-      });
-      // 保留转换后的数据
-      this.currentTopicData.wordFillingFormat = JSON.parse(
-        JSON.stringify(this.currentTopicData.wordFilling)
-      );
+        // 保留转换后的数据
+        this.currentTopicData.wordFillingFormat = JSON.parse(
+          JSON.stringify(this.currentTopicData.wordFilling)
+        );
+      }
     },
     // 选择单词
     selectWord(item, i) {
@@ -480,7 +489,6 @@ export default {
         getWordEn: async (wordEn) => {
           let res = await getWordEn({ wordEn });
           let data = res.data.result;
-
           // 可选单词乱序
           data.shuffledStr = this.shuffleString(
             (data.questionAnswer || "") + (data.questionAnswerNoise || "")
@@ -489,8 +497,13 @@ export default {
           data.selectWordIndex = [];
           // 当前单词填写状态 正常，正确，错误
           data.currentTopicStatus = "normal";
-          // 单词填写初始化
-          data.wordFilling = [];
+          if (this.topicDataCache[this.currentTopic - 1]) {
+            data.wordFilling =
+              this.topicDataCache[this.currentTopic - 1].wordFilling;
+          } else {
+            data.wordFilling = [];
+          }
+
           // 初始化音频播放器
           data.auditManager = {
             file: data.audioUsa,
@@ -501,6 +514,7 @@ export default {
           // data.questionText = "___________"
           this.currentTopicData = data;
           this.wordFormat();
+
           this.isInit = true;
           this.playAudio();
         },
@@ -513,7 +527,6 @@ export default {
               .map((item) => item.value)
               .join(""),
           };
-
           // 判断是挑战还是复习
           let res;
           if (this.pageType == "chanllenge") {
@@ -531,7 +544,6 @@ export default {
             res = await reviewNext(getData);
           }
           if (isSkip) return;
-
           if (res.data.code == 200 && res.data.result.answerResult == 1) {
             // 正确
             this.currentTopicData.currentTopicStatus = "success";

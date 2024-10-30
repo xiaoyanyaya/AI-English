@@ -95,7 +95,7 @@
           </view>
         </view>
         <view
-          v-if="osName === 'android'"
+          v-if="osName === 'android' || iosPayWay == 0"
           class="user-center-btn t-color-fff flex align-item-center justify-content-center t-size-24"
           @click="$navigateTo('/pages/me/userCenter')"
         >
@@ -209,6 +209,7 @@ export default {
       isShowOther: false,
       version: "",
       ifWxmpUser: false,
+      iosPayWay: 0,
     };
   },
   // 深度监听userInfo
@@ -305,6 +306,7 @@ export default {
       if (basicData) {
         this.version = basicData.version;
         var iosPay = basicData.iosPay;
+        this.iosPayWay = basicData.iosPayWay;
         var wxappCheck = basicData.wxappCheck;
         // this.isShowOther = !wxappCheck;
         // if (this.deviceBrand === "android") {
@@ -317,8 +319,8 @@ export default {
           if (this.osName === "ios") {
             this.isShowPayCenter = false;
           } else {
-            if (wxappCheck) this.isShowPayCenter = true;
-            else this.isShowPayCenter = false;
+            if (wxappCheck) this.isShowPayCenter = false;
+            else this.isShowPayCenter = true;
           }
         }
         if (wxappCheck) {

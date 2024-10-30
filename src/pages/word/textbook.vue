@@ -17,7 +17,7 @@
             <image :src="bookData.bookImage" mode=""></image>
           </view>
           <view class="headR">
-            <view v-if="id == 1 || id == 2" class="headR-title">
+            <!-- <view v-if="id == 1 || id == 2" class="headR-title">
               {{ bookData.bookFullName }}
             </view>
             <view v-else-if="id == 0" class="headR-title">
@@ -28,7 +28,9 @@
             </view>
             <view v-else-if="id == 0" class="headR-name">
               {{ bookData.bookFullName.split("-")[0] }}
-            </view>
+            </view> -->
+            <view class="headR-title">{{ bookData.bookFullName }}</view>
+            <view class="headR-name">{{ bookData.bookName }}</view>
             <view class="headR-num"> 共{{ bookData.wordNums }}个单词</view>
             <view class="change_share">
               <view
@@ -70,7 +72,7 @@
           <u-icon name="plus" size="30"></u-icon>
           <text>新建任务</text>
         </view>
-        <view class="mt-4 mb-1">
+        <view class="mt-4">
           <u-tabs
             bg-color="transparent"
             inactive-color="#8A8A8A"
@@ -374,6 +376,8 @@ export default {
         pageSize: 20,
         totalPage: null,
       },
+      osName: "android",
+      osVersion: "",
     };
   },
   async onLoad(e) {
@@ -390,6 +394,13 @@ export default {
     if (e.isReturnHome) {
       this.isReturnHome = 1;
     }
+    uni.getSystemInfo({
+      success: (res) => {
+        console.log("系统信心res00000", res);
+        this.osName = res.osName;
+        this.osVersion = res.osVersion;
+      },
+    });
   },
   onShow() {
     this.show = false;
@@ -402,17 +413,31 @@ export default {
   },
   mounted() {
     // 获取到盒子的高度 this===当前组件实例
-    uni
-      .createSelectorQuery()
-      .in(this)
-      .select(".top")
-      .boundingClientRect((rect) => {
-        if (rect) {
-          this.topBoxHeight = rect.height;
-          console.log("mounted~~~this.topBoxHeight", this.topBoxHeight);
-        }
-      })
-      .exec();
+    this.$nextTick(() => {
+      uni
+        .createSelectorQuery()
+        .in(this)
+        .select(".top")
+        .boundingClientRect((rect) => {
+          if (rect) {
+            console.log("mounted~~~rect.height", rect.height);
+            if (this.osName == "ios" && this.osVersion > "12.4.1") {
+              //iphone6s软件版本12.4.1
+              if (this.id == 0) {
+                this.topBoxHeight =
+                  rect.height < 230 ? rect.height + 42 : rect.height;
+              }
+              if (this.id == 1) {
+                this.topBoxHeight =
+                  rect.height < 260 ? rect.height + 60 : rect.height;
+              }
+            } else {
+              this.topBoxHeight = rect.height;
+            }
+          }
+        })
+        .exec();
+    });
   },
   onPageScroll(e) {
     if (e.scrollTop > 20) {
@@ -1088,7 +1113,6 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
   padding: 0 22rpx;
   width: 640rpx;
   height: 110rpx;

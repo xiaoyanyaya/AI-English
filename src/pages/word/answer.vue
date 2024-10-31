@@ -434,15 +434,18 @@ export default {
         case 0:
           if (this.pageType !== "chanllenge") {
             // 重新答题
-            this.toNav(
-              "/pages/word/wordList?id=" +
+            uni.redirectTo({
+              url:
+                "/pages/word/wordList?id=" +
                 this.wordType +
                 "&unitId=" +
                 this.nowUnitId +
-                "&btnTitle=重新答题"
-            );
+                "&btnTitle=重新答题",
+            });
           } else {
-            this.toNav("/pages/word/chanllenge/wordList?bookId=" + this.bookId);
+            uni.redirectTo({
+              url: "/pages/word/chanllenge/wordList?bookId=" + this.bookId,
+            });
           }
           break;
         case 1:

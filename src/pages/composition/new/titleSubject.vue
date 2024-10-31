@@ -446,12 +446,18 @@ export default {
     }
     if (res.from === "button") {
       const SRC = `pages/composition/new/titleSubject?`;
-      const path = `pageIndex=6&id=${this.collectionId}&pageTilte=${this.pageTitle}&isShowTitle=${isShowTitle}`;
+      const path = `promoCode=${this.$store.state.userInfo.promoCode}&pageIndex=6&id=${this.collectionId}&pageTilte=${this.pageTitle}&isShowTitle=${isShowTitle}`;
       // 来自页面内分享按钮
       return {
         title: this.pageTitle,
         path: `${SRC}${path}`,
         // imageUrl: `${this.imgDomain}wxapp/icon1.1/pic_visit.png`,
+      };
+    } else {
+      return {
+        title: "小礼AI极简单词",
+        path:
+          "pages/word/index?promoCode=" + this.$store.state.userInfo.promoCode,
       };
     }
   },

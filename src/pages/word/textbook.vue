@@ -422,14 +422,11 @@ export default {
     }
   },
   onShareAppMessage(res) {
-    if (res.from === "button") {
-      // 来自页面内分享按钮
-      console.log(res.target);
-      return {
-        title: "词汇速记",
-        path: `pages/word/textbook?id=${this.query.id}&bookId=${this.data.bookId}&isReturnHome=1`,
-      };
-    }
+    console.log("res", res)
+    return {
+      title: "词汇速记",
+      path: `pages/word/textbook?promoCode=${this.$store.state.userInfo.promoCode}&id=${this.query.id}&bookId=${this.data.bookId}&isReturnHome=1`,
+    };
   },
   methods: {
     // 初始化页面数据

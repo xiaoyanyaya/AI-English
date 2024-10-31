@@ -161,12 +161,19 @@ export default {
       var data = this.clickData
       uni.setStorageSync('compositionTitleText', data.compositionTitleText)
       const SRC = `/pages/composition/new/titleSubject?`;
-      const path = `returnHome=1&pageIndex=4&pageTitle=作文挑战进行时&id=${data.id}&compositionType=${data.compositionType}`;
+      const path = `promoCode=${this.$store.state.userInfo.promoCode}&returnHome=1&pageIndex=4&pageTitle=作文挑战进行时&id=${data.id}&compositionType=${data.compositionType}`;
       // 来自页面内分享按钮
       return {
         title: this.pageTitle,
         path: `${SRC}${path}`,
         // imageUrl: `${this.imgDomain}wxapp/icon1.1/pic_visit.png`,
+      };
+    } else {
+      console.log("pages/word/index?promoCode=" + this.$store.state.userInfo.promoCode, "分享链接")
+      return {
+        title: "小礼AI极简单词",
+        path:
+          "pages/word/index?promoCode=" + this.$store.state.userInfo.promoCode,
       };
     }
   },

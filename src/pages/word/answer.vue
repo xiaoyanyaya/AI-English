@@ -378,14 +378,10 @@ export default {
     // 获取userInfo
     const userInfo = this.$store.state.userInfo;
     const fromType = uni.getStorageSync("answerFromType");
-    if (res.from === "button") {
-      // 来自页面内分享按钮
-      console.log(res.target);
-      return {
-        title: `${userInfo.nickName}的听写榜，快来试试吧`,
-        path: `pages/word/answer?id=${this.id}&bookId=${this.bookId}&pageType=${this.pageType}&isReturnHome=1&fromType=${fromType}`,
-      };
-    }
+    return {
+      title: `${userInfo.nickName}的听写榜，快来试试吧`,
+      path: `pages/word/answer?promoCode=${this.$store.state.userInfo.promoCode}&id=${this.id}&bookId=${this.bookId}&pageType=${this.pageType}&isReturnHome=1&fromType=${fromType}`,
+    };
   },
   onLoad(e) {
     if (e.isReturnHome) {

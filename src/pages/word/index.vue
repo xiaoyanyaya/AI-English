@@ -303,14 +303,10 @@ export default {
     if (e.code) this.getSourceCB(e.code);
   },
   onShareAppMessage(res) {
-    if (res.from === "button") {
-      // 来自页面内分享按钮
-      console.log(res.target);
-      return {
-        title: "词汇速记",
-        path: `pages/word/textbook?id=${this.shareContent.id}&bookId=${this.shareContent.bookId}&isReturnHome=1`,
-      };
-    }
+    return {
+      title: "词汇速记",
+      path: `pages/word/index?promoCode=${this.$store.state.userInfo.promoCode}&id=${this.shareContent.id}&bookId=${this.shareContent.bookId}&isReturnHome=1`,
+    };
   },
   methods: {
     goTextBook(item) {

@@ -398,6 +398,7 @@ export default {
     },
     // 删除单词
     deleteWord() {
+      //如果有填写单词
       if (this.currentTopicData.selectWordIndex.length > 0) {
         this.currentTopicData.wordFilling.find(
           (item) =>
@@ -493,15 +494,16 @@ export default {
           data.shuffledStr = this.shuffleString(
             (data.questionAnswer || "") + (data.questionAnswerNoise || "")
           );
-          // 选中的单词索引
-          data.selectWordIndex = [];
           // 当前单词填写状态 正常，正确，错误
           data.currentTopicStatus = "normal";
           if (this.topicDataCache[this.currentTopic - 1]) {
             data.wordFilling =
               this.topicDataCache[this.currentTopic - 1].wordFilling;
+            data.selectWordIndex =
+              this.topicDataCache[this.currentTopic - 1].selectWordIndex;
           } else {
             data.wordFilling = [];
+            data.selectWordIndex = [];
           }
 
           // 初始化音频播放器

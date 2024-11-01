@@ -68,6 +68,7 @@
           <input
             v-if="item.type === 'text'"
             :placeholder="item.placeholder"
+            :focus="item.isFocused"
             style="text-align: right"
             class="t-color-3D3D3D t-size-30"
             type="text"
@@ -137,12 +138,14 @@ export default {
           placeholder: "请输入户名",
           type: "text",
           value: "",
+          isFocused: true,
         },
         {
           title: "账号",
           placeholder: "请输入支付宝账号",
           type: "text",
           value: "",
+          isFocused: false,
         },
       ],
     };
@@ -153,6 +156,10 @@ export default {
   },
   methods: {
     clickPayWay(index) {
+      this.inputList[0].isFocused = false;
+      this.$nextTick(() => {
+        this.inputList[0].isFocused = true;
+      });
       this.selectWay = this.paywey[index].title;
       this.selectWayValue = this.paywey[index].value;
       this.paywey.forEach((item, i) => {
@@ -209,6 +216,9 @@ export default {
           //   });
           //   return;
           // }
+          this.price = this.price.trim();
+          this.inputList[0].value = this.inputList[0].value.trim();
+          this.inputList[1].value = this.inputList[1].value.trim();
 
           var prams = {
             amount: this.price,

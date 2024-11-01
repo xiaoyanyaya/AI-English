@@ -130,6 +130,7 @@
         >
           <view v-if="index === 0 && item.noPartner" class="share-btn">
             <button
+              v-if="userInfo.distributionType != 0"
               open-type="getPhoneNumber"
               @getphonenumber="getPhone($event, '/pages/me/apply/cooperative')"
             >
@@ -334,7 +335,12 @@ export default {
     },
     toPage(index) {
       if (index == 0) {
-        if (this.menuList[index].noPartner) {
+        if (this.userInfo.distributionType == 0) {
+          uni.showToast({
+            title: "申请已提交，请耐心等待平台审核",
+            icon: "none",
+          });
+        } else if (this.menuList[index].noPartner) {
         } else {
           this.$navigateTo("/pages/me/distribution");
         }

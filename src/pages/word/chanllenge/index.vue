@@ -141,7 +141,7 @@
     </view>
     <!-- 滚动区域 -->
     <view class="mt-3 pt-1 px-1">
-      <scroll-view scroll-y="true" scroll-x="true" class="content-box">
+      <scroll-view scroll-y="true" class="content-box">
         <!-- 二维表头 -->
         <view
           v-if="currentOptions == 1 || currentTopOptions == 2"
@@ -940,7 +940,6 @@ export default {
 .content-box {
   white-space: nowrap;
   border-radius: 50rpx 50rpx 0 0;
-  width: 750rpx;
   height: 43vh;
   bottom: 160rpx;
   box-sizing: border-box;

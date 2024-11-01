@@ -51,12 +51,12 @@ export default {
   },
   methods: {
     exchange() {
+      this.value = this.value.trim();
       var reg = /^[a-zA-Z0-9-]*$/;
       if (!reg.test(this.value)) {
         this.utils().$toast("只能输入大小写字母，数字，破折号这三种符号的组合");
         return;
       }
-
       cardExchange({ code: this.value }).then((res) => {
         console.log(res);
         if (res.data.code !== 200) {

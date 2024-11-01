@@ -498,13 +498,10 @@ export default {
     }
   },
   onShareAppMessage(res) {
-    if (res.from === "button") {
-      // 来自页面内分享按钮
-      return {
-        title: "疯狂挑战",
-        path: `pages/word/chanllenge/index?isReturnHome=1`,
-      };
-    }
+    return {
+      title: "疯狂挑战",
+      path: `pages/word/chanllenge/index?promoCode=${this.$store.state.userInfo.promoCode}`,
+    };
   },
   methods: {
     initData() {

@@ -303,10 +303,18 @@ export default {
     if (e.code) this.getSourceCB(e.code);
   },
   onShareAppMessage(res) {
-    return {
-      title: "词汇速记",
-      path: `pages/word/index?promoCode=${this.$store.state.userInfo.promoCode}&id=${this.shareContent.id}&bookId=${this.shareContent.bookId}&isReturnHome=1`,
-    };
+    if (res.from == "button") {
+      return {
+        title: "词汇速记",
+        path: `pages/word/index?promoCode=${this.$store.state.userInfo.promoCode}&id=${this.shareContent.id}&bookId=${this.shareContent.bookId}&isReturnHome=1`,
+      };
+    } else {
+      return {
+        title: "小礼AI极简英语",
+        path:
+          "pages/index/index?promoCode=" + this.$store.state.userInfo.promoCode,
+      };
+    }
   },
   methods: {
     goTextBook(item) {

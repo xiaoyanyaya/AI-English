@@ -1,8 +1,8 @@
 const devApiDomain = "https://wapi-dev.aien.xiaolixb.com/v1"; // API测试环境
 const prodApiDomain = "https://wapi.aien.xiaolixb.com/v1"; // API生产环境
 
-const devH5Domain = "https://wapi-dev.aien.xiaolixb.com/h5"; // H5测试环境
-const prodH5Domain = "https://wapi.aien.xiaolixb.com/h5"; //H5生产环境
+const devH5Domain = "https://h5-dev.xiaolixb.com/aien/h5"; // H5测试环境
+const prodH5Domain = "https://h5.xiaolixb.com/aien/h5"; //H5生产环境
 
 const ENV = "dev"; // dev -测试 pro -生产
 

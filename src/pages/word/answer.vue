@@ -378,10 +378,18 @@ export default {
     // 获取userInfo
     const userInfo = this.$store.state.userInfo;
     const fromType = uni.getStorageSync("answerFromType");
-    return {
-      title: `${userInfo.nickName}的听写榜，快来试试吧`,
-      path: `pages/word/answer?promoCode=${this.$store.state.userInfo.promoCode}&id=${this.id}&bookId=${this.bookId}&pageType=${this.pageType}&isReturnHome=1&fromType=${fromType}`,
-    };
+    if (res.from == "button") {
+      return {
+        title: `${userInfo.nickName}的听写榜，快来试试吧`,
+        path: `pages/word/answer?promoCode=${this.$store.state.userInfo.promoCode}&id=${this.id}&bookId=${this.bookId}&pageType=${this.pageType}&isReturnHome=1&fromType=${fromType}`,
+      };
+    } else {
+      return {
+        title: "小礼AI极简英语",
+        path:
+          "pages/index/index?promoCode=" + this.$store.state.userInfo.promoCode,
+      };
+    }
   },
   onLoad(e) {
     if (e.isReturnHome) {

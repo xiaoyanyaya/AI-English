@@ -123,7 +123,7 @@ export default {
         } else if (this.pagePath === "/pages/login/index") {
           //小手机跳转嗷嗷打印的是/pages/login/index
           uni.switchTab({
-            url: "/pages/word/index",
+            url: "/pages/index/index",
           });
         } else {
           uni.redirectTo({

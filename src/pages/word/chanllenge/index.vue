@@ -498,10 +498,18 @@ export default {
     }
   },
   onShareAppMessage(res) {
-    return {
-      title: "疯狂挑战",
-      path: `pages/word/chanllenge/index?promoCode=${this.$store.state.userInfo.promoCode}`,
-    };
+    if (res.from == "button") {
+      return {
+        title: "疯狂挑战",
+        path: `pages/word/chanllenge/index?promoCode=${this.$store.state.userInfo.promoCode}`,
+      };
+    } else {
+      return {
+        title: "小礼AI极简英语",
+        path:
+          "pages/index/index?promoCode=" + this.$store.state.userInfo.promoCode,
+      };
+    }
   },
   methods: {
     initData() {

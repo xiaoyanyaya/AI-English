@@ -67,7 +67,7 @@
           </view>
         </view>
         <view class="right">
-          <view class="text-center font-weight-bold title">小礼AI极简英语</view>
+          <view class="text-center font-weight-bold title">小礼AI极简单词</view>
           <view class="flex ml-2 mr-2 mt-2 align-item-start">
             <u-icon name="close-circle" class="close-circle" color="#24A800" size="28"></u-icon>
             <view class="ml-1 c-24A800">机械式的跟读，只能练出哑巴英语</view>
@@ -308,7 +308,7 @@ export default {
       });
     },
     getPrepayPaymentResponse() {
-      let url = "/weixin/getH5PayNeedParam";
+      let url = "/weixin/getPrepayPaymentResponse";
       requestApi({
         url,
         method: "post",

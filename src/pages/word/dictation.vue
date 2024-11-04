@@ -176,6 +176,8 @@ export default {
       currentTopic: 0,
       // 题目数据（缓存做过的题目）
       topicDataCache: [],
+      // 缓存数据（用于点击上一题）
+      topicDataCacheLast: [],
       // 当前题目数据
       currentTopicData: {
         wordFilling: [],
@@ -280,6 +282,9 @@ export default {
       if (!this.debounceShow) return;
       this.debounceShow = false;
 
+      // 存储当前题目数据
+      this.topicDataCacheLast.push(this.currentTopicData);
+
       this.isNext = false;
       // 清除当前题目的定时器
       if (this.currentTopicData.timeout) {
@@ -320,8 +325,16 @@ export default {
       if (this.currentTopic < this.totalTopic) {
         this.isInit = false;
         this.currentTopic++;
-        var currentTopicData = this.topicList[this.currentTopic - 1];
-        this.network().getWordEn(currentTopicData.wordEn);
+
+        // 从缓存中取出下一题数据
+        if (this.topicDataCacheLast.length > 0) {
+          this.currentTopicData = this.topicDataCacheLast.pop();
+          this.isInit = true;
+          this.playAudio();
+        } else {
+          var currentTopicData = this.topicList[this.currentTopic - 1];
+          this.network().getWordEn(currentTopicData.wordEn);
+        }
       } else if (this.currentTopic === this.totalTopic) {
         // 判断是挑战还是复习
         let data = {};

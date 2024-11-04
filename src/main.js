@@ -4,6 +4,7 @@ import "./uni.promisify.adaptor";
 import "@/assets/css/cyGlobal.css";
 import "@/assets/icons/font/iconfont.css";
 import "@/assets/icons/font_4171829_v39knp8d7pe/iconfont.css";
+import "@/assets/icons/font_4268092_3iny96i2kdb/iconfont.css";
 import store from "./store";
 
 Vue.config.productionTip = false;

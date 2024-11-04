@@ -67,6 +67,7 @@
               introduceCirList.children[2].nodeName
             }}</text>
           </view>
+          课程数： {{ introduceCirList.videoNum }}
         </view>
       </view>
     </view>

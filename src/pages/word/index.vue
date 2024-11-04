@@ -12,7 +12,7 @@
     <view class="content">
       <!-- 教材 -->
       <view class="model_box">
-        <view class="title"> <text class="text">教材</text>词汇速记 </view>
+        <view class="title"> <text class="text">教材</text>同步</view>
         <image class="bg_img" :src="imageBaseUrl + '/word/7-1-06.png'"> </image>
         <view class="body">
           <view class="body_top">
@@ -108,9 +108,9 @@
       </view>
       <!-- 考纲 -->
       <view class="model_box">
-        <view class="title"> <text class="text">考纲</text>词汇速记 </view>
+        <view class="title"> <text class="text">考纲</text>冲刺</view>
         <image class="bg_img" :src="imageBaseUrl + '/word/7-1-06.png'"> </image>
-        <view class="body">
+        <view class="body_dict">
           <view class="body_top">
             <image class="img_book" :src="dictBook.bookImage" mode="widthFix">
             </image>
@@ -145,6 +145,56 @@
                   </image>
                   <view class="text">分享</view>
                 </button>
+              </view>
+            </view>
+          </view>
+          <view class="body_footer">
+            <view class="footer">
+              <view
+                class="item-box-listItem item-box-l"
+                :style="{
+                  backgroundImage: 'url(' + imageBaseUrl + '/word/7-1-07.png)',
+                }"
+                @click="
+                  toNav(`/pages/word/textbook?id=1&bookId=${dictBook.id}`)
+                "
+              >
+                <text>考频查询</text>
+                <image
+                  class="item-box-listItem-img"
+                  :src="imageBaseUrl + '/word/7-1-01.png'"
+                  mode="widthFix"
+                >
+                </image>
+                <view class="item-box-listItem-icon">
+                  <image
+                    :src="imageBaseUrl + '/word/7-1-02.png'"
+                    mode=""
+                  ></image>
+                </view>
+              </view>
+            </view>
+            <view class="footer">
+              <view
+                class="item-box-listItem item-box-r"
+                :style="{
+                  backgroundImage: 'url(' + imageBaseUrl + '/word/7-1-08.png)',
+                }"
+                @click="toNav('/pages/word/fastQuestion')"
+              >
+                <text>极速刷词</text>
+                <image
+                  class="item-box-listItem-imgs"
+                  :src="imageBaseUrl + '/word/7-1-03.png'"
+                  mode="widthFix"
+                >
+                </image>
+                <view class="item-box-listItem-icon">
+                  <image
+                    :src="imageBaseUrl + '/word/7-1-04.png'"
+                    mode=""
+                  ></image>
+                </view>
               </view>
             </view>
           </view>
@@ -200,6 +250,34 @@
           </view>
         </view>
       </view>
+      <!-- 专题 -->
+      <view class="special_box">
+        <view class="title">
+          <view><text class="text">专项</text>训练</view>
+          <view class="iconfont icon-shangxiahuadong icon"> </view>
+        </view>
+        <view class="item-box-select">
+          <view
+            class="item-box-selectItem"
+            v-for="item in typeData"
+            :key="item.id"
+            @click="goTextBook(item)"
+          >
+            <view class="item-box-selectItem-head">
+              <image :src="item.unitImage" mode="heightFix"></image>
+            </view>
+            <view class="item-box-selectItem-name">
+              {{ item.unitName.split("(")[1].slice(0, -1) }}
+            </view>
+            <view class="item-box-selectItem-text">
+              {{ item.wordNums }}个单词
+            </view>
+            <view class="item-box-selectItem-textB">
+              挑战次数：{{ item.reviewNum }}次
+            </view>
+          </view>
+        </view>
+      </view>
       <!-- 查询 -->
       <view class="search-box">
         <image :src="imageBaseUrl + '/word/icon3.png'" mode=""></image>
@@ -226,34 +304,6 @@
           "
         >
           搜索
-        </view>
-      </view>
-      <!-- 专题 -->
-      <view class="special_box">
-        <view class="title">
-          <view><text class="text">专题</text>词汇速记</view>
-          <view class="iconfont icon-zuoyouhuadong icon"> </view>
-        </view>
-        <view class="item-box-select">
-          <view
-            class="item-box-selectItem"
-            v-for="item in typeData"
-            :key="item.id"
-            @click="goTextBook(item)"
-          >
-            <view class="item-box-selectItem-head">
-              <image :src="item.unitImage" mode="heightFix"></image>
-            </view>
-            <view class="item-box-selectItem-name">
-              {{ item.unitName.split("(")[1].slice(0, -1) }}
-            </view>
-            <view class="item-box-selectItem-text">
-              {{ item.wordNums }}个单词
-            </view>
-            <view class="item-box-selectItem-textB">
-              挑战次数：{{ item.reviewNum }}次
-            </view>
-          </view>
         </view>
       </view>
     </view>
@@ -498,6 +548,10 @@ export default {
           }
         }
       }
+      .body_dict {
+        @extend .body;
+        height: 680rpx;
+      }
     }
 
     .special_box {
@@ -526,7 +580,6 @@ export default {
       }
       .item-box-select {
         display: flex;
-        flex-direction: column;
         justify-content: space-between;
         flex-wrap: wrap;
         overflow-x: auto; /* 水平滚动 */

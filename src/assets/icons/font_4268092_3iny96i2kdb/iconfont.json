@@ -1,0 +1,23 @@
+{
+  "id": "4268092",
+  "name": "积分",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "38697865",
+      "name": "上下滑动",
+      "font_class": "shangxiahuadong",
+      "unicode": "e740",
+      "unicode_decimal": 59200
+    },
+    {
+      "icon_id": "34598270",
+      "name": "部门人员",
+      "font_class": "bumenrenyuan",
+      "unicode": "e75a",
+      "unicode_decimal": 59226
+    }
+  ]
+}

@@ -155,6 +155,9 @@
           "path": "answer"
         },
         {
+          "path": "fastQuestion"
+        },
+        {
           "path": "reverseForgetting/index"
         },
         {

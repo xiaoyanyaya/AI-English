@@ -103,7 +103,7 @@
               <view class="listItem-lR-tName">
                 {{ item.wordEn }}
               </view>
-              <view class="listItem-lR-tHit">
+              <view v-if="item.symbolUsa" class="listItem-lR-tHit">
                 {{ "['" + item.symbolUsa + "]" }}
               </view>
             </view>

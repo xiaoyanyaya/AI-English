@@ -79,7 +79,7 @@
             <view class="listItem-cTitle">
               <view class="listItem-cTitle-word"> {{ item.wordEn }}</view>
               <view v-if="item.symbolUsa" class="listItem-cTitle-definition">
-                {{ "['" + item.symbolUsa + "']" }}
+                {{ "[" + item.symbolUsa + "]" }}
               </view>
             </view>
             <view class="listItem-cContent">

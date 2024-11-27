@@ -104,6 +104,7 @@
 <script>
 import MyMixin from "../../utils/MyMixin";
 import store from "@/store/";
+import { apiDomain } from "@/configs/env";
 import { withdrawApply } from "@/api/me";
 
 export default {
@@ -244,6 +245,9 @@ export default {
                   icon: "none",
                   duration: 2000,
                 });
+                setTimeout(() => {
+                  uni.navigateBack();
+                }, 2000);
               },
               fail: (error) => {
                 console.log("error", error);
@@ -269,6 +273,9 @@ export default {
                   icon: "none",
                   duration: 2000,
                 });
+                setTimeout(() => {
+                  uni.navigateBack();
+                }, 2000);
               },
               fail: (error) => {
                 console.log("error", error);

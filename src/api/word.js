@@ -185,3 +185,42 @@ export const queryStudyReport = (params) =>
 //某个复习记录详情
 export const queryStudyReportDetail = (params) =>
   fly.get("/word/review/queryById", params);
+
+//单词考纲 - 考纲冲刺 - 考频单词列表查询
+export const getFastWordList = (params) =>
+  fly.get("/word/unit/dict/queryListByDictFrequency", params);
+
+//单词考纲 - 考纲冲刺 - 考频类型列表查询
+export const getFrequencyList = (params) =>
+  fly.get("/word/unit/dict/countWordFrequencyType", params);
+
+//单词考纲 - 考纲冲刺 - 单词题目列表查询
+export const getWordDictQuestionList = (params) =>
+  fly.get("/word/dict/question/queryWordDictQuestionList", params);
+
+//单词考纲 - 考纲冲刺 - 单词极速刷题的结果存储
+export const addUserStudyDict = (params) =>
+  fly.post("/word/study/history/addStudyHistory", params);
+
+//单词考纲 - 考纲冲刺 - 查看极速刷词列表
+export const getStudyWordList = (params) =>
+  fly.get("/word/study/dict/queryStudyDictByBookId", params);
+
+//单词考纲 - 考纲冲刺 - 统计极速刷词结果
+export const getNewWordNum = (params) =>
+  fly.get("/word/study/dict/countStudyDict", params);
+
+//单词考纲 - 考纲冲刺 - 统计极速刷词记录
+export const getOverWordNum = (params) =>
+  fly.get("/word/study/history/countStudyHistory", params);
+
+//单词考纲 - 用户报障 - 查询报障类型
+export const getMalType = () =>
+  fly.get("/word/malfunction/queryQuestionMalType");
+
+//单词考纲 - 用户报障 - 添加用户报障
+export const postAddMal = (params) => fly.post("/word/malfunction/add", params);
+
+//单词考纲 - 用户报障 - 查询单词讲解报障类型
+export const getMalTypeDict = (params) =>
+  fly.get("/word/malfunction/queryDictMalType", params);

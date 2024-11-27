@@ -158,6 +158,9 @@
           "path": "fastQuestion"
         },
         {
+          "path": "examFrequency"
+        },
+        {
           "path": "reverseForgetting/index"
         },
         {

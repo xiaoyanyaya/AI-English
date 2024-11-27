@@ -5,12 +5,27 @@
     </cy-navbar>
     <view class="content">
       <view class="contentItem" v-for="(item, index) in allData" :key="item.id">
-        <u-swipe-action :show="item.show" :index="index" @click="click(index,item.id)" @open="open" :options="options">
-          <view class="listItem" @click="play(item.audioUsa,item.id)">
+        <u-swipe-action
+          :show="item.show"
+          :index="index"
+          @click="click(index, item.id)"
+          @open="open"
+          :options="options"
+        >
+          <view class="listItem" @click="play(item.audioUsa, item.id)">
             <view class="listItem-l">
-              <image v-if="gif&&selectId==item.id" class="listItem-lGif"
-                     :src="imageBaseUrl + '/word/in_play.gif'" mode=""></image>
-              <u-icon v-else name="volume-up" size="36" color="rgba(24, 99, 229, 1)"></u-icon>
+              <image
+                v-if="gif && selectId == item.id"
+                class="listItem-lGif"
+                :src="imageBaseUrl + '/word/in_play.gif'"
+                mode=""
+              ></image>
+              <u-icon
+                v-else
+                name="volume-up"
+                size="36"
+                color="rgba(24, 99, 229, 1)"
+              ></u-icon>
             </view>
             <view class="listItem-c">
               <view class="listItem-cTitle">
@@ -18,7 +33,7 @@
                   {{ item.wordEn }}
                 </view>
                 <view class="listItem-cTitle-definition">
-                  {{ "['" + getNameWithEllipsis(item.symbolUsa, 15) + "']" }}
+                  {{ "[" + getNameWithEllipsis(item.symbolUsa, 15) + "]" }}
                 </view>
               </view>
               <view class="listItem-cContent">
@@ -27,7 +42,12 @@
                 </view>
               </view>
             </view>
-            <view class="listItem-r" @click.stop="toNav(`/pages/word/definition?wordEn=${item.wordEn}&showBtn=0`)">
+            <view
+              class="listItem-r"
+              @click.stop="
+                toNav(`/pages/word/definition?wordEn=${item.wordEn}&showBtn=0`)
+              "
+            >
               词汇讲解
             </view>
           </view>
@@ -39,46 +59,48 @@
 
 <script>
 import MyMixin from "@/utils/MyMixin";
-import {
-  queryWordWrongDict,
-  updateStatus
-} from "@/api/word";
+import { queryWordWrongDict, updateStatus } from "@/api/word";
 
 export default {
   mixins: [MyMixin],
   data() {
     return {
-      list: [{
-        id: 1,
-        title: '长安回望绣成堆，山顶千门次第开，一骑红尘妃子笑，无人知是荔枝来',
-        images: 'https://cdn.uviewui.com/uview/common/logo.png',
-        show: false
-      },
+      list: [
+        {
+          id: 1,
+          title:
+            "长安回望绣成堆，山顶千门次第开，一骑红尘妃子笑，无人知是荔枝来",
+          images: "https://cdn.uviewui.com/uview/common/logo.png",
+          show: false,
+        },
         {
           id: 2,
-          title: '新丰绿树起黄埃，数骑渔阳探使回，霓裳一曲千峰上，舞破中原始下来',
-          images: 'https://cdn.uviewui.com/uview/common/logo.png',
-          show: false
+          title:
+            "新丰绿树起黄埃，数骑渔阳探使回，霓裳一曲千峰上，舞破中原始下来",
+          images: "https://cdn.uviewui.com/uview/common/logo.png",
+          show: false,
         },
         {
           id: 3,
-          title: '登临送目，正故国晚秋，天气初肃。千里澄江似练，翠峰如簇',
-          images: 'https://cdn.uviewui.com/uview/common/logo.png',
+          title: "登临送目，正故国晚秋，天气初肃。千里澄江似练，翠峰如簇",
+          images: "https://cdn.uviewui.com/uview/common/logo.png",
           show: false,
-        }
+        },
       ],
       disabled: false,
       btnWidth: 180,
       show: false,
-      options: [{
-        text: '删除',
-        style: {
-          color: '#DC0C0C',
-          backgroundColor: '#FFE2E2'
-        }
-      }],
+      options: [
+        {
+          text: "删除",
+          style: {
+            color: "#DC0C0C",
+            backgroundColor: "#FFE2E2",
+          },
+        },
+      ],
       data: {
-        id: 0
+        id: 0,
       },
       bookData: {},
       allData: {},
@@ -87,56 +109,55 @@ export default {
     };
   },
   onLoad(e) {
-    this.data.id = e.id
-    this.bookData = uni.getStorageSync('bookData')
+    this.data.id = e.id;
+    this.bookData = uni.getStorageSync("bookData");
   },
   onShow() {
-    this.getWord()
+    this.getWord();
   },
   methods: {
     async getWord() {
-      var that = this
+      var that = this;
       let data = await queryWordWrongDict();
-      this.allData = data.data.result
+      this.allData = data.data.result;
       this.allData.forEach(function (item, i) {
-        that.allData[i].show = false
-      })
-      uni.setStorageSync('wordList', data.data.result)
+        that.allData[i].show = false;
+      });
+      uni.setStorageSync("wordList", data.data.result);
     },
     play(src, id) {
       var auditManager = uni.createInnerAudioContext();
-      let voicePath = ""
-      this.gif = true
-      this.selectId = id
+      let voicePath = "";
+      this.gif = true;
+      this.selectId = id;
 
-      if (this.deviceBrand === 'android') {
+      if (this.deviceBrand === "android") {
         uni.downloadFile({
           url: src,
           success: (res) => {
             if (res.statusCode === 200) {
-              voicePath = res.tempFilePath
+              voicePath = res.tempFilePath;
             }
-          }
-        })
+          },
+        });
       } else {
-        voicePath = src
+        voicePath = src;
         auditManager.obeyMuteSwitch = false;
       }
 
-      auditManager.src = voicePath
-      auditManager.play()
+      auditManager.src = voicePath;
+      auditManager.play();
       // 播放中
-      auditManager.onPlay(() => {
-      })
+      auditManager.onPlay(() => {});
       // 播放结束
       auditManager.onEnded(() => {
-        this.gif = false
-      })
+        this.gif = false;
+      });
     },
     async click(index, id) {
       var newData = {
-        id: id
-      }
+        id: id,
+      };
       let res = await updateStatus(newData);
       if (res.data.code === 200) {
         this.allData.splice(index, 1);
@@ -152,21 +173,21 @@ export default {
       this.list[index].show = true;
       this.list.map((val, idx) => {
         if (index != idx) this.list[idx].show = false;
-      })
+      });
     },
     toNav(urls) {
       uni.navigateTo({
-        url: urls
-      })
-    }
-  }
+        url: urls,
+      });
+    },
+  },
 };
 </script>
 
 <style>
 .main {
   min-height: 100vh;
-  background: linear-gradient(180deg, #DEF0FF 0%, #F7FCFF 100%);
+  background: linear-gradient(180deg, #def0ff 0%, #f7fcff 100%);
 }
 
 .item {
@@ -226,7 +247,7 @@ image {
 }
 
 .listItem-r {
-  background: #F7A751;
+  background: #f7a751;
   border-radius: 50rpx;
   color: #fff;
   font-size: 20rpx;
@@ -245,7 +266,7 @@ image {
   bottom: 70rpx;
   width: 206rpx;
   height: 80rpx;
-  background: linear-gradient(180deg, #5692F9 0%, #1863E5 100%);
+  background: linear-gradient(180deg, #5692f9 0%, #1863e5 100%);
   border-radius: 50rpx;
   color: #fff;
   line-height: 80rpx;
@@ -253,7 +274,7 @@ image {
   left: 0;
   right: 0;
   margin: auto;
-  font-size: 26rpx
+  font-size: 26rpx;
 }
 
 .listItem-lGif {

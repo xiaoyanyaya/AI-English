@@ -106,36 +106,38 @@ export default {
     },
     toPage() {
       console.log("跳转嗷嗷", this.pagePath);
-      if (this.pagePath) {
-        // 特殊处理
-        if (this.pagePath === "/pages/index/index") {
-          uni.switchTab({
-            url: "/pages/index/index",
-          });
-        } else if (this.pagePath === "/pages/me/index") {
-          uni.switchTab({
-            url: "/pages/me/index",
-          });
-        } else if (this.pagePath === "/pages/frank/index") {
-          uni.switchTab({
-            url: "/pages/frank/index",
-          });
-        } else if (this.pagePath === "/pages/login/index") {
-          //小手机跳转嗷嗷打印的是/pages/login/index
-          uni.switchTab({
-            url: "/pages/index/index",
-          });
-        } else {
-          uni.redirectTo({
-            url: this.pagePath,
-          });
-        }
-      } else {
-        uni.switchTab({
-          url: "/pages/frank/index",
-        });
-      }
-
+      // if (this.pagePath) {
+      //   // 特殊处理
+      //   if (this.pagePath === "/pages/index/index") {
+      //     uni.switchTab({
+      //       url: "/pages/index/index",
+      //     });
+      //   } else if (this.pagePath === "/pages/me/index") {
+      //     uni.switchTab({
+      //       url: "/pages/me/index",
+      //     });
+      //   } else if (this.pagePath === "/pages/frank/index") {
+      //     uni.switchTab({
+      //       url: "/pages/frank/index",
+      //     });
+      //   } else if (this.pagePath === "/pages/login/index") {
+      //     //小手机跳转嗷嗷打印的是/pages/login/index
+      //     uni.switchTab({
+      //       url: "/pages/index/index",
+      //     });
+      //   } else {
+      //     uni.redirectTo({
+      //       url: this.pagePath,
+      //     });
+      //   }
+      // } else {
+      //   uni.switchTab({
+      //     url: "/pages/frank/index",
+      //   });
+      // }
+      uni.switchTab({
+        url: "/pages/index/index",
+      });
       console.log("跳转执行");
     },
     async getPhoneNumberWx(res) {

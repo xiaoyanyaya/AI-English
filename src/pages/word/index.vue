@@ -65,19 +65,13 @@
                   toNav(`/pages/word/textbook?id=0&bookId=${textBook.id}`)
                 "
               >
-                <text> 开始学习 </text>
+                <text> 词汇学习 </text>
                 <image
                   class="item-box-listItem-img"
                   :src="imageBaseUrl + '/word/7-1-01.png'"
                   mode="widthFix"
                 >
                 </image>
-                <view class="item-box-listItem-icon">
-                  <image
-                    :src="imageBaseUrl + '/word/7-1-02.png'"
-                    mode=""
-                  ></image>
-                </view>
               </view>
             </view>
             <view class="footer">
@@ -88,19 +82,13 @@
                 }"
                 @click="toNav('/pages/word/reverseForgetting/index')"
               >
-                <text> 复习 </text>
+                <text> 抗遗忘复习 </text>
                 <image
-                  class="item-box-listItem-imgs"
+                  class="item-box-listItem-img"
                   :src="imageBaseUrl + '/word/7-1-03.png'"
                   mode="widthFix"
                 >
                 </image>
-                <view class="item-box-listItem-icon">
-                  <image
-                    :src="imageBaseUrl + '/word/7-1-04.png'"
-                    mode=""
-                  ></image>
-                </view>
               </view>
             </view>
           </view>
@@ -151,50 +139,38 @@
           <view class="body_footer">
             <view class="footer">
               <view
+                @click="
+                  toNav(`/pages/word/examFrequency?bookId=${dictBook.id}`)
+                "
                 class="item-box-listItem item-box-l"
                 :style="{
-                  backgroundImage: 'url(' + imageBaseUrl + '/word/7-1-07.png)',
+                  backgroundColor: '#e4f8e1',
                 }"
-                @click="
-                  toNav(`/pages/word/textbook?id=1&bookId=${dictBook.id}`)
-                "
               >
                 <text>考频查询</text>
                 <image
-                  class="item-box-listItem-img"
-                  :src="imageBaseUrl + '/word/7-1-01.png'"
-                  mode="widthFix"
+                  class="item-box-listItem-imgs"
+                  :src="imageBaseUrl + '/11-14-01.png'"
                 >
                 </image>
-                <view class="item-box-listItem-icon">
-                  <image
-                    :src="imageBaseUrl + '/word/7-1-02.png'"
-                    mode=""
-                  ></image>
-                </view>
+                <view class="item-box-listItem-icon"> </view>
               </view>
             </view>
             <view class="footer">
               <view
                 class="item-box-listItem item-box-r"
                 :style="{
-                  backgroundImage: 'url(' + imageBaseUrl + '/word/7-1-08.png)',
+                  backgroundColor: '#e8e6fe',
                 }"
-                @click="toNav('/pages/word/fastQuestion')"
+                @click="toNav(`/pages/word/fastQuestion?bookId=${dictBook.id}`)"
               >
                 <text>极速刷词</text>
                 <image
                   class="item-box-listItem-imgs"
-                  :src="imageBaseUrl + '/word/7-1-03.png'"
-                  mode="widthFix"
+                  :src="imageBaseUrl + '/11-14-02.png'"
                 >
                 </image>
-                <view class="item-box-listItem-icon">
-                  <image
-                    :src="imageBaseUrl + '/word/7-1-04.png'"
-                    mode=""
-                  ></image>
-                </view>
+                <view class="item-box-listItem-icon"> </view>
               </view>
             </view>
           </view>
@@ -209,19 +185,13 @@
                   toNav(`/pages/word/textbook?id=1&bookId=${dictBook.id}`)
                 "
               >
-                <text> 开始学习 </text>
+                <text> 词汇学习 </text>
                 <image
                   class="item-box-listItem-img"
                   :src="imageBaseUrl + '/word/7-1-01.png'"
                   mode="widthFix"
                 >
                 </image>
-                <view class="item-box-listItem-icon">
-                  <image
-                    :src="imageBaseUrl + '/word/7-1-02.png'"
-                    mode=""
-                  ></image>
-                </view>
               </view>
             </view>
             <view class="footer">
@@ -232,19 +202,13 @@
                 }"
                 @click="toNav('/pages/word/reverseForgetting/index')"
               >
-                <text> 复习 </text>
+                <text> 抗遗忘复习 </text>
                 <image
-                  class="item-box-listItem-imgs"
+                  class="item-box-listItem-img"
                   :src="imageBaseUrl + '/word/7-1-03.png'"
                   mode="widthFix"
                 >
                 </image>
-                <view class="item-box-listItem-icon">
-                  <image
-                    :src="imageBaseUrl + '/word/7-1-04.png'"
-                    mode=""
-                  ></image>
-                </view>
               </view>
             </view>
           </view>
@@ -276,6 +240,10 @@
               挑战次数：{{ item.reviewNum }}次
             </view>
           </view>
+          <view
+            v-if="typeData.length % 3 != 0"
+            class="item-box-selectItem-null"
+          ></view>
         </view>
       </view>
       <!-- 查询 -->
@@ -356,7 +324,7 @@ export default {
     if (res.from == "button") {
       return {
         title: "词汇速记",
-        path: `pages/word/index?promoCode=${this.$store.state.userInfo.promoCode}&id=${this.shareContent.id}&bookId=${this.shareContent.bookId}&isReturnHome=1`,
+        path: `pages/word/textbook?promoCode=${this.$store.state.userInfo.promoCode}&id=${this.shareContent.id}&bookId=${this.shareContent.bookId}&isReturnHome=1`,
       };
     } else {
       return {
@@ -419,16 +387,112 @@ export default {
 
 <style lang="scss" scoped>
 .main {
-  background: #fff;
+  background: linear-gradient(180deg, #c8ddfe 0%, #ffffff 38%);
   min-height: 100vh;
-  padding-bottom: 200rpx;
+  padding-bottom: 100rpx;
   .content {
+    .frank_en {
+      display: flex;
+      justify-content: space-between;
+      margin: 40rpx 55rpx;
+      .frank_left {
+        position: relative;
+        width: 215rpx;
+        height: 270rpx;
+        background-color: #fff;
+        border-radius: 5%;
+        box-shadow: 2px 2px 8px #689aef;
+        image {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translateX(-50%) translateY(-50%);
+          width: 90%;
+          height: 88%;
+        }
+        .frank_buton {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          bottom: 10rpx;
+          display: flex;
+          justify-content: center;
+          width: 90%;
+          height: 40rpx;
+          line-height: 50rpx;
+          opacity: 0.8;
+          text-align: center;
+          font-size: 22rpx;
+          color: #fff;
+          background: linear-gradient(180deg, #5a95fb 0%, #1258d0 100%);
+        }
+      }
+      .frank_right {
+        flex: 1;
+        padding-left: 45rpx;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        .flex_bu {
+          display: flex;
+          position: relative;
+          margin-left: 35rpx;
+          width: 322rpx;
+          height: 68rpx;
+          line-height: 68rpx;
+          background: linear-gradient(
+            90deg,
+            #ffffff 42%,
+            rgba(255, 255, 255, 0) 100%
+          );
+          .circle {
+            position: absolute;
+            left: -40rpx;
+            top: -6rpx;
+            width: 83rpx;
+            height: 83rpx;
+            image {
+              width: 100%;
+              height: 100%;
+            }
+          }
+          .icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 29rpx;
+            height: 29rpx;
+            margin-left: 55rpx;
+            background: #e49739;
+            border-radius: 50%;
+            .icons {
+              position: absolute;
+              top: 50%;
+              left: -3rpx;
+              transform: translateY(-50%);
+            }
+          }
+          .text {
+            font-size: 24rpx;
+            margin-left: 90rpx;
+          }
+        }
+
+        .buton_stu {
+          width: 360rpx;
+          height: 60rpx;
+          line-height: 60rpx;
+          text-align: center;
+          border-radius: 10rpx;
+          color: #fff;
+          font-size: 22rpx;
+          background: linear-gradient(180deg, #5a95fb 0%, #0853d5 100%);
+        }
+      }
+    }
+
     .model_box {
-      background: linear-gradient(
-        180deg,
-        #eef5ff 0%,
-        rgba(238, 245, 255, 0) 100%
-      );
+      background: linear-gradient(180deg, #f5f9ff 0%, #fbfcff 100%);
       position: relative;
       .bg_img {
         position: absolute;
@@ -455,12 +519,11 @@ export default {
         }
       }
       .body {
-        height: 500rpx;
+        height: 480rpx;
         padding: 0 65rpx;
         .body_top {
           display: flex;
-          height: 277rpx;
-          margin-top: 25rpx;
+          margin-bottom: 30rpx;
           .img_book {
             width: 197rpx;
             height: 277rpx;
@@ -538,7 +601,7 @@ export default {
         .body_footer {
           display: flex;
           justify-content: space-between;
-          margin-top: 20rpx;
+          margin-top: 10rpx;
           .footer {
             width: 294rpx;
             height: 144rpx;
@@ -550,11 +613,16 @@ export default {
       }
       .body_dict {
         @extend .body;
-        height: 680rpx;
+        height: 635rpx;
       }
     }
 
     .special_box {
+      background: linear-gradient(
+        180deg,
+        #eff5ff 0%,
+        rgba(238, 245, 255, 0) 100%
+      );
       padding-left: 43rpx;
       .title {
         display: flex;
@@ -589,18 +657,23 @@ export default {
         height: 127rpx;
       }
       .item-box-selectItem-head {
-        margin-bottom: 26rpx;
+        margin-bottom: 15rpx;
         display: flex;
         justify-content: center;
       }
       .item-box-selectItem {
         width: 202rpx;
-        height: 294rpx;
+        height: 284rpx;
+        margin-bottom: 15rpx;
         background: #fff;
         padding: 20rpx;
         padding-bottom: 25rpx;
         border-radius: 10rpx;
         margin-right: 32rpx;
+      }
+      .item-box-selectItem-null {
+        @extend .item-box-selectItem;
+        background-color: #fcfdff;
       }
       .item-box-selectItem-text {
         font-size: 20rpx;
@@ -641,7 +714,7 @@ export default {
   z-index: 0;
 }
 .search-box {
-  margin: 0rpx 40rpx 40rpx;
+  margin: 30rpx 40rpx 0rpx;
   height: 70rpx;
   line-height: 70rpx;
   color: #8a8a8a;
@@ -710,33 +783,36 @@ export default {
 
 .item-box-listItem {
   width: 294rpx;
-  height: 144rpx;
-  padding: 25rpx;
-  margin: 20rpx 0;
+  height: 120rpx;
+  border-radius: 10rpx;
+  padding: 35rpx;
+  margin: 15rpx 0;
   background-size: 100% 100%;
   position: relative;
 }
 
 .item-box-listItem-icon image {
-  width: 43rpx;
-  height: 43rpx;
+  width: 50rpx;
+  height: 12rpx;
   position: absolute;
   left: 25rpx;
-  bottom: 32rpx;
+  bottom: 25rpx;
 }
 
 .item-box-listItem-img {
-  width: 120rpx;
+  width: 100rpx;
+  height: 100rpx;
   position: absolute;
   right: 15rpx;
-  bottom: 20rpx;
+  bottom: 15rpx;
 }
 
 .item-box-listItem-imgs {
-  width: 120rpx;
+  width: 60rpx;
+  height: 60rpx;
   position: absolute;
-  right: 15rpx;
-  bottom: 20rpx;
+  right: 38rpx;
+  bottom: 35rpx;
 }
 
 .item-boxBottom {

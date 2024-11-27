@@ -17,7 +17,7 @@
           @click="allData.audioUsa ? play(allData.audioUsa) : ''"
         >
           <text>英</text>
-          <text class="headAudio-boxC">['{{ allData.symbolUsa }}]</text>
+          <text class="headAudio-boxC">[{{ allData.symbolUsa }}]</text>
           <image :src="imageBaseUrl + '/word/5-21-31.png'" mode=""></image>
         </view>
       </view>

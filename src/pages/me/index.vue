@@ -111,12 +111,6 @@
             <button open-type="contact">优惠</button>
           </view>
         </view>
-        <!-- <view
-          class="user-center-btn t-color-fff flex align-item-center justify-content-center t-size-24"
-          @click="$navigateTo('/pages/me/userCenter')"
-        >
-          立享优惠
-        </view> -->
       </view>
 
       <!-- 操作列表框 -->
@@ -187,7 +181,7 @@
 <script>
 import MyMixin from "@/utils/MyMixin.js";
 import store from "@/store/";
-import { getSendMsg } from "@/api/me";
+import { sendCustomMessage } from "@/api/me";
 
 export default {
   mixins: [MyMixin],
@@ -284,9 +278,6 @@ export default {
     };
   },
   methods: {
-    async senMSG() {
-      const res = await getSendMsg();
-    },
     getSystemInfo() {
       uni.getSystemInfo({
         success: (res) => {
@@ -347,12 +338,14 @@ export default {
       }
       if (index == 1) this.$navigateTo("/pages/me/cardConversion");
     },
-    changeMpuser() {
-      if (this.ifWxmpUser) return;
-      uni.navigateTo({ url: "/pages/word/authorization?type=pay" });
-    },
-    network() {
-      return {};
+    async changeMpuser() {
+      //请求接入客服消息后再修改ifWxmpUser
+      await sendCustomMessage();
+      this.getUserInfo().then((data) => {
+        this.ifWxmpUser = data.ifWxmpUser;
+        if (this.ifWxmpUser) return;
+        uni.navigateTo({ url: "/pages/word/authorization?type=pay" });
+      });
     },
   },
 };

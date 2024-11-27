@@ -41,7 +41,7 @@
     </view>
 
     <view class="definition" v-if="setData.show && currentTopicData.symbolUsa">
-      {{ "['" + currentTopicData.symbolUsa + "]" }}
+      {{ "[" + currentTopicData.symbolUsa + "]" }}
     </view>
     <view class="word" v-if="setData.show">
       {{ currentTopicData.wordCn }}

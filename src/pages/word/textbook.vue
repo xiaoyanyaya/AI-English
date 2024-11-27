@@ -123,7 +123,7 @@
                   {{ item2.wordEn }}
                 </view>
                 <view v-if="item2.symbolUsa" class="listItem-cTitle-definition">
-                  {{ "['" + item2.symbolUsa + "']" }}
+                  {{ "[" + item2.symbolUsa + "]" }}
                 </view>
               </view>
               <view class="listItem-cContent-item">
@@ -233,7 +233,7 @@
                     v-if="item2.symbolUsa"
                     class="listItem-cTitle-definition"
                   >
-                    {{ "['" + item2.symbolUsa + "']" }}
+                    {{ "[" + item2.symbolUsa + "]" }}
                   </view>
                 </view>
                 <view class="listItem-cContent-item">

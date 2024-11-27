@@ -104,7 +104,7 @@
                 {{ item.wordEn }}
               </view>
               <view v-if="item.symbolUsa" class="listItem-lR-tHit">
-                {{ "['" + item.symbolUsa + "]" }}
+                {{ "[" + item.symbolUsa + "]" }}
               </view>
             </view>
             <view class="listItem-lR-b">
@@ -454,15 +454,8 @@ export default {
           break;
         case 1:
           if (this.pageType !== "chanllenge") {
-            // this.toNav('/pages/word/textbook?id=' + this.wordType + '&bookId=' + this.bookData.id)
-            // uni.redirectTo({
-            //   url: "/pages/word/reverseForgetting/index",
-            // });
             this.toNav("/pages/word/reverseForgetting/index");
           } else {
-            // uni.redirectTo({
-            //   url: "/pages/word/chanllenge/index",
-            // });
             this.toNav("/pages/word/chanllenge/index");
           }
           break;

@@ -6,18 +6,31 @@
 
     <view class="px-4">
       <view class="flex align-item-center user-info px-3 pt-3 pb-3 pl-1">
-        <view class="mr-4 mt-1">
-          <image
-            :src="
-              userInfo.avatar ? userInfo.avatar : `${imageBaseUrl}/icon_11.png`
-            "
-            mode="widthFix"
-            class="avatar"
-          />
-        </view>
-        <view class="flex flex-direction-column justify-content-center">
-          <view class="t-color-3D3D3D mb-1">{{ userInfo.nickName }}</view>
-          <view class="t-size-24 t-color-8A8A8A">{{ userInfo.title }}</view>
+        <view class="flex justify-content-between align-item-center w-100">
+          <view class="flex">
+            <view class="mr-4 mt-1">
+              <image
+                :src="
+                  userInfo.avatar
+                    ? userInfo.avatar
+                    : `${imageBaseUrl}/icon_11.png`
+                "
+                mode="widthFix"
+                class="avatar"
+              />
+            </view>
+            <view class="flex flex-direction-column justify-content-center">
+              <view class="t-color-3D3D3D mb-1">{{ userInfo.nickName }}</view>
+              <view class="t-size-24 t-color-8A8A8A">{{ userInfo.title }}</view>
+            </view>
+          </view>
+          <view
+            class="qrcode-box flex align-item-center justify-content-center mr-1"
+            @click="clickQrCode"
+          >
+            <image :src="`${imageBaseUrl}/11-4-01.png`" mode="widthFix" />
+            <view class="t-size-24 ml-1">推广码</view>
+          </view>
         </view>
       </view>
 
@@ -28,9 +41,9 @@
           class="price px-4 pt-3 pb-3 flex align-item-center justify-content-between"
         >
           <view class="flex flex-direction-column justify-content-start">
-            <view class="font-weight-bold t-size-36 t-color-DC0C0C">{{
-              userInfo.canWithdrawAmount
-            }}</view>
+            <view class="font-weight-bold t-size-36 t-color-DC0C0C"
+              >{{ userInfo.canWithdrawAmount }}
+            </view>
             <view class="t-size-24 mt-1 t-color-3D3D3D">可提现佣金(元)</view>
           </view>
           <view
@@ -74,9 +87,9 @@
             class="flex flex-direction-column justify-content-center pt-3 pb-3"
           >
             <view class="t-size-24 t-color-3D3D3D mt-2">{{ item.title }}</view>
-            <view class="t-size-24 t-color-8A8A8A mt-1">{{
-              item.subTitle
-            }}</view>
+            <view class="t-size-24 t-color-8A8A8A mt-1"
+              >{{ item.subTitle }}
+            </view>
           </view>
         </view>
       </view>
@@ -108,6 +121,41 @@
         </view>
       </view>
 
+      <!--   推广码popup   -->
+      <view class="popup" v-if="showQrCode">
+        <view
+          class="popup-content flex flex-direction-column align-item-center pb-3"
+        >
+          <view
+            class="flex justify-content-between align-item-center title-box"
+            style="width: 100%"
+          >
+            <view></view>
+            <view class="t-size-32 title font-weight-bold">推广码</view>
+            <view
+              class="t-size-30 mr-4 pl-2 pr-2 pt-2 pb-2"
+              @click="showQrCode = false"
+            >
+              <u-icon name="close" color="#FFFFFF" size="30"></u-icon>
+            </view>
+          </view>
+          <view class="flex justify-content-center mt-5 qrcode mb-3">
+            <image :src="qrCodeUrl" mode="widthFix" class="mt-3" />
+          </view>
+          <view
+            @click="downloadQrcode"
+            class="flex justify-content-center align-item-center t-color-fff mt-3 download-box"
+          >
+            <image
+              :src="`${imageBaseUrl}/11-4-02.png`"
+              class="download-img"
+              mode="widthFix"
+            />
+            <view class="t-size-26 ml-2">下载</view>
+          </view>
+        </view>
+      </view>
+
       <!--      <view class="flex justify-content-center mt-5">
         <text class="text-center t-color-2D6CDA agreement" @click="toUserPage(4, '用户推广协议')">《用户推广协议》</text>
       </view>-->
@@ -119,6 +167,7 @@
 import MyMixin from "@/utils/MyMixin";
 import { commissionIndex } from "@/api/me";
 import store from "@/store";
+import { promoQRCode } from "../../api/me";
 
 export default {
   mixins: [MyMixin],
@@ -146,24 +195,182 @@ export default {
           subTitle: "",
         },
       ],
+      // 邀请码
+      qrCodeUrl: "",
+      showQrCode: false,
       menuList: [{ title: "邀请好友", image: "8-13-12.png" }],
       userInfo: {},
+      osName: "ios",
     };
   },
-  onShareAppMessage() {
+  onShareAppMessage(res) {
     var promoCode = store.state.userInfo.promoCode;
     const SRC = `pages/index/index?promoCode=${promoCode}`;
     const path = ``;
-    return {
-      title: "小礼AI极简英语",
-      path: `${SRC}${path}`,
-      imageUrl: `${this.imageBaseUrl}/9-07-01.png`,
-    };
+    // 来自页面内分享按钮
+    if (res.from === "button") {
+      return {
+        title: "小礼AI极简单词",
+        path: `${SRC}${path}`,
+        imageUrl: `${this.imageBaseUrl}/10-19.png`,
+      };
+    } else {
+      return {
+        title: "小礼AI极简单词",
+        path:
+          "pages/index/index?promoCode=" + this.$store.state.userInfo.promoCode,
+      };
+    }
   },
   onLoad() {
+    console.log("eeeeeeeeeeeeeeee");
+
     this.commissionIndex();
+    this.promoQRCode();
+    uni.getSystemInfo({
+      success: (res) => {
+        this.osName = res.osName;
+      },
+    });
   },
   methods: {
+    clickQrCode() {
+      this.showQrCode = true;
+      uni.getSetting({
+        success: (res) => {
+          console.log("授权情况", res.authSetting);
+          if (!res.authSetting["scope.writePhotosAlbum"]) {
+            uni.authorize({
+              scope: "scope.writePhotosAlbum",
+              success: () => {
+                console.log("授权成功");
+              },
+              fail: () => {
+                uni.showModal({
+                  title: "提示",
+                  content: "请授权保存图片到相册",
+                  success: (res) => {
+                    if (res.confirm) {
+                      uni.openSetting();
+                    }
+                  },
+                });
+              },
+            });
+          }
+        },
+      });
+    },
+    promoQRCode() {
+      promoQRCode().then((res) => {
+        this.qrCodeUrl = res.data.result;
+      });
+    },
+    downloadQrcode() {
+      let _this = this;
+      uni.getSetting({
+        success(res) {
+          if (!res.authSetting["scope.writePhotosAlbum"]) {
+            uni.authorize({
+              scope: "scope.writePhotosAlbum",
+              success(res) {
+                uni.showToast({
+                  title: "授权成功",
+                  icon: "none",
+                  duration: 2200,
+                });
+                _this.onSavePhoto();
+              },
+              fail() {
+                uni.showModal({
+                  content: "检测到您没打开相册功能权限，是否去设置打开？",
+                  confirmText: "确认",
+                  cancelText: "取消",
+                  success: (res) => {
+                    if (res.confirm) {
+                      uni.openSetting({
+                        success: (res) => {
+                          if (res.authSetting["scope.writePhotosAlbum"]) {
+                            _this.onSavePhoto();
+                          } else {
+                            //用户未同意保存图片权限
+                          }
+                        },
+                        fail: (err) => {
+                          console.log(err);
+                        },
+                      });
+                    } else {
+                      uni.showToast({
+                        title: "获取授权相册授权失败",
+                        icon: "none",
+                        success: function () {
+                          uni.navigateBack();
+                        },
+                      });
+                    }
+                  },
+                });
+              },
+            });
+          } else {
+            _this.onSavePhoto();
+          }
+        },
+        fail() {
+          uni.showToast({
+            title: "获取授权相机授权失败",
+            icon: "none",
+            success: function () {
+              uni.navigateBack();
+            },
+          });
+        },
+      });
+    },
+    onSavePhoto() {
+      // #ifdef MP-WEIXIN
+      let _this = this;
+      uni.showLoading({
+        title: "保存中",
+      });
+      uni.getImageInfo({
+        src: _this.qrCodeUrl,
+        success: function (e) {
+          var filePathNew =
+            wx.env.USER_DATA_PATH + "/" + new Date().valueOf() + "." + e.type;
+          uni.downloadFile({
+            url: _this.qrCodeUrl, //仅为示例，并非真实的资源
+            filePath: filePathNew,
+            success: (res) => {
+              if (res.statusCode === 200) {
+                uni.saveImageToPhotosAlbum({
+                  filePath: filePathNew,
+                  success: function () {
+                    uni.showToast({
+                      title: "保存到相册成功",
+                      icon: "none",
+                      duration: 2200,
+                    });
+                    _this.showQrCode = false;
+                    uni.hideLoading();
+                  },
+                  fail: function (err) {
+                    console.log("saveImageToPhotosAlbum() fail ", err);
+                    _this.showQrCode = false;
+                    uni.hideLoading();
+                  },
+                });
+              }
+            },
+          });
+        },
+        complete: function (e) {
+          console.log("getImageInfo", e.path);
+        },
+      });
+      // #endif
+    },
     toUserPage(type, title) {
       uni.navigateTo({
         url: `/pages/me/content?type=${type}&title=${title}`,
@@ -226,6 +433,19 @@ page {
     width: 80rpx;
     height: 80rpx;
     border-radius: 50%;
+  }
+
+  .qrcode-box {
+    border: 1rpx solid #3a73d9;
+    width: 170rpx;
+    height: 54rpx;
+    border-radius: 25rpx;
+    color: #3a73d9;
+
+    image {
+      width: 26rpx;
+      height: 26rpx;
+    }
   }
 }
 
@@ -292,5 +512,61 @@ page {
   left: 0;
   right: 0;
   opacity: 0;
+}
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+
+  .popup-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #e8f2ff;
+    border-radius: 20rpx;
+    width: 80%;
+    overflow: hidden;
+
+    .title-box {
+      color: #ffffff;
+      height: 80rpx;
+      opacity: 0.9;
+      background: linear-gradient(180deg, #6ab3f8 0%, #1863e5 100%);
+
+      .title {
+        margin-left: 90rpx;
+      }
+    }
+
+    .qrcode {
+      width: 80%;
+      height: 440rpx;
+      border-radius: 40rpx;
+      background: #ffffff;
+
+      image {
+        width: 75%;
+        height: 75%;
+      }
+    }
+
+    .download-box {
+      width: 350rpx;
+      height: 65rpx;
+      border-radius: 50rpx;
+      background: #3a73d9;
+
+      .download-img {
+        width: 30rpx;
+        height: 30rpx;
+      }
+    }
+  }
 }
 </style>

@@ -8,66 +8,48 @@
       <view class="frank_left" @click="toNav('/pages/frank/frankDetail')">
         <image :src="imageBaseUrl + '/frank/8-28-02.png'" mode=""></image>
         <view class="frank_buton">
-          <text class="mr-1">查看Frank介绍</text>
+          <text>查看Frank介绍</text>
           <uni-icons type="arrow-right" size="19" color="#fff"></uni-icons>
         </view>
       </view>
       <view class="frank_right">
-        <view class="flex justify-content-between">
-          <view class="border_r">
-            <view class="text_bu">一朝<text>掌握</text>方法</view>
+        <view class="flex_bu">
+          <view class="circle">
+            <image :src="imageBaseUrl + '/frank/8-7-02.png'" mode=""></image>
           </view>
-          <view class="border_r">
-            <view class="text_bu">一生<text>远离</text>补习</view>
+          <view class="icon">
+            <uni-icons
+              class="icons"
+              type="checkmarkempty"
+              size="15"
+              color="#fff"
+            ></uni-icons>
           </view>
+          <text class="text">虚拟语境记忆法</text>
         </view>
-        <view class="introduce_cir">
-          <view class="flex flex-direction-column align-item-center">
-            <view
-              class="circle"
-              @click="
-                toNav(
-                  `/pages/frank/components/courseOutline?nodeCode=${introduceCirList.nodeCode}&nodeName=${introduceCirList.nodeName}&clickIndex=0`
-                )
-              "
-            >
-              <image :src="imageBaseUrl + '/frank/8-7-02.png'" mode=""></image>
-            </view>
-            <text class="text">{{
-              introduceCirList.children[0].nodeName
-            }}</text>
+        <view class="flex_bu">
+          <view class="circle">
+            <image :src="imageBaseUrl + '/frank/8-7-03.png'" mode=""></image>
           </view>
-          <view class="flex flex-direction-column align-item-center">
-            <view
-              class="circle"
-              @click="
-                toNav(
-                  `/pages/frank/components/courseOutline?nodeCode=${introduceCirList.nodeCode}&nodeName=${introduceCirList.nodeName}&clickIndex=1`
-                )
-              "
-            >
-              <image :src="imageBaseUrl + '/frank/8-7-03.png'" mode=""></image>
-            </view>
-            <text class="text">{{
-              introduceCirList.children[1].nodeName
-            }}</text>
+          <view class="icon">
+            <uni-icons
+              class="icons"
+              type="checkmarkempty"
+              size="15"
+              color="#fff"
+            ></uni-icons>
           </view>
-          <view class="flex flex-direction-column align-item-center">
-            <view
-              class="circle"
-              @click="
-                toNav(
-                  `/pages/frank/components/courseOutline?nodeCode=${introduceCirList.nodeCode}&nodeName=${introduceCirList.nodeName}&clickIndex=2`
-                )
-              "
-            >
-              <image :src="imageBaseUrl + '/frank/8-7-04.png'" mode=""></image>
-            </view>
-            <text class="text">{{
-              introduceCirList.children[2].nodeName
-            }}</text>
-          </view>
-          课程数： {{ introduceCirList.videoNum }}
+          <text class="text">真实语境记忆法</text>
+        </view>
+        <view
+          @click="
+            toNav(
+              `/pages/frank/components/courseOutline?nodeCode=${introduceCirList.nodeCode}&nodeName=${introduceCirList.nodeName}&clickIndex=1`
+            )
+          "
+          class="buton_stu"
+        >
+          立即学习（课程数： {{ frankVideoNum }}个）
         </view>
       </view>
     </view>
@@ -358,6 +340,7 @@ export default {
       courseSystemList: [], //课程体系
       secretCourseBagList: [], //秘籍课程加强包
       leaningIncreaseList: [], //学段提分加强包
+      frankVideoNum: "",
     };
   },
   onPageScroll(e) {
@@ -384,6 +367,7 @@ export default {
       this.introduceCirList = res.data.result[0].children[0];
       this.courseSystemList = res.data.result[0].children.slice(1);
       console.log("this.courseSystemList", this.courseSystemList);
+      this.frankVideoNum = res.data.result[0].children[0].videoNum;
       // this.secretCourseBagList = res.data.result[0].children[4];
       // this.leaningIncreaseList = res.data.result[0].children[5];
     },
@@ -407,6 +391,7 @@ export default {
       height: 270rpx;
       background-color: #fff;
       border-radius: 5%;
+      box-shadow: 2px 2px 8px #689aef;
       image {
         position: absolute;
         left: 50%;
@@ -425,6 +410,7 @@ export default {
         width: 90%;
         height: 40rpx;
         line-height: 50rpx;
+        opacity: 0.8;
         text-align: center;
         font-size: 22rpx;
         color: #fff;
@@ -433,58 +419,67 @@ export default {
     }
     .frank_right {
       flex: 1;
-      padding-left: 40rpx;
-      .border_r {
-        position: relative;
-        width: 180rpx;
-        height: 50rpx;
-        border-radius: 10rpx;
-        box-sizing: border-box;
-        border: 1rpx solid #165bd2;
-        .text_bu {
-          position: absolute;
-          left: -8%;
-          top: 17%;
-          width: 180rpx;
-          height: 50rpx;
-          line-height: 50rpx;
-          text-align: center;
-          border-radius: 10rpx;
-          font-size: 24rpx;
-          font-weight: 400;
-          color: #1863e5;
-          background: #ffffff;
-          text {
-            margin: 0 3rpx;
-            font-size: 30rpx;
-            font-weight: normal;
-            color: #e76615;
-          }
-        }
-      }
-
-      .introduce_cir {
+      padding-left: 45rpx;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      .flex_bu {
         display: flex;
-        justify-content: space-between;
-        margin-top: 40rpx;
-        padding: 0 10rpx;
+        position: relative;
+        margin-left: 35rpx;
+        width: 322rpx;
+        height: 68rpx;
+        line-height: 68rpx;
+        background: linear-gradient(
+          90deg,
+          #ffffff 42%,
+          rgba(255, 255, 255, 0) 100%
+        );
         .circle {
-          width: 80rpx;
-          height: 80rpx;
+          position: absolute;
+          left: -40rpx;
+          top: -6rpx;
+          width: 83rpx;
+          height: 83rpx;
           image {
             width: 100%;
             height: 100%;
           }
         }
+        .icon {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 29rpx;
+          height: 29rpx;
+          margin-left: 55rpx;
+          background: #e49739;
+          border-radius: 50%;
+          .icons {
+            position: absolute;
+            top: 50%;
+            left: -3rpx;
+            transform: translateY(-50%);
+          }
+        }
         .text {
           font-size: 24rpx;
-          margin-top: 10rpx;
-          width: 95rpx;
+          margin-left: 90rpx;
         }
+      }
+
+      .buton_stu {
+        width: 360rpx;
+        height: 60rpx;
+        line-height: 60rpx;
+        text-align: center;
+        border-radius: 10rpx;
+        color: #fff;
+        font-size: 22rpx;
+        background: linear-gradient(180deg, #5a95fb 0%, #0853d5 100%);
       }
     }
   }
-
   .infomercial {
     width: 670rpx;
     height: 150rpx;

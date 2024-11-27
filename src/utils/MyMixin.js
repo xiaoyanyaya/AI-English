@@ -42,6 +42,10 @@ export default {
     // #endif
   },
   onLoad() {
+    if (e.promoCode) {
+      console.log("MyMixin onLoad promoCode", e.promoCode);
+      uni.setStorageSync("promoCode", e.promoCode);
+    }
     this.getSystemInfo();
     // 是否授权获取了手机号
     this.isAuthPhone = uni.getStorageSync("isAuthPhone");
@@ -168,7 +172,7 @@ export default {
         uni.setStorageSync("basicData", data.data.result);
         setTimeout(() => {
           if (isNew) {
-            this.$navigateTo("/pages/me/selectLevel?pageForm=login");
+            // this.$navigateTo("/pages/me/selectLevel?pageForm=login");
           }
         }, 500);
       });

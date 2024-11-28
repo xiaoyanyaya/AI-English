@@ -41,7 +41,7 @@ export default {
     }
     // #endif
   },
-  onLoad() {
+  onLoad(e) {
     if (e.promoCode) {
       console.log("MyMixin onLoad promoCode", e.promoCode);
       uni.setStorageSync("promoCode", e.promoCode);

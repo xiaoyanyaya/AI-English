@@ -714,7 +714,7 @@ export default {
   z-index: 0;
 }
 .search-box {
-  margin: 30rpx 40rpx 0rpx;
+  margin: 30rpx 40rpx 70rpx;
   height: 70rpx;
   line-height: 70rpx;
   color: #8a8a8a;

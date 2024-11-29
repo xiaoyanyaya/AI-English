@@ -1,7 +1,7 @@
 <template>
   <view class="main">
     <cy-navbar :showBack="true" :bgColor="backColor" textColor="#3D3D3D">
-      <view class="t-size-30">视屏列表</view>
+      <view class="t-size-30">视频列表</view>
     </cy-navbar>
 
     <view class="search-box">
@@ -18,7 +18,7 @@
         ></u-icon>
       </view>
       <view
-        @click="getSearchVideoList"
+        @click="handeleSearch"
         v-if="pagingParams.keyword.length > 0"
         class="search-boxIcon"
         >搜索</view
@@ -88,7 +88,7 @@
           <view
             @click="
               toNav(
-                `/pages/frank/webview?vodVideoId=${item.vodVideoId}&videoId=${item.id}&vName=${item.videoFullName}&pTime=${item.publishTime}&cover=${item.videoImageUrl}&playTimes=${item.playTimes}&currTime=${item.currTime}`
+                `/pages/frank/webview?videoId=${item.id}&pid=${item.nodeId}`
               )
             "
             class="image"
@@ -163,6 +163,10 @@ export default {
       this.pagingParams.totalPage = res.data.result.pages;
       console.log("this.videoList", this.videoList);
     },
+    handeleSearch() {
+      this.videoList = [];
+      this.getSearchVideoList();
+    },
     cickFlexbox1() {
       this.activeTab = 0;
       this.isOpenOne = !this.isOpenOne;
@@ -182,11 +186,9 @@ export default {
       this.resetChangeTab(this.isOpenThr);
     },
     resetChangeTab(isOpen) {
-      if (isOpen) {
-        this.pagingParams.orderType = "asc";
-      } else {
-        this.pagingParams.orderType = "desc";
-      }
+      this.videoList = [];
+      this.pagingParams.pageNo = 1;
+      this.pagingParams.orderType = isOpen ? "asc" : "desc";
       this.getSearchVideoList();
     },
     // 上划加载更多

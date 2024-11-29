@@ -1,0 +1,30 @@
+{
+  "id": "4268092",
+  "name": "积分",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "21156",
+      "name": "点击",
+      "font_class": "dianji",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "2893436",
+      "name": "查看视觉-答题错误",
+      "font_class": "chakanshijue-daticuowu",
+      "unicode": "e68e",
+      "unicode_decimal": 59022
+    },
+    {
+      "icon_id": "11615039",
+      "name": "答案正确",
+      "font_class": "daanzhengque",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    }
+  ]
+}

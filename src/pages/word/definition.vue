@@ -19,6 +19,10 @@
           <text>英</text>
           <text class="headAudio-boxC">[{{ allData.symbolUsa }}]</text>
           <image :src="imageBaseUrl + '/word/5-21-31.png'" mode=""></image>
+          <view class="baocuo" @click="showReport">
+            <u-icon name="question-circle" color="#7d7d7d" size="26"></u-icon>
+            <text>我要报错</text>
+          </view>
         </view>
       </view>
       <view class="headText" v-if="allData.wordCn">
@@ -141,14 +145,51 @@
         <view class="t-color-1863E5"> 下一个 </view>
       </view>
     </view>
+
+    <!-- 报错pop -->
+    <u-popup
+      v-model="showReportPop"
+      @close="reportPopClose"
+      closeable="true"
+      mode="bottom"
+      border-radius="15"
+    >
+      <view class="reppop_box">
+        <view class="title">报错提交</view>
+        <u-form :model="reportForm" ref="uForm">
+          <u-form-item label="单词" label-width="180">
+            <u-input v-model="reportForm.wordEn" disabled="true" />
+          </u-form-item>
+          <u-form-item label="错误类型" prop="malType" label-width="180">
+            <u-input
+              v-model="reportForm.malType"
+              type="select"
+              @click="showMalType = true"
+            />
+            <u-action-sheet
+              :list="actionSheetList"
+              v-model="showMalType"
+              @click="actionSheetCallback"
+            ></u-action-sheet>
+          </u-form-item>
+          <u-form-item label="错误描述" label-width="180">
+            <u-input
+              v-model="reportForm.malContent"
+              type="textarea"
+              maxlength="100"
+            />
+          </u-form-item>
+        </u-form>
+        <view class="submit_sty" @click="submit">提交</view>
+      </view>
+    </u-popup>
   </view>
 </template>
 
 <script>
 const innerAudioContext = uni.createInnerAudioContext();
 import MyMixin from "@/utils/MyMixin";
-import { getWordEn } from "@/api/word";
-import { reviewStart } from "@/api/word";
+import { getWordEn, reviewStart, getMalTypeDict, postAddMal } from "@/api/word";
 
 export default {
   mixins: [MyMixin],
@@ -175,9 +216,27 @@ export default {
         num: 3,
       },
       activeIndex: 0, //当前项索引
+      showReportPop: false,
+      reportForm: {
+        wordEn: "",
+        malType: "",
+        malContent: "",
+      },
+      addMalParams: {
+        wordEn: "",
+        malType: "",
+        malContent: "",
+      },
+      formRules: {
+        malType: [
+          { required: true, message: "请输入错误类型", trigger: "change" },
+        ],
+      },
+      showMalType: false,
+      actionSheetList: [],
     };
   },
-  onLoad(e) {
+  async onLoad(e) {
     this.lessonId = e.lessonId;
     var that = this;
     this.data.wordEn = e.wordEn;
@@ -236,6 +295,17 @@ export default {
         })
         .exec();
     });
+    //报错类型
+    const errType = await getMalTypeDict();
+    this.actionSheetList = Object.entries(errType.data.result).map(
+      ([id, text]) => ({
+        text: text,
+        id: id.toString(),
+      })
+    );
+  },
+  onReady() {
+    this.$refs.uForm.setRules(this.formRules);
   },
   onPageScroll(e) {
     if (e.scrollTop > 20) {
@@ -245,6 +315,38 @@ export default {
     }
   },
   methods: {
+    showReport() {
+      this.showReportPop = true;
+      this.reportForm.wordEn = this.allData.wordEn;
+      this.addMalParams.wordEn = this.allData.wordEn;
+    },
+    actionSheetCallback(index) {
+      this.reportForm.malType = this.actionSheetList[index].text;
+      this.addMalParams.malType = this.actionSheetList[index].id;
+    },
+    submit() {
+      this.$refs.uForm.validate((valid) => {
+        if (valid) {
+          this.addMalParams.malContent = this.reportForm.malContent;
+          postAddMal(this.addMalParams).then((res) => {
+            if (res.data.code == 200) {
+              uni.showToast({ title: "上报成功！感谢反馈", icon: "none" });
+            } else {
+              uni.showToast({ title: res.message });
+            }
+            this.showReportPop = false;
+            this.reportForm.malType = "";
+            this.reportForm.malContent = "";
+          });
+        }
+      });
+    },
+    reportPopClose() {
+      this.$refs.uForm.resetFields();
+      this.reportForm.malType = "";
+      this.addMalParams.malType = "";
+      this.reportForm.malContent = "";
+    },
     async getWordEn() {
       let data = await getWordEn(this.data);
       this.allData = data.data.result;
@@ -451,7 +553,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped lang="scss">
 .nav-icon,
 .nav-slot,
 .nav-btn {
@@ -461,6 +563,14 @@ export default {
 .main {
   background-size: 100% 100%;
   min-height: 100vh;
+}
+
+.baocuo {
+  position: absolute;
+  top: 17%;
+  right: 55rpx;
+  font-size: 24rpx;
+  color: #7d7d7d;
 }
 
 .head {
@@ -531,6 +641,18 @@ export default {
   margin-bottom: 6rpx;
 }
 
+.report_sty {
+  z-index: 999;
+  width: 180rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  text-align: center;
+  color: #7d7d7d;
+  font-size: 24rpx;
+  border-radius: 163rpx;
+  border: 1rpx solid #7d7d7d;
+}
+
 .content {
   /* padding-top: 520rpx; */
   padding-bottom: 100rpx;
@@ -572,9 +694,7 @@ export default {
 .contentText {
   border-radius: 30rpx;
   background: #fff;
-  /* border: 3rpx solid #ADCBFF; */
-  padding: 30rpx 50rpx;
-  /* margin-top: 50rpx; */
+  padding: 30rpx 50rpx 160rpx;
 }
 
 .contentText-item {
@@ -612,9 +732,9 @@ export default {
   position: fixed;
   bottom: 0;
   width: 100%;
-  padding: 36rpx 50rpx;
+  height: 150rpx;
   border-top: 2rpx solid #bfbfbf;
-  background: #fff;
+  background-color: #fff;
 }
 
 .controllerItem {
@@ -627,7 +747,6 @@ export default {
   width: 206rpx;
   height: 80rpx;
   border-radius: 201rpx;
-  background: linear-gradient(180deg, #5692f9 0%, #1863e5 100%);
 }
 .controllerItem:nth-child(2) {
   margin-right: 0;
@@ -646,5 +765,31 @@ export default {
 
 .contentText-img image {
   width: 400rpx;
+}
+
+.reppop_box {
+  position: relative;
+  height: 55vh;
+  padding: 50rpx;
+  .title {
+    color: #1863e5;
+    font-size: 28rpx;
+    text-align: center;
+    margin-bottom: 40rpx;
+  }
+  .submit_sty {
+    position: absolute;
+    left: 50%;
+    bottom: 10%;
+    transform: translateX(-50%);
+    width: 90%;
+    height: 80rpx;
+    line-height: 80rpx;
+    background-color: #43a2ff;
+    border-radius: 10rpx;
+    color: #fff;
+    font-size: 28rpx;
+    text-align: center;
+  }
 }
 </style>
